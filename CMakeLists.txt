@@ -86,16 +86,19 @@ configure_file("./src/farsoconfig.h.in" "./src/farsoconfig.h")
 # Include headers and files
 include(sources.cmake)
 if(${FARSO_HAS_OGRE})
-   set(FARSO_HEADERS ${FARSO_HEADERS} ${FARSO_OGRE_HEADERS})
-   set(FARSO_SOURCES ${FARSO_SOURCES} ${FARSO_OGRE_SOURCES})
+   set(FARSO_FULL_HEADERS ${FARSO_HEADERS} ${FARSO_OGRE_HEADERS})
+   set(FARSO_FULL_SOURCES ${FARSO_SOURCES} ${FARSO_OGRE_SOURCES})
+else(${FARSO_HAS_OGRE})
+   set(FARSO_FULL_HEADERS ${FARSO_HEADERS})
+   set(FARSO_FULL_SOURCES ${FARSO_SOURCES})
 endif(${FARSO_HAS_OGRE})
 
 
 # Build the library with defined mode (static or shared)
 if(${FARSO_STATIC})
-   add_library(farso ${FARSO_SOURCES} ${FARSO_HEADERS})
+   add_library(farso ${FARSO_FULL_SOURCES} ${FARSO_FULL_HEADERS})
 else(${FARSO_STATIC})
-   add_library(farso SHARED ${FARSO_SOURCES} ${FARSO_HEADERS} )
+   add_library(farso SHARED ${FARSO_FULL_SOURCES} ${FARSO_FULL_HEADERS} )
 endif(${FARSO_STATIC})
 
 set_target_properties(farso PROPERTIES VERSION ${VERSION}
@@ -104,10 +107,8 @@ set_target_properties(farso PROPERTIES VERSION ${VERSION}
 # install the include files and created library.
 install(FILES ${FARSO_CONFIG_FILE} DESTINATION include/farso)
 install(FILES ${FARSO_HEADERS} DESTINATION include/farso)
+if(${FARSO_HAS_OGRE})
+   install(FILES ${FARSO_OGRE_HEADERS} DESTINATION include/farso/ogre3d)
+endif(${FARSO_HAS_OGRE})
 install(TARGETS farso DESTINATION lib)
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
-   set(JAVA_FILES src/jni/ActivityJNI.java src/jni/MainJNIActivity.java)
-   install(FILES ${JAVA_FILES} DESTINATION share/farso)
-endif(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
-
 

@@ -147,9 +147,12 @@ class Controller
        * \note The caller is responsible to delete the surface when no 
        * more needed. */
       static Surface* loadImageToSurface(Kobold::String filename);
-
+      
       /*! \return default group name for the current using renderer */
       static Kobold::String getDefaultGroupName();
+
+      /*! \return current renderer type */
+      static RendererType getRendererType();
 
    private:
       /*! No instances allowed */

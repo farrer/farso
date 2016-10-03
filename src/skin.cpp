@@ -22,11 +22,8 @@
 #include "controller.h"
 #include "font.h"
 
-#include "ogre3d/ogresurface.h"
-
-#include <OGRE/OgreLogManager.h>
-#include <OGRE/OgreResourceManager.h>
 #include <kobold/defparser.h>
+#include <kobold/log.h>
 #include <stdio.h>
 #include <assert.h>
 
@@ -758,7 +755,7 @@ void Skin::load(Kobold::String filename)
       {
          if(surface == NULL)
          {
-            surface = new OgreSurface(value, Controller::getDefaultGroupName());
+            surface = Controller::loadImageToSurface(value); 
          }
       }
       else if(key == SKIN_KEY_DEFAULT_FONT)
@@ -787,10 +784,9 @@ void Skin::load(Kobold::String filename)
          if(cur < 0)
          {
             /* Invalid file. */
-            Ogre::LogManager::getSingleton().getDefaultLog()->stream(
-                  Ogre::LML_CRITICAL)
-                  << "ERROR: Defined '" << key 
-                  << "' without element at skin: '" << filename << "'";
+            Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+                  "ERROR: Defined '%s' without element at skin: '%s'",
+                  key.c_str(), filename.c_str());
             break;
          }
 
@@ -895,10 +891,9 @@ void Skin::load(Kobold::String filename)
             }
             else
             {
-               Ogre::LogManager::getSingleton().getDefaultLog()->stream(
-                     Ogre::LML_CRITICAL)
-                  << "ERROR: Unknow key '" << key 
-                  << "' at skin file: '" << filename << "'";
+               Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+                  "ERROR: Unknown key '%s' at skin: '%s'",
+                  key.c_str(), filename.c_str());
             }
          }
       }
@@ -1030,9 +1025,9 @@ Skin::SkinElementType Skin::getElementType(Kobold::String typeName)
    {
       return SKIN_TYPE_TEXTENTRY_DISABLED;
    }
-   Ogre::LogManager::getSingleton().getDefaultLog()->stream(Ogre::LML_CRITICAL)
-      << "ERROR: Unknow widget name '" << typeName
-      << "' on screen definition file!";
+   Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+      "ERROR: Unknow widget name '%s' on screen definition file!",
+      typeName.c_str());
 
    /* Unknown widget. let's overhide window to make sure
     * the user view that something is wrong with the skin definition.*/

@@ -22,8 +22,15 @@
 #include "controller.h"
 #include <math.h>
 #include <kobold/log.h>
-#include <OGRE/OgreDataStream.h>
-#include <OGRE/OgreResourceGroupManager.h>
+
+#if FARSO_HAS_OGRE == 1
+   #include <OGRE/OgreDataStream.h>
+   #include <OGRE/OgreResourceGroupManager.h>
+#endif
+
+#include <fstream>
+#include <sys/stat.h>
+
 #include <assert.h>
 using namespace Farso;
 
@@ -273,37 +280,69 @@ Font::~Font()
  ***********************************************************************/
 bool Font::load()
 {
-   Ogre::DataStreamPtr fileData;
+#if FARSO_HAS_OGRE == 1
+   if(Controller::getRendererType() == RENDERER_TYPE_OGRE3D)
+   {
+      Ogre::DataStreamPtr fileData;
 
-   /* Open the file */
-   try
-   {
-      fileData = Ogre::ResourceGroupManager::getSingleton().openResource(
-            filename);
-   }
-   catch(Ogre::FileNotFoundException)
-   {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
-         "ERROR: Couldn't open font file from resources: '%s'", 
-         filename.c_str());
-      return false;
-   }
-   dataSize = fileData->size();
-   if(dataSize == 0)
-   {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
-         "ERROR: Couldn't define filesize for font: '%s'", filename.c_str());
+      /* Open the file */
+      try
+      {
+         fileData = Ogre::ResourceGroupManager::getSingleton().openResource(
+               filename);
+      }
+      catch(Ogre::FileNotFoundException)
+      {
+         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+               "ERROR: Couldn't open font file from resources: '%s'", 
+               filename.c_str());
+         return false;
+      }
+      dataSize = fileData->size();
+      if(dataSize == 0)
+      {
+         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+               "ERROR: Couldn't define filesize for font: '%s'", 
+               filename.c_str());
+         fileData->close();
+         return false;
+      }
+
+      /* Alloc buffer and load to it */
+      data = new FT_Byte[dataSize];
+      fileData->read(data, dataSize);
+
+      /* Done */
       fileData->close();
-      return false;
+
    }
+   else
+   {
+#endif
+      std::ifstream file(filename.c_str(), std::ifstream::binary);
+      if(!file)
+      {
+         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+               "ERROR: Couldn't open font file from resources: '%s'", 
+               filename.c_str());
+         return false;
+      }
 
-   /* Alloc buffer and load to it */
-   data = new FT_Byte[dataSize];
-   fileData->read(data, dataSize);
+      /* Get file size */       
+      struct stat st;
+      stat(filename.c_str(), &st);
+      dataSize = st.st_size;
 
-   /* Done */
-   fileData->close();
+      /* Alloc buffer and load to it */
+      data = new FT_Byte[dataSize];
+      file.read((char*) &data[0], dataSize);
 
+      /* Done */
+      file.close();
+
+#if FARSO_HAS_OGRE == 1
+   }
+#endif
    return true;
 }
 

@@ -22,10 +22,12 @@
 #include "colors.h"
 #include "font.h"
 
-#include "ogre3d/ogredraw.h"
-#include "ogre3d/ogrejunction.h"
-#include "ogre3d/ogresurface.h"
-#include "ogre3d/ogrewidgetrenderer.h"
+#if FARSO_HAS_OGRE == 1
+   #include "ogre3d/ogredraw.h"
+   #include "ogre3d/ogrejunction.h"
+   #include "ogre3d/ogresurface.h"
+   #include "ogre3d/ogrewidgetrenderer.h"
+#endif
 
 #include <kobold/log.h>
 
@@ -48,8 +50,12 @@ void Controller::init(RendererType rendererType)
             //TODO!
          break;
          case RENDERER_TYPE_OGRE3D:
+#if FARSO_HAS_OGRE == 1
             Controller::junction = new OgreJunction();
             Controller::draw = new OgreDraw();
+#else
+            Kobold::Log::add("ERROR: Ogre3d isn't available!");
+#endif
         break;
       }
 
@@ -120,7 +126,11 @@ WidgetRenderer* Controller::createNewWidgetRenderer(int width, int height)
          //TODO!
          break;
       case RENDERER_TYPE_OGRE3D:
+#if FARSO_HAS_OGRE == 1
          return new OgreWidgetRenderer(width, height);
+#else
+      break;
+#endif
    }
 
    return NULL;
@@ -134,11 +144,16 @@ Kobold::String Controller::getDefaultGroupName()
    switch(rendererType)
    {
       case RENDERER_TYPE_OGRE3D:
+#if FARSO_HAS_OGRE == 1
          return Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME;
+#endif
+      break;
       case RENDERER_TYPE_OPENGL:
       default:
          return ""; 
    }
+
+   return "";
 }
 
 /***********************************************************************
@@ -152,7 +167,11 @@ Surface* Controller::loadImageToSurface(Kobold::String filename)
          //TODO!
          break;
       case RENDERER_TYPE_OGRE3D:
+#if FARSO_HAS_OGRE == 1
          return new OgreSurface(filename, getDefaultGroupName()); 
+#else
+      break;
+#endif
    }
 
    return NULL;
@@ -282,6 +301,7 @@ void Controller::setActiveWindow(Window* window)
 {
    if(window != activeWindow)
    {
+#if FARSO_HAS_OGRE == 1
       if(rendererType == RENDERER_TYPE_OGRE3D)
       {
          /* Bring the window to front (removing and reinserting at 
@@ -298,6 +318,7 @@ void Controller::setActiveWindow(Window* window)
                   ogreRenderer->getOverlayContainer());
          }
       }
+#endif
 
       Window* lastActive = activeWindow;
       activeWindow = window;
@@ -419,6 +440,14 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    }
 
    return gotEvent;
+}
+
+/***********************************************************************
+ *                        getRendererType                              *
+ ***********************************************************************/
+RendererType Controller::getRendererType()
+{
+   return rendererType;
 }
 
 /***********************************************************************

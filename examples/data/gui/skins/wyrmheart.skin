@@ -1,0 +1,233 @@
+# Wyrmheart skin definition file.
+atlas = skins/wyrmheart.png
+defaultFont = LiberationSans-Regular.ttf
+defaultFontSize = 10
+defaultFontColor = 255,255,255,255
+
+# Window Definition
+element = window
+   backgroundDelta = 9,6,9,6
+   background = 50,4,171,64
+   borderDelta = 1,14,1,2
+   leftBorder = 7,111,27,112
+   rightBorder = 10,123,30,124
+   topBorder = 18,73,20,100
+   bottomBorder = 10,56,12,96
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 52,79,147,173
+   topRightCorner = 165,79,259,173
+   bottomLeftCorner = 52,180,147,274
+   bottomRightCorner = 165,180,259,274
+
+   # Window close button (enabled)
+   element = windowEnabledCloseButton
+      cornerDelta = 0,5,6,0
+      topRightCorner = 4,3,22,21
+   # Window close button (disabled)
+   element = windowDisabledCloseButton
+      cornerDelta = 0,5,6,0
+      topRightCorner = 4,26,22,44
+   # Window close button (on over)
+   element = windowOnOverCloseButton
+      cornerDelta = 0,5,6,0
+      topRightCorner = 25,3,43,21
+
+   # Window Active Title bar
+   element = windowActiveTitleBar
+      borderDelta = 95,0,95,0
+      topBorder = 55,286,63,313
+      cornerDelta = 42,0,42,0
+      topLeftCorner = 1,286,53,313
+      topRightCorner = 64,286,116,313
+      textAreaDelta = 50,3,50,5
+      textAlignment = 1
+      textFontSize = 12
+   # Window Inactive Title bar
+   element = windowInactiveTitleBar
+      borderDelta = 95,0,95,0
+      topBorder = 55,317,63,344
+      cornerDelta = 42,0,42,0
+      topLeftCorner = 1,317,53,344
+      topRightCorner = 64,317,116,344
+      textAreaDelta = 50,3,50,5
+      textFontColor = 125,125,125,255
+      textAlignment = 1 
+      textFontSize = 12
+
+# Buttons
+element = buttonEnabled
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 134,293,139,298
+   bottomLeftCorner = 134,304,139,309
+   topRightCorner = 152,293,157,298
+   bottomRightCorner = 152,304,157,309
+   borderDelta = 0,0,0,0
+   leftBorderDelta = 0,2,0,2
+   leftBorder = 134,302,139,302
+   rightBorderDelta = 0,2,0,2
+   rightBorder = 152,302,157,302
+   topBorderDelta = 2,0,2,0
+   topBorder = 145,293,146,298
+   bottomBorderDelta = 2,0,2,0
+   bottomBorder = 145,304,146,309
+   backgroundDelta = 6,6,6,6
+   background = 145,302,146,302
+   textAreaDelta = 0,0,0,0
+   textFontColor = 116,100,81,255
+   textAlignment = 1 
+
+element = buttonDisabled
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 134,313,139,318
+   bottomLeftCorner = 134,324,139,329
+   topRightCorner = 152,313,157,318
+   bottomRightCorner = 152,324,157,329
+   borderDelta = 0,0,0,0
+   leftBorderDelta = 0,2,0,2
+   leftBorder = 134,322,139,322
+   rightBorderDelta = 0,2,0,2
+   rightBorder = 152,322,157,322
+   topBorderDelta = 2,0,2,0
+   topBorder = 145,313,146,318
+   bottomBorderDelta = 2,0,2,0
+   bottomBorder = 145,324,146,329
+   backgroundDelta = 6,6,6,6
+   background = 145,322,146,322
+   textAreaDelta = 0,0,0,0
+   textFontColor = 116,100,81,255
+   textAlignment = 1 
+
+element = buttonPressed
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 134,333,139,338
+   bottomLeftCorner = 134,344,139,349
+   topRightCorner = 152,333,157,338
+   bottomRightCorner = 152,344,157,349
+   borderDelta = 0,0,0,0
+   leftBorderDelta = 0,2,0,2
+   leftBorder = 134,342,139,342
+   rightBorderDelta = 0,2,0,2
+   rightBorder = 152,342,157,342
+   topBorderDelta = 2,0,2,0
+   topBorder = 145,333,146,338
+   bottomBorderDelta = 2,0,2,0
+   bottomBorder = 145,344,146,349
+   backgroundDelta = 6,6,6,6
+   background = 145,342,146,342
+   textAreaDelta = 1,1,0,0
+   textFontColor = 116,100,81,255
+   textAlignment = 1 
+
+# Label
+element = label
+   textAreaDelta = 0,0,0,0
+   textFontColor = 255,255,255,255
+
+# Check Box
+element = checkBoxEnabledChecked
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 165,293,181,309
+   
+   element = checkBoxEnabled
+      cornerDelta = 0,0,0,0
+      topLeftCorner = 183,293,199,309
+
+   element = checkBoxDisabledChecked
+      cornerDelta = 0,0,0,0
+      topLeftCorner = 165,313,181,329
+   
+   element = checkBoxDisabled
+      cornerDelta = 0,0,0,0
+      topLeftCorner = 183,313,199,329
+
+# Text Selectors
+element = textOption
+   textAreaDelta = 0,0,0,0
+   textFontColor = 255,255,255,255
+   element = textOptionOver
+      textAreaDelta = 0,0,0,0
+      textFontColor = 10,255,10,255
+
+# Special captions
+element = upCaption
+   cornerDelta = 1,1,0,0
+   topLeftCorner = 6,143,19,156
+   element = downCaption
+      cornerDelta = 1,2,0,0
+      topLeftCorner = 23,144,36,157
+   element = leftCaption
+      cornerDelta = 1,2,0,0
+      topLeftCorner = 5,160,18,173
+   element = rightCaption
+      cornerDelta = 1,2,0,0
+      topLeftCorner = 23,160,36,173
+
+# Progress bar
+element = progressBar
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 2,182,7,186
+   bottomLeftCorner = 2,194,7,198
+   topRightCorner = 20,182,25,186
+   bottomRightCorner = 20,194,25,198
+   topBorderDelta = 6,0,6,0
+   topBorder = 8,182,8,186
+   bottomBorderDelta = 6,0,6,0
+   bottomBorder = 8,194,8,198
+   leftBorderDelta = 0,5,0,5
+   leftBorder = 2,187,7,187
+   rightBorderDelta = 0,5,0,5
+   rightBorder = 20,187,25,187
+   backgroundDelta = 6,5,6,5
+   background = 13,190,13,190
+   
+   element = progressBarFill
+      cornerDelta = 3,3,3,3
+      topLeftCorner = 5,201,10,205
+      bottomLeftCorner = 5,207,10,211
+      topRightCorner = 17,201,22,205
+      bottomRightCorner = 17,207,22,211
+      topBorderDelta = 8,3,8,3
+      topBorder = 13,201,13,205
+      bottomBorderDelta = 8,3,8,3
+      bottomBorder = 13,207,13,211
+      leftBorderDelta = 3,8,3,8
+      leftBorder = 5,206,10,206
+      rightBorderDelta = 3,8,3,8
+      rightBorder = 17,206,22,206
+      backgroundDelta = 8,8,8,8
+      background = 11,206,11,206
+
+# Some special borders
+element = borderLeft
+   borderDelta = 0,0,0,0
+   leftBorder = 7,111,9,112
+   element = borderRight
+      borderDelta = 0,0,0,0
+      rightBorder = 28,123,30,124
+   element = borderTop
+      borderDelta = 0,0,0,0
+      topBorder = 19,72,20,74
+   element = borderBottom
+      borderDelta = 0,0,0,0
+      bottomBorder = 11,94,12,96
+
+# TextEntry
+element = textEntry
+   borderDelta = 0,0,0,0
+   leftBorder = 5,53,6,53
+   rightBorder = 9,53,10,53
+   topBorder = 7,50,7,51
+   bottomBorder = 7,55,7,56
+   backgroundDelta = 2,2,2,2
+   background = 7,52,8,53
+   textFontColor = 15,15,15,255
+
+   element = textEntryDisabled
+      borderDelta = 0,0,0,0
+      leftBorder = 15,53,16,53
+      rightBorder = 19,53,20,53
+      topBorder = 17,50,17,51
+      bottomBorder = 17,55,17,56
+      backgroundDelta = 2,2,2,2
+      background = 17,52,18,53
+      textFontColor = 155,155,155,255

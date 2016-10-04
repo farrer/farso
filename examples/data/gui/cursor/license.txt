@@ -1,0 +1,4 @@
+sel.png talk.png
+ \
+  Created by DNTeam, for DNT.
+  license: GPLv3 or later.

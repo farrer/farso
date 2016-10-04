@@ -52,6 +52,8 @@ Widget::Widget(WidgetType type, int x, int y, int width, int height,
    {
       /* Without parent, must have its own renderer. */
       this->renderer = Controller::createNewWidgetRenderer(width, height);
+      /* And be added to the controller as a 'root' widget */
+      Controller::addWidget(this);
    }
 
    assert(this->renderer != NULL);

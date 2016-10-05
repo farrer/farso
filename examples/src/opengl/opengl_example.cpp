@@ -9,6 +9,9 @@ using namespace FarsoExample;
 #define NORMAL_FPS 35       /**< Minimun FPS to the engine runs smooth */
 #define UPDATE_RATE (1000 / NORMAL_FPS) /**< Update Rate in ms */
 
+/************************************************************************
+ *                              OpenGLExample                           *
+ ************************************************************************/
 OpenGLExample::OpenGLExample()
 {
    window = NULL;
@@ -41,6 +44,9 @@ OpenGLExample::OpenGLExample()
    example->init(Farso::RENDERER_TYPE_OPENGL);
 }
 
+/************************************************************************
+ *                             ~OpenGLExample                           *
+ ************************************************************************/
 OpenGLExample::~OpenGLExample()
 {
    if(example != NULL)
@@ -59,6 +65,9 @@ OpenGLExample::~OpenGLExample()
    SDL_Quit();
 }
 
+/************************************************************************
+ *                                   run                                *
+ ************************************************************************/
 void OpenGLExample::run()
 {
    Uint32 lastTime = 0;
@@ -71,6 +80,8 @@ void OpenGLExample::run()
       time = SDL_GetTicks();
       if(time - lastTime >= UPDATE_RATE)
       {
+         lastTime = time;
+
          /* Get Keyboard and Mouse State */
          SDL_PumpEvents();
          Kobold::Keyboard::updateState();

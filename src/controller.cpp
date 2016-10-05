@@ -29,6 +29,13 @@
    #include "ogre3d/ogrewidgetrenderer.h"
 #endif
 
+#if FARSO_HAS_OPENGL == 1
+   #include "opengl/opengldraw.h"
+   #include "opengl/opengljunction.h"
+   #include "opengl/openglsurface.h"
+   #include "opengl/openglwidgetrenderer.h"
+#endif
+
 #include <kobold/log.h>
 
 #include <assert.h>
@@ -39,15 +46,27 @@ using namespace Farso;
 /***********************************************************************
  *                                 init                                *
  ***********************************************************************/
-void Controller::init(RendererType rendererType)
+void Controller::init(RendererType rendererType,
+      int screenWidth, int screenHeight, Kobold::String baseDir)
 {
    if(!inited)
    {
+      /* Define parameters */
       Controller::rendererType = rendererType;
+      Controller::width = screenWidth;
+      Controller::height = screenHeight;
+      Controller::baseDir = baseDir;
+
+      /* Create based on renderer type */
       switch(rendererType)
       {
          case RENDERER_TYPE_OPENGL:
-            //TODO!
+#if FARSO_HAS_OPENGL == 1
+            Controller::junction = new OpenGLJunction();
+            Controller::draw = new OpenGLDraw();
+#else
+            Kobold::Log::add("ERROR: OpenGL isn't available!");
+#endif
          break;
          case RENDERER_TYPE_OGRE3D:
 #if FARSO_HAS_OGRE == 1
@@ -116,6 +135,35 @@ void Controller::finish()
 }
 
 /***********************************************************************
+ *                               getWidth                              *
+ ***********************************************************************/
+int Controller::getWidth()
+{
+   return width;
+}
+
+/***********************************************************************
+ *                              getHeight                              *
+ ***********************************************************************/
+int Controller::getHeight()
+{
+   return height;
+}
+
+/***********************************************************************
+ *                           getRealFilename                           *
+ ***********************************************************************/
+Kobold::String Controller::getRealFilename(Kobold::String filename)
+{
+   if(rendererType == RENDERER_TYPE_OPENGL)
+   {
+      return baseDir + filename;
+   }
+
+   return filename;
+}
+
+/***********************************************************************
  *                       createNewWidgetRenderer                       *
  ***********************************************************************/
 WidgetRenderer* Controller::createNewWidgetRenderer(int width, int height)
@@ -123,7 +171,9 @@ WidgetRenderer* Controller::createNewWidgetRenderer(int width, int height)
    switch(rendererType)
    {
       case RENDERER_TYPE_OPENGL:
-         //TODO!
+#if FARSO_HAS_OPENGL == 1
+         return new OpenGLWidgetRenderer(width, height);
+#endif
          break;
       case RENDERER_TYPE_OGRE3D:
 #if FARSO_HAS_OGRE == 1
@@ -164,7 +214,9 @@ Surface* Controller::loadImageToSurface(Kobold::String filename)
    switch(rendererType)
    {
       case RENDERER_TYPE_OPENGL:
-         //TODO!
+#if FARSO_HAS_OPENGL == 1
+         return new OpenGLSurface(filename, getDefaultGroupName()); 
+#endif
          break;
       case RENDERER_TYPE_OGRE3D:
 #if FARSO_HAS_OGRE == 1
@@ -408,6 +460,9 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
 {
    bool gotEvent = false;
 
+   /* Enter 2d rendering mode */
+   junction->enter2dMode();
+
    event.set(NULL, EVENT_NONE);
 
    /* Let's remove all to be removed widgets. */
@@ -417,6 +472,8 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       removeWidget(wPtr->widget);
       toRemoveWidgets->remove(wPtr);
    }
+
+   float depth = 0.0f;
 
    /* Must always treat active window events before others. */
    Window* curActive = activeWindow;
@@ -434,10 +491,20 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       {
          gotEvent |= verifyEvents(w, leftButtonPressed, rightButtonPressed, 
                mouseX, mouseY, !gotEvent);
+         w->getWidgetRenderer()->render(depth);
+         depth += 0.001f;
       }
 
       w = (Widget*) w->getNext();
    }
+   
+   if(curActive)
+   {
+      curActive->getWidgetRenderer()->render(depth);
+   }
+
+   /* Restore rendering mode to previously enter 2d one. */
+   junction->restore3dMode();
 
    return gotEvent;
 }
@@ -462,3 +529,6 @@ bool Controller::inited = false;
 Window* Controller::activeWindow = NULL;
 Event Controller::event(NULL, EVENT_NONE);
 RendererType Controller::rendererType = RENDERER_TYPE_OPENGL; 
+int Controller::width = 0;
+int Controller::height = 0;
+Kobold::String Controller::baseDir;

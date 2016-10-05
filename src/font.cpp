@@ -319,7 +319,8 @@ bool Font::load()
    else
    {
 #endif
-      std::ifstream file(filename.c_str(), std::ifstream::binary);
+      std::ifstream file(Controller::getRealFilename(filename).c_str(), 
+            std::ifstream::binary);
       if(!file)
       {
          Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
@@ -330,7 +331,7 @@ bool Font::load()
 
       /* Get file size */       
       struct stat st;
-      stat(filename.c_str(), &st);
+      stat(Controller::getRealFilename(filename).c_str(), &st);
       dataSize = st.st_size;
 
       /* Alloc buffer and load to it */
@@ -362,7 +363,7 @@ Font::FaceInfo* Font::getFace(int size)
       {
          Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
             (Kobold::String("ERROR: couldn't create face for '%s'.") + 
-            Kobold::String("Error code: %d. Datasize: %d")).c_str(), 
+            Kobold::String(" Error code: %d. Datasize: %d")).c_str(), 
             filename.c_str(), error, dataSize);
          
          delete face;

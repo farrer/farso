@@ -242,6 +242,12 @@ void Widget::draw(bool force)
       }
       child = (Widget*) child->getNext();
    }
+
+   /* Reupload its texture, if it's a 'root' widget */
+   if(parent == NULL)
+   {
+      getWidgetRenderer()->uploadSurface();
+   }
 }
 
 /***********************************************************************

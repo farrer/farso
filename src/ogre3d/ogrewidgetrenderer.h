@@ -54,6 +54,9 @@ class OgreWidgetRenderer : public WidgetRenderer
       /*! \return respective OverlayContainer pointer */
       Ogre::OverlayContainer* getOverlayContainer();
 
+      /*! Not needed for Ogre3D */
+      void uploadSurface();
+
    protected:
 
       /*! Do any needed action to set renderer position to x, y (absolute
@@ -66,6 +69,9 @@ class OgreWidgetRenderer : public WidgetRenderer
       /*! Do needed actions to show the renderer */
       void doShow();
 
+      /*! Do the render (in case of Ogre3D, nothing, as controlled
+       * by the engine itself) */
+      void doRender(float depth);
 
       /*! Update the texture renderer of this widget. */
       void defineTexture();

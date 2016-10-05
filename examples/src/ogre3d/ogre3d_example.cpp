@@ -41,10 +41,10 @@ bool Ogre3dExample::doInit()
 void Ogre3dExample::getDataDirectories(Ogre::String** dataDirectories,
       Ogre::String** dataGroups, int& total)
 {
-   static Ogre::String dirs[] = {"gui", "fonts"};
+   static Ogre::String dirs[] = {"gui"};
    (*dataDirectories) = &dirs[0];
    (*dataGroups) = &dirs[0];
-   total = 2;
+   total = 1;
 }
 
 /************************************************************************

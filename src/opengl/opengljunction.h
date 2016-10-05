@@ -18,39 +18,26 @@
   along with Farso.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _farso_ogre_junction_h
-#define _farso_ogre_junction_h
-
 #include "../controller.h"
-#include <OGRE/Overlay/OgreOverlay.h>
 
 namespace Farso
 {
 
-/*! The junction between controller and renderer for Ogre3d. */
-class OgreJunction : public ControllerRendererJunction
+/*! The junction between OpenGL and the Controller. */
+class OpenGLJunction : public ControllerRendererJunction
 {
    public:
       /*! Constructor */
-      OgreJunction();
+      OpenGLJunction();
       /*! Destructor */
-      ~OgreJunction();
+      ~OpenGLJunction();
 
-      /*! \return the overlay used for Farso */
-      Ogre::Overlay* getOverlay();
-
-      void enter2dMode(){};
-      void restore3dMode(){};
-
-   private:
-      Ogre::Overlay* overlay; /**< Overlay to render farso to */
-
+      /*! Set the projection and model view matrix to draw on 2d */
+      void enter2dMode();
+      /*! Restore the projection and model view matrix to state before
+       * call to enter2dMode() */
+      void restore3dMode();
 };
 
-
-
 }
-
-#endif
-
 

@@ -42,6 +42,7 @@ hosted here.
  * OpenGL
  * Kobold [https://github.com/farrer/kobold]
  * SDL2 [https://libsdl.org/download-2.0.php]
+ * SDL\_image 2.x [https://www.libsdl.org/projects/SDL\_image/]
  * OpenAL [http://kcat.strangesoft.net/openal.html]
  * Ogg [https://xiph.org/downloads/]
  * Vorbis [https://xiph.org/downloads/]
@@ -55,6 +56,7 @@ hosted here.
  * Kobold [https://github.com/farrer/kobold]
  * Goblin [https://github.com/farrer/goblin]
  * SDL2 [https://libsdl.org/download-2.0.php]
+ * SDL\_image 2.x [https://www.libsdl.org/projects/SDL\_image/]
  * OpenAL [http://kcat.strangesoft.net/openal.html]
  * Ogg [https://xiph.org/downloads/]
  * Vorbis [https://xiph.org/downloads/]

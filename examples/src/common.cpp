@@ -23,13 +23,14 @@ Example::~Example()
 /************************************************************************
  *                                  init                                *
  ************************************************************************/
-void Example::init(Farso::RendererType  rendererType)
+void Example::init(Farso::RendererType rendererType)
 {
-    /* Init Farso, with Ogre3d renderer */
-   Farso::Controller::init(Farso::RENDERER_TYPE_OGRE3D);
+   /* Init Farso, with Ogre3d renderer */
+   Farso::Controller::init(rendererType, EXAMPLE_WINDOW_WIDTH, 
+         EXAMPLE_WINDOW_HEIGHT, "data/gui/");
 
    /* Set a default font (this is only needed when not using a skin). */
-   Farso::FontManager::setDefaultFont("LiberationSans-Regular.ttf");
+   Farso::FontManager::setDefaultFont("fonts/LiberationSans-Regular.ttf");
 
    /* Let's create our windows. Obviously, widgets could be created
     * any time, and not just on init. */
@@ -120,7 +121,15 @@ void Example::createOtherWindow()
    new Farso::CheckBox(0, 88, 100, "Check box", true, window);
    (new Farso::CheckBox(0, 110, 100, "Disabled", false, window))->disable();
    (new Farso::CheckBox(0, 132, 100, "Checked", true, window))->disable();
-   new Farso::Picture(120, 0, "cursor/talk.png", window);
+
+   if(Farso::Controller::getRendererType() == Farso::RENDERER_TYPE_OGRE3D)
+   {
+      new Farso::Picture(120, 0, "cursor/talk.png", window);
+   }
+   else
+   {
+      new Farso::Picture(120, 0, "data/gui/cursor/talk.png", window);
+   }
 
    /* We can use containers to set as reference coordinates to children widgets,
     * allowing us to align them to the window without any explicit maths */

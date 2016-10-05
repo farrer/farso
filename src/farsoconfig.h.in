@@ -26,6 +26,7 @@ namespace Farso
 
 #define FARSO_VERSION "@VERSION@"
 #define FARSO_HAS_OGRE @FARSO_HAS_OGRE@
+#define FARSO_HAS_OPENGL @FARSO_HAS_OPENGL@
 
 }
 

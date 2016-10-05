@@ -740,10 +740,12 @@ Skin::SkinElement Skin::getSkinElement(SkinElementType type)
 void Skin::load(Kobold::String filename)
 {
    Kobold::DefParser def;
-
-   if(!def.load(filename))
+   
+   if(!def.load(Controller::getRealFilename(filename), 
+            (Controller::getRendererType() != RENDERER_TYPE_OGRE3D)))
    {
       return;
+
    }
 
    Kobold::String key, value;
@@ -755,7 +757,8 @@ void Skin::load(Kobold::String filename)
       {
          if(surface == NULL)
          {
-            surface = Controller::loadImageToSurface(value); 
+            surface = Controller::loadImageToSurface(
+                  Controller::getRealFilename(value)); 
          }
       }
       else if(key == SKIN_KEY_DEFAULT_FONT)

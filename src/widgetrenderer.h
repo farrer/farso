@@ -76,8 +76,15 @@ class WidgetRenderer
       /*! \return if widget is actually displayed or hidden */
       bool isVisible();
 
+      /*! Render the widget surface 
+       * \param depth depth factor (z) */
+      void render(float depth);
+
       /*! \return the drawabe surface */
       Surface* getSurface();
+
+      /*! Upload the surface to the renderer */
+      virtual void uploadSurface() = 0;
 
    protected:
 
@@ -90,6 +97,10 @@ class WidgetRenderer
 
       /*! Do needed actions to show the renderer */
       virtual void doShow() = 0;
+
+      /*! Do the render of the widget surface 
+       * \param depth depth factor (z) */
+      virtual void doRender(float depth) = 0;
 
 
       Surface* surface;      /**< The drawable surface */

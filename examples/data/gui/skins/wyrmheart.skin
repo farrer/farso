@@ -1,6 +1,6 @@
 # Wyrmheart skin definition file.
 atlas = skins/wyrmheart.png
-defaultFont = LiberationSans-Regular.ttf
+defaultFont = fonts/LiberationSans-Regular.ttf
 defaultFontSize = 10
 defaultFontColor = 255,255,255,255
 
@@ -12,7 +12,7 @@ element = window
    leftBorder = 7,111,27,112
    rightBorder = 10,123,30,124
    topBorder = 18,73,20,100
-   bottomBorder = 10,56,12,96
+   bottomBorder = 10,57,12,96
    cornerDelta = 0,0,0,0
    topLeftCorner = 52,79,147,173
    topRightCorner = 165,79,259,173

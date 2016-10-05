@@ -4,6 +4,9 @@
 namespace FarsoExample
 {
 
+#define EXAMPLE_WINDOW_WIDTH    1024
+#define EXAMPLE_WINDOW_HEIGHT    768
+
    /*! The rendering-independent example class */
    class Example
    {

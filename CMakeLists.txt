@@ -33,6 +33,8 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
    # For android, must build statically.
    set(FARSO_STATIC True)
    set(OGRE_STATIC True)
+   # Android doesn't have OpenGL.
+   set(FARSO_HAS_OPENGL 0)
    # Use Tremor instead of Vorbis and Vorbis File
    FIND_PACKAGE(Tremor REQUIRED)
    include_directories(${VORBISFILE_INCLUDE_DIR})
@@ -40,6 +42,13 @@ else(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
    # SDL2 is only used on non android systems
    FIND_PACKAGE(SDL2 REQUIRED)
    include_directories(${SDL2_INCLUDE_DIR})
+   # SDL_Image
+   FIND_PACKAGE(SDL2_image REQUIRED)
+   include_directories(${SDL2_IMAGE_INCLUDE_DIR})
+   # OpenGL is only a valid target when not on mobile
+   FIND_PACKAGE(OpenGL REQUIRED)
+   include_directories(${OPENGL_INCLUDE_DIR})
+   set(FARSO_HAS_OPENGL 1)
    # Vorbis and vorbis file 
    FIND_PACKAGE(Vorbis REQUIRED)
    include_directories(${VORBIS_INCLUDE_DIR})
@@ -85,14 +94,6 @@ configure_file("./src/farsoconfig.h.in" "./src/farsoconfig.h")
 
 # Include headers and files
 include(sources.cmake)
-if(${FARSO_HAS_OGRE})
-   set(FARSO_FULL_HEADERS ${FARSO_HEADERS} ${FARSO_OGRE_HEADERS})
-   set(FARSO_FULL_SOURCES ${FARSO_SOURCES} ${FARSO_OGRE_SOURCES})
-else(${FARSO_HAS_OGRE})
-   set(FARSO_FULL_HEADERS ${FARSO_HEADERS})
-   set(FARSO_FULL_SOURCES ${FARSO_SOURCES})
-endif(${FARSO_HAS_OGRE})
-
 
 # Build the library with defined mode (static or shared)
 if(${FARSO_STATIC})
@@ -111,4 +112,29 @@ if(${FARSO_HAS_OGRE})
    install(FILES ${FARSO_OGRE_HEADERS} DESTINATION include/farso/ogre3d)
 endif(${FARSO_HAS_OGRE})
 install(TARGETS farso DESTINATION lib)
+
+# Print configuration options
+message("\n******************************************************")
+message("Farso building options: ")
+if(${FARSO_HAS_OGRE})
+   message("   Ogre renderer: enabled")
+else(${FARSO_HAS_OGRE})
+   message("   Ogre renderer: disabled")
+endif(${FARSO_HAS_OGRE})
+if(${FARSO_HAS_OPENGL})
+   message("   OpenGL renderer: enabled")
+else(${FARSO_HAS_OPENGL})
+   message("   OpenGL renderer: disabled")
+endif(${FARSO_HAS_OPENGL})
+if(${FARSO_HAS_EXAMPLE})
+   message("   Build examples: yes")
+else(${FARSO_HAS_EXAMPLE})
+   message("   Build examples: no")
+endif(${FARSO_HAS_EXAMPLE})
+if(${FARSO_STATIC})
+   message("   Static build")
+else(${FARSO_STATIC})
+   message("   Shared build")
+endif(${FARSO_STATIC})
+message("******************************************************\n")
 

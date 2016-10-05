@@ -147,5 +147,17 @@ bool WidgetRenderer::isVisible()
    return visible;
 }
 
+/***********************************************************************
+ *                               render                                *
+ ***********************************************************************/
+void WidgetRenderer::render(float depth)
+{
+   if(visible)
+   {
+      doRender(depth);
+   }
+}
+
+
 int WidgetRenderer::counter = 0;
 

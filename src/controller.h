@@ -49,6 +49,11 @@ class ControllerRendererJunction
    public:
       ControllerRendererJunction(){};
       virtual ~ControllerRendererJunction(){};
+
+      /*! Define rendering state to 2d */
+      virtual void enter2dMode() = 0;
+      /*! Restore the rendering to the state before call to enter2dMode() */
+      virtual void restore3dMode() = 0;
 };
 
 enum RendererType
@@ -65,10 +70,24 @@ class Controller
 {
    public:
       /*! Init the farso controller system to use.
-       * \param rendererType the renderer to use for Farso. */
-      static void init(RendererType rendererType);
+       * \param rendererType the renderer to use for Farso.
+       * \param screenWidth current screen width
+       * \param screenHeight current screen height 
+       * \param baseDir base directory to open font, skin and cursor files.
+       *                Must end with a trail '/'.
+       * \note baseDir is ignored on Ogre3d, in favor of its own resource 
+       *               manager (thus make sure that baseDir is at a defined
+       *               resource group). */
+      static void init(RendererType rendererType, 
+            int screenWidth, int screenHeight, Kobold::String baseDir);
       /*! Finish with the farso controller (usually called at exit). */
       static void finish();
+
+      /*! \return width available to farso */
+      static int getWidth();
+
+      /*! \return height available to farso */
+      static int getHeight();
 
       /*! Load a skin to be the current default one.
        * \param filename skin definition file to load. 
@@ -154,6 +173,9 @@ class Controller
       /*! \return current renderer type */
       static RendererType getRendererType();
 
+      /*! \return real filename for fonts, skins and cursors files */
+      static Kobold::String getRealFilename(Kobold::String filename);
+
    private:
       /*! No instances allowed */
       Controller(){};
@@ -185,6 +207,11 @@ class Controller
       static Window* activeWindow; /**< Current active window */
       static Event event; /**< Last event. */
       static RendererType rendererType; /**< Current controller renderer type*/
+
+      static int width; /**< Width available */
+      static int height; /**< height available */
+
+      static Kobold::String baseDir; /**< Base directory */
 };
 
 };

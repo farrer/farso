@@ -18,38 +18,42 @@
   along with Farso.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _farso_ogre_junction_h
-#define _farso_ogre_junction_h
+#ifndef _farso_opengl_widget_renderer_h
+#define _farso_opengl_widget_renderer_h
 
-#include "../controller.h"
-#include <OGRE/Overlay/OgreOverlay.h>
+#include "../widgetrenderer.h"
+#include <SDL2/SDL_opengl.h>
 
 namespace Farso
 {
 
-/*! The junction between controller and renderer for Ogre3d. */
-class OgreJunction : public ControllerRendererJunction
+/*! The WidgetRenderer for OpenGL/SDL */
+class OpenGLWidgetRenderer: public WidgetRenderer
 {
    public:
-      /*! Constructor */
-      OgreJunction();
-      /*! Destructor */
-      ~OgreJunction();
+      OpenGLWidgetRenderer(int width, int height); 
+      ~OpenGLWidgetRenderer();
 
-      /*! \return the overlay used for Farso */
-      Ogre::Overlay* getOverlay();
+      void uploadSurface();
 
-      void enter2dMode(){};
-      void restore3dMode(){};
+   protected:
+      
+      void doSetPosition(float x, float y);
+      void doHide();
+      void doShow();
+      void doRender(float depth);
 
    private:
-      Ogre::Overlay* overlay; /**< Overlay to render farso to */
 
+      int posX;        /**< current X position on screen */
+      int posY;        /**< current Y position on screen */
+      GLuint texture;  /**< GL texture for the renderer */
+      float propX;     /**< Proportional texture coordinate */
+      float propY;     /**< Proportional texture coordinate */
 };
 
-
-
 }
+
 
 #endif
 

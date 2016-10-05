@@ -111,6 +111,10 @@ install(FILES ${FARSO_HEADERS} DESTINATION include/farso)
 if(${FARSO_HAS_OGRE})
    install(FILES ${FARSO_OGRE_HEADERS} DESTINATION include/farso/ogre3d)
 endif(${FARSO_HAS_OGRE})
+if(${FARSO_HAS_OPENGL})
+   install(FILES ${FARSO_OPENGL_HEADERS} DESTINATION include/farso/opengl)
+endif(${FARSO_HAS_OPENGL})
+
 install(TARGETS farso DESTINATION lib)
 
 # Print configuration options

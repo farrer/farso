@@ -21,6 +21,7 @@
 #include "textselector.h"
 #include "controller.h"
 #include "event.h"
+#include <assert.h>
 using namespace Farso;
 
 /***********************************************************************

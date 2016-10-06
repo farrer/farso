@@ -22,7 +22,14 @@
 #include "../controller.h"
 #include "../draw.h"
 
-#include <SDL2/SDL_image.h>
+#include <kobold/platform.h>
+
+#if KOBOLD_PLATFORM == KOBOLD_PLATFORM_MACOS
+   #include <SDL2_Image/SDL_image.h>
+#else 
+   #include <SDL2/SDL_image.h>
+#endif
+
 #include <kobold/log.h>
 
 using namespace Farso;

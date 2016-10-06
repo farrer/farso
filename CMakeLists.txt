@@ -28,6 +28,11 @@ if(UNIX)
    endif(${FARSO_DEBUG})
 endif(UNIX)
 
+if(APPLE)
+   set(FARSO_STATIC True)
+   set(OGRE_STATIC True)
+endif(APPLE)
+
 #Find Packages
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
    # For android, must build statically.
@@ -52,8 +57,10 @@ else(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
    # Vorbis and vorbis file 
    FIND_PACKAGE(Vorbis REQUIRED)
    include_directories(${VORBIS_INCLUDE_DIR})
+if(!APPLE)
    FIND_PACKAGE(Vorbisfile REQUIRED)
    include_directories(${VORBISFILE_INCLUDE_DIR})
+endif(!APPLE)
 endif(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
 
 FIND_PACKAGE(OpenAL REQUIRED)

@@ -1,6 +1,7 @@
 
 #include "common.h"
 #include <kobold/log.h>
+#include <kobold/platform.h>
 using namespace FarsoExample;
 
 /************************************************************************
@@ -44,8 +45,8 @@ void Example::init(Farso::RendererType rendererType)
  ************************************************************************/
 bool Example::shouldQuit()
 {
-#if OGRE_PLATFORM != OGRE_PLATFORM_APPLE_IOS &&\
-    OGRE_PLATFORM != OGRE_PLATFORM_ANDROID
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS &&\
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID
    /* Quit on ESC press. */
    return Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_ESCAPE);
 #endif

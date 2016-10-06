@@ -21,7 +21,7 @@
 #include "opengldraw.h"
 #include "openglsurface.h"
 #include <kobold/log.h>
-#include <math.h>
+#include <stdlib.h>
 using namespace Farso;
 
 /************************************************************************
@@ -266,7 +266,7 @@ void OpenGLDraw::doFreeTypeStamp(Surface* target, int x, int y,
    Uint8* pSrc = bitmap->buffer;
 
    /* Define the 'jump' after each valid line */
-   int glyphLineJump = (int) (fabs(bitmap->pitch) - 
+   int glyphLineJump = (int) (abs(bitmap->pitch) - 
          (bitmap->width * glyphBpp));
    int tx;
    int ty = y - top;

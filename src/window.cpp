@@ -21,6 +21,7 @@
 #include "window.h"
 #include "controller.h"
 #include "font.h"
+#include <assert.h>
 using namespace Farso;
 
 /***********************************************************************

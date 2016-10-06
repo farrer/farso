@@ -19,6 +19,7 @@
 */
 
 #include "container.h"
+#include <assert.h>
 using namespace Farso;
 
 /***********************************************************************

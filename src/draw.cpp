@@ -20,6 +20,7 @@
 
 #include "draw.h"
 #include <math.h>
+#include <stdlib.h>
 #include <kobold/log.h>
 #include <string.h>
 
@@ -116,13 +117,13 @@ void Draw::doLine(Surface* surface, int x1, int y1, int x2, int y2)
    float xInc, yInc, x = x1, y = y1;
  
    /* Define needed steps */
-   if(fabsf(dx) > fabsf(dy))
+   if(abs(dx) > abs(dy))
    {
-      steps = (int) fabsf(dx);
+      steps = abs(dx);
    }
    else
    {
-      steps = (int) fabsf(dy);
+      steps = abs(dy);
    }
 
    /* Let's iterate and set each line pixel */

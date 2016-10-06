@@ -22,7 +22,14 @@
 #include "opengljunction.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
-#include <GL/glu.h>
+
+#include <kobold/platform.h>
+
+#if KOBOLD_PLATFORM == KOBOLD_PLATFORM_MACOS
+   #include <OpenGL/glu.h>
+#else 
+   #include <GL/glu.h>
+#endif
 using namespace Farso;
 
 /*************************************************************************

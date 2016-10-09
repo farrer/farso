@@ -56,6 +56,8 @@ Widget::Widget(WidgetType type, int x, int y, int width, int height,
       Controller::addWidget(this);
    }
 
+   defineParentContainer();
+
    assert(this->renderer != NULL);
 }
 
@@ -119,6 +121,38 @@ void Widget::setPosition(int x, int y)
 }
 
 /***********************************************************************
+ *                                setX                                 *
+ ***********************************************************************/
+void Widget::setX(int x)
+{
+   setPosition(x, y);
+}
+
+/***********************************************************************
+ *                                setY                                 *
+ ***********************************************************************/
+void Widget::setY(int y)
+{
+   setPosition(x, y);
+}
+
+/***********************************************************************
+ *                              setWidth                               *
+ ***********************************************************************/
+void Widget::setWidth(int width)
+{
+   setSize(width, height);
+}
+
+/***********************************************************************
+ *                              setHeight                              *
+ ***********************************************************************/
+void Widget::setHeight(int height)
+{
+   setSize(width, height);
+}
+
+/***********************************************************************
  *                               setSize                               *
  ***********************************************************************/
 void Widget::setSize(int width, int height)
@@ -137,13 +171,48 @@ void Widget::setSize(int width, int height)
 }
 
 /***********************************************************************
+ *                          getParentContainer                         *
+ ***********************************************************************/
+void Widget::defineParentContainer()
+{
+   parentContainer = NULL;
+
+   Widget* widget = parent;
+   while(widget != NULL)
+   {
+      if(widget->getType() == WIDGET_TYPE_CONTAINER)
+      {
+         parentContainer = widget;
+         return;
+      }
+      widget = widget->parent;
+   }
+}
+
+/***********************************************************************
+ *                         getXWithotTransform                         *
+ ***********************************************************************/
+int Widget::getXWithoutTransform()
+{
+   return x;
+}
+
+/***********************************************************************
+ *                         getYWithotTransform                         *
+ ***********************************************************************/
+int Widget::getYWithoutTransform()
+{
+   return y;
+}
+
+/***********************************************************************
  *                                 getX1                               *
  ***********************************************************************/
 int Widget::getX()
 {
-   if((parent != NULL) && (parent->getType() == WIDGET_TYPE_CONTAINER))
+   if(parentContainer)
    {
-      Container* cont = (Container*) parent;
+      Container* cont = (Container*) parentContainer;
       return cont->getChildX(x, width);
    }
 
@@ -163,9 +232,9 @@ int Widget::getWidth()
  ***********************************************************************/
 int Widget::getY()
 {
-   if((parent != NULL) && (parent->getType() == WIDGET_TYPE_CONTAINER))
+   if(parentContainer)
    {
-      Container* cont = (Container*) parent;
+      Container* cont = (Container*) parentContainer;
       return cont->getChildY(y, height);
    }
 
@@ -367,6 +436,14 @@ Widget* Widget::getParent()
 }
 
 /***********************************************************************
+ *                         getParentContainer                          *
+ ***********************************************************************/
+Widget* Widget::getParentContainer()
+{
+   return parentContainer;
+}
+
+/***********************************************************************
  *                               isInner                               *
  ***********************************************************************/
 bool Widget::isInner(int x, int y)
@@ -477,17 +554,23 @@ bool Widget::treat(bool leftButtonPressed, bool rightButtonPressed,
  ***********************************************************************/
 Rect Widget::getBodyWithParentsApplied()
 {
+   Rect body = getBody();
+   
    if(parent != NULL)
    {
       Rect parentBody = parent->getBodyWithParentsApplied();
-      Rect body = getBody();
+      int xt = parent->getXWithoutTransform();
+      int yt = parent->getYWithoutTransform();
 
-      return Rect(parentBody.getX1() + body.getX1(), 
-                  parentBody.getY1() + body.getY1(),
-                  parentBody.getX1() + body.getX2(),
-                  parentBody.getY1() + body.getY2());
+      return Rect(parentBody.getX1() + xt + body.getX1(), 
+                  parentBody.getY1() + yt + body.getY1(),
+                  parentBody.getX1() + xt + body.getX2(),
+                  parentBody.getY1() + yt + body.getY2());
    }
 
-   return getBody();
+   int xt = getXWithoutTransform();
+   int yt = getYWithoutTransform();
+   return Rect(body.getX1() + xt, body.getY1() + yt,
+               body.getX2() + xt, body.getY2() + yt);
 }
 

@@ -42,7 +42,8 @@ class Widget : public Kobold::ListElement, public Kobold::List
       /*! The farso guiWidget types */
       enum WidgetType
       {
-         WIDGET_TYPE_WINDOW = 0,
+         WIDGET_TYPE_USER_CREATED = 0,
+         WIDGET_TYPE_WINDOW,
          WIDGET_TYPE_BUTTON,
          WIDGET_TYPE_LABEL,
          WIDGET_TYPE_CHECK_BOX,
@@ -52,7 +53,8 @@ class Widget : public Kobold::ListElement, public Kobold::List
          WIDGET_TYPE_PROGRESS_BAR,
          WIDGET_TYPE_SCROLL_BAR,
          WIDGET_TYPE_STACK_TAB,
-         WIDGET_TYPE_TEXT_ENTRY
+         WIDGET_TYPE_TEXT_ENTRY,
+         WIDGET_TYPE_SCROLL_TEXT
       };
 
       /*! Constructor
@@ -116,6 +118,12 @@ class Widget : public Kobold::ListElement, public Kobold::List
        * \param x -> x coordinate
        * \param y -> y coordinate */
       void setPosition(int x, int y);
+
+      /*! Set X coordinate */
+      void setX(int x);
+      
+      /*! Set Y coordinate */
+      void setY(int x);
       
       /*! Set widget's size. 
        * \note the cost to call it on a widget without a parent 
@@ -124,6 +132,11 @@ class Widget : public Kobold::ListElement, public Kobold::List
        * \param width -> new widget's width
        * \param height -> new widget's height*/
       void setSize(int width, int height);
+
+      /*! Set widget's width */
+      void setWidth(int width);
+      /*! Set widget's height */
+      void setHeight(int height);
 
       /*! Get Widget relative (to its parent's body) coordinates
        * \param xa -> x1 coordinate
@@ -166,8 +179,10 @@ class Widget : public Kobold::ListElement, public Kobold::List
       /*! \return widget type */
       WidgetType getType();
 
-      /*! \return pointer to parent GuiWidget, if any */
+      /*! \return pointer to parent Widget, if any */
       Widget* getParent();
+      /*! \return pointer to nearest Container parent of this Widget, if any */
+      Widget* getParentContainer();
 
       /*! Add a child to this Widget.
        * \param child pointer to the Widget to add as a child
@@ -204,7 +219,6 @@ class Widget : public Kobold::ListElement, public Kobold::List
        *               (mouse or finger) is.
        * \param mouseY Y screen coordinate where the cursor 
        *               (mouse or finger) is.
-
        * \param mrX X coordinate where the cursor 
        *    (mouse or finger) is, in renderer coordinate system.
        * \param mrY Y screen coordinate where the cursor 
@@ -224,6 +238,14 @@ class Widget : public Kobold::ListElement, public Kobold::List
       /*! Children should be able to redefine dirty variable */
       void setDirtyValue(bool val);
 
+      /*! Define the nearest container parent if exists. */
+      void defineParentContainer();
+
+      /*! \return x coordinate without any container transformation */
+      int getXWithoutTransform();
+      /*! \return y coordinate without any container transformation */
+      int getYWithoutTransform();
+
    private:
       
       WidgetType type;     /**< Widget Type */ 
@@ -238,6 +260,8 @@ class Widget : public Kobold::ListElement, public Kobold::List
       
       Kobold::String caption;   /**< Text of the widget */
       Kobold::String mouseHint; /**< Hint when mouse over */
+
+      Widget* parentContainer; /**< Container parent to this widget */
 
       WidgetRenderer* renderer; /**< Internal renderer, if without parents. */
       Widget* parent;   /**< Parent Widget - if any */

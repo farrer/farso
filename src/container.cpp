@@ -65,15 +65,12 @@ int Container::getChildX(int x, int width)
       case TYPE_TOP_LEFT:
       case TYPE_BOTTOM_LEFT:
          return x;
-      break;
       case TYPE_TOP_RIGHT:
       case TYPE_BOTTOM_RIGHT:
          return getWidth() - width - x;
-      break;
       case TYPE_TOP_CENTERED:
       case TYPE_BOTTOM_CENTERED:
          return ((getWidth() - width) / 2) - x;
-      break;
    }
 
    return x;
@@ -107,6 +104,14 @@ int Container::getChildY(int y, int height)
 Rect Container::getBody()
 {
    return body;
+}
+
+/***********************************************************************
+ *                          getContainerType                           *
+ ***********************************************************************/
+Container::ContainerType Container::getContainerType()
+{
+   return contType;
 }
 
 /***********************************************************************

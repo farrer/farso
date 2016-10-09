@@ -76,6 +76,9 @@ class Container : public Widget
 
       Rect getBody();
 
+      /*! \return current container type */
+      ContainerType getContainerType();
+
    protected:
       void doDraw(Rect pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 

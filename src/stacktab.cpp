@@ -134,10 +134,11 @@ void StackTab::doDraw(Rect pBody)
    /* Draw body borders */
    if(skin)
    {
-      skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_LEFT, x1, y1, x2, y2);
+      skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_LEFT, 
+            x1, y1 + 1, x2, y2 - 1);
       skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_RIGHT, x1, y1, x2, y2);
       skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_TOP, 
-            x1+1, y1, x2-1, y2);
+            x1+1, y1 + 1, x2-1, y2 - 1);
       skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_BOTTOM, 
             x1+1, y1, x2-1, y2);
    }

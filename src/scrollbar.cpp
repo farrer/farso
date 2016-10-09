@@ -21,7 +21,7 @@
 #include "scrollbar.h"
 #include "controller.h"
 #include "event.h"
-#include "math.h"
+#include <math.h>
 using namespace Farso;
 
 #define DEFAULT_SIZE  20
@@ -49,7 +49,7 @@ ScrollBar::ScrollBar(ScrollType type, int x, int y, int widthOrHeight,
    this->realWidthOrHeight = (widthOrHeight - (2 * DEFAULT_SIZE) - 3);
 
    /* Let's create and define its buttons */
-   int rx  = getX(), ry = getY();
+   int rx  = x, ry = y;
    if(type == TYPE_VERTICAL)
    {
       upButton = new Farso::Button(rx, ry, DEFAULT_SIZE, DEFAULT_SIZE, 
@@ -121,13 +121,13 @@ void ScrollBar::definePositionAndSize()
    /* Finally, set the scroll possition and size, depending on its type */
    if(scrollType == TYPE_VERTICAL)
    {
-      scrollButton->setPosition(rx + 1, ry + DEFAULT_SIZE + 1 + posInit);
-      scrollButton->setSize(DEFAULT_SIZE - 2, size); 
+      scrollButton->setY(ry + DEFAULT_SIZE + 1 + posInit);
+      scrollButton->setHeight(size); 
    }
    else
    {
-      scrollButton->setPosition(rx + DEFAULT_SIZE + 1 + posInit, ry + 1);
-      scrollButton->setSize(size, DEFAULT_SIZE - 2);
+      scrollButton->setX(rx + DEFAULT_SIZE + 1 + posInit);
+      scrollButton->setWidth(size);
    }
 
    /* As we have no background for scroll button, we must dirty our parent */
@@ -142,11 +142,19 @@ void ScrollBar::definePositionAndSize()
  ************************************************************************/
 void ScrollBar::setTotals(int maxDisplayed, int total)
 {
-   this->initial = 0;
-   this->maxDisplayed = maxDisplayed;
-   this->total = total;
+   if((this->maxDisplayed != maxDisplayed) ||
+      (this->total != total))
+   {
+      if(this->initial > this->total - maxDisplayed)
+      {
+         /* Initial is currently 'out-of-bound', must reset it */
+         this->initial = 0;
+      }
+      this->maxDisplayed = maxDisplayed;
+      this->total = total;
 
-   definePositionAndSize();
+      definePositionAndSize();
+   }
 }
 
 /************************************************************************
@@ -203,7 +211,7 @@ bool ScrollBar::doTreat(bool leftButtonPressed, bool rightButtonPressed,
             /* Use X */
             delta = mrX - scrollReference[0];
          }
-         int varInitial = (delta / realWidthOrHeight) * total;
+         int varInitial = (int) round((delta / realWidthOrHeight) * total);
 
          if(varInitial != 0)
          {
@@ -212,9 +220,9 @@ bool ScrollBar::doTreat(bool leftButtonPressed, bool rightButtonPressed,
             {
                initial = 0;
             }
-            else if(initial > total - maxDisplayed - 1)
+            else if(initial > total - maxDisplayed)
             {
-               initial = total - maxDisplayed - 1;
+               initial = total - maxDisplayed;
             }
             Controller::setEvent(this, EVENT_SCROLLBAR_CHANGED);
             definePositionAndSize();
@@ -281,7 +289,7 @@ void ScrollBar::doAfterChildTreat()
       else if(ev.getWidget() == downButton)
       {
          /* Let's try to move the scroll down (or right) */
-         if(initial + maxDisplayed < total - 1)
+         if(initial + maxDisplayed < total)
          {
             initial++;
             definePositionAndSize();

@@ -30,6 +30,7 @@
 #include "picture.h"
 #include "progressbar.h"
 #include "scrollbar.h"
+#include "scrolltext.h"
 #include "skin.h"
 #include "stacktab.h"
 #include "textentry.h"

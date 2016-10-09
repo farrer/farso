@@ -182,7 +182,9 @@ void Button::doDraw(Rect pBody)
    Farso::Skin* skin = Farso::Controller::getSkin();
    Farso::Surface* surface = getWidgetRenderer()->getSurface();
 
-   body.set(getX(), getY(), getX() + getWidth() - 1, getY() + getHeight() - 1);
+   int xt = getX();
+   int yt = getY();
+   body.set(xt, yt, xt + getWidth() - 1, yt + getHeight() - 1);
 
    /* Define real coordinates on surface. */
    int rx1 = pBody.getX1() + body.getX1();

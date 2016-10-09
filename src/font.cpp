@@ -34,8 +34,7 @@
 #include <assert.h>
 using namespace Farso;
 
-/*! Delta for min horizontal distance to keep from write area X axys border. */
-#define HORIZONTAL_DELTA   2
+#define UNICODE_SPACE_CHARACTER   0x20
 
 /***********************************************************************
  *                                 init                                *
@@ -455,6 +454,18 @@ int Font::getHeight(int areaWidth, Kobold::String text)
 }
 
 /***********************************************************************
+ *                        getDefaultHeight                             *
+ ***********************************************************************/
+int Font::getDefaultHeight()
+{
+   if(curFace == NULL)
+   {
+      return 0;
+   }
+   return curFace->getFontHeight();
+}
+
+/***********************************************************************
  *                             getWidth                                *
  ***********************************************************************/
 int Font::getWidth(Kobold::String text)
@@ -480,6 +491,64 @@ int Font::getWidth(Kobold::String text)
 }
 
 /***********************************************************************
+ *                          getWhileWidth                              *
+ ***********************************************************************/
+int Font::getWhileFits(Kobold::String text, Kobold::String& fit,
+      Kobold::String& wontFit, int width)
+{
+   int curSize = 0;
+   const Uint8* utf8 = (Uint8*) text.c_str();
+   size_t fulllen = strlen((char*) utf8);
+   size_t texlen = fulllen;
+   size_t lastlen;
+   size_t lastSpace = Kobold::String::npos;
+   
+   fit = "";
+   wontFit = "";
+   
+   while(texlen > 0)
+   {
+      lastlen = texlen;
+      /* Get the character and its glyph */
+      Uint16 c = getchUTF8(&utf8, &texlen);
+
+      if(c == UNICODE_SPACE_CHARACTER)
+      {
+         lastSpace = texlen;
+      }
+
+      Font::CachedGlyph* glyph = curFace->getGlyph(c);
+      if(glyph == NULL)
+      {
+         return 0;
+      }
+
+      curSize += glyph->getAdvanceX();
+      if(curSize > width)
+      {
+         /* Last try yo break on last space */
+         if(lastSpace != Kobold::String::npos)
+         {
+            lastlen = lastSpace;
+         }
+
+         /* String greater than the maximun available width, get each of its
+          * parts (fits up to last character 'eaten', wontFit from that on) */
+         fit = text.substr(0, fulllen - lastlen);
+         wontFit = text.substr(fulllen - lastlen);
+
+         /* Return last size */
+         return curSize - glyph->getAdvanceX();
+      }
+   }
+
+   /* The whole string fits */
+   fit = text;
+   wontFit = "";
+   return curSize;
+}
+
+/***********************************************************************
  *                                write                                *
  ***********************************************************************/
 int Font::write(Surface* surface, int x, int y, Rect area, Kobold::String text)
@@ -499,7 +568,7 @@ int Font::write(Surface* surface, Rect area, Kobold::String text)
    
    /* Let's go down by the maximum height, to make sure all glypsh will
     * fit at the start position. */
-   return write(surface, area.getX1() + HORIZONTAL_DELTA, 
+   return write(surface, area.getX1() + FONT_HORIZONTAL_DELTA, 
          area.getY1() + curFace->getFontHeight(), area, (Uint8*) text.c_str());
 }
 
@@ -540,7 +609,7 @@ int Font::write(Surface* surface, int x, int y, Rect area, const Uint8* utf8)
    }
 
    /* Calculate ammount to 'jump' on each line */
-   int incY = curFace->getIncY(); 
+   int incY = curFace->getFontHeight(); 
 
    int renderedChars = 0;
    size_t texlen = strlen((char*) utf8);
@@ -553,15 +622,18 @@ int Font::write(Surface* surface, int x, int y, Rect area, const Uint8* utf8)
       
       if(glyph == NULL)
       {
+         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+               "Warn: couldn't find glyph %d on font %s", 
+               c, filename.c_str()); 
          return 0;
       }
 
       /* Test if currently fits on line, or need a next line. */
-      if(x + glyph->getAdvanceX() >= area.getX2() - HORIZONTAL_DELTA)
+      if(x + glyph->getAdvanceX() >= area.getX2() - FONT_HORIZONTAL_DELTA)
       {
          /* go to next potential line. */
          y += incY;
-         x = area.getX1() + HORIZONTAL_DELTA;
+         x = area.getX1() + FONT_HORIZONTAL_DELTA;
       }
 
       /* Let's see if the glyph actually fits on the defined area */
@@ -598,11 +670,11 @@ void Font::flushLine(Surface* surface, int x, int y, Uint16* chars,
    /* Define initial position */
    if(curAlign == TEXT_RIGHT)
    {
-      x += areaWidth - textWidth - HORIZONTAL_DELTA;
+      x += areaWidth - textWidth - FONT_HORIZONTAL_DELTA;
    }
    else if(curAlign == TEXT_CENTERED)
    {
-      x += ((areaWidth - textWidth - HORIZONTAL_DELTA) / 2);
+      x += ((areaWidth - textWidth - FONT_HORIZONTAL_DELTA) / 2);
    }
 
 
@@ -650,7 +722,7 @@ int Font::centeredOrRightWrite(Surface* surface, int x, int y, Rect area,
 
       /* Test if currently fits on line, or need a next line. */
       if(curX + glyph->getAdvanceX() >= 
-            area.getX2() - HORIZONTAL_DELTA)
+            area.getX2() - FONT_HORIZONTAL_DELTA)
       {
          /* Won't fit, must flush the current toRender glyphs */
          flushLine(surface, x, y, &toRender[0], curToRender, 
@@ -658,7 +730,7 @@ int Font::centeredOrRightWrite(Surface* surface, int x, int y, Rect area,
 
          /* go to next potential line. */
          y += curFace->getIncY();
-         x = area.getX1() + HORIZONTAL_DELTA;
+         x = area.getX1() + FONT_HORIZONTAL_DELTA;
          curX = x;
          curWidth = 0;
          curToRender = -1;
@@ -668,10 +740,11 @@ int Font::centeredOrRightWrite(Surface* surface, int x, int y, Rect area,
       if(!willGlyphFits(x, y, area, glyph))
       {
          /* Current character won't fit. Let's stop. */
-         /*printf("glyph: %d,%d %d,%d area: %d,%d %d,%d", x + slot->bitmap_left,
-                y - slot->bitmap_top, 
-                x + slot->bitmap_left + (int)slot->bitmap.width,
-                y - slot->bitmap_top + (int)slot->bitmap.rows,
+         /*printf("glyph: %d,%d %d,%d area: %d,%d %d,%d", 
+               x + glyph->getBitmapLeft(),
+               y - glyph->getBitmapTop(), 
+               x + glyph->getBitmapLeft() + (int) glyph->getBitmap()->width,
+               y - glyph->getBitmapTop() + (int) glyph->getBitmap()->rows,
                 area.getX1(), area.getY1(), area.getX2(), area.getY2());*/
          flushLine(surface, x, y, &toRender[0], curToRender, 
                area.getWidth(), curWidth);

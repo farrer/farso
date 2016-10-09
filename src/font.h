@@ -37,6 +37,8 @@ namespace Farso
 {
 
 #define FONT_GLYPH_CACHE_SIZE   128
+/*! Delta for min horizontal distance to keep from write area X axys border. */
+#define FONT_HORIZONTAL_DELTA   2
 
 /*! A single font representation. */
 class Font
@@ -49,6 +51,7 @@ class Font
          TEXT_LEFT,
          TEXT_CENTERED,
          TEXT_RIGHT
+         //TODO: TEXT_JUSTIFIED
       };
 
       /*! Font constructor
@@ -94,12 +97,25 @@ class Font
        * \return width in pixels. */
       int getWidth(Kobold::String text);
 
+      /*! Get part (or the whole) string that fits an width, breaking
+       * the string, if possible, on last space (ie: on words).
+       * \param text text to get its part that fits width
+       * \param fit will receive part of text that fits
+       * \param wontFit will receive part of text that won't fit
+       * \param width width where text should be.
+       * \return width of 'fit' */
+      int getWhileFits(Kobold::String text, Kobold::String& fit,
+                       Kobold::String& wontFit, int width);
+
       /*! Get the needed height, in pixels, to write the text with current
        * font at its current size on an area of defined width.
        * \param areaWidth width of the area where will write the font to
        * \param text text to get needed height
        * \return needed height in pixels. */
       int getHeight(int areaWidth, Kobold::String text);
+      
+      /*! Get default height for a line at current font size */
+      int getDefaultHeight();
 
    private:
 

@@ -92,6 +92,23 @@ void Example::createWindowWithStack()
                          tabCont))->setTotals(10, 100);
    (new Farso::ScrollBar(Farso::ScrollBar::TYPE_HORIZONTAL, 0, 160, 150, 
                          tabCont))->setTotals(10, 5);
+   
+   Farso::ScrollText* scrollText = new Farso::ScrollText(160, 10, 130, 160, 
+         "fonts/LiberationSans-Regular.ttf", 10, 
+         Farso::Colors::colorText, tabCont);
+   scrollText->addText(" A scroll text is an widget with ");
+   scrollText->addText("multiple", Farso::Color(180, 0, 0, 255));
+   scrollText->addText(" text lines, that could be, obviously, scrollable.");
+   scrollText->addLineBreak();
+   scrollText->addLineBreak();
+   scrollText->addText("Subtitle", "fonts/LiberationSans-Regular.ttf", 13, 
+       Farso::Font::TEXT_CENTERED, Farso::Color(0, 220, 150, 255));
+   scrollText->addLineBreak();
+   scrollText->addText(" Text could be defined with different fonts and ");
+   scrollText->addText("co", Farso::Color(180, 0, 180, 255));
+   scrollText->addText("lors", Farso::Color(180, 180, 0, 255));
+   scrollText->addText(" And some more text to go over the total we have. ");
+
 
    /* Add another option to the stack tab and some children */
    tabCont = tab->insertTab("Option 2");

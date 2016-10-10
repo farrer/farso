@@ -26,10 +26,9 @@ using namespace Farso;
 /*************************************************************************
  *                            OgreJunction                               *
  *************************************************************************/
-OgreJunction::OgreJunction()
+OgreJunction::OgreJunction(Kobold::String name)
 {
-   overlay = Ogre::OverlayManager::getSingletonPtr()->create(
-               "farso_ogre3d_overlay");
+   overlay = Ogre::OverlayManager::getSingletonPtr()->create(name);
    overlay->show();
 }
 

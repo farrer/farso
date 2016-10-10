@@ -47,7 +47,8 @@ using namespace Farso;
  *                                 init                                *
  ***********************************************************************/
 void Controller::init(RendererType rendererType,
-      int screenWidth, int screenHeight, Kobold::String baseDir)
+      int screenWidth, int screenHeight, int maxCursorSize,
+      Kobold::String baseDir)
 {
    if(!inited)
    {
@@ -58,11 +59,12 @@ void Controller::init(RendererType rendererType,
       Controller::baseDir = baseDir;
 
       /* Create based on renderer type */
+      Controller::junction = createNewJunction("farso_default_junction");
+
       switch(rendererType)
       {
          case RENDERER_TYPE_OPENGL:
 #if FARSO_HAS_OPENGL == 1
-            Controller::junction = new OpenGLJunction();
             Controller::draw = new OpenGLDraw();
 #else
             Kobold::Log::add("ERROR: OpenGL isn't available!");
@@ -70,7 +72,6 @@ void Controller::init(RendererType rendererType,
          break;
          case RENDERER_TYPE_OGRE3D:
 #if FARSO_HAS_OGRE == 1
-            Controller::junction = new OgreJunction();
             Controller::draw = new OgreDraw();
 #else
             Kobold::Log::add("ERROR: Ogre3d isn't available!");
@@ -86,6 +87,10 @@ void Controller::init(RendererType rendererType,
       inited = true;
       Colors::init();
       FontManager::init();
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
+      Cursor::init(maxCursorSize);
+#endif
    }
    else
    {
@@ -100,6 +105,12 @@ void Controller::init(RendererType rendererType,
 void Controller::finish()
 {
    assert(inited);
+
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
+   Cursor::finish();
+#endif
+
    if(draw)
    {
       delete draw;
@@ -131,6 +142,7 @@ void Controller::finish()
       junction = NULL;
    }
    FontManager::finish();
+
    inited = false;
 }
 
@@ -151,6 +163,18 @@ int Controller::getHeight()
 }
 
 /***********************************************************************
+ *                              setCursor                              *
+ ***********************************************************************/
+void Controller::setCursor(Kobold::String filename)
+{
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
+      Cursor::set(getRealFilename(filename));
+#endif
+
+}
+
+/***********************************************************************
  *                           getRealFilename                           *
  ***********************************************************************/
 Kobold::String Controller::getRealFilename(Kobold::String filename)
@@ -164,20 +188,55 @@ Kobold::String Controller::getRealFilename(Kobold::String filename)
 }
 
 /***********************************************************************
- *                       createNewWidgetRenderer                       *
+ *                           createNewJunction                         *
  ***********************************************************************/
-WidgetRenderer* Controller::createNewWidgetRenderer(int width, int height)
+ControllerRendererJunction* Controller::createNewJunction(Kobold::String name)
 {
    switch(rendererType)
    {
       case RENDERER_TYPE_OPENGL:
 #if FARSO_HAS_OPENGL == 1
-         return new OpenGLWidgetRenderer(width, height);
+         return new OpenGLJunction();
+#else
+         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+               "ERROR: OpenGL isn't available!");
+      break;
+#endif
+      case RENDERER_TYPE_OGRE3D:
+#if FARSO_HAS_OGRE == 1
+         return new OgreJunction(name);
+#else
+         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+               "ERROR: Ogre3d isn't available!");
+      break;
+#endif
+   }
+
+   return NULL;
+}
+
+/***********************************************************************
+ *                       createNewWidgetRenderer                       *
+ ***********************************************************************/
+WidgetRenderer* Controller::createNewWidgetRenderer(int width, int height,
+    ControllerRendererJunction* junction)
+{
+   if(junction == NULL)
+   {
+      /* Must use the current one */
+      junction = getJunction();
+   }
+
+   switch(rendererType)
+   {
+      case RENDERER_TYPE_OPENGL:
+#if FARSO_HAS_OPENGL == 1
+         return new OpenGLWidgetRenderer(width, height, junction);
 #endif
          break;
       case RENDERER_TYPE_OGRE3D:
 #if FARSO_HAS_OGRE == 1
-         return new OgreWidgetRenderer(width, height);
+         return new OgreWidgetRenderer(width, height, junction);
 #else
       break;
 #endif
@@ -502,6 +561,22 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    {
       curActive->getWidgetRenderer()->render(depth);
    }
+
+   /* Must render mouse cursor on top */
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
+
+   WidgetRenderer* cursorRenderer = Farso::Cursor::getRenderer();
+   if(cursorRenderer)
+   {
+      cursorRenderer->setPosition(Farso::Cursor::getX(),
+                                  Farso::Cursor::getY());
+      cursorRenderer->render(depth);
+      depth += 0.001f;
+   }
+
+#endif
+
 
    /* Restore rendering mode to previously enter 2d one. */
    junction->restore3dMode();

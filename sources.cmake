@@ -4,6 +4,7 @@ src/checkbox.cpp
 src/colors.cpp
 src/container.cpp
 src/controller.cpp
+src/cursor.cpp
 src/draw.cpp
 src/event.cpp
 src/font.cpp
@@ -29,6 +30,7 @@ src/checkbox.h
 src/colors.h
 src/container.h
 src/controller.h
+src/cursor.h
 src/draw.h
 src/event.h
 src/font.h

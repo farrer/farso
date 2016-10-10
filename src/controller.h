@@ -24,6 +24,7 @@
 #include "button.h"
 #include "checkbox.h"
 #include "container.h"
+#include "cursor.h"
 #include "draw.h"
 #include "event.h"
 #include "label.h"
@@ -74,13 +75,15 @@ class Controller
        * \param rendererType the renderer to use for Farso.
        * \param screenWidth current screen width
        * \param screenHeight current screen height 
+       * \param maxCursorSize -> maximum cursor size, in pixels 
        * \param baseDir base directory to open font, skin and cursor files.
        *                Must end with a trail '/'.
        * \note baseDir is ignored on Ogre3d, in favor of its own resource 
        *               manager (thus make sure that baseDir is at a defined
        *               resource group). */
       static void init(RendererType rendererType, 
-            int screenWidth, int screenHeight, Kobold::String baseDir);
+            int screenWidth, int screenHeight, int maxCursorSize, 
+            Kobold::String baseDir);
       /*! Finish with the farso controller (usually called at exit). */
       static void finish();
 
@@ -89,6 +92,10 @@ class Controller
 
       /*! \return height available to farso */
       static int getHeight();
+
+      /*! Set cursor image to use, when mouse cursor is defined
+       * \param filename cursor image's filename */
+      static void setCursor(Kobold::String filename);
 
       /*! Load a skin to be the current default one.
        * \param filename skin definition file to load. 
@@ -108,6 +115,12 @@ class Controller
       
       /*! \return pointer to current overlay used */
       static ControllerRendererJunction* getJunction();
+
+      /*! Create a new ControllerRendererJunction for the current renderer
+       *  type, to be used elsewhere.
+       *  \param name name to be used for the junction. Must be unique.
+       *  \return junction created (or NULL if error) */
+      static ControllerRendererJunction* createNewJunction(Kobold::String name);
  
       /*! Add a widget that has no parent.
        * \note: widget's should have no parent.
@@ -158,8 +171,13 @@ class Controller
       static void setEvent(Widget* owner, EventType type);
 
       /*! Create a new WidgetRenderer based on current renderer type.
+       * \param width desired width for widget renderer
+       * \param height desired height for widget renderer
+       * \param junction pointer to junction to use or NULL to use the
+       *        current controller's one.
        * \note The caller is responsible to delete it when no more needed */
-      static WidgetRenderer* createNewWidgetRenderer(int width, int height);
+      static WidgetRenderer* createNewWidgetRenderer(int width, int height,
+            ControllerRendererJunction* junction = NULL);
 
       /*! Load an image from file to a new surface.
        * \param filename name of the image's file to load

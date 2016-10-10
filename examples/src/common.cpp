@@ -28,10 +28,13 @@ void Example::init(Farso::RendererType rendererType)
 {
    /* Init Farso, with Ogre3d renderer */
    Farso::Controller::init(rendererType, EXAMPLE_WINDOW_WIDTH, 
-         EXAMPLE_WINDOW_HEIGHT, "data/gui/");
+         EXAMPLE_WINDOW_HEIGHT, 32, "data/gui/");
 
    /* Set a default font (this is only needed when not using a skin). */
    Farso::FontManager::setDefaultFont("fonts/LiberationSans-Regular.ttf");
+
+   /* Set our cursor */
+   Farso::Controller::setCursor("cursor/sel.png");
 
    /* Let's create our windows. Obviously, widgets could be created
     * any time, and not just on init. */

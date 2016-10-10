@@ -34,8 +34,9 @@ using namespace Farso;
 /***********************************************************************
  *                             OgreWidgetRenderer                          *
  ***********************************************************************/
-OgreWidgetRenderer::OgreWidgetRenderer(int width, int height)
-                   :WidgetRenderer(width, height)
+OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
+            ControllerRendererJunction* junction) 
+                   :WidgetRenderer(width, height, junction)
 {
    Farso::Draw* draw = Farso::Controller::getDraw();
 
@@ -53,8 +54,8 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height)
    this->container = (Ogre::OverlayContainer*)
          Ogre::OverlayManager::getSingletonPtr()->createOverlayElement(
             "Panel", name);
-   OgreJunction* junction = (OgreJunction*) Farso::Controller::getJunction();
-   junction->getOverlay()->add2D(this->container);
+   OgreJunction* ogreJunction = (OgreJunction*) junction;
+   ogreJunction->getOverlay()->add2D(this->container);
 
    /* Create the material to use */
    Ogre::ResourceManager::ResourceCreateOrRetrieveResult matRes;
@@ -79,8 +80,8 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height)
 OgreWidgetRenderer::~OgreWidgetRenderer()
 {  
    /* Clear the container of the overlay */
-   OgreJunction* junction = (OgreJunction*) Farso::Controller::getJunction();
-   junction->getOverlay()->remove2D(container);
+   OgreJunction* ogreJunction = (OgreJunction*) junction;
+   ogreJunction->getOverlay()->remove2D(container);
    Ogre::OverlayManager::getSingletonPtr()->destroyOverlayElement(container);
 
    /* Remove Shaders from material */

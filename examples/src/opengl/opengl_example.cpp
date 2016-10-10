@@ -72,8 +72,6 @@ void OpenGLExample::run()
 {
    Uint32 lastTime = 0;
    Uint32 time;
-   Uint32 mButton;
-   int mouseX=0, mouseY=0;
 
    while(!example->shouldQuit())
    {
@@ -85,7 +83,7 @@ void OpenGLExample::run()
          /* Get Keyboard and Mouse State */
          SDL_PumpEvents();
          Kobold::Keyboard::updateState();
-         mButton = SDL_GetMouseState(&mouseX, &mouseY);
+         Kobold::Mouse::update();
 
          /* Let's update things by events (usually, only used for text 
           * editing and mouse release states) */
@@ -96,12 +94,14 @@ void OpenGLExample::run()
             {
                Kobold::Keyboard::updateByEvent(event);
             }
+            Kobold::Mouse::updateByEvent(event);
          }
 
          glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-         example->step(mButton & SDL_BUTTON(1), mButton & SDL_BUTTON(3), 
-               mouseX, mouseY);
+         example->step(Kobold::Mouse::isLeftButtonPressed(), 
+                       Kobold::Mouse::isRightButtonPressed(),
+                       Kobold::Mouse::getX(), Kobold::Mouse::getY());
 
          glFlush();
          SDL_GL_SwapWindow(window);

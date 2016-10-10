@@ -30,6 +30,9 @@
 namespace Farso
 {
 
+
+class ControllerRendererJunction;
+
 /*! The renderer interface. */
 class WidgetRenderer
 {
@@ -37,8 +40,10 @@ class WidgetRenderer
       /*! Constructor.
        * \note children constructor must create the surface it will use.
        * \param width -> width of the drawable surface 
-       * \param width -> height of the drawable surface */
-      WidgetRenderer(int width, int height);
+       * \param width -> height of the drawable surface
+       * \param junction -> pointer to juntion to use. */
+      WidgetRenderer(int width, int height, 
+            ControllerRendererJunction* junction);
       /*! Destructor
        * \note children destructor must delete the created surface. */
       virtual ~WidgetRenderer();
@@ -104,6 +109,8 @@ class WidgetRenderer
 
 
       Surface* surface;      /**< The drawable surface */
+
+      ControllerRendererJunction* junction; /**< Junction to use */
       
       Kobold::String name; /**< internal name of this renderer */
 

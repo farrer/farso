@@ -34,8 +34,9 @@ using namespace Farso;
 /************************************************************************
  *                        OpenGLWidgetRenderer                          *
  ************************************************************************/
-OpenGLWidgetRenderer::OpenGLWidgetRenderer(int width, int height)
-                     :WidgetRenderer(width, height)
+OpenGLWidgetRenderer::OpenGLWidgetRenderer(int width, int height,
+      ControllerRendererJunction* junction)
+                     :WidgetRenderer(width, height, junction)
 {
    Draw* draw = Controller::getDraw();
    posX = 0;

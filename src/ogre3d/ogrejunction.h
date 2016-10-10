@@ -32,7 +32,7 @@ class OgreJunction : public ControllerRendererJunction
 {
    public:
       /*! Constructor */
-      OgreJunction();
+      OgreJunction(Kobold::String name);
       /*! Destructor */
       ~OgreJunction();
 

@@ -31,7 +31,8 @@ namespace Farso
 class OpenGLWidgetRenderer: public WidgetRenderer
 {
    public:
-      OpenGLWidgetRenderer(int width, int height); 
+      OpenGLWidgetRenderer(int width, int height, 
+            ControllerRendererJunction* junction); 
       ~OpenGLWidgetRenderer();
 
       void uploadSurface();

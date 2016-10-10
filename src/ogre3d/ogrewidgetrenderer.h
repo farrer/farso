@@ -47,7 +47,8 @@ class OgreWidgetRenderer : public WidgetRenderer
       /*! Constructor
        * \param width -> width of the drawable surface 
        * \param width -> height of the drawable surface */
-      OgreWidgetRenderer(int width, int height);
+      OgreWidgetRenderer(int width, int height, 
+            ControllerRendererJunction* junction);
       /*! Destructor */
       ~OgreWidgetRenderer();
 

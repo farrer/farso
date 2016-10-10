@@ -50,7 +50,7 @@ WidgetRenderer::WidgetRenderer(int width, int height)
  *                            ~WidgetRenderer                          *
  ***********************************************************************/
 WidgetRenderer::~WidgetRenderer()
-{  
+{
 }
 
 /***********************************************************************

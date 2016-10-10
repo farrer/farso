@@ -63,6 +63,11 @@ OpenGLWidgetRenderer::~OpenGLWidgetRenderer()
 {
    /* Delete our generated texture */
    glDeleteTextures(1, &texture);
+
+   if(surface != NULL)
+   {
+      delete surface;
+   }
 }
 
 /************************************************************************

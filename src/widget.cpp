@@ -21,8 +21,12 @@
 #include "widget.h"
 #include "controller.h"
 #include "container.h"
+#include "cursor.h"
+
+#include <kobold/platform.h>
 #include <kobold/keyboard.h>
 #include <assert.h>
+
 using namespace Farso;
 
 /***********************************************************************
@@ -502,6 +506,15 @@ bool Widget::treat(bool leftButtonPressed, bool rightButtonPressed,
       /* No events on hidden or disabled widgets. */
       return false;
    }
+
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
+   /* Check if have mouse hint and is cursor is over it */
+   if( (!mouseHint.empty()) && (isInner(mrX, mrY)) )
+   {
+      Farso::Cursor::setTextualTip(mouseHint);
+   }
+#endif
    
    /* Note that if is editing a text, we just need to treat events
     * on the text editor itself. */

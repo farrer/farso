@@ -143,14 +143,9 @@ void Example::createOtherWindow()
    (new Farso::CheckBox(0, 110, 100, "Disabled", false, window))->disable();
    (new Farso::CheckBox(0, 132, 100, "Checked", true, window))->disable();
 
-   if(Farso::Controller::getRendererType() == Farso::RENDERER_TYPE_OGRE3D)
-   {
-      new Farso::Picture(120, 0, "cursor/talk.png", window);
-   }
-   else
-   {
-      new Farso::Picture(120, 0, "data/gui/cursor/talk.png", window);
-   }
+   Farso::Picture* pic = new Farso::Picture(120, 0, 
+         Farso::Controller::getRealFilename("cursor/talk.png"), window);
+   pic->setMouseHint("I'm a png image!");
 
    /* We can use containers to set as reference coordinates to children widgets,
     * allowing us to align them to the window without any explicit maths */

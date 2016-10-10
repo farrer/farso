@@ -24,6 +24,7 @@
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
 
 #include "controller.h"
+#include "font.h"
 #include <assert.h>
 
 #if FARSO_HAS_OGRE == 1
@@ -31,6 +32,9 @@
 #endif
 
 using namespace Farso;
+
+#define CURSOR_TIP_MAX_WIDTH   128
+#define CURSOR_TIP_MAX_HEIGHT   32
 
 /************************************************************************
  *                                 init                                 *
@@ -49,7 +53,17 @@ void Cursor::init(int size)
       ogreJunction->getOverlay()->setZOrder(200);
    }
 #endif
+
    renderer = Controller::createNewWidgetRenderer(size, size, junction);
+
+   tipRenderer = Controller::createNewWidgetRenderer(CURSOR_TIP_MAX_WIDTH, 
+         CURSOR_TIP_MAX_HEIGHT, junction);
+   tipRenderer->hide();
+
+   tipHeight = 0;
+   tipFont = FontManager::getDefaultFontFileName();
+   tipFontSize = 10;
+
    maxSize = size;
    current = NULL;
 }
@@ -68,6 +82,11 @@ void Cursor::finish()
    {
       delete renderer;
       renderer = NULL;
+   }
+   if(tipRenderer != NULL)
+   {
+      delete tipRenderer;
+      tipRenderer = NULL;
    }
    if(junction != NULL)
    {
@@ -232,7 +251,88 @@ void Cursor::unloadUnusedCursors()
  ************************************************************************/
 void Cursor::setTextualTip(Kobold::String tip)
 {
-   //TODO
+   /* Only update tip if changed */
+   if(textualTip != tip)
+   {
+      textualTip = tip;
+      if(textualTip.empty())
+      {
+         /* Empty tip, we must not render it */
+         tipRenderer->hide();
+      }
+      else
+      {
+         /* let's mark as visible and set its contents */
+         tipRenderer->show();
+         
+         Draw* draw = Controller::getDraw();
+         Surface* surface = tipRenderer->getSurface();
+
+         Font* font = FontManager::getFont(tipFont);
+         font->setAlignment(Font::TEXT_CENTERED);
+         font->setSize(tipFontSize);
+
+         int w = font->getWidth(textualTip) + 10;
+         int h = font->getDefaultHeight() + 2 * FONT_HORIZONTAL_DELTA;
+
+         /* make sure in limits */
+         if(w > CURSOR_TIP_MAX_WIDTH)
+         {
+            w = CURSOR_TIP_MAX_WIDTH;
+         }
+         if(h > CURSOR_TIP_MAX_HEIGHT)
+         {
+            h = CURSOR_TIP_MAX_HEIGHT;
+         }
+         
+         surface->lock();
+      
+         /* Clear and draw background */
+         surface->clear();
+         draw->setActiveColor(Colors::colorButton);
+         draw->doFilledRectangle(surface, 1, 1, w - 2, h - 2);
+         draw->setActiveColor(Colors::colorCont[0]);
+         draw->doRoundedRectangle(surface, 0, 0, w - 1, h - 1, 
+               Colors::colorCont[0]);
+
+         /* Render its text */
+         draw->setActiveColor(Colors::colorText);
+         font->write(surface, Rect(0, 0, w - 1, h - 1), textualTip);
+         
+         surface->unlock();
+
+         /* Reupload it */
+         tipRenderer->uploadSurface();
+
+         /* Set size */
+         tipHeight = h;
+      }
+   }
+}
+
+/************************************************************************
+ *                            setTextualTip                             *
+ ************************************************************************/
+Kobold::String Cursor::getTextualTip()
+{
+   return textualTip;
+}
+
+/************************************************************************
+ *                             setTipFont                               *
+ ************************************************************************/
+void Cursor::setTipFont(Kobold::String fontFilename, int size)
+{
+   tipFontSize = size;
+   tipFont = fontFilename;
+}
+
+/************************************************************************
+ *                            getTipHeight                              *
+ ************************************************************************/
+int Cursor::getTipHeight()
+{
+   return tipHeight;
 }
 
 /************************************************************************
@@ -241,6 +341,14 @@ void Cursor::setTextualTip(Kobold::String tip)
 Farso::WidgetRenderer* Cursor::getRenderer()
 {
    return renderer;
+}
+
+/************************************************************************
+ *                          getTipRenderer                              *
+ ************************************************************************/
+Farso::WidgetRenderer* Cursor::getTipRenderer()
+{
+   return tipRenderer;
 }
 
 /************************************************************************
@@ -270,6 +378,11 @@ Cursor::CursorImage* Cursor::getCursorImage(Kobold::String filename)
  ************************************************************************/
 Kobold::List* Cursor::cursors = NULL;
 Farso::WidgetRenderer* Cursor::renderer = NULL;
+Farso::WidgetRenderer* Cursor::tipRenderer = NULL;
+Kobold::String Cursor::textualTip;
+int Cursor::tipHeight = 0;
+Kobold::String Cursor::tipFont;
+int Cursor::tipFontSize = 0;
 int Cursor::maxSize = 0;
 Cursor::CursorImage* Cursor::current = NULL;
 ControllerRendererJunction* Cursor::junction = NULL;

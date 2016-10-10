@@ -29,8 +29,9 @@
 #include <kobold/kstring.h>
 #include <kobold/list.h>
 #include <kobold/mouse.h>
-#include "widgetrenderer.h"
+
 #include "farsoconfig.h"
+#include "widgetrenderer.h"
 
 namespace Farso
 {
@@ -86,8 +87,24 @@ class Cursor
        * \param tip text to display. "" for none. */
       static void setTextualTip(Kobold::String tip);
 
+      /*! \return current textual tip */
+      static Kobold::String getTextualTip();
+
+      /*! Set which font to use for writing tips
+       * \param fontFilename font's filename 
+       * \param size font's size
+       * \note This font will be used on next setTextualTip with a
+       *       different string than the current one. */
+      static void setTipFont(Kobold::String fontFilename, int size);
+
+      /*! \return current height to rendering textual tip */
+      static int getTipHeight();
+
       /*! \return pointer to the used renderer */
       static Farso::WidgetRenderer* getRenderer();
+      
+      /*! \return pointer to the renderer used for textual tips */
+      static Farso::WidgetRenderer* getTipRenderer();
 
    private:
 
@@ -118,6 +135,11 @@ class Cursor
 
       static Kobold::List* cursors; /**< Loaded cursors images */
       static Farso::WidgetRenderer* renderer; /**< The renderer used */
+      static Farso::WidgetRenderer* tipRenderer; /**< Renderer for text tip */
+      static Kobold::String textualTip; /**< Current text tip */
+      static int tipHeight; /**< Current text tip height */
+      static Kobold::String tipFont; /**< Current tip font name */
+      static int tipFontSize; /**< Current tip font size */
       static int maxSize; /**< Maximum cursor size */
       static CursorImage* current; /**< Current cursor image, if any */
       static ControllerRendererJunction* junction; /**< Own junction */

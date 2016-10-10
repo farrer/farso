@@ -566,11 +566,22 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
 
+   /* Render cursor */
    WidgetRenderer* cursorRenderer = Farso::Cursor::getRenderer();
-   if(cursorRenderer)
+   if( (cursorRenderer) && (cursorRenderer->isVisible()) )
    {
       cursorRenderer->setPosition(Farso::Cursor::getX(),
                                   Farso::Cursor::getY());
+      cursorRenderer->render(depth);
+      depth += 0.001f;
+   }
+   
+   /* Render cursor tip */
+   cursorRenderer = Farso::Cursor::getTipRenderer();
+   if( (cursorRenderer) && (cursorRenderer->isVisible()) )
+   {
+      cursorRenderer->setPosition(Farso::Cursor::getX(),
+            Farso::Cursor::getY() - Farso::Cursor::getTipHeight());
       cursorRenderer->render(depth);
       depth += 0.001f;
    }

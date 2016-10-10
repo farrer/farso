@@ -28,6 +28,11 @@
    #include <OGRE/OgreResourceGroupManager.h>
 #endif
 
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
+    #include "cursor.h"
+#endif
+
 #include <fstream>
 #include <sys/stat.h>
 
@@ -66,7 +71,14 @@ void FontManager::finish()
 Font* FontManager::setDefaultFont(Kobold::String filename)
 {
    assert(filename != "");
+
    defaultFont = filename;
+
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
+   Farso::Cursor::setTipFont(filename, 10);
+#endif
+
    return getFont(filename);
 }
 

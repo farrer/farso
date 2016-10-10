@@ -63,7 +63,7 @@ void Cursor::init(int size)
    tipRenderer->hide();
 
    tipHeight = 0;
-   tipFont = FontManager::getDefaultFontFileName();
+   tipFont = FontManager::getDefaultFontFilename();
    tipFontSize = 10;
 
    maxSize = size;

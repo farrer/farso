@@ -250,7 +250,7 @@ class Skin
       bool isElementDefined(SkinElementType type);
 
       /*! \return filename of the skin. */
-      Kobold::String getFileName();
+      Kobold::String getFilename();
 
    protected:
       /*! Load the skin definition file.

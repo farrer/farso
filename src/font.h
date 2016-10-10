@@ -238,7 +238,7 @@ class FontManager
       /*! \return pointer to the default font to use. */
       static Font* getDefaultFont();
       /*! \return filename of the default font to use. */
-      static Kobold::String getDefaultFontFileName();
+      static Kobold::String getDefaultFontFilename();
 
       /*! Unload all current loaded fonts. Usefull when the system is
        * low in memory to de-alloc some no more used bytes.

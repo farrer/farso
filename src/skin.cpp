@@ -719,9 +719,9 @@ Skin::~Skin()
 }
 
 /***********************************************************************
- *                              getFileName                            *
+ *                              getFilename                            *
  ***********************************************************************/
-Kobold::String Skin::getFileName()
+Kobold::String Skin::getFilename()
 {
    return filename;
 }

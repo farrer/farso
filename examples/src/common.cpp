@@ -194,7 +194,7 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
    else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_M))
    {
       if((Farso::Controller::getSkin() == NULL) ||
-         (Farso::Controller::getSkin()->getFileName() != "skins/moderna.skin"))
+         (Farso::Controller::getSkin()->getFilename() != "skins/moderna.skin"))
       {
          Farso::Controller::loadSkin("skins/moderna.skin");
       }
@@ -202,7 +202,7 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
    else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_W))
    {
       if((Farso::Controller::getSkin() == NULL) ||
-            (Farso::Controller::getSkin()->getFileName() !=
+            (Farso::Controller::getSkin()->getFilename() !=
              "skins/wyrmheart.skin"))
       {
          Farso::Controller::loadSkin("skins/wyrmheart.skin");

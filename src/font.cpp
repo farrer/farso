@@ -90,7 +90,7 @@ Font* FontManager::getDefaultFont()
    assert(defaultFont != "");
    return getFont(defaultFont);
 }
-Kobold::String FontManager::getDefaultFontFileName()
+Kobold::String FontManager::getDefaultFontFilename()
 {
    return defaultFont;
 }

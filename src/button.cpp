@@ -34,7 +34,7 @@ Button::Button(int x, int y, int width, int height, Kobold::String caption,
    this->pressStarted = false;
    this->pressed = false;
    this->useRoundedEdges = false;
-   this->fontName = FontManager::getDefaultFontFileName();
+   this->fontName = FontManager::getDefaultFontFilename();
    this->fontSize = 10;
    this->enabledType = Skin::SKIN_TYPE_BUTTON_ENABLED;
    this->disabledType = Skin::SKIN_TYPE_BUTTON_DISABLED;

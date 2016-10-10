@@ -160,12 +160,12 @@ void StackTab::doDraw(Rect pBody)
       {
          /* Draw with skin */
          skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_RIGHT, 
-               curX + incX, y1 + 1, curX + incX, y1 + 19);
+               curX + incX, y1 + 3, curX + incX, y1 + 19);
          if(tab != active)
          {
             skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_BOTTOM,
                curX + 1, y1 + 20, 
-               curX + incX - 1, y1 + 20);
+               curX + incX - 2, y1 + 20);
          }
       }
       else

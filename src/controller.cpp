@@ -575,6 +575,9 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       cursorRenderer->render(depth);
       depth += 0.001f;
    }
+
+   /* Check if current tip, if any, expired */
+   Farso::Cursor::checkTipExpiration();
    
    /* Render cursor tip */
    cursorRenderer = Farso::Cursor::getTipRenderer();

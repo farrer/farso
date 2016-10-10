@@ -36,6 +36,8 @@ using namespace Farso;
 #define CURSOR_TIP_MAX_WIDTH   128
 #define CURSOR_TIP_MAX_HEIGHT   32
 
+#define CURSOR_TIP_EXPIRE_TIME  220 /**< Time to expire tip, in ms */
+
 /************************************************************************
  *                                 init                                 *
  ************************************************************************/
@@ -251,6 +253,8 @@ void Cursor::unloadUnusedCursors()
  ************************************************************************/
 void Cursor::setTextualTip(Kobold::String tip)
 {
+   tipTimer.reset();
+
    /* Only update tip if changed */
    if(textualTip != tip)
    {
@@ -336,6 +340,19 @@ int Cursor::getTipHeight()
 }
 
 /************************************************************************
+ *                         checkTipExpiration                           *
+ ************************************************************************/
+void Cursor::checkTipExpiration()
+{
+   if( (!textualTip.empty()) &&
+       (tipTimer.getMilliseconds() >= CURSOR_TIP_EXPIRE_TIME) )
+   {
+      /* expired, must clean it */
+      setTextualTip("");
+   }
+}
+
+/************************************************************************
  *                            getRenderer                               *
  ************************************************************************/
 Farso::WidgetRenderer* Cursor::getRenderer()
@@ -383,6 +400,7 @@ Kobold::String Cursor::textualTip;
 int Cursor::tipHeight = 0;
 Kobold::String Cursor::tipFont;
 int Cursor::tipFontSize = 0;
+Kobold::Timer Cursor::tipTimer;
 int Cursor::maxSize = 0;
 Cursor::CursorImage* Cursor::current = NULL;
 ControllerRendererJunction* Cursor::junction = NULL;

@@ -28,6 +28,7 @@
 
 #include <kobold/kstring.h>
 #include <kobold/list.h>
+#include <kobold/timer.h>
 #include <kobold/mouse.h>
 
 #include "farsoconfig.h"
@@ -84,11 +85,18 @@ class Cursor
       static void unloadUnusedCursors();
 
       /*! Set the text to be displayed with mouse tip
-       * \param tip text to display. "" for none. */
+       * \param tip text to display. "" for none.
+       * \note that the tip will expire after an amount of time passed since
+       *       the last set to it. (so, to clean the tip, just no more call
+       *       to set it).
+       * \note if you want immediate clean up, just call setTextualTip(""); */
       static void setTextualTip(Kobold::String tip);
 
       /*! \return current textual tip */
       static Kobold::String getTextualTip();
+
+      /*! Check if tip expired, if defined. */
+      static void checkTipExpiration();
 
       /*! Set which font to use for writing tips
        * \param fontFilename font's filename 
@@ -140,6 +148,7 @@ class Cursor
       static int tipHeight; /**< Current text tip height */
       static Kobold::String tipFont; /**< Current tip font name */
       static int tipFontSize; /**< Current tip font size */
+      static Kobold::Timer tipTimer; /**< Timer of last set tip */
       static int maxSize; /**< Maximum cursor size */
       static CursorImage* current; /**< Current cursor image, if any */
       static ControllerRendererJunction* junction; /**< Own junction */

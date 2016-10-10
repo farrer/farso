@@ -143,8 +143,7 @@ void Example::createOtherWindow()
    (new Farso::CheckBox(0, 110, 100, "Disabled", false, window))->disable();
    (new Farso::CheckBox(0, 132, 100, "Checked", true, window))->disable();
 
-   Farso::Picture* pic = new Farso::Picture(120, 0, 
-         Farso::Controller::getRealFilename("cursor/talk.png"), window);
+   Farso::Picture* pic = new Farso::Picture(120, 0, "cursor/talk.png", window);
    pic->setMouseHint("I'm a png image!");
 
    /* We can use containers to set as reference coordinates to children widgets,

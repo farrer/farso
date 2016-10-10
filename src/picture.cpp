@@ -34,7 +34,8 @@ Picture::Picture(int x, int y, Kobold::String filename, Widget* parent)
    /* Initialize variables */
    pressStarted = false;
    /* Load the image */
-   image = Controller::loadImageToSurface(filename);
+   image = Controller::loadImageToSurface(
+         Controller::getRealFilename(filename));
    /* Set widget coordinates and size based on loaded image */
    setPosition(x, y);
    setSize(image->getWidth(), image->getHeight());

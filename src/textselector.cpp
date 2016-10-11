@@ -75,7 +75,7 @@ void TextSelector::addOption(Kobold::String text)
    /* We insert at the whole line, but at doDraw, we'll redefine the 
     * position according to font and skin used (allowing changing the skin
     * on the fly). */
-   options.insert(new TextOption(getX(), getY(), getWidth(), getHeight(), 
+   options.insert(new TextOption(0, 0, getWidth(), getHeight(), 
             prefix + text, this));
 }
 

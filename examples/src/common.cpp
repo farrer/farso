@@ -218,6 +218,13 @@ void Example::addAllWidgetsToContainer(Farso::Container* cont)
    new Farso::Picture(4, 4, "cursor/talk.png", button);
    (new Farso::ProgressBar(2, 136, 100, 16, cont))->setValue(50);
    new Farso::Picture(2, 155, "cursor/talk.png", cont);
+   /* Add a container to our text selector */
+   Farso::Container* cont2 = new Farso::Container(
+         Farso::Container::TYPE_TOP_LEFT, 2, 190, 200, 60, cont);
+   Farso::TextSelector* sel = new Farso::TextSelector(cont2);
+   sel->addOption("Morning Star");
+   sel->addOption("Rats and Monkeys");
+   sel->addOption("Heart of Stone");
 }
 
 /************************************************************************

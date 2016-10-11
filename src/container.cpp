@@ -124,9 +124,10 @@ void Container::doDraw(Rect pBody)
    {
       setSize(getParent()->getBody().getWidth(), 
               getParent()->getBody().getHeight());
-      body.set(getX(), getY(), 
-               getX() + getWidth() - 1, getY() + getHeight() - 1);
    }
+   /* Reset body to allow skin changes on the fly */
+   body.set(getX(), getY(), 
+            getX() + getWidth() - 1, getY() + getHeight() - 1);
 }
 
 /***********************************************************************

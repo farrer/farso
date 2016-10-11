@@ -214,18 +214,18 @@ void Example::addAllWidgetsToContainer(Farso::Container* cont)
    new Farso::Label(2, 33, 80, 21, "Label", cont);
    new Farso::TextEntry(2, 54, 80, 21, cont);
    new Farso::CheckBox(2, 75, 100, "Check box", true, cont);
-   Farso::Button* button = new Farso::Button(10, 95, 40, 40, "", cont);
+   Farso::Button* button = new Farso::Button(10, 98, 40, 40, "", cont);
    new Farso::Picture(4, 4, "cursor/talk.png", button);
-   (new Farso::ProgressBar(2, 136, 100, 16, cont))->setValue(50);
-   new Farso::Picture(2, 155, "cursor/talk.png", cont);
+   (new Farso::ProgressBar(2, 140, 100, 16, cont))->setValue(50);
+   new Farso::Picture(2, 158, "cursor/talk.png", cont);
    /* Add a container to our text selector */
    Farso::Container* cont2 = new Farso::Container(
-         Farso::Container::TYPE_TOP_LEFT, 2, 190, 140, 60, cont);
+         Farso::Container::TYPE_TOP_LEFT, 2, 192, 140, 60, cont);
    Farso::TextSelector* sel = new Farso::TextSelector(cont2);
    sel->addOption("Morning Star");
    sel->addOption("Rats and Monkeys");
    sel->addOption("Heart of Stone");
-   Farso::ScrollText* scrollText = new Farso::ScrollText(2, 255, 120, 100, 
+   Farso::ScrollText* scrollText = new Farso::ScrollText(2, 257, 120, 100, 
          "fonts/LiberationSans-Regular.ttf", 10, 
          Farso::Colors::colorText, cont);
    scrollText->addText("Some text to the scroll to be scrollable, it is?");

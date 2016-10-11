@@ -37,7 +37,7 @@ StackTab::StackTab(Widget* parent)
    assert(parent != NULL);
    active = NULL;
    Rect pBody = parent->getBody();
-   body.set(1, 21, pBody.getWidth() - 3, pBody.getHeight() - 23);
+   body.set(1, 21, pBody.getWidth() - 1, pBody.getHeight() - 1);
 }
 
 /************************************************************************
@@ -104,15 +104,17 @@ void StackTab::doDraw(Rect pBody)
    Farso::Surface* surface = getWidgetRenderer()->getSurface();
 
    /* Define coordinates on parent's surface */
-   int x1 = pBody.getX1();
-   int y1 = pBody.getY1();
-   int x2 = pBody.getX2();
-   int y2 = pBody.getY2();
+   int x1 = getX() + pBody.getX1();
+   int y1 = getY() + pBody.getY1();
+   int x2 = x1 + pBody.getWidth() - 1;
+   int y2 = y1 + pBody.getHeight() - 1;
 
    Rect borderSize(0, 0, 0, 0);
 
-   /* Redefine body and current widget size */
+   /* Redefine current widget size */
    setSize(pBody.getWidth(), pBody.getHeight());
+
+   /* Get border size (assuming all borders with same size or left width) */
    if(skin)
    {
       Skin::SkinElement el = skin->getSkinElement(Skin::SKIN_TYPE_BORDER_LEFT);
@@ -126,10 +128,12 @@ void StackTab::doDraw(Rect pBody)
       font = FontManager::getDefaultFont();
       font->setSize(10);
    }
+  
+   /* Define current body */
+   Rect parentBody = getParent()->getBody();
    body.set(borderSize.getWidth(), 20 + borderSize.getWidth(), 
-            pBody.getWidth() - 1 - (2 * borderSize.getWidth()), 
-            pBody.getHeight() - 21 - (2 * borderSize.getWidth()));
-
+            parentBody.getWidth() - borderSize.getWidth(), 
+            parentBody.getHeight() - borderSize.getWidth());
 
    /* Draw body borders */
    if(skin)

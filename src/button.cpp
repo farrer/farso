@@ -40,6 +40,7 @@ Button::Button(int x, int y, int width, int height, Kobold::String caption,
    this->disabledType = Skin::SKIN_TYPE_BUTTON_DISABLED;
    this->onOverType = Skin::SKIN_TYPE_BUTTON_ON_OVER;
    this->pressedType = Skin::SKIN_TYPE_BUTTON_PRESSED;
+   this->body.set(getX(), getY(), getX() + width - 1, getY() + height - 1);
 }
 
 /******************************************************************
@@ -184,13 +185,12 @@ void Button::doDraw(Rect pBody)
 
    int xt = getX();
    int yt = getY();
-   body.set(xt, yt, xt + getWidth() - 1, yt + getHeight() - 1);
 
    /* Define real coordinates on surface. */
-   int rx1 = pBody.getX1() + body.getX1();
-   int ry1 = pBody.getY1() + body.getY1();
-   int rx2 = pBody.getX1() + body.getX2();
-   int ry2 = pBody.getY1() + body.getY2();
+   int rx1 = pBody.getX1() + xt;
+   int ry1 = pBody.getY1() + yt;
+   int rx2 = pBody.getX1() + xt + getWidth() - 1;
+   int ry2 = pBody.getY1() + yt + getHeight() - 1;
 
    bool specialCaption = ( (getCaption() == BUTTON_SPECIAL_CAPTION_LEFT) ||
                            (getCaption() == BUTTON_SPECIAL_CAPTION_RIGHT) ||
@@ -302,18 +302,21 @@ void Button::doDraw(Rect pBody)
 
       if(!specialCaption)
       {
-         /* Draw the button caption */
-         Font* font = FontManager::getFont(fontName);
-         font->setSize(fontSize);
-         font->setAlignment(Font::TEXT_CENTERED);
-         if(pressed)
+         if(!getCaption().empty())
          {
-            font->write(surface, Rect(rx1 + 1, ry1 + 1, rx2, ry2), 
-                        getCaption());
-         }
-         else 
-         {
-            font->write(surface, Rect(rx1, ry1, rx2, ry2), getCaption());
+            /* Draw the button caption */
+            Font* font = FontManager::getFont(fontName);
+            font->setSize(fontSize);
+            font->setAlignment(Font::TEXT_CENTERED);
+            if(pressed)
+            {
+               font->write(surface, Rect(rx1 + 1, ry1 + 1, rx2, ry2), 
+                     getCaption());
+            }
+            else 
+            {
+               font->write(surface, Rect(rx1, ry1, rx2, ry2), getCaption());
+            }
          }
       }
       else
@@ -346,6 +349,19 @@ void Button::doDraw(Rect pBody)
                   rx1 + 5, ry1 + 5, rx2 - 5, ry1 + 5);
          }
       }
+   }
+
+   /* Set body (when pressed, a bit changed) */
+   if(pressed)
+   {
+      this->body.set(getX() + 1, getY() + 1, 
+                     getX() + getWidth() - 2, getY() + getHeight() - 2);
+   }
+   else
+   {
+      this->body.set(getX(), getY(), 
+                     getX() + getWidth() - 1, 
+                     getY() + getHeight() - 1);
    }
 }
 

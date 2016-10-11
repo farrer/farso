@@ -30,8 +30,8 @@ Container::Container(ContainerType type, Widget* parent)
 {
    assert(parent != NULL);
    contType = type;
-   setSize(parent->getWidth(), parent->getHeight());
-   body.set(0, 0, parent->getWidth() - 1, parent->getHeight() - 1);
+   setSize(parent->getBody().getWidth(), parent->getBody().getHeight());
+   body.set(getX(), getX(), getX() + getWidth() - 1, getX() + getHeight() - 1);
    dynamicSize = true;
 }
 
@@ -43,8 +43,9 @@ Container::Container(ContainerType type, int x, int y, int width, int height,
           :Widget(WIDGET_TYPE_CONTAINER, x, y, width, height, parent)
 {
    contType = type;
-   setSize(parent->getBody().getWidth(), parent->getBody().getHeight());
-   body.set(0, 0, width, height);
+   setPosition(x, y);
+   setSize(width, height);
+   body.set(getX(), getY(), getX() + width - 1, getY() + height - 1);
    dynamicSize = false;
 }
 
@@ -123,7 +124,8 @@ void Container::doDraw(Rect pBody)
    {
       setSize(getParent()->getBody().getWidth(), 
               getParent()->getBody().getHeight());
-      body.set(0, 0, getParent()->getWidth(), getParent()->getHeight());
+      body.set(getX(), getY(), 
+               getX() + getWidth() - 1, getY() + getHeight() - 1);
    }
 }
 

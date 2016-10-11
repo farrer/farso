@@ -33,6 +33,11 @@ namespace FarsoExample
          void createWindowWithStack();
          /*! Create another example window */
          void createOtherWindow();
+
+         /*! Create the window to test all container types */
+         void createWindowToTestContainers();
+         /*! Add widgets to a container of the window to test containers */
+         void addAllWidgetsToContainer(Farso::Container* cont);
    };
 
 }

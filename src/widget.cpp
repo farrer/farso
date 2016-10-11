@@ -181,15 +181,10 @@ void Widget::defineParentContainer()
 {
    parentContainer = NULL;
 
-   Widget* widget = parent;
-   while(widget != NULL)
+   if( (parent) && (parent->getType() == WIDGET_TYPE_CONTAINER) )
    {
-      if(widget->getType() == WIDGET_TYPE_CONTAINER)
-      {
-         parentContainer = widget;
-         return;
-      }
-      widget = widget->parent;
+      parentContainer = parent;
+      return;
    }
 }
 
@@ -572,18 +567,14 @@ Rect Widget::getBodyWithParentsApplied()
    if(parent != NULL)
    {
       Rect parentBody = parent->getBodyWithParentsApplied();
-      int xt = parent->getXWithoutTransform();
-      int yt = parent->getYWithoutTransform();
 
-      return Rect(parentBody.getX1() + xt + body.getX1(), 
-                  parentBody.getY1() + yt + body.getY1(),
-                  parentBody.getX1() + xt + body.getX2(),
-                  parentBody.getY1() + yt + body.getY2());
+      return Rect(parentBody.getX1() + body.getX1(), 
+                  parentBody.getY1() + body.getY1(),
+                  parentBody.getX1() + body.getX2(),
+                  parentBody.getY1() + body.getY2());
    }
 
-   int xt = getXWithoutTransform();
-   int yt = getYWithoutTransform();
-   return Rect(body.getX1() + xt, body.getY1() + yt,
-               body.getX2() + xt, body.getY2() + yt);
+   return Rect(body.getX1(), body.getY1(),
+               body.getX2(), body.getY2());
 }
 

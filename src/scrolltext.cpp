@@ -31,22 +31,13 @@ ScrollText::ScrollText(int x, int y, int width, int height,
                        Kobold::String defaultFont, int defaultFontSize,
                        Color defaultColor, Widget* parent)
           :Widget(Widget::WIDGET_TYPE_SCROLL_TEXT, x, y, width, height, parent),
-           body(0, 0, width - 1, height - 1),
            lines(Kobold::LIST_TYPE_ADD_AT_END)
 {
+   body.set(getX(), getY(), getX() + width - 1, getY() + height - 1);
+
    /* Create children */
-   int scrollX = width - 20;
-   if(getParentContainer() != NULL)
-   {
-      Container* cont = (Container*) getParentContainer();
-      if( (cont->getContainerType() == Container::TYPE_TOP_RIGHT) ||
-          (cont->getContainerType() == Container::TYPE_BOTTOM_RIGHT) )
-      {
-         scrollX = 0;
-      }
-   }
    this->scrollBar = new ScrollBar(ScrollBar::TYPE_VERTICAL, 
-         scrollX, 0, height, this); 
+         width - 20, 0, height, this); 
 
    /* Set defaults */
    this->defaultFont = defaultFont;

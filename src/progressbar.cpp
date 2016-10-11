@@ -27,11 +27,11 @@ using namespace Farso;
  ***********************************************************************/
 ProgressBar::ProgressBar(int x, int y, int width, int height, Widget* parent)
             :Widget(WIDGET_TYPE_PROGRESS_BAR, x, y, width, height, parent),
-             color(255, 10, 10, 255),
-             body(x, y, x + width - 1, y + height -1)
+             color(255, 10, 10, 255)
 {
    curValue = 0;
    maxValue = 100;
+   body.set(getX(), getY(), getX() + width - 1, getY() + height -1);
 }
 
 /***********************************************************************

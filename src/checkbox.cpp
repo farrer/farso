@@ -33,7 +33,8 @@ CheckBox::CheckBox(int x, int y, int width, Kobold::String label, bool checked,
    this->setCaption(label);
    this->checked = checked;
    this->pressStarted = false;
-   this->body.set(x + 20, y, x + width - 1, y + 22);
+   this->body.set(getX() + 20, getY(), getX() + width - 1, getY() + 22);
+
    /* Note: let's make the label a child of the same parent (instead of
     * a child of the checkBox. It's just to avoid rerendering the label
     * on check box togle states (as the toggle will only affect the
@@ -41,9 +42,10 @@ CheckBox::CheckBox(int x, int y, int width, Kobold::String label, bool checked,
     * be than uneffective, but here will check the whole check box area
     * (which includes the label), creating events, and the checkbox is 
     * always before the label on parent's children list, so, once the click
-    * is got here, it won't check the label's one after. */
-   this->label = new Label(body.getX1(), body.getY1(), body.getWidth(), 
-                           body.getHeight(), label, parent);
+    * is got here, it won't check the label's one after.
+    * TODO: The downside is that we must assure to set label's position 
+    * always right of the 'box', which is not so trivial due to containers. */
+   this->label = new Label(x + 15, y, width - 15, 20, label, parent);
 }
 
 /******************************************************************
@@ -99,6 +101,7 @@ void CheckBox::doDraw(Rect pBody)
    int ry1 = pBody.getY1() + getY();
    int rx2 = pBody.getX1() + getX() + getWidth() - 1;
    int ry2 = pBody.getY1() + getY() + getHeight() - 1;
+   int labelX;
 
    if(skin != NULL)
    {
@@ -127,14 +130,10 @@ void CheckBox::doDraw(Rect pBody)
       }
       skin->drawElement(surface, skType, rx1, ry1, rx2, ry2);
       Rect bounds = skin->getSkinElement(skType).getBounds(0,0);
-      this->body.set(getX() + bounds.getX2() + 2, getY(), 
-                     getX() + getWidth() - 1, getY() + 22);
+      labelX = bounds.getX2() + 2;
    }
    else
    {
-      this->body.set(getX() + 15, getY(), 
-                     getX() + getWidth() - 1, getY() + 22);
-
       Farso::Draw* draw = Farso::Controller::getDraw();
       draw->setActiveColor(Colors::colorCont[0]);
       draw->doTwoColorsRectangle(surface, rx1, ry1+3, rx1+13, ry1+16, 
@@ -165,10 +164,11 @@ void CheckBox::doDraw(Rect pBody)
          draw->doLine(surface, rx1+10, ry1+5, rx1+1, ry1+14);
          draw->doLine(surface, rx1+12, ry1+5, rx1+3, ry1+14);
       }
+      labelX = 15;
    }
 
-   label->setPosition(body.getX1(), body.getY1());
-   label->setSize(body.getWidth(), body.getHeight());
+   label->setPosition(labelX + getXWithoutTransform(), 
+         getYWithoutTransform());
 }
 
 /******************************************************************

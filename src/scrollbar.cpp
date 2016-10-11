@@ -45,29 +45,29 @@ ScrollBar::ScrollBar(ScrollType type, int x, int y, int widthOrHeight,
    this->scrollReference[0] = UNDEFINED_REFERENCE;
    this->scrollReference[1] = UNDEFINED_REFERENCE;
    this->widthOrHeight = widthOrHeight;
-   this->body.set(0, 0, getWidth() - 1, getHeight() - 1);
+   this->body.set(getX(), getY(), getX() + getWidth() - 1, getY() + 
+         getHeight() - 1);
    this->realWidthOrHeight = (widthOrHeight - (2 * DEFAULT_SIZE) - 3);
 
    /* Let's create and define its buttons */
-   int rx  = x, ry = y;
    if(type == TYPE_VERTICAL)
    {
-      upButton = new Farso::Button(rx, ry, DEFAULT_SIZE, DEFAULT_SIZE, 
+      upButton = new Farso::Button(0, 0, DEFAULT_SIZE, DEFAULT_SIZE, 
             BUTTON_SPECIAL_CAPTION_UP, this);
-      scrollButton = new Farso::Button(rx + 1, ry + DEFAULT_SIZE + 1, 
+      scrollButton = new Farso::Button(1, DEFAULT_SIZE + 1, 
             DEFAULT_SIZE - 2, widthOrHeight - (2 * DEFAULT_SIZE) - 3, "",
             this);
-      downButton = new Farso::Button(rx, ry + widthOrHeight - DEFAULT_SIZE - 1,
+      downButton = new Farso::Button(0, widthOrHeight - DEFAULT_SIZE - 1,
             DEFAULT_SIZE, DEFAULT_SIZE, BUTTON_SPECIAL_CAPTION_DOWN, this);
    }
    else
    {
-      upButton = new Farso::Button(rx, ry, DEFAULT_SIZE, DEFAULT_SIZE, 
+      upButton = new Farso::Button(0, 0, DEFAULT_SIZE, DEFAULT_SIZE, 
             BUTTON_SPECIAL_CAPTION_LEFT, this);
-      scrollButton = new Farso::Button(rx + DEFAULT_SIZE + 1, ry + 1, 
+      scrollButton = new Farso::Button(DEFAULT_SIZE + 1, 1, 
             widthOrHeight - (2 * DEFAULT_SIZE) - 3, DEFAULT_SIZE - 2, 
             "", this);
-      downButton = new Farso::Button(rx + widthOrHeight - DEFAULT_SIZE - 1, ry,
+      downButton = new Farso::Button(widthOrHeight - DEFAULT_SIZE - 1, 0,
             DEFAULT_SIZE, DEFAULT_SIZE, BUTTON_SPECIAL_CAPTION_RIGHT, this);
    }
 }
@@ -85,9 +85,6 @@ ScrollBar::~ScrollBar()
  ************************************************************************/
 void ScrollBar::definePositionAndSize()
 {
-   /* Define coordinates */
-   int rx  = getX(), ry = getY();
-   
    /* Calculate variation for each position */
    realWidthOrHeight = (widthOrHeight - (2 * DEFAULT_SIZE) - 3);
    float deltaInit = (initial) / (float)total;
@@ -121,12 +118,12 @@ void ScrollBar::definePositionAndSize()
    /* Finally, set the scroll possition and size, depending on its type */
    if(scrollType == TYPE_VERTICAL)
    {
-      scrollButton->setY(ry + DEFAULT_SIZE + 1 + posInit);
+      scrollButton->setY(DEFAULT_SIZE + 1 + posInit);
       scrollButton->setHeight(size); 
    }
    else
    {
-      scrollButton->setX(rx + DEFAULT_SIZE + 1 + posInit);
+      scrollButton->setX(DEFAULT_SIZE + 1 + posInit);
       scrollButton->setWidth(size);
    }
 

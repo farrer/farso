@@ -41,6 +41,7 @@ void Example::init(Farso::RendererType rendererType)
    createDialogWindow();
    createWindowWithStack();
    createOtherWindow();
+   createWindowToTestContainers();
 }
 
 /************************************************************************
@@ -165,6 +166,61 @@ void Example::createOtherWindow()
 }
 
 /************************************************************************
+ *                      createWindowToTestContainers                    *
+ ************************************************************************/
+void Example::createWindowToTestContainers()
+{
+   Farso::Window* window = new Farso::Window(400, 450, "Containers test");
+   window->open();
+   window->getWidgetRenderer()->setPosition(10, 10);
+
+   /* Add a stack tab to it */
+   Farso::StackTab* tab = new Farso::StackTab(window);
+
+   /* Add first option to the stack tab and add some children widgets to it */
+   Farso::Container* tabCont = tab->insertTab("T. Left");
+   Farso::Container* cont = new Farso::Container(
+         Farso::Container::TYPE_TOP_LEFT, tabCont);
+   addAllWidgetsToContainer(cont);
+
+   tabCont = tab->insertTab("T. Center");
+   cont = new Farso::Container(Farso::Container::TYPE_TOP_CENTERED, tabCont);
+   addAllWidgetsToContainer(cont);
+
+   tabCont = tab->insertTab("T. Right");
+   cont = new Farso::Container(Farso::Container::TYPE_TOP_RIGHT, tabCont);
+   addAllWidgetsToContainer(cont);
+
+   tabCont = tab->insertTab("B. Left");
+   cont = new Farso::Container(Farso::Container::TYPE_BOTTOM_LEFT, tabCont);
+   addAllWidgetsToContainer(cont);
+
+   tabCont = tab->insertTab("B. Center");
+   cont = new Farso::Container(Farso::Container::TYPE_BOTTOM_CENTERED,
+         tabCont); 
+   addAllWidgetsToContainer(cont);
+
+   tabCont = tab->insertTab("B. Right");
+   cont = new Farso::Container(Farso::Container::TYPE_BOTTOM_RIGHT, tabCont);
+   addAllWidgetsToContainer(cont);
+}
+
+/************************************************************************
+ *                         addAllWidgetsToContainer                     *
+ ************************************************************************/
+void Example::addAllWidgetsToContainer(Farso::Container* cont)
+{
+   new Farso::Button(2, 10, 80, 21, "Button", cont);
+   new Farso::Label(2, 33, 80, 21, "Label", cont);
+   new Farso::TextEntry(2, 54, 80, 21, cont);
+   new Farso::CheckBox(2, 75, 100, "Check box", true, cont);
+   Farso::Button* button = new Farso::Button(10, 95, 40, 40, "", cont);
+   new Farso::Picture(4, 4, "cursor/talk.png", button);
+   (new Farso::ProgressBar(2, 136, 100, 16, cont))->setValue(50);
+   new Farso::Picture(2, 155, "cursor/talk.png", cont);
+}
+
+/************************************************************************
  *                                  step                                *
  ************************************************************************/
 void Example::step(bool leftButtonPressed, bool rightButtonPressed,
@@ -174,7 +230,7 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
    if(Farso::Controller::verifyEvents(leftButtonPressed, rightButtonPressed, 
             mouseX, mouseY))
    {
-      /* Got an event, we musrt treat it. For this example, just echoing
+      /* Got an event, we must treat it. For this example, just echo'ing
        * the event code to log */
       Farso::Event event = Farso::Controller::getLastEvent();
       Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL, "Event got: %d", 

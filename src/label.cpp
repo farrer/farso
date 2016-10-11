@@ -37,7 +37,7 @@ Label::Label(int x, int y, int width, int height, Kobold::String caption,
    this->fontAlign = Font::TEXT_LEFT;
    this->definedColor = false;
    this->pressStarted = false;
-   this->body.set(x, y, x + width - 1, y + width -1);
+   this->body.set(getX(), getY(), getX() + width - 1, getY() + width -1);
    this->skinType = Skin::SKIN_TYPE_LABEL;
 }
 

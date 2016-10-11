@@ -43,9 +43,10 @@ CheckBox::CheckBox(int x, int y, int width, Kobold::String label, bool checked,
     * (which includes the label), creating events, and the checkbox is 
     * always before the label on parent's children list, so, once the click
     * is got here, it won't check the label's one after.
-    * TODO: The downside is that we must assure to set label's position 
+    * The downside is that we must assure to set label's position 
     * always right of the 'box', which is not so trivial due to containers. */
-   this->label = new Label(x + 15, y, width - 15, 20, label, parent);
+   this->label = new Label(0, 0, width, 20, label, parent);
+   setLabelPosition(15);
 }
 
 /******************************************************************
@@ -55,6 +56,29 @@ CheckBox::~CheckBox()
 {
    /* No need to delete label, as it will be deleted on
     * checkbox's children list destructor. */
+}
+
+/******************************************************************
+ *                         setLabelPosition                       *
+ ******************************************************************/
+void CheckBox::setLabelPosition(int labelX)
+{
+   Container* pCont = (Container*) getParentContainer();
+
+   if((pCont == NULL) || 
+      (pCont->getContainerType() == Container::TYPE_TOP_LEFT) ||
+      (pCont->getContainerType() == Container::TYPE_BOTTOM_LEFT))
+   {
+      /* left oriented */
+      label->setPosition(labelX + getXWithoutTransform(), 
+            getYWithoutTransform());
+   }
+   else 
+   {
+      /* Centered oriented or right oriented*/
+      label->setPosition(getXWithoutTransform() - labelX, 
+            getYWithoutTransform());
+   }
 }
 
 /******************************************************************
@@ -105,6 +129,8 @@ void CheckBox::doDraw(Rect pBody)
 
    if(skin != NULL)
    {
+      /* Determine which skin element to use for checkbox, according to 
+       * its current state */
       Skin::SkinElementType skType;
       if(isAvailable())
       {
@@ -128,6 +154,7 @@ void CheckBox::doDraw(Rect pBody)
             skType = Skin::SKIN_TYPE_CHECKBOX_DISABLED;
          }
       }
+      /* Draw the checkbox */
       skin->drawElement(surface, skType, rx1, ry1, rx2, ry2);
       Rect bounds = skin->getSkinElement(skType).getBounds(0,0);
       labelX = bounds.getX2() + 2;
@@ -135,9 +162,12 @@ void CheckBox::doDraw(Rect pBody)
    else
    {
       Farso::Draw* draw = Farso::Controller::getDraw();
+
+      /* Draw checkbox border */
       draw->setActiveColor(Colors::colorCont[0]);
       draw->doTwoColorsRectangle(surface, rx1, ry1+3, rx1+13, ry1+16, 
                                  Colors::colorCont[1]);
+      /* Fill checkbox interior */
       if(isAvailable())
       {
          draw->setActiveColor(Colors::colorText);
@@ -147,6 +177,8 @@ void CheckBox::doDraw(Rect pBody)
          draw->setActiveColor(Colors::colorCont[2]);
       }
       draw->doFilledRectangle(surface, rx1+1, ry1+4, rx1+12, ry1+15);
+
+      /* Draw its inner 'X' mark, if needed */
       if(checked)
       {
          if(isAvailable())
@@ -167,8 +199,8 @@ void CheckBox::doDraw(Rect pBody)
       labelX = 15;
    }
 
-   label->setPosition(labelX + getXWithoutTransform(), 
-         getYWithoutTransform());
+   /* Redefine label position, due to potential on-the-fly skin change. */
+   setLabelPosition(labelX);
 }
 
 /******************************************************************

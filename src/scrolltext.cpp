@@ -259,6 +259,8 @@ void ScrollText::doDraw(Rect pBody)
 {
    Skin* skin = Controller::getSkin();
    Farso::Surface* surface = getWidgetRenderer()->getSurface();
+   
+   body.set(getX(), getY(), getX() + getWidth() - 1, getY() + getHeight() - 1);
 
    /* Define coordinates (with parent's applied) */
    int pX = getX() + pBody.getX1();

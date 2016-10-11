@@ -170,7 +170,7 @@ void Example::createOtherWindow()
  ************************************************************************/
 void Example::createWindowToTestContainers()
 {
-   Farso::Window* window = new Farso::Window(400, 450, "Containers test");
+   Farso::Window* window = new Farso::Window(400, 500, "Containers test");
    window->open();
    window->getWidgetRenderer()->setPosition(10, 10);
 
@@ -225,6 +225,14 @@ void Example::addAllWidgetsToContainer(Farso::Container* cont)
    sel->addOption("Morning Star");
    sel->addOption("Rats and Monkeys");
    sel->addOption("Heart of Stone");
+   Farso::ScrollText* scrollText = new Farso::ScrollText(2, 255, 120, 100, 
+         "fonts/LiberationSans-Regular.ttf", 10, 
+         Farso::Colors::colorText, cont);
+   scrollText->addText("Some text to the scroll to be scrollable, it is?");
+   scrollText->addLineBreak();
+   scrollText->addText("And more text maybe it is now, right?");
+   scrollText->addLineBreak();
+   scrollText->addText("Now it really is, I'm sure!");
 }
 
 /************************************************************************

@@ -37,8 +37,6 @@ Widget::Widget(WidgetType type, int x, int y, int width, int height,
 {
    this->available = true;
    this->visible = true;
-   this->x = x;
-   this->y = y;
    this->width = width;
    this->height = height;
    this->dirty = true;
@@ -61,6 +59,19 @@ Widget::Widget(WidgetType type, int x, int y, int width, int height,
    }
 
    defineParentContainer();
+
+   if(parent == NULL)
+   {
+      this->x = 0;
+      this->y = 0;
+      renderer->setPosition(x,y);
+   }
+   else
+   {
+      this->x = x;
+      this->y = y;
+   }
+
 
    assert(this->renderer != NULL);
 }

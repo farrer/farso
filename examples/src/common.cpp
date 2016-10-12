@@ -85,7 +85,7 @@ void Example::createWindowWithStack()
 {
    /* Create the window and set its position */
    Farso::Window* window = new Farso::Window(450, 400, "Window 3");
-   window->setPosition(300, 200);
+//   window->setPosition(300, 200);
    
    /* Add a stack tab to it */
    Farso::StackTab* tab = new Farso::StackTab(window);

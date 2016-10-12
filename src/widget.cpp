@@ -57,6 +57,7 @@ Widget::Widget(WidgetType type, int x, int y, int width, int height,
       /* And be added to the controller as a 'root' widget */
       Controller::addWidget(this);
    }
+   assert(this->renderer != NULL);
 
    defineParentContainer();
 
@@ -72,8 +73,6 @@ Widget::Widget(WidgetType type, int x, int y, int width, int height,
       this->y = y;
    }
 
-
-   assert(this->renderer != NULL);
 }
 
 /***********************************************************************

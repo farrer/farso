@@ -544,6 +544,16 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    Window* curActive = activeWindow;
    if(curActive)
    {
+      /* Make sure the active window is first
+       * Note: doing here, instead of inside setActiveWindow because
+       * that function could be called while looping through the list,
+       * which could mess things up on the list. */
+      if(curActive != widgets->getFirst())
+      {
+         widgets->removeWithoutDelete(curActive);
+         widgets->insertAtBegin(curActive);
+      }
+
       gotEvent |= verifyEvents(curActive, leftButtonPressed, 
             rightButtonPressed, mouseX, mouseY, !gotEvent);
    }
@@ -556,19 +566,27 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       {
          gotEvent |= verifyEvents(w, leftButtonPressed, rightButtonPressed, 
                mouseX, mouseY, !gotEvent);
-         if(w->isVisible())
-         {
-            w->getWidgetRenderer()->render(depth);
-         }
-         depth += 0.001f;
       }
 
       w = (Widget*) w->getNext();
    }
+
+   /* Most render widgets from back to front */
+   w = (Widget*) widgets->getLast();
+   for(int i = 0; i < widgets->getTotal(); i++)
+   {
+      if((w->isVisible()) && (w != curActive))
+      {
+         w->getWidgetRenderer()->render(depth);
+      }
+      depth += 0.001f;
+
+      w = (Widget*) w->getPrevious();
+   }
    
    if(curActive)
    {
-      /* Render current ative on top */
+      /* Render current ative on top (last) */
       curActive->getWidgetRenderer()->render(depth);
    }
 

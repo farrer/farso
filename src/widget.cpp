@@ -107,20 +107,21 @@ void Widget::setCaption(Kobold::String text)
  ***********************************************************************/
 void Widget::setPosition(int x, int y)
 {
-   if( (this->x != x) || (this->y != y) )
+   if(parent == NULL)
    {
-      this->x = x; 
-      this->y = y;
-      if(parent == NULL)
+      renderer->setPosition(x, y);
+   }
+   else
+   {
+      if( (this->x != x) || (this->y != y) )
       {
-         renderer->setPosition(x, y);
-      }
-      else
-      {
+         this->x = x; 
+         this->y = y;
+
          /* As changed its position, must dirty its parent too */
          parent->setDirty();
+         setDirty();
       }
-      setDirty();
    }
 }
 

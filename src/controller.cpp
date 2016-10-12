@@ -556,7 +556,10 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       {
          gotEvent |= verifyEvents(w, leftButtonPressed, rightButtonPressed, 
                mouseX, mouseY, !gotEvent);
-         w->getWidgetRenderer()->render(depth);
+         if(w->isVisible())
+         {
+            w->getWidgetRenderer()->render(depth);
+         }
          depth += 0.001f;
       }
 

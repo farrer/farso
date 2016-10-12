@@ -471,6 +471,12 @@ bool Controller::verifyEvents(Widget* widget,
 {
    bool gotEvent = false;
 
+   if(!widget->isVisible())
+   {
+      /* No need to treat invisible widgets. */
+      return false;
+   }
+
    /* Verify widget events */
    if(checkEvents)
    {
@@ -559,6 +565,7 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    
    if(curActive)
    {
+      /* Render current ative on top */
       curActive->getWidgetRenderer()->render(depth);
    }
 

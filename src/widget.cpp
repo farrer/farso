@@ -410,7 +410,7 @@ void Widget::show()
 
    if(parent == NULL)
    {
-      renderer->hide();
+      renderer->show();
    }
 }
 

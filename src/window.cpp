@@ -47,6 +47,7 @@ Window::Window(int width, int height, Kobold::String title)
          Skin::SKIN_TYPE_WINDOW_DISABLED_CLOSE_BUTTON);
 
    defineBody();
+   hide();
 }
 
 /***********************************************************************
@@ -270,6 +271,7 @@ bool Window::isActive()
  ***********************************************************************/
 void Window::open()
 {
+   show();
    activate();
 
    Farso::Skin* skin = Farso::Controller::getSkin();

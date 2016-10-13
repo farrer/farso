@@ -104,6 +104,12 @@ class Controller
        * \return if load was successfull. */
       static bool loadSkin(Kobold::String filename);
 
+      /*! Set the current skin to an already loaded one.
+       * \note this function is usually called to set to a derived Skin class
+       *       implementation, that is created outside the usual 'loadSkin'
+       *       function call. */
+      static void setSkin(Skin* skin);
+
       /*! Unload the current loaded skin (if any). */
       static void unloadSkin();
 

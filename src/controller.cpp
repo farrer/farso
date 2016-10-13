@@ -289,6 +289,23 @@ Surface* Controller::loadImageToSurface(Kobold::String filename)
 }
 
 /***********************************************************************
+ *                              setSkin                                *
+ ***********************************************************************/
+void Controller::setSkin(Skin* skin)
+{
+   if(skin != NULL)
+   {
+      if(Controller::skin)
+      {
+         /* Must unload the current one */
+         delete Controller::skin;
+      }
+      Controller::skin = skin;
+      markAllDirty();
+   }
+}
+
+/***********************************************************************
  *                              loadSkin                               *
  ***********************************************************************/
 bool Controller::loadSkin(Kobold::String filename)
@@ -301,6 +318,7 @@ bool Controller::loadSkin(Kobold::String filename)
 
    bool success = true;
    skin = new Skin(filename);
+   skin->load();
    if(!skin->getSurface())
    {
       /* Skin couldn't be loaded. Must not use it. */

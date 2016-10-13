@@ -704,7 +704,7 @@ Skin::Skin(Kobold::String filename)
    surface = NULL;
    defaultFontSize = 10;
    this->filename = filename;
-   load(filename);
+   elements = NULL;
 }
 
 /***********************************************************************
@@ -715,6 +715,10 @@ Skin::~Skin()
    if(surface)
    {
       delete surface;
+   }
+   if(elements)
+   {
+      delete[] elements;
    }
 }
 
@@ -729,17 +733,31 @@ Kobold::String Skin::getFilename()
 /***********************************************************************
  *                            getSkinElement                           *
  ***********************************************************************/
-Skin::SkinElement Skin::getSkinElement(SkinElementType type)
+Skin::SkinElement Skin::getSkinElement(int type)
 {
-   return elements[type]; 
+   if((type > SKIN_TYPE_UNKNOWN) && (type < total))
+   {
+      return elements[type];
+   }
+
+   assert(false);
+   return elements[SKIN_TYPE_WINDOW];
 }
 
 /***********************************************************************
  *                                load                                 *
  ***********************************************************************/
-void Skin::load(Kobold::String filename)
+void Skin::load()
 {
    Kobold::DefParser def;
+
+   /* Define elements vector and totals */
+   total = getTotalElements();
+   if(elements)
+   {
+      delete[] elements;
+   }
+   elements = new SkinElement[total];
    
    if(!def.load(Controller::getRealFilename(filename), 
             (Controller::getRendererType() != RENDERER_TYPE_OGRE3D)))
@@ -776,6 +794,7 @@ void Skin::load(Kobold::String filename)
       else if(key == SKIN_KEY_ELEMENT)
       {
          cur = getElementType(value);
+         assert(cur != SKIN_TYPE_UNKNOWN);
          elements[cur].setFontName(defaultFont);
          elements[cur].setFontSize(defaultFontSize);
          elements[cur].setFontAlignment(Font::TEXT_LEFT);
@@ -906,7 +925,7 @@ void Skin::load(Kobold::String filename)
 /***********************************************************************
  *                            getWidgetType                            *
  ***********************************************************************/
-Skin::SkinElementType Skin::getElementType(Kobold::String typeName)
+int Skin::getElementType(Kobold::String typeName)
 {
    if(typeName == "window")
    {
@@ -1028,13 +1047,35 @@ Skin::SkinElementType Skin::getElementType(Kobold::String typeName)
    {
       return SKIN_TYPE_TEXTENTRY_DISABLED;
    }
-   Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
-      "ERROR: Unknow widget name '%s' on screen definition file!",
-      typeName.c_str());
 
-   /* Unknown widget. let's overhide window to make sure
-    * the user view that something is wrong with the skin definition.*/
-   return SKIN_TYPE_WINDOW;
+   /* Try to get from user defined ones */
+   int elementType = getExtendedElementType(typeName);
+
+   if(elementType == SKIN_TYPE_UNKNOWN)
+   {
+      /* Unknown widget. */
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+            "ERROR: Unknow widget name '%s' on screen definition file!",
+            typeName.c_str());
+   }
+
+   return elementType;
+}
+
+/***********************************************************************
+ *                           getTotalElements                          *
+ ***********************************************************************/
+int Skin::getTotalElements()
+{
+   return TOTAL_BASIC_SKIN_ELEMENT_TYPES;
+}
+
+/***********************************************************************
+ *                        getExtendedElementType                       *
+ ***********************************************************************/
+int Skin::getExtendedElementType(Kobold::String typeName)
+{
+   return SKIN_TYPE_UNKNOWN;
 }
 
 /***********************************************************************
@@ -1048,12 +1089,12 @@ Surface* Skin::getSurface()
 /***********************************************************************
  *                             drawElement                             *
  ***********************************************************************/
-void Skin::drawElement(Surface* dest, SkinElementType type, 
+void Skin::drawElement(Surface* dest, int type, 
       int wx1, int wy1, int wx2, int wy2)
 {
    getSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2); 
 }
-void Skin::drawElement(Surface* dest, SkinElementType type, 
+void Skin::drawElement(Surface* dest, int type, 
       int wx1, int wy1, int wx2, int wy2, Rect bounds, Kobold::String caption)
 {
    getSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2, bounds, 
@@ -1063,8 +1104,13 @@ void Skin::drawElement(Surface* dest, SkinElementType type,
 /***********************************************************************
  *                          isElementDefined                           *
  ***********************************************************************/
-bool Skin::isElementDefined(SkinElementType type)
+bool Skin::isElementDefined(int type)
 {
-   return getSkinElement(type).isDefined();
+   if((type > SKIN_TYPE_UNKNOWN) && (type < total))
+   {
+      return getSkinElement(type).isDefined();
+   }
+
+   return false;
 }
 

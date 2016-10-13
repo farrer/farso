@@ -33,13 +33,20 @@ namespace Farso
 {
 
 /*! A skin is an image atlas with elements to define the style of
- * Farso Widgets. */
+ * Farso Widgets.
+ * \note One could extend from this class, supporting own skin elements
+ *       besides the basic defined ones, by reimplementing the function
+ *       getTotalElements (only called once) and getExtendedElementType.
+ *       Also, one should then set the skin by Controller::setSkin,
+ *       loading it elsewhere with the new inherited class, instead of 
+ *       the usual Controller::loadSkin call. */
 class Skin
 {
    public:
       /*! Element types for skin definitions */
       enum SkinElementType
       {
+         SKIN_TYPE_UNKNOWN = -1,
          SKIN_TYPE_WINDOW,
          SKIN_TYPE_WINDOW_ACTIVE_TITLE_BAR,
          SKIN_TYPE_WINDOW_INACTIVE_TITLE_BAR,
@@ -70,7 +77,7 @@ class Skin
          SKIN_TYPE_BORDER_BOTTOM,
          SKIN_TYPE_TEXTENTRY,
          SKIN_TYPE_TEXTENTRY_DISABLED,
-         TOTAL_SKIN_ELEMENT_TYPES
+         TOTAL_BASIC_SKIN_ELEMENT_TYPES
       };
 
       /*! Basic skin defintion for an element. A element is basicaly
@@ -216,13 +223,17 @@ class Skin
       };
 
       /*! Constructor.
-       * \param filename skin defintion file to load */
+       * \param filename skin defintion file.
+       * \note: one must load (with a call to load()) it before use the skin. */
       Skin(Kobold::String filename);
       /*! Destructor */
-      ~Skin();
+      virtual ~Skin();
+
+      /*! Load the skin definition file. */
+      void load();
 
       /*! \return SkinElement definition for specific widget type */
-      SkinElement getSkinElement(SkinElementType type);
+      SkinElement getSkinElement(int type);
 
       /*! \return surface with texture atlas */
       Surface* getSurface();
@@ -236,31 +247,38 @@ class Skin
        * \param wy2 widget bottom coordinate 
        * \note: both dest and this->surface surfaces must be locked before
        *        calling this function. */ 
-      void drawElement(Surface* dest, SkinElementType type, 
+      void drawElement(Surface* dest, int type, 
             int wx1, int wy1, int wx2, int wy2);
       /*! Same as #drawElement, but writing caption at element's text area, 
        * if defined.
        * \param bounds Pre-calculated element bounds for current widget.
        * \param caption to write. */
-      void drawElement(Surface* dest, SkinElementType type, 
+      void drawElement(Surface* dest, int type, 
             int wx1, int wy1, int wx2, int wy2, Rect bounds, 
             Kobold::String caption);
 
       /*! \return if the Element type is defined or not on this skin. */
-      bool isElementDefined(SkinElementType type);
+      bool isElementDefined(int type);
 
       /*! \return filename of the skin. */
       Kobold::String getFilename();
 
    protected:
-      /*! Load the skin definition file.
-       * \param filename skin defintion to load. */
-      void load(Kobold::String filename);
+
+      /*! \return total distinct skin elements supported. */
+      virtual int getTotalElements();
+
+      /*! Get extended element type constant.
+       * \param typeName name
+       * \return extended element type constant ( >= 
+       * TOTAL_BASIC_SKIN_ELEMENT_TYPES && < getTotalElements )
+       * or UNKNOW_ELEMENT when typeName isn't defined. */
+      virtual int getExtendedElementType(Kobold::String typeName);
 
       /*! \return SkinElementType constant based on its name.
        * For example, "window" will return ELEMENT_TYPE_WINDOW and
        * so on. */
-      SkinElementType getElementType(Kobold::String typeName);
+      int getElementType(Kobold::String typeName);
 
    private:
       Surface* surface; /** The surface with the skin texture atlas. */
@@ -269,7 +287,8 @@ class Skin
       int defaultFontSize; /**< Default font size to use. */
       Farso::Color defaultFontColor; /**< Default font color to use. */
       
-      SkinElement elements[TOTAL_SKIN_ELEMENT_TYPES]; /** Elements vector */
+      SkinElement* elements; /** Elements vector */
+      int total; /** Total elements */
 
       Kobold::String filename; /**< Skin filename */
 };

@@ -67,7 +67,7 @@ void Example::createDialogWindow()
    Farso::Window* window = new Farso::Window(450, 200, "Window 2");
 
    /* Define a position where it will be when opened */
-   window->setPosition(0, 200);
+   window->setPosition(200, 500);
 
    /* Create a text selector with some options to it */
    Farso::TextSelector* sel = new Farso::TextSelector(window);
@@ -85,7 +85,7 @@ void Example::createWindowWithStack()
 {
    /* Create the window and set its position */
    Farso::Window* window = new Farso::Window(450, 400, "Window 3");
-//   window->setPosition(300, 200);
+   window->setPosition(600, 200);
    
    /* Add a stack tab to it */
    Farso::StackTab* tab = new Farso::StackTab(window);

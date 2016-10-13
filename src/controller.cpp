@@ -571,17 +571,20 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       w = (Widget*) w->getNext();
    }
 
-   /* Most render widgets from back to front */
-   w = (Widget*) widgets->getLast();
-   for(int i = 0; i < widgets->getTotal(); i++)
+   if(rendererType != RENDERER_TYPE_OGRE3D)
    {
-      if(w->isVisible())
+      /* Most render widgets from back to front */
+      w = (Widget*) widgets->getLast();
+      for(int i = 0; i < widgets->getTotal(); i++)
       {
-         w->getWidgetRenderer()->render(depth);
-      }
-      depth += 0.001f;
+         if(w->isVisible())
+         {
+            w->getWidgetRenderer()->render(depth);
+         }
+         depth += 0.001f;
 
-      w = (Widget*) w->getPrevious();
+         w = (Widget*) w->getPrevious();
+      }
    }
    
    /* Must render mouse cursor on top */

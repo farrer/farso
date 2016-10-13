@@ -228,4 +228,17 @@ element = textEntry
       textFontColor = 155,155,155,255
       textAlignment = 0
 
+# Cursor Textual Tip
+element = cursorTextualTip
+   borderDelta = 0,0,0,0
+   leftBorder = 16,173,16,173
+   rightBorder = 35,173,35,173
+   topBorder = 23,167,23,167
+   bottomBorder = 23,186,23,186
+   backgroundDelta = 1,1,1,1
+   background = 20,176,20,176
+   textAreaDelta = 0,0,0,0
+   textFontColor = 255,255,255,255
+   textAlignment = 1
+
 

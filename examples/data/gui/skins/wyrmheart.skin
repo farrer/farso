@@ -231,3 +231,26 @@ element = textEntry
       backgroundDelta = 2,2,2,2
       background = 17,52,18,53
       textFontColor = 155,155,155,255
+
+# Cursor Textual Tip
+element = cursorTextualTip
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 134,313,139,318
+   bottomLeftCorner = 134,324,139,329
+   topRightCorner = 152,313,157,318
+   bottomRightCorner = 152,324,157,329
+   borderDelta = 0,0,0,0
+   leftBorderDelta = 0,2,0,2
+   leftBorder = 134,322,139,322
+   rightBorderDelta = 0,2,0,2
+   rightBorder = 152,322,157,322
+   topBorderDelta = 2,0,2,0
+   topBorder = 145,313,146,318
+   bottomBorderDelta = 2,0,2,0
+   bottomBorder = 145,324,146,329
+   backgroundDelta = 6,6,6,6
+   background = 145,322,146,322
+   textAreaDelta = 0,0,0,0
+   textFontColor = 116,100,81,255
+   textAlignment = 1 
+

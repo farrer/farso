@@ -77,6 +77,7 @@ class Skin
          SKIN_TYPE_BORDER_BOTTOM,
          SKIN_TYPE_TEXTENTRY,
          SKIN_TYPE_TEXTENTRY_DISABLED,
+         SKIN_TYPE_CURSOR_TEXTUAL_TIP,
          TOTAL_BASIC_SKIN_ELEMENT_TYPES
       };
 
@@ -141,6 +142,8 @@ class Skin
             int getFontSize();
             /*! Set the font alignment to use */
             void setFontAlignment(Font::Alignment align);
+            /* \return font alignment to use */
+            Font::Alignment getFontAlignment();
             /*! Set font color to use for element's text */
             void setFontColor(Farso::Color color);
             /*! Set font color to use for element's text */

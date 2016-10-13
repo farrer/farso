@@ -261,6 +261,15 @@ void Skin::SkinElement::setFontAlignment(Font::Alignment align)
 }
 
 /***********************************************************************
+ *                         getFontAlignment                            *
+ ***********************************************************************/
+Font::Alignment Skin::SkinElement::getFontAlignment()
+{
+   return this->fontAlign;
+}
+
+
+/***********************************************************************
  *                           setFontColor                              *
  ***********************************************************************/
 void Skin::SkinElement::setFontColor(Farso::Color color)
@@ -1046,6 +1055,10 @@ int Skin::getElementType(Kobold::String typeName)
    else if(typeName == "textEntryDisabled")
    {
       return SKIN_TYPE_TEXTENTRY_DISABLED;
+   }
+   else if(typeName == "cursorTextualTip")
+   {
+      return SKIN_TYPE_CURSOR_TEXTUAL_TIP;
    }
 
    /* Try to get from user defined ones */

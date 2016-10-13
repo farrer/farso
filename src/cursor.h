@@ -146,6 +146,7 @@ class Cursor
       static Farso::WidgetRenderer* tipRenderer; /**< Renderer for text tip */
       static Kobold::String textualTip; /**< Current text tip */
       static int tipHeight; /**< Current text tip height */
+      static bool definedTipFont; /**< If tip font was explicit defined */
       static Kobold::String tipFont; /**< Current tip font name */
       static int tipFontSize; /**< Current tip font size */
       static Kobold::Timer tipTimer; /**< Timer of last set tip */

@@ -33,8 +33,8 @@
 
 using namespace Farso;
 
-#define CURSOR_TIP_MAX_WIDTH   128
-#define CURSOR_TIP_MAX_HEIGHT   32
+#define CURSOR_TIP_MAX_WIDTH   256
+#define CURSOR_TIP_MAX_HEIGHT   64
 
 #define CURSOR_TIP_EXPIRE_TIME  220 /**< Time to expire tip, in ms */
 
@@ -63,6 +63,7 @@ void Cursor::init(int size)
    tipRenderer->hide();
 
    tipHeight = 0;
+   definedTipFont = false;
    tipFont = FontManager::getDefaultFontFilename();
    tipFontSize = 10;
 
@@ -271,11 +272,32 @@ void Cursor::setTextualTip(Kobold::String tip)
          
          Draw* draw = Controller::getDraw();
          Surface* surface = tipRenderer->getSurface();
+         Skin* skin = Controller::getSkin();
 
-         Font* font = FontManager::getFont(tipFont);
-         font->setAlignment(Font::TEXT_CENTERED);
-         font->setSize(tipFontSize);
+         Font* font;
+         Color fontColor;
+         
+         if( (definedTipFont) || (skin == NULL) || 
+             (!skin->isElementDefined(Skin::SKIN_TYPE_CURSOR_TEXTUAL_TIP)) )
+         {
+            /* Must use the defined or default font */
+            font = FontManager::getFont(tipFont);
+            font->setSize(tipFontSize);
+            font->setAlignment(Font::TEXT_CENTERED);
+            fontColor = Colors::colorText;
+         }
+         else 
+         {
+            /* Must use font from skin element */
+            Skin::SkinElement skEl = skin->getSkinElement(
+                  Skin::SKIN_TYPE_CURSOR_TEXTUAL_TIP);
+            font = FontManager::getFont(skEl.getFontName());
+            font->setSize(skEl.getFontSize());
+            font->setAlignment(skEl.getFontAlignment());
+            fontColor = skEl.getFontColor();
+         }
 
+         /* Let's define tip size with current font */
          int w = font->getWidth(textualTip) + 10;
          int h = font->getDefaultHeight() + 2 * FONT_HORIZONTAL_DELTA;
 
@@ -288,20 +310,31 @@ void Cursor::setTextualTip(Kobold::String tip)
          {
             h = CURSOR_TIP_MAX_HEIGHT;
          }
-         
+        
+         /* Finally, let's draw it */
          surface->lock();
-      
-         /* Clear and draw background */
+         
          surface->clear();
-         draw->setActiveColor(Colors::colorButton);
-         draw->doFilledRectangle(surface, 1, 1, w - 2, h - 2);
-         draw->setActiveColor(Colors::colorCont[0]);
-         draw->doRoundedRectangle(surface, 0, 0, w - 1, h - 1, 
-               Colors::colorCont[0]);
 
-         /* Render its text */
-         draw->setActiveColor(Colors::colorText);
-         font->write(surface, Rect(0, 0, w - 1, h - 1), textualTip);
+         if(skin == NULL)
+         {
+            /* Draw background */
+            draw->setActiveColor(Colors::colorButton);
+            draw->doFilledRectangle(surface, 1, 1, w - 2, h - 2);
+            draw->setActiveColor(Colors::colorCont[0]);
+            draw->doRoundedRectangle(surface, 0, 0, w - 1, h - 1, 
+                  Colors::colorCont[0]);
+
+            /* Render its text */
+            draw->setActiveColor(fontColor);
+            font->write(surface, Rect(0, 0, w - 1, h - 1), textualTip);
+         }
+         else
+         {
+            //TODO: when explicitly defined font!
+            skin->drawElement(surface, Skin::SKIN_TYPE_CURSOR_TEXTUAL_TIP,
+                  0, 0, w - 1, h - 1, Rect(0, 0, w - 1, h - 1), textualTip);
+         }
          
          surface->unlock();
 
@@ -327,6 +360,7 @@ Kobold::String Cursor::getTextualTip()
  ************************************************************************/
 void Cursor::setTipFont(Kobold::String fontFilename, int size)
 {
+   definedTipFont = true;
    tipFontSize = size;
    tipFont = fontFilename;
 }
@@ -398,6 +432,7 @@ Farso::WidgetRenderer* Cursor::renderer = NULL;
 Farso::WidgetRenderer* Cursor::tipRenderer = NULL;
 Kobold::String Cursor::textualTip;
 int Cursor::tipHeight = 0;
+bool Cursor::definedTipFont = false;
 Kobold::String Cursor::tipFont;
 int Cursor::tipFontSize = 0;
 Kobold::Timer Cursor::tipTimer;

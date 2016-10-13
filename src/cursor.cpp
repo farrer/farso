@@ -64,7 +64,7 @@ void Cursor::init(int size)
 
    tipHeight = 0;
    definedTipFont = false;
-   tipFont = FontManager::getDefaultFontFilename();
+   tipFont = "";
    tipFontSize = 10;
 
    maxSize = size;
@@ -281,7 +281,14 @@ void Cursor::setTextualTip(Kobold::String tip)
              (!skin->isElementDefined(Skin::SKIN_TYPE_CURSOR_TEXTUAL_TIP)) )
          {
             /* Must use the defined or default font */
-            font = FontManager::getFont(tipFont);
+            if(definedTipFont)
+            {
+               font = FontManager::getFont(tipFont);
+            }
+            else
+            {
+               font = FontManager::getDefaultFont();
+            }
             font->setSize(tipFontSize);
             font->setAlignment(Font::TEXT_CENTERED);
             fontColor = Colors::colorText;
@@ -296,6 +303,7 @@ void Cursor::setTextualTip(Kobold::String tip)
             font->setAlignment(skEl.getFontAlignment());
             fontColor = skEl.getFontColor();
          }
+         assert(font);
 
          /* Let's define tip size with current font */
          int w = font->getWidth(textualTip) + 10;
@@ -331,9 +339,20 @@ void Cursor::setTextualTip(Kobold::String tip)
          }
          else
          {
-            //TODO: when explicitly defined font!
-            skin->drawElement(surface, Skin::SKIN_TYPE_CURSOR_TEXTUAL_TIP,
-                  0, 0, w - 1, h - 1, Rect(0, 0, w - 1, h - 1), textualTip);
+            if(definedTipFont)
+            {
+               /* Render with specific font defined */
+               skin->drawElement(surface, Skin::SKIN_TYPE_CURSOR_TEXTUAL_TIP,
+                     0, 0, w - 1, h - 1, Rect(0, 0, w - 1, h - 1), textualTip,
+                     tipFont, tipFontSize, Font::TEXT_CENTERED, 
+                     Colors::colorText);
+            }
+            else
+            {
+               /* Render with default element's font */
+               skin->drawElement(surface, Skin::SKIN_TYPE_CURSOR_TEXTUAL_TIP,
+                     0, 0, w - 1, h - 1, Rect(0, 0, w - 1, h - 1), textualTip);
+            }
          }
          
          surface->unlock();

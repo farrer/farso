@@ -659,6 +659,18 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
 void Skin::SkinElement::draw(Surface* dest, Surface* src, 
       int wx1, int wy1, int wx2, int wy2, Rect bounds, Kobold::String caption)
 {
+   draw(dest, src, wx1, wy1, wx2, wy2, bounds, caption, fontName, 
+         fontSize, fontAlign, fontColor);
+}
+
+/***********************************************************************
+ *                                draw                                 *
+ ***********************************************************************/
+void Skin::SkinElement::draw(Surface* dest, Surface* src, 
+      int wx1, int wy1, int wx2, int wy2, Rect bounds, Kobold::String caption,
+      Kobold::String fontName, int fontSize, Font::Alignment align, 
+      Color fontColor)
+{
    /* Do the normal draw */
    draw(dest, src, wx1, wy1, wx2, wy2);
 
@@ -1107,11 +1119,27 @@ void Skin::drawElement(Surface* dest, int type,
 {
    getSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2); 
 }
+
+/***********************************************************************
+ *                             drawElement                             *
+ ***********************************************************************/
 void Skin::drawElement(Surface* dest, int type, 
       int wx1, int wy1, int wx2, int wy2, Rect bounds, Kobold::String caption)
 {
    getSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2, bounds, 
          caption);
+}
+
+/***********************************************************************
+ *                             drawElement                             *
+ ***********************************************************************/
+void Skin::drawElement(Surface* dest, int type, int wx1, int wy1, 
+      int wx2, int wy2, Rect bounds, Kobold::String caption, 
+      Kobold::String fontName, int fontSize, Font::Alignment align,
+      Color fontColor)
+{
+   getSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2, bounds,
+         caption, fontName, fontSize, align, fontColor);
 }
 
 /***********************************************************************

@@ -159,10 +159,17 @@ void Label::doDraw(Rect pBody)
       int rx2 = pBody.getX1() + x2;
       int ry2 = pBody.getY1() + y2;
 
-      //TODO: when font was defined to override the default element's one!
-      
-      skin->drawElement(surface, skinType, rx1, ry1, rx2, ry2, 
-                        Rect(rx1, ry1, rx2, ry2), getCaption());
+      if((!fontName.empty()) && (fontSize != -1))
+      {
+         skin->drawElement(surface, skinType, rx1, ry1, rx2, ry2, 
+               Rect(rx1, ry1, rx2, ry2), getCaption(), fontName, fontSize,
+               fontAlign, fontColor);
+      } 
+      else
+      {
+         skin->drawElement(surface, skinType, rx1, ry1, rx2, ry2, 
+               Rect(rx1, ry1, rx2, ry2), getCaption());
+      }
    }
    else
    {

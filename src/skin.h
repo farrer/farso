@@ -165,7 +165,12 @@ class Skin
             void draw(Surface* dest, Surface* src, 
                   int wx1, int wy1, int wx2, int wy2, 
                   Rect bounds, Kobold::String caption);
-
+            /*! Same as #draw, but writing caption with an specific font */
+            void draw(Surface* dest, Surface* src, 
+                  int wx1, int wy1, int wx2, int wy2, 
+                  Rect bounds, Kobold::String caption,
+                  Kobold::String fontName, int fontSize, 
+                  Font::Alignment align, Color fontColor);
             /*! \return if this SkinElement is defined or not. */
             bool isDefined();
 
@@ -259,6 +264,14 @@ class Skin
       void drawElement(Surface* dest, int type, 
             int wx1, int wy1, int wx2, int wy2, Rect bounds, 
             Kobold::String caption);
+      /*! Same as #drawElement, but writing caption at element's text area, 
+       * if defined, with an specific font .
+       * \param bounds Pre-calculated element bounds for current widget.
+       * \param caption to write. */
+      void drawElement(Surface* dest, int type, 
+            int wx1, int wy1, int wx2, int wy2, Rect bounds, 
+            Kobold::String caption, Kobold::String fontName, 
+            int fontSize, Font::Alignment align, Color fontColor);
 
       /*! \return if the Element type is defined or not on this skin. */
       bool isElementDefined(int type);

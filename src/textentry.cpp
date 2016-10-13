@@ -285,7 +285,7 @@ void TextEntry::doDraw(Rect pBody)
       fontColor = Colors::colorCont[1];
    }
 
-   /* Draw the text : TODO: parametrize font parameter */
+   /* Draw the text */
    if(isAvailable())
    {
       draw->setActiveColor(fontColor);

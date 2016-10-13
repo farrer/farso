@@ -575,7 +575,7 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    w = (Widget*) widgets->getLast();
    for(int i = 0; i < widgets->getTotal(); i++)
    {
-      if((w->isVisible()) && (w != curActive))
+      if(w->isVisible())
       {
          w->getWidgetRenderer()->render(depth);
       }
@@ -584,12 +584,6 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       w = (Widget*) w->getPrevious();
    }
    
-   if(curActive)
-   {
-      /* Render current ative on top (last) */
-      curActive->getWidgetRenderer()->render(depth);
-   }
-
    /* Must render mouse cursor on top */
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS

@@ -41,7 +41,7 @@ element = window
       topRightCorner = 64,286,116,313
       textAreaDelta = 50,3,50,5
       textAlignment = 1
-      textFontSize = 12
+      textFontSize = 11
    # Window Inactive Title bar
    element = windowInactiveTitleBar
       borderDelta = 95,0,95,0
@@ -52,7 +52,7 @@ element = window
       textAreaDelta = 50,3,50,5
       textFontColor = 125,125,125,255
       textAlignment = 1 
-      textFontSize = 12
+      textFontSize = 11
 
 # Buttons
 element = buttonEnabled
@@ -253,4 +253,23 @@ element = cursorTextualTip
    textAreaDelta = 0,0,0,0
    textFontColor = 116,100,81,255
    textAlignment = 1 
+
+# Grid Element Border Highlight
+element = gridBorder
+   borderDelta = 0,0,0,0
+   leftBorder = 12,216,13,216
+   rightBorder = 12,216,13,216
+   topBorder = 12,216,12,217
+   bottomBorder = 12,216,12,217
+
+# Grid Element Border Highlight
+element = gridFill
+   borderDelta = 0,0,0,0
+   leftBorder = 12,216,12,216
+   rightBorder = 12,216,12,216
+   topBorder = 12,216,12,216
+   bottomBorder = 12,216,12,216
+   backgroundDelta = 0,0,0,0
+   background = 12,216,12,216
+
 

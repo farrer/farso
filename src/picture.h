@@ -61,7 +61,6 @@ class Picture : public Widget
    private:
       Surface* image;      /**< Loaded image with the picture */
       Rect body;           /**< same as picture's coordinates */
-      bool pressStarted;   /**< If press procedure already started */
 };
 
 }

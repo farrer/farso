@@ -8,6 +8,7 @@ src/cursor.cpp
 src/draw.cpp
 src/event.cpp
 src/font.cpp
+src/grid.cpp
 src/label.cpp
 src/picture.cpp
 src/progressbar.cpp
@@ -34,6 +35,7 @@ src/cursor.h
 src/draw.h
 src/event.h
 src/font.h
+src/grid.h
 src/label.h
 src/picture.h
 src/progressbar.h

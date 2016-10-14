@@ -31,11 +31,11 @@ Picture::Picture(int x, int y, Kobold::String filename, Widget* parent)
         :Widget(WIDGET_TYPE_PICTURE, x, y, 0, 0, parent) 
 {
    assert(parent != NULL);
-   /* Initialize variables */
-   pressStarted = false;
+   
    /* Load the image */
    image = Controller::loadImageToSurface(
          Controller::getRealFilename(filename));
+   
    /* Set widget coordinates and size based on loaded image */
    setPosition(x, y);
    setSize(image->getWidth(), image->getHeight());
@@ -72,27 +72,6 @@ void Picture::doDraw(Rect pBody)
 bool Picture::doTreat(bool leftButtonPressed, bool rightButtonPressed,
       int mouseX, int mouseY, int mrX, int mrY)
 {
-   if(leftButtonPressed)
-   {
-      if(isInner(mrX, mrY))
-      {
-         if(!pressStarted)
-         {
-            pressStarted = true;
-         }
-         Farso::Controller::setEvent(this, EVENT_PICTURE_PRESSING);
-         return true;
-      }
-   }
-   else if(pressStarted)
-   {
-      pressStarted = false;
-      if(isInner(mrX, mrY))
-      {
-         Farso::Controller::setEvent(this, EVENT_PICTURE_CLICKED);
-         return true;
-      }
-   }
    return false;
 }
 

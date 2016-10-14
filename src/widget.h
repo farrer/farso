@@ -54,7 +54,8 @@ class Widget : public Kobold::ListElement, public Kobold::List
          WIDGET_TYPE_SCROLL_BAR,
          WIDGET_TYPE_STACK_TAB,
          WIDGET_TYPE_TEXT_ENTRY,
-         WIDGET_TYPE_SCROLL_TEXT
+         WIDGET_TYPE_SCROLL_TEXT,
+         WIDGET_TYPE_GRID
       };
 
       /*! Constructor

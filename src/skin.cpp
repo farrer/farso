@@ -1072,6 +1072,14 @@ int Skin::getElementType(Kobold::String typeName)
    {
       return SKIN_TYPE_CURSOR_TEXTUAL_TIP;
    }
+   else if(typeName == "gridFill")
+   {
+      return SKIN_TYPE_GRID_FILL;
+   }
+   else if(typeName == "gridBorder")
+   {
+      return SKIN_TYPE_GRID_BORDER;
+   }
 
    /* Try to get from user defined ones */
    int elementType = getExtendedElementType(typeName);

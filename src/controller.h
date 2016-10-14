@@ -27,6 +27,7 @@
 #include "cursor.h"
 #include "draw.h"
 #include "event.h"
+#include "grid.h"
 #include "label.h"
 #include "picture.h"
 #include "progressbar.h"

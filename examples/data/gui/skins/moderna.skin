@@ -241,4 +241,21 @@ element = cursorTextualTip
    textFontColor = 255,255,255,255
    textAlignment = 1
 
+# Grid Element Border Highlight
+element = gridBorder
+   borderDelta = 0,0,0,0
+   leftBorder = 16,80,17,80
+   rightBorder = 16,80,17,80
+   topBorder = 16,80,16,81
+   bottomBorder = 16,80,16,81
+
+# Grid Element Fill Highlight
+element = gridFill
+   borderDelta = 0,0,0,0
+   leftBorder = 16,80,16,80
+   rightBorder = 16,80,16,80
+   topBorder = 16,80,16,80
+   bottomBorder = 16,80,16,80
+   backgroundDelta = 1,1,1,1
+   background = 16,80,16,80
 

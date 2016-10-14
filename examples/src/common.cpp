@@ -26,7 +26,7 @@ Example::~Example()
  ************************************************************************/
 void Example::init(Farso::RendererType rendererType)
 {
-   /* Init Farso, with Ogre3d renderer */
+   /* Init Farso, with desired renderer */
    Farso::Controller::init(rendererType, EXAMPLE_WINDOW_WIDTH, 
          EXAMPLE_WINDOW_HEIGHT, 32, "data/gui/");
 
@@ -64,16 +64,39 @@ void Example::createDialogWindow()
 {
    /* Create the window. Not that any widget without parents is automatically
     * added as a 'root' widget to the controller. */
-   Farso::Window* window = new Farso::Window(450, 200, "Window 2");
+   Farso::Window* window = new Farso::Window(450, 280, "Dialog");
 
    /* Define a position where it will be when opened */
-   window->setPosition(200, 500);
+   window->setPosition(200, 410);
+   
+   /* Add a portrait image and a grid to it to show some parts */
+   Farso::Picture* pic = new Farso::Picture(5, 2, 
+         "portrait/richard_bergh1.png", window);
+   Farso::Grid* grid = new Farso::Grid(
+         Farso::Grid::GRID_TYPE_HIGHLIGHT_BORDER, pic);
+   grid->addElement(29, 38, 8, 6, "Right eye");
+   grid->addElement(47, 37, 11, 5, "Left eye");
+   grid->addElement(38, 45, 11, 8, "Nose");
+   grid->addElement(37, 56, 16, 6, "Mouth");
+
+   /* Let's add the person's dialog ScrollText */
+   Farso::Container* cont = new Farso::Container(
+         Farso::Container::TYPE_TOP_RIGHT, window);
+
+   Farso::ScrollText* scrollText = new Farso::ScrollText(0, 0, 320, 90, 
+         "fonts/LiberationSans-Regular.ttf", 10, 
+         Farso::Colors::colorText, cont);
+   scrollText->addText(" Hello fellow developer, what brings you to this Farso test/example?");
+
 
    /* Create a text selector with some options to it */
-   Farso::TextSelector* sel = new Farso::TextSelector(window);
-   sel->addOption("First option");
-   sel->addOption("Another option, with some ammount of text to break the whole line and test what will be with the calculation of height for this widget.");
-   sel->addOption("Even another option");
+   cont = new Farso::Container(
+         Farso::Container::TYPE_TOP_CENTERED, 
+         0, 100, window->getBody().getWidth() - 32, 120, window);
+   Farso::TextSelector* sel = new Farso::TextSelector(cont);
+   sel->addOption("I'm not a talkative person, not even to a painted portrait.");
+   sel->addOption("Just looking around to see if anything could be used for my own projects or if it's just garbage.");
+   sel->addOption("What is Farso, and what am I doing here?");
 
    window->open();
 }

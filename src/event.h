@@ -67,11 +67,6 @@ enum EventType
    EVENT_CHECKBOX_CHECKED,
    /*! When a Checkbox that was checked was unchecked by a click. */
    EVENT_CHECKBOX_UNCHECKED,
-   /*! When the cursor (finger or mouse) is pressing the picture */
-   EVENT_PICTURE_PRESSING,
-   /*! When the cursor (finger or mouse) pressed the picture and 
-    * just released inside it. */
-   EVENT_PICTURE_CLICKED,
    /*! When selected an option from the text selector */
    EVENT_TEXTSELECTOR_OPTION_SELECTED,
    /*! When current initial value of the scroll bar changed */
@@ -88,7 +83,13 @@ enum EventType
    /*! When is actually editing a text entry (even if it doesn't changes) */
    EVENT_TEXTENTRY_EDITING,
    /*! When done the editing of a text entry */
-   EVENT_TEXTENTRY_EDITION_DONE
+   EVENT_TEXTENTRY_EDITION_DONE,
+   /*! When cursor is over grid, but not on any of its elements */
+   EVENT_GRID_OVER,
+   /*! When cursor is over a grid's element */
+   EVENT_GRID_OVER_ELEMENT,
+   /*! When just selected a grid's element */
+   EVENT_GRID_SELECTED_ELEMENT
 };
 
 /*! A Farso event definition */

@@ -1088,7 +1088,7 @@ int Skin::getElementType(Kobold::String typeName)
    {
       /* Unknown widget. */
       Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
-            "ERROR: Unknow widget name '%s' on screen definition file!",
+            "ERROR: Unknow widget name '%s' on skin definition file!",
             typeName.c_str());
    }
 

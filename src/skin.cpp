@@ -674,7 +674,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
    /* Do the normal draw */
    draw(dest, src, wx1, wy1, wx2, wy2);
 
-   if(textAreaDelta.isDefined())
+   if( (textAreaDelta.isDefined()) && (!caption.empty()) )
    {
       /* Write with the desired font */
       Font* font = Farso::FontManager::getFont(fontName);

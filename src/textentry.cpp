@@ -242,6 +242,8 @@ void TextEntry::doDraw(Rect pBody)
    int y1 = getY() + pBody.getY1();
    int y2 = y1 + getHeight() - 1;
 
+   Rect textAreaDelta(0,0,0,0);
+
    if(skin)
    {
       Skin::SkinElement skEl;
@@ -260,6 +262,7 @@ void TextEntry::doDraw(Rect pBody)
       font = FontManager::getFont(skEl.getFontName());
       font->setSize(skEl.getFontSize());
       font->setAlignment(Font::TEXT_LEFT);
+      textAreaDelta = skEl.getTextAreaDelta();
       fontColor = skEl.getFontColor();
    }  
    else
@@ -299,7 +302,8 @@ void TextEntry::doDraw(Rect pBody)
    int init = 0;
    int end = (int)getCaption().length();
    Kobold::String writeText = getCaption();
-   int maxWidth = getWidth() - 6;
+   int maxWidth = getWidth() - 6 - 
+                  (textAreaDelta.getX1() + textAreaDelta.getX2());
    while(font->getWidth(writeText) > maxWidth )
    {
       if(end > (int) cursorIndex)
@@ -316,15 +320,19 @@ void TextEntry::doDraw(Rect pBody)
       }
    }
 
-   font->write(surface, Rect(x1, y1, x2, y2), writeText);
+   font->write(surface, Rect(x1 + textAreaDelta.getX1(), 
+                             y1 + textAreaDelta.getY1(), 
+                             x2 - textAreaDelta.getX2(), 
+                             y2 - textAreaDelta.getY2()), writeText);
 
    if(editing)
    {
       /* Must draw cursor */
       Kobold::String s = getCaption().substr(init, end).substr(0, 
             cursorIndex - init);
-      int x = x1 + 2 + font->getWidth(s);
-      draw->doLine(surface, x, y1+3, x, y2-3);
+      int x = x1 + 2 + font->getWidth(s) + textAreaDelta.getX1();
+      draw->doLine(surface, x, y1 + 3 + textAreaDelta.getY1(), 
+                            x, y2 - 3 - textAreaDelta.getY2());
    }
 
 }

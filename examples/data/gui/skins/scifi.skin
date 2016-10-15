@@ -6,7 +6,7 @@ defaultFontColor = 191,228,230,255
 
 # Window
 element = window
-   backgroundDelta = 13,30,26,20
+   backgroundDelta = 13,30,18,11
    background = 2,2,11,11
 
    cornerDelta = 0,0,0,0

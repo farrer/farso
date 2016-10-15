@@ -199,10 +199,10 @@ element = progressBar
 
 # Some special borders
 element = borderLeft
-   borderDelta = 0,0,0,0
+   borderDelta = 0,2,0,2
    leftBorder = 7,111,9,112
    element = borderRight
-      borderDelta = 0,0,0,0
+      borderDelta = 0,2,0,2
       rightBorder = 28,123,30,124
    element = borderTop
       borderDelta = 0,0,0,0

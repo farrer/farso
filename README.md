@@ -44,10 +44,6 @@ hosted here.
  * Kobold [https://github.com/farrer/kobold]
  * SDL2 [https://libsdl.org/download-2.0.php]
  * SDL\_image 2.x [https://www.libsdl.org/projects/SDL\_image/]
- * OpenAL [http://kcat.strangesoft.net/openal.html]
- * Ogg [https://xiph.org/downloads/]
- * Vorbis [https://xiph.org/downloads/]
- * VorbisFile [https://xiph.org/downloads/]
  * FreeType 2.x [https://www.freetype.org/]
 
 
@@ -56,6 +52,11 @@ hosted here.
  * Ogre3D 1.10 [http://www.ogre3d.org/]
  * Kobold [https://github.com/farrer/kobold]
  * Goblin [https://github.com/farrer/goblin]
+ * Kosound [https://github.com/farrer/kosound]
+ * OpenAL [http://kcat.strangesoft.net/openal.html]
+ * Ogg [https://xiph.org/downloads/]
+ * Vorbis [https://xiph.org/downloads/]
+ * VorbisFile [https://xiph.org/downloads/]
  * SDL2 [https://libsdl.org/download-2.0.php]
  * SDL\_image 2.x [https://www.libsdl.org/projects/SDL\_image/]
  * OpenAL [http://kcat.strangesoft.net/openal.html]

@@ -127,7 +127,7 @@ if(${OGRE_FOUND})
                         ${FARSO_EXAMPLE_SOURCES} 
                         ${FARSO_COMMON_EXAMPLE_HEADERS})
    target_link_libraries(farso_ogre3d_example farso
-                        ${GOBLIN_LIBRARY} ${KOBOLD_LIBRARY}
+                        ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARY}
                         ${OGRE_LIBRARIES} 
                         ${OGRE_RTShaderSystem_LIBRARIES}
                         ${OGRE_Overlay_LIBRARIES}
@@ -155,7 +155,7 @@ if(${OPENGL_FOUND})
                         ${FARSO_EXAMPLE_SOURCES} 
                         ${FARSO_COMMON_EXAMPLE_HEADERS})
    target_link_libraries(farso_opengl_example farso
-                        ${GOBLIN_LIBRARY} ${KOBOLD_LIBRARY}
+                        ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARY}
                         ${OGRE_LIBRARIES} 
                         ${OGRE_RTShaderSystem_LIBRARIES}
                         ${OGRE_Overlay_LIBRARIES}

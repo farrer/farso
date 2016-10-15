@@ -82,6 +82,10 @@ if(${OGRE_FOUND})
    FIND_PACKAGE(Goblin REQUIRED)
    include_directories(${GOBLIN_INCLUDE_DIR})
 
+   # And with Goblin, we also need kosound
+   FIND_PACKAGE(Kosound REQUIRED)
+   include_directories(${KOSOUND_INCLUDE_DIR})
+
    if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
       include_directories(${OGRE_INCLUDE_DIR}/RenderSystems/GLES2/)
       include_directories(${OGRE_INCLUDE_DIR}/RenderSystems/GLES2/Android/)

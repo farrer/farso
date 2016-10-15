@@ -68,7 +68,7 @@ void Example::createDialogWindow()
 
    /* Define a position where it will be when opened */
    window->setPosition(200, 410);
-   
+
    /* Add a portrait image and a grid to it to show some parts */
    Farso::Picture* pic = new Farso::Picture(5, 2, 
          "portrait/richard_bergh1.png", window);
@@ -109,7 +109,7 @@ void Example::createWindowWithStack()
    /* Create the window and set its position */
    Farso::Window* window = new Farso::Window(450, 400, "Window 3");
    window->setPosition(600, 200);
-   
+ 
    /* Add a stack tab to it */
    Farso::StackTab* tab = new Farso::StackTab(window);
 
@@ -136,7 +136,6 @@ void Example::createWindowWithStack()
    scrollText->addText("lors", Farso::Color(180, 180, 0, 255));
    scrollText->addText(" And some more text to go over the total we have. ");
 
-
    /* Add another option to the stack tab and some children */
    tabCont = tab->insertTab("Option 2");
    new Farso::Button(0, 2, 80, 21, "Button", tabCont);
@@ -158,7 +157,7 @@ void Example::createOtherWindow()
 {
    /* Create the window and add some widgets to it */
    Farso::Window* window = new Farso::Window(300, 400, "Window");
-   
+
    new Farso::Button(0, 0, 100, 21, "Rectangular", window);
    (new Farso::Button(0, 22, 100, 21, "Oval", window))->setRoundedEdges();
    (new Farso::Button(0, 43, 100, 21, "Disabled", window))->disable();
@@ -182,7 +181,7 @@ void Example::createOtherWindow()
    cont = new Farso::Container(
          Farso::Container::TYPE_BOTTOM_LEFT, window);
    new Farso::Button(0, 2, 80, 21, "Left", cont);
-
+   
    /* Open the window and set a target position to it */
    window->open();
    window->getWidgetRenderer()->setTargetPosition(400, 100);
@@ -196,7 +195,7 @@ void Example::createWindowToTestContainers()
    Farso::Window* window = new Farso::Window(400, 500, "Containers test");
    window->open();
    window->setPosition(10, 10);
-
+   
    /* Add a stack tab to it */
    Farso::StackTab* tab = new Farso::StackTab(window);
 
@@ -300,6 +299,15 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
              "skins/wyrmheart.skin"))
       {
          Farso::Controller::loadSkin("skins/wyrmheart.skin");
+      }
+   }
+   else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_S))
+   {
+      if((Farso::Controller::getSkin() == NULL) ||
+            (Farso::Controller::getSkin()->getFilename() !=
+             "skins/scifi.skin"))
+      {
+         Farso::Controller::loadSkin("skins/scifi.skin");
       }
    }
 #endif

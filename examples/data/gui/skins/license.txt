@@ -1,14 +1,21 @@
+moderna skin
+ \
+  Adapted by DNTeam from:
+  author: Jorge Avila
+  license: CC-By 3.0
+  source: http://opengameart.org/content/moderna-graphical-interface
+
+scifi skin
+ \
+  Adapted by DNTeam from:
+  author: Buch
+  license: CC0
+  source: http://opengameart.org/content/sci-fi-user-interface-elements
+
 wyrmheart skin
  \ 
   Adapted by DNTeam from:
   author: Wyrmheart
   license: CC0
   source: http://opengameart.org/content/rpg-game-ui
-
-moderna skin
- \
-  Adapted by DNTeam from:
-  author: Jorge Avila
-  licese: CC-By 3.0
-  source: http://opengameart.org/content/moderna-graphical-interface
 

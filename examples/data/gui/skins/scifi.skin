@@ -1,0 +1,292 @@
+# Scifi skin definition file
+atlas = skins/scifi.png
+defaultFont = fonts/LiberationSerif-Regular.ttf
+defaultFontSize = 10
+defaultFontColor = 191,228,230,255
+
+# Window
+element = window
+   backgroundDelta = 13,30,26,20
+   background = 2,2,11,11
+
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 13,0,36,29
+   topRightCorner = 47,0,80,29
+   bottomRightCorner = 47,39,80,49
+   bottomLeftCorner = 13,39,36,49
+
+   topBorderDelta = 23,0,23,0
+   topBorder = 39,0,44,29
+   leftBorderDelta = 0,30,0,11
+   leftBorder = 13,33,25,34
+   rightBorderDelta = 0,30,0,11
+   rightBorder = 63,33,80,34
+   bottomBorderDelta = 23,0,23,0
+   bottomBorder = 39,39,44,49
+
+   # Window Inactive Title bar
+   element = windowInactiveTitleBar
+      borderDelta = 23,3,34,0
+      topBorder = 39,3,41,16
+      cornerDelta = 16,3,31,0
+      topLeftCorner = 29,3,35,16
+      topRightCorner = 47,3,48,16
+      textAreaDelta = 0,-1,0,0
+      textFont = fonts/LiberationSerif-Bold.ttf
+      textFontSize = 8
+      textAlignment = 1 
+
+   # Window Active Title bar
+   element = windowActiveTitleBar
+      borderDelta = 23,3,34,0
+      topBorder = 2,31,4,44
+      cornerDelta = 16,3,31,0
+      topLeftCorner = 2,16,8,29
+      topRightCorner = 2,46,6,60
+      textAreaDelta = 0,-1,0,0
+      textFont = fonts/LiberationSerif-Bold.ttf
+      textFontSize = 8
+      textFontColor = 200,200,200,255
+      textAlignment = 1 
+
+   # Window close button (enabled).
+   element = windowEnabledCloseButton
+      cornerDelta = 0,3,4,0
+      topRightCorner = 13,52,21,60
+
+# Button
+element = buttonPressed
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 104,1,108,5
+   topRightCorner = 117,1,121,5
+   bottomLeftCorner = 104,14,108,18
+   bottomRightCorner = 117,14,121,18
+   topBorderDelta = 5,0,5,0
+   topBorder = 109,1,109,5
+   bottomBorderDelta = 5,0,5,0
+   bottomBorder = 109,14,109,18
+   leftBorderDelta = 0,5,0,5
+   leftBorder = 104,6,108,6
+   rightBorderDelta = 0,5,0,5
+   rightBorder = 117,6,121,6
+   backgroundDelta = 5,5,5,5
+   background = 110,7,110,7
+   textAreaDelta = 2,1,1,0
+   textAlignment = 1 
+element = buttonEnabled
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 84,1,88,5
+   topRightCorner = 97,1,101,5
+   bottomLeftCorner = 84,14,88,18
+   bottomRightCorner = 97,14,101,18
+   topBorderDelta = 5,0,5,0
+   topBorder = 89,1,89,5
+   bottomBorderDelta = 5,0,5,0
+   bottomBorder = 89,14,89,18
+   leftBorderDelta = 0,5,0,5
+   leftBorder = 84,6,88,6
+   rightBorderDelta = 0,5,0,5
+   rightBorder = 97,6,101,6
+   backgroundDelta = 5,5,5,5
+   background = 90,7,90,7
+   textAreaDelta = 1,0,1,0
+   textAlignment = 1 
+element = buttonDisabled
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 124,1,128,5
+   topRightCorner = 137,1,141,5
+   bottomLeftCorner = 124,14,128,18
+   bottomRightCorner = 137,14,141,18
+   topBorderDelta = 5,0,5,0
+   topBorder = 129,1,129,5
+   bottomBorderDelta = 5,0,5,0
+   bottomBorder = 129,14,129,18
+   leftBorderDelta = 0,5,0,5
+   leftBorder = 124,6,128,6
+   rightBorderDelta = 0,5,0,5
+   rightBorder = 137,6,141,6
+   backgroundDelta = 5,5,5,5
+   background = 130,7,130,7
+   textAreaDelta = 1,0,1,0
+   textFontColor = 155,155,155,255
+   textAlignment = 1 
+
+# Label
+element = label
+   textAreaDelta = 0,0,0,0
+
+# Check Box
+element = checkBoxEnabledChecked
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 85,21,102,38
+   
+   element = checkBoxEnabled
+      cornerDelta = 0,0,0,0
+      topLeftCorner = 105,21,122,38
+
+   element = checkBoxDisabledChecked
+      cornerDelta = 0,0,0,0
+      topLeftCorner = 85,40,102,57
+
+   element = checkBoxDisabled
+      cornerDelta = 0,0,0,0
+      topLeftCorner = 105,40,122,57
+
+# Progress bar definition
+element = progressBar
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 145,20,150,24
+   bottomLeftCorner = 145,33,145,37
+   topRightCorner = 157,20,162,24
+   bottomRightCorner = 157,33,162,37
+   borderDelta = 0,0,0,0
+   topBorderDelta = 4,0,4,0 
+   topBorder = 153,20,154,24
+   bottomBorderDelta = 4,0,4,0 
+   bottomBorder = 153,33,154,37
+   leftBorderDelta = 0,4,0,4
+   leftBorder  = 145,27,150,28
+   rightBorderDelta = 0,4,0,4
+   rightBorder  = 157,27,162,28
+   backgroundDelta = 4,4,4,4
+   background = 153,27,154,28
+   
+   element = progressBarFill
+      cornerDelta = 2,2,2,2
+      topLeftCorner = 145,3,150,6
+      bottomLeftCorner = 145,13,150,16
+      topRightCorner = 157,3,162,6
+      bottomRightCorner = 157,13,162,16
+      topBorderDelta = 8,2,8,2 
+      topBorder = 153,3,154,6
+      bottomBorderDelta = 8,2,8,2 
+      bottomBorder = 153,13,154,16
+      leftBorderDelta = 2,5,2,5
+      leftBorder  = 145,8,150,9
+      rightBorderDelta = 2,5,2,5
+      rightBorder  = 157,8,162,9
+      backgroundDelta = 8,5,8,5
+      background = 153,8,154,9
+
+# Text Selectors
+element = textOption
+   textAreaDelta = 0,0,0,0
+   element = textOptionOver
+      textAreaDelta = 0,0,0,0
+      textFontColor = 62,157,230,255
+
+# Special captions
+element = upCaption
+   cornerDelta = 1,2,0,0
+   topLeftCorner = 130,36,138,41
+   element = downCaption
+      cornerDelta = 1,2,0,0
+      topLeftCorner = 130,44,138,49
+   element = leftCaption
+      cornerDelta = 1,1,0,0
+      topLeftCorner = 128,25,133,33
+   element = rightCaption
+      cornerDelta = 2,1,0,0
+      topLeftCorner = 136,25,141,33
+
+# Some special borders
+element = borderLeft
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 144,41,146,43
+   bottomLeftCorner = 144,46,146,48
+   borderDelta = 0,3,0,3
+   leftBorder = 144,44,144,44
+   element = borderRight
+      cornerDelta = 0,0,0,0
+      topRightCorner = 153,41,155,43
+      bottomRightCorner = 153,46,155,48
+      borderDelta = 0,3,0,3
+      rightBorder = 155,44,155,44
+   element = borderTop
+      borderDelta = 2,0,2,0
+      topBorder = 150,41,150,41
+   element = borderBottom
+      borderDelta = 2,0,2,0
+      bottomBorder = 150,48,150,48
+
+
+# TextEntry
+element = textEntry
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 165,1,170,6
+   topRightCorner = 175,1,180,6
+   bottomLeftCorner = 165,13,170,18
+   bottomRightCorner = 175,13,180,18
+   leftBorderDelta = 0,6,0,6
+   leftBorder = 165,8,170,8
+   rightBorderDelta = 0,6,0,6
+   rightBorder = 175,8,180,8
+   topBorderDelta = 6,0,6,0
+   topBorder = 172,1,172,6
+   bottomBorderDelta = 6,0,6,0
+   bottomBorder = 172,13,172,18
+   backgroundDelta = 6,6,6,6
+   background = 172,8,172,8
+   textAreaDelta = 3,0,1,0
+   textFontColor = 15,15,15,255
+   textAlignment = 0 
+
+   element = textEntryDisabled
+      cornerDelta = 0,0,0,0
+      topLeftCorner = 165,22,170,27
+      topRightCorner = 175,22,180,27
+      bottomLeftCorner = 165,34,170,39
+      bottomRightCorner = 175,34,180,39
+      leftBorderDelta = 0,6,0,6
+      leftBorder = 165,29,170,29
+      rightBorderDelta = 0,6,0,6
+      rightBorder = 175,29,180,29
+      topBorderDelta = 6,0,6,0
+      topBorder = 172,22,172,27
+      bottomBorderDelta = 6,0,6,0
+      bottomBorder = 172,34,172,39
+      backgroundDelta = 6,6,6,6
+      background = 172,29,172,29
+      textAreaDelta = 3,0,1,0
+      textAlignment = 0
+
+# Cursor Textual Tip
+element = cursorTextualTip
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 158,41,160,43
+   bottomLeftCorner = 158,46,160,48
+   topRightCorner = 167,41,169,43
+   bottomRightCorner = 167,46,169,48
+   leftBorderDelta = 0,3,0,3
+   leftBorder = 158,44,160,44
+   rightBorderDelta = 0,3,0,3
+   rightBorder = 167,44,169,44
+   topBorderDelta = 3,0,3,0
+   topBorder = 164,41,164,43
+   bottomBorderDelta = 3,0,3,0
+   bottomBorder = 164,46,164,48
+   backgroundDelta = 3,3,3,3
+   background = 164,44,164,44
+   textAreaDelta = 0,0,0,0
+   textFontColor = 12,12,12,255
+   textAlignment = 1
+
+# Grid Element Border Highlight
+element = gridBorder
+   borderDelta = 0,0,0,0
+   leftBorder = 186,7,186,7
+   rightBorder = 186,7,186,7
+   topBorder = 186,7,186,7
+   bottomBorder = 186,7,186,7
+
+# Grid Element Fill Highlight
+element = gridFill
+   borderDelta = 0,0,0,0
+   leftBorder = 186,7,186,7
+   rightBorder = 186,7,186,7
+   topBorder = 186,7,186,7
+   bottomBorder = 186,7,186,7
+   backgroundDelta = 1,1,1,1
+   background = 186,7,186,7
+
+

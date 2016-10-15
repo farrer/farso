@@ -139,12 +139,12 @@ void StackTab::doDraw(Rect pBody)
    if(skin)
    {
       skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_LEFT, 
-            x1, y1 + 1, x2, y2 - 1);
+            x1, y1, x2, y2);
       skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_RIGHT, x1, y1, x2, y2);
       skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_TOP, 
-            x1+1, y1 + 1, x2-1, y2 - 1);
+            x1, y1, x2, y2);
       skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_BOTTOM, 
-            x1+1, y1, x2-1, y2);
+            x1, y1, x2, y2);
    }
    else
    {
@@ -163,13 +163,15 @@ void StackTab::doDraw(Rect pBody)
       if(skin)
       {
          /* Draw with skin */
-         skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_RIGHT, 
-               curX + incX, y1 + 3, curX + incX, y1 + 19);
          if(tab != active)
          {
+            skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_LEFT, 
+                  curX, y1, curX + incX, y1 + 20);
+            skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_RIGHT, 
+                  curX + incX, y1, curX + incX, y1 + 20);
             skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_BOTTOM,
-               curX + 1, y1 + 20, 
-               curX + incX - 2, y1 + 20);
+                  curX, y1 + 20, 
+                  curX + incX, y1 + 20);
          }
       }
       else

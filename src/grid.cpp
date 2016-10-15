@@ -263,10 +263,6 @@ bool Grid::doTreat(bool leftButtonPressed, bool rightButtonPressed,
 
          el = (GridElement*) el->getNext();
       }
-
-      /* Just inner the grid */
-      Controller::setEvent(this, EVENT_GRID_OVER);
-      return true;
    }
   
    /* Outside the grid, no event. */

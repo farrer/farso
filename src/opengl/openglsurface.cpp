@@ -98,7 +98,7 @@ OpenGLSurface::OpenGLSurface(Kobold::String filename, Kobold::String group)
    if( ((surface->w) != draw->smallestPowerOfTwo(surface->w)) ||
        ((surface->h) != draw->smallestPowerOfTwo(surface->h)) )
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL, 
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_DEBUG, 
             "Warning: loaded non-power of two image: '%s' (%d x %d)",
             filename.c_str(), surface->w, surface->h);
    }

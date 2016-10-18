@@ -7,6 +7,7 @@ src/controller.cpp
 src/cursor.cpp
 src/draw.cpp
 src/event.cpp
+src/fileselector.cpp
 src/font.cpp
 src/grid.cpp
 src/label.cpp
@@ -34,6 +35,7 @@ src/controller.h
 src/cursor.h
 src/draw.h
 src/event.h
+src/fileselector.h
 src/font.h
 src/grid.h
 src/label.h

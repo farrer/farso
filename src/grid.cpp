@@ -27,11 +27,12 @@ using namespace Farso;
  *                                GridElement                          *
  ***********************************************************************/
 Grid::GridElement::GridElement(int x, int y, int width, int height, 
-                               Kobold::String mouseHint)
+                               Kobold::String mouseHint, int index)
                   :Kobold::ListElement(),
                    area(x, y, x + width - 1, y + height - 1)
 {
    this->mouseHint = mouseHint;
+   this->index = index;
 }
 
 /***********************************************************************
@@ -67,6 +68,14 @@ Kobold::String Grid::GridElement::getMouseHint()
 }
 
 /***********************************************************************
+ *                               getIndex                              *
+ ***********************************************************************/
+int Grid::GridElement::getIndex()
+{
+   return index;
+}
+
+/***********************************************************************
  *                                  Grid                               *
  ***********************************************************************/
 Grid::Grid(GridType gridType, Widget* parent)
@@ -81,6 +90,7 @@ Grid::Grid(GridType gridType, Widget* parent)
    this->current  = NULL;
    this->gridType = gridType;
    this->pressStarted = false;
+   this->curIndex = 0;
 }
 
 /***********************************************************************
@@ -96,8 +106,10 @@ Grid::~Grid()
 Grid::GridElement* Grid::addElement(int x, int y, int width, int height, 
       Kobold::String mouseHint)
 {
-   GridElement* el = new GridElement(x, y, width, height, mouseHint);
+   GridElement* el = new GridElement(x, y, width, height, mouseHint, curIndex);
    elements.insert(el);
+
+   curIndex++;
 
    return el;
 }

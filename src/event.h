@@ -87,7 +87,16 @@ enum EventType
    /*! When cursor is over a grid's element */
    EVENT_GRID_OVER_ELEMENT,
    /*! When just selected a grid's element (after release) */
-   EVENT_GRID_SELECTED_ELEMENT
+   EVENT_GRID_SELECTED_ELEMENT,
+   /*! Accepted a file selection (to load or save) */
+   EVENT_FILE_SELECTOR_ACCEPT,
+   /*! Canceled a file selection (load or save) */
+   EVENT_FILE_SELECTOR_CANCEL,
+   /*! When selected a file on the file selector list */
+   EVENT_FILE_SELECTOR_SELECTED_FILE,
+   /*! When selected a directory on the file selector list (and thus, changed
+    * its current directory displayed) */
+   EVENT_FILE_SELECTOR_SELECTED_DIRECTORY
 };
 
 /*! A Farso event definition */

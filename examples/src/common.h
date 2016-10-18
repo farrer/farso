@@ -34,6 +34,9 @@ namespace FarsoExample
          /*! Create another example window */
          void createOtherWindow();
 
+         /*! Create an window with load/save file selector inner a stack */
+         void createLoadSaveWindow();
+
          /*! Create the window to test all container types */
          void createWindowToTestContainers();
          /*! Add widgets to a container of the window to test containers */

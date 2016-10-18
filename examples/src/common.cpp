@@ -41,6 +41,7 @@ void Example::init(Farso::RendererType rendererType)
    createDialogWindow();
    createWindowWithStack();
    createOtherWindow();
+   //createLoadSaveWindow();
    createWindowToTestContainers();
 }
 
@@ -145,6 +146,29 @@ void Example::createWindowWithStack()
 
    /* Disable the last TextEntry */
    textEntry->disable();
+
+   /* Open the window */
+   window->open();
+}
+
+/************************************************************************
+ *                      createLoadSaveWindow                            *
+ ************************************************************************/
+void Example::createLoadSaveWindow()
+{
+   /* Create the window and set its position */
+   Farso::Window* window = new Farso::Window(300, 250, "Load or Save");
+   window->setPosition(200, 400);
+ 
+   /* Add a stack tab to it */
+   Farso::StackTab* tab = new Farso::StackTab(window);
+
+   /* Add first option to the stack tab and add some children widgets to it */
+   Farso::Container* tabCont = tab->insertTab("Load");
+   new Farso::FileSelector(true, "./", true, tabCont);
+
+   tabCont = tab->insertTab("Save");
+   new Farso::FileSelector(false, "./", true, tabCont);
 
    /* Open the window */
    window->open();

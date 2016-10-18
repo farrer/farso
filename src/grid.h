@@ -49,7 +49,7 @@ class Grid : public Widget
          public:
             /*! Constructor */
             GridElement(int x, int y, int width, int height, 
-                  Kobold::String mouseHint);
+                  Kobold::String mouseHint, int index);
             /*! Destructor */
             ~GridElement();
 
@@ -62,9 +62,14 @@ class Grid : public Widget
             /*! \return text to be displayed on mouse over */
             Kobold::String getMouseHint();
 
+            /*! \return element's index (defined as an incremented integer 
+             * from initial 0, for each added element). */
+            int getIndex();
+
          private:
             Rect area;  /**< Element's area */
             Kobold::String mouseHint; /**< Text to display on mouse over */
+            int index; /**< Element's index */
       };
 
       /*! Constructor
@@ -107,6 +112,7 @@ class Grid : public Widget
       GridElement* current; /**< Current element under cursor, if any */
       GridType gridType; /**< Current grid type */
       bool pressStarted; /**< If pressing the element */
+      int curIndex; /**< Current next element's index */
 };
 
 }

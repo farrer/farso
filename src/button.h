@@ -42,7 +42,7 @@ class Button: public Widget
        * \param width button width
        * \param height button height
        * \param parent pointer to button's parent (if any). */
-      Button(int x, int y1, int width, int height, Kobold::String caption, 
+      Button(int x, int y, int width, int height, Kobold::String caption, 
             Widget* parent);
       /*! Destructor */
       ~Button();

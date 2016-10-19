@@ -317,6 +317,7 @@ void FileSelector::changeCurDir(Kobold::String newDir)
 
    /* Set labels */
    setLabels();
+   setDirty();
 }
 
 /***********************************************************************
@@ -325,15 +326,28 @@ void FileSelector::changeCurDir(Kobold::String newDir)
 void FileSelector::setLabels()
 {
    int totalFiles = files.size();
+   int first = scrollBar->getCurrent();
+
    for(int i = 0; i < numLines; i++)
    {
-      if(i < totalFiles)
+      /* Define text */
+      if(i + first < totalFiles)
       {
-         labels[i]->setCaption(files[i]);
+         labels[i]->setCaption(files[i + first]);
       }
       else
       {
          labels[i]->setCaption("");
+      }
+      /* Define color */
+      //FIXME: when using skins.
+      if(i + first <= lastDir)
+      {
+         labels[i]->setFontColor(Colors::colorDirectory);
+      }
+      else
+      {
+         labels[i]->setFontColor(Colors::colorFile);
       }
    }
 }
@@ -418,6 +432,7 @@ void FileSelector::setFilename(Kobold::String fileName)
    {
       editCurFile->setCaption(file);
    }
+   setDirty();
 }
 
 /***********************************************************************
@@ -450,12 +465,12 @@ void FileSelector::doAfterChildTreat()
           ( ((!loading) && (editCurFile->getCaption() != "")) ) ) )
       {
          /* Accepted a selected (or edited) filename */
-         Controller::setEvent(this, EVENT_FILE_SELECTOR_ACCEPT);
+         Controller::setEvent(this, EVENT_FILESELECTOR_ACCEPT);
       }
       else if(event.getWidget() == cancelButton)
       {
          /* Called to cancel file selector */
-         Controller::setEvent(this, EVENT_FILE_SELECTOR_CANCEL);
+         Controller::setEvent(this, EVENT_FILESELECTOR_CANCEL);
       }
    }
    else if(event.getType() == EVENT_GRID_SELECTED_ELEMENT)
@@ -467,7 +482,12 @@ void FileSelector::doAfterChildTreat()
          int curIndex = grid->getCurrent()->getIndex() + 
                         scrollBar->getCurrent();
 
-         assert(curIndex < (int) files.size());
+         if(curIndex >= (int) files.size())
+         {
+            /* Selected an inactive selector. */
+            return;
+         }
+
          Kobold::String cur = files[curIndex];
 
          if(curIndex <= lastDir)
@@ -511,7 +531,7 @@ void FileSelector::doAfterChildTreat()
                textCurFile->setCaption("");
             }
 
-            Controller::setEvent(this, EVENT_FILE_SELECTOR_SELECTED_DIRECTORY);
+            Controller::setEvent(this, EVENT_FILESELECTOR_SELECTED_DIRECTORY);
          }
          else
          {
@@ -524,8 +544,17 @@ void FileSelector::doAfterChildTreat()
             {
                editCurFile->setCaption(cur);
             }
-            Controller::setEvent(this, EVENT_FILE_SELECTOR_SELECTED_FILE);
+            setDirty();
+            Controller::setEvent(this, EVENT_FILESELECTOR_SELECTED_FILE);
          }
+      }
+   }
+   else if(event.getType() == EVENT_SCROLLBAR_CHANGED)
+   {
+      /* Must reset labels content if changed scroll bar current value */
+      if(event.getWidget() == scrollBar)
+      {
+         setLabels();
       }
    }
 }

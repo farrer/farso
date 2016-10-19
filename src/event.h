@@ -89,14 +89,14 @@ enum EventType
    /*! When just selected a grid's element (after release) */
    EVENT_GRID_SELECTED_ELEMENT,
    /*! Accepted a file selection (to load or save) */
-   EVENT_FILE_SELECTOR_ACCEPT,
+   EVENT_FILESELECTOR_ACCEPT,
    /*! Canceled a file selection (load or save) */
-   EVENT_FILE_SELECTOR_CANCEL,
+   EVENT_FILESELECTOR_CANCEL,
    /*! When selected a file on the file selector list */
-   EVENT_FILE_SELECTOR_SELECTED_FILE,
+   EVENT_FILESELECTOR_SELECTED_FILE,
    /*! When selected a directory on the file selector list (and thus, changed
     * its current directory displayed) */
-   EVENT_FILE_SELECTOR_SELECTED_DIRECTORY
+   EVENT_FILESELECTOR_SELECTED_DIRECTORY
 };
 
 /*! A Farso event definition */

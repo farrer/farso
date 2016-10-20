@@ -113,6 +113,7 @@ void Grid::clearElements()
       elements.remove(elements.getFirst());
    }
    curIndex = 0;
+   current = NULL;
 }
 
 /******************************************************************

@@ -167,11 +167,7 @@ void ScrollBar::setTotals(int maxDisplayed, int total)
    if((this->maxDisplayed != maxDisplayed) ||
       (this->total != total))
    {
-      if(this->initial > this->total - maxDisplayed)
-      {
-         /* Initial is currently 'out-of-bound', must reset it */
-         this->initial = 0;
-      }
+      this->initial = 0;
       this->maxDisplayed = maxDisplayed;
       this->total = total;
 

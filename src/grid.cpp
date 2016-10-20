@@ -339,6 +339,10 @@ bool Grid::doTreat(bool leftButtonPressed, bool rightButtonPressed,
          {
             current = el;
             /* Selected current, but no event for this. */
+            if(gridType != GRID_TYPE_HIGHLIGHT_NONE)
+            {
+               setDirty();
+            }
             return false;
          }
 

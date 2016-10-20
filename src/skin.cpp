@@ -1080,6 +1080,14 @@ int Skin::getElementType(Kobold::String typeName)
    {
       return SKIN_TYPE_GRID_BORDER;
    }
+   else if(typeName == "fileLabel")
+   {
+      return SKIN_TYPE_FILE_LABEL;
+   }
+   else if(typeName == "directoryLabel")
+   {
+      return SKIN_TYPE_DIRECTORY_LABEL;
+   }
 
    /* Try to get from user defined ones */
    int elementType = getExtendedElementType(typeName);

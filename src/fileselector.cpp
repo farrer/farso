@@ -366,14 +366,15 @@ void FileSelector::setLabels()
          labels[i]->setCaption("");
       }
       /* Define color */
-      //FIXME: when using skins.
       if(i + first <= lastDir)
       {
          labels[i]->setFontColor(Colors::colorDirectory);
+         labels[i]->setSkinType(Skin::SKIN_TYPE_DIRECTORY_LABEL);
       }
       else
       {
          labels[i]->setFontColor(Colors::colorFile);
+         labels[i]->setSkinType(Skin::SKIN_TYPE_FILE_LABEL);
       }
    }
 }

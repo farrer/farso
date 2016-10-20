@@ -103,6 +103,13 @@ element = buttonDisabled
 element = label
    textAreaDelta = 0,0,0,0
    textFontColor = 255,255,255,255
+element = fileLabel
+   textAreaDelta = 0,0,0,0
+   textFontColor = 255,255,255,255
+element = directoryLabel
+   textAreaDelta = 0,0,0,0
+   textFontColor = 255,25,25,255
+
 
 # Check Box
 element = checkBoxEnabledChecked

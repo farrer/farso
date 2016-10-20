@@ -98,6 +98,7 @@ FileSelector::FileSelector(bool load, Kobold::String dir, bool nav,
    {
       textCurFile = new Label(getX(), getY(), width - 40,  
             FILE_SEL_LINE_HEIGHT, "", this);
+      textCurFile->enableBorder();
       editCurFile = NULL;
    }
    else

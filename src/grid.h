@@ -96,6 +96,11 @@ class Grid : public Widget
       /*! \return pointer to GridElement actally active (under cursor) */
       GridElement* getCurrent();
 
+      /*! Enable the draw of a border for grid's whole area */
+      void enableBorder();
+      /*! Disable the draw of a border for grid's whole area */
+      void disableBorder();
+
       /* Functions from Widget */
       Rect getBody();
       void setDirty();
@@ -116,6 +121,8 @@ class Grid : public Widget
       GridType gridType; /**< Current grid type */
       bool pressStarted; /**< If pressing the element */
       int curIndex; /**< Current next element's index */
+      bool useBorder; /**< If should draw a border do grid's area */
+      Rect parentBody; /**< Last state of parent's body */
 };
 
 }

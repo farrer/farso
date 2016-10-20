@@ -39,6 +39,7 @@ Label::Label(int x, int y, int width, int height, Kobold::String caption,
    this->pressStarted = false;
    this->body.set(getX(), getY(), getX() + width - 1, getY() + width -1);
    this->skinType = Skin::SKIN_TYPE_LABEL;
+   this->useBorder = false;
 }
 
 /******************************************************************
@@ -46,6 +47,22 @@ Label::Label(int x, int y, int width, int height, Kobold::String caption,
  ******************************************************************/
 Label::~Label()
 {
+}
+
+/******************************************************************
+ *                          enableBorder                          *
+ ******************************************************************/
+void Label::enableBorder()
+{
+   this->useBorder = true;
+}
+
+/******************************************************************
+ *                         disableBorder                          *
+ ******************************************************************/
+void Label::disableBorder()
+{
+   this->useBorder = false;
 }
 
 /******************************************************************
@@ -152,12 +169,25 @@ void Label::doDraw(Rect pBody)
    int y2 = y1 + getHeight() - 1;
    body.set(x1, y1, x2, y2);
 
+   int rx1 = pBody.getX1() + x1;
+   int ry1 = pBody.getY1() + y1;
+   int rx2 = pBody.getX1() + x2;
+   int ry2 = pBody.getY1() + y2;
+
    if(skin != NULL)
    {
-      int rx1 = pBody.getX1() + x1;
-      int ry1 = pBody.getY1() + y1;
-      int rx2 = pBody.getX1() + x2;
-      int ry2 = pBody.getY1() + y2;
+      if(useBorder)
+      {
+         /* Let's draw its border */
+         skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_LEFT,
+               rx1, ry1 + 1, rx2, ry2 - 1);
+         skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_RIGHT,
+               rx1, ry1 + 1 , rx2, ry2 - 1);
+         skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_TOP,
+               rx1 + 1, ry1, rx2-1, ry2);
+         skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_BOTTOM,
+               rx1 + 1, ry1, rx2-1, ry2);
+      }
 
       if((!fontName.empty()) && (fontSize != -1))
       {
@@ -174,6 +204,13 @@ void Label::doDraw(Rect pBody)
    else
    {
       Farso::Draw* draw = Farso::Controller::getDraw();
+
+      /* let's draw its border, if needed */
+      if(useBorder)
+      {
+         draw->setActiveColor(Colors::colorCont[0]);
+         draw->doRectangle(surface, rx1, ry1, rx2, ry2);
+      }
 
       /* define font to use */
       Font* font = getFont();
@@ -200,8 +237,7 @@ void Label::doDraw(Rect pBody)
       
       /* Write the text */
       font->setAlignment(fontAlign);
-      font->write(surface, Rect(x1 + pBody.getX1(), y1 + pBody.getY1(), 
-               x2 + pBody.getX1(), y2 + pBody.getY1()), getCaption());
+      font->write(surface, Rect(rx1, ry1, rx2, ry2), getCaption());
    }
 }
 

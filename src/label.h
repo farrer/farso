@@ -66,6 +66,11 @@ class Label: public Widget
       /*! \return font size to use */
       int getFontSize();
 
+      /*! Enable the use of borders */
+      void enableBorder();
+      /*! Disable the use of borders */
+      void disableBorder();
+
 
       Farso::Rect getBody();
 
@@ -85,6 +90,7 @@ class Label: public Widget
       bool definedColor;        /**< If color is defined */
       bool pressStarted;        /**< Flag for press control */
       Skin::SkinElementType skinType; /**< Type of label to use with skins */
+      bool useBorder;           /**< If should draw border or not */
 };
 
 }

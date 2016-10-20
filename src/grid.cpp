@@ -80,17 +80,19 @@ int Grid::GridElement::getIndex()
  ***********************************************************************/
 Grid::Grid(GridType gridType, Widget* parent)
      :Widget(Widget::WIDGET_TYPE_GRID,
-             parent->getBody().getX1(), parent->getBody().getY1(),
+             0, 0,
              parent->getBody().getWidth(), parent->getBody().getHeight(),
              parent)
 {
    /* Note that grid area will be fully parent's area  */
    this->body = Rect(getX(), getY(), getX() + parent->getBody().getWidth() - 1, 
                      getY() + parent->getBody().getHeight() -1);
+   this->parentBody = parent->getBody();
    this->current  = NULL;
    this->gridType = gridType;
    this->pressStarted = false;
    this->curIndex = 0;
+   this->useBorder = false;
 }
 
 /***********************************************************************
@@ -111,6 +113,22 @@ void Grid::clearElements()
       elements.remove(elements.getFirst());
    }
    curIndex = 0;
+}
+
+/******************************************************************
+ *                          enableBorder                          *
+ ******************************************************************/
+void Grid::enableBorder()
+{
+   this->useBorder = true;
+}
+
+/******************************************************************
+ *                         disableBorder                          *
+ ******************************************************************/
+void Grid::disableBorder()
+{
+   this->useBorder = false;
 }
 
 /***********************************************************************
@@ -162,10 +180,20 @@ void Grid::setDirty()
  ***********************************************************************/
 void Grid::doDraw(Rect pBody)
 {
-   /* Update body */
-   body = Rect(getX(), getY(), 
-               getX() + getParent()->getBody().getWidth() - 1, 
-               getY() + getParent()->getBody().getHeight() -1);
+   Rect curParentBody = getParent()->getBody();
+
+   if(curParentBody != parentBody)
+   {
+      /* Update body */
+      body = Rect(getX(), getY(), 
+            getX() + curParentBody.getWidth() - 1, 
+            getY() + curParentBody.getHeight() - 1);
+
+      /* Update pos and size */
+      setSize(curParentBody.getWidth(), curParentBody.getHeight());
+
+      parentBody = curParentBody;
+   }
 
    if(gridType == GRID_TYPE_HIGHLIGHT_NONE)
    {
@@ -173,12 +201,38 @@ void Grid::doDraw(Rect pBody)
       return;
    }
 
+   Skin* skin = Controller::getSkin();
+   Draw* draw = Controller::getDraw();
+   Surface* surface = getWidgetRenderer()->getSurface();
+
+   if(useBorder)
+   {
+      int rx1 = pBody.getX1() + getX();
+      int ry1 = pBody.getY1() + getY();
+      int rx2 = rx1 + getWidth() - 1;
+      int ry2 = ry1 + getHeight() - 1;
+
+      /* Let's draw its border */
+      if(skin != NULL)
+      {
+         skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_LEFT,
+               rx1, ry1 + 1, rx2, ry2 - 1);
+         skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_RIGHT,
+               rx1, ry1 + 1 , rx2, ry2 - 1);
+         skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_TOP,
+               rx1 + 1, ry1, rx2-1, ry2);
+         skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_BOTTOM,
+               rx1 + 1, ry1, rx2-1, ry2);
+      }
+      else
+      {
+         draw->setActiveColor(Colors::colorCont[0]);
+         draw->doRectangle(surface, rx1, ry1, rx2, ry2);
+      }
+   }
+
    if(current)
    {
-      Skin* skin = Controller::getSkin();
-      Draw* draw = Controller::getDraw();
-      Surface* surface = getWidgetRenderer()->getSurface();
-
       /* Define element's area within parent's body applied */
       Rect area = current->getArea();
       int x1 = area.getX1() + pBody.getX1();

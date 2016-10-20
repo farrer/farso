@@ -41,7 +41,7 @@ void Example::init(Farso::RendererType rendererType)
    createDialogWindow();
    createWindowWithStack();
    createOtherWindow();
-   //createLoadSaveWindow();
+   createLoadSaveWindow();
    createWindowToTestContainers();
 }
 

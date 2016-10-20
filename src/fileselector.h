@@ -90,6 +90,14 @@ class FileSelector: public Widget
        * \param s -> string to verify
        * \return -> true if passed*/
       bool passFilter(Kobold::String s);
+      
+      /*! \return number of lines available to display files and dirs */
+      int calculateNumLines();
+      /*! \return width for each selector */
+      int getSelectorWidth();
+
+      /*! Create needed labels and grid elements */
+      void createLabelsAndGridElements();
 
       Button* cancelButton;    /**< The cancel Button */
       Button* acceptButton;    /**< The accept Button */

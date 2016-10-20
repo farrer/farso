@@ -42,6 +42,12 @@ class Rect
       /*! Assign operator overload. */
       Rect& operator=(Rect r);
 
+      /*! Equal operator */
+      bool operator==(Rect& r);
+
+      /*! Not equal operator */
+      bool operator!=(Rect& r);
+
       /*! Verify if point x,y is inner the rectangle */
       bool isInner(int x, int y);
 

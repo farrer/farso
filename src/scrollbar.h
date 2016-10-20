@@ -61,6 +61,7 @@ class ScrollBar : public Widget
       int getCurrent();
       
       Rect getBody();
+      void setSize(int width, int height);
 
    protected:
 
@@ -79,6 +80,7 @@ class ScrollBar : public Widget
       ScrollType scrollType;
 
       Rect body;
+      Rect parentBody;
 
       int widthOrHeight;
       float realWidthOrHeight;

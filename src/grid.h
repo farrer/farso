@@ -79,6 +79,9 @@ class Grid : public Widget
       /*! Destructor */
       ~Grid();
 
+      /*! Clear all current grid elements */
+      void clearElements();
+
       /*! Add a grid element to the grid.
        * \note the element will be deleted on grid's destructor.
        * \param x element's left coordinate

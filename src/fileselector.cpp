@@ -73,8 +73,7 @@ FileSelector::FileSelector(bool load, Kobold::String dir, bool nav,
    acceptButton = new Button(80, 0, 70, FILE_SEL_LINE_HEIGHT, "Confirm", cont); 
 
    /* Calculate number of available file lines */
-   numLines = ((parent->getBody().getHeight() - 10) / 
-                     FILE_SEL_LINE_HEIGHT) - 2;
+   numLines = calculateNumLines();
    if(numLines <= 0)
    {
       Kobold::Log::add("Warning: area for file selector is too small!");
@@ -91,21 +90,10 @@ FileSelector::FileSelector(bool load, Kobold::String dir, bool nav,
    /* Create the grid, which will contain the labels */
    grid = new Grid(Grid::GRID_TYPE_HIGHLIGHT_FILL, this);
 
-   /* Create respective labels and grid elements to them */
-   int curY = getY() + FILE_SEL_LINE_HEIGHT + 2;
-   int width = parent->getBody().getWidth() - 24;
-   Label* label;
-   for(int i = 0; i < numLines; i++)
-   {
-      label = new Label(getX(), curY, width, FILE_SEL_LINE_HEIGHT, "", grid);
-      labels.push_back(label);
-
-      grid->addElement(getX(), curY, width, FILE_SEL_LINE_HEIGHT);
-
-      curY += FILE_SEL_LINE_HEIGHT;
-   }
+   createLabelsAndGridElements();
 
    /* Create the current file text */
+   int width = getSelectorWidth();
    if(loading)
    {
       textCurFile = new Label(getX(), getY(), width - 40,  
@@ -132,6 +120,43 @@ FileSelector::FileSelector(bool load, Kobold::String dir, bool nav,
  ***********************************************************************/
 FileSelector::~FileSelector()
 {
+}
+
+/***********************************************************************
+ *                         calculateNumLines                           *
+ ***********************************************************************/
+int FileSelector::calculateNumLines()
+{
+   return ((getParent()->getBody().getHeight() - 10) / 
+         FILE_SEL_LINE_HEIGHT) - 2;
+}
+
+/***********************************************************************
+ *                         getSelectorWidth                            *
+ ***********************************************************************/
+int FileSelector::getSelectorWidth()
+{
+   return getParent()->getBody().getWidth() - 24;
+}
+
+/***********************************************************************
+ *                    createLabelsAndGridElements                      *
+ ***********************************************************************/
+void FileSelector::createLabelsAndGridElements()
+{
+   /* Create respective labels and grid elements to them */
+   int curY = getY() + FILE_SEL_LINE_HEIGHT + 2;
+   int width = getSelectorWidth();
+   Label* label;
+   for(int i = 0; i < numLines; i++)
+   {
+      label = new Label(getX(), curY, width, FILE_SEL_LINE_HEIGHT, "", grid);
+      labels.push_back(label);
+
+      grid->addElement(getX(), curY, width, FILE_SEL_LINE_HEIGHT);
+
+      curY += FILE_SEL_LINE_HEIGHT;
+   }
 }
 
 /***********************************************************************
@@ -440,6 +465,41 @@ void FileSelector::setFilename(Kobold::String fileName)
  ***********************************************************************/
 void FileSelector::doDraw(Rect pBody)
 {
+   Rect parentBody = getParent()->getBody();
+   if((parentBody.getWidth() != body.getWidth()) ||
+      (parentBody.getHeight() != body.getHeight()))
+   {
+      /* Parent's body changed, must redefine our component's size */
+      body.set(0, 0, parentBody.getWidth() - 1, parentBody.getHeight() - 1);
+      setSize(body.getWidth(), body.getHeight());
+
+      numLines = calculateNumLines();
+      /* Must delete and recreate our grid elements and labels */
+      grid->clearElements();
+      while(labels.size() > 0)
+      {
+         grid->remove(labels[labels.size() - 1]);
+         labels.pop_back();
+      }
+      createLabelsAndGridElements();
+      scrollBar->setHeight(getParent()->getBody().getHeight() - 10 - 
+                           2 * FILE_SEL_LINE_HEIGHT);
+      scrollBar->setTotals(numLines, files.size());
+      
+      /* Adjusts width of selected and pattern */
+      int width = getSelectorWidth();
+      if(loading)
+      {
+         textCurFile->setWidth(width - 40);
+      }
+      else
+      {
+         editCurFile->setWidth(width - 40);
+         
+      }
+      /* Redefine Labels */
+      setLabels();
+   }
 }
 
 /***********************************************************************

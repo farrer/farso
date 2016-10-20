@@ -133,7 +133,7 @@ class Widget : public Kobold::ListElement, public Kobold::List
        * recreated.
        * \param width -> new widget's width
        * \param height -> new widget's height*/
-      void setSize(int width, int height);
+      virtual void setSize(int width, int height);
 
       /*! Set widget's width */
       void setWidth(int width);

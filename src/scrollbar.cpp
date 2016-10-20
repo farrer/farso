@@ -45,6 +45,10 @@ ScrollBar::ScrollBar(ScrollType type, int x, int y, int widthOrHeight,
    this->scrollReference[0] = UNDEFINED_REFERENCE;
    this->scrollReference[1] = UNDEFINED_REFERENCE;
    this->widthOrHeight = widthOrHeight;
+   if(parent)
+   {
+      this->parentBody = parent->getBody();
+   }
    this->body.set(getX(), getY(), getX() + getWidth() - 1, getY() + 
          getHeight() - 1);
    this->realWidthOrHeight = (widthOrHeight - (2 * DEFAULT_SIZE) - 3);
@@ -78,6 +82,27 @@ ScrollBar::ScrollBar(ScrollType type, int x, int y, int widthOrHeight,
 ScrollBar::~ScrollBar()
 {
    /* Note that our buttons are deleted on list destructor. */
+}
+
+/************************************************************************
+ *                               setSize                                *
+ ************************************************************************/
+void ScrollBar::setSize(int width, int height)
+{
+   Widget::setSize(width, height);
+   if(scrollType == TYPE_VERTICAL)
+   {
+      this->widthOrHeight = height;
+      this->realWidthOrHeight = (height - (2 * DEFAULT_SIZE) - 3);
+      this->downButton->setPosition(0, height - DEFAULT_SIZE - 1);
+   }
+   else
+   {
+      this->widthOrHeight = width;
+      this->realWidthOrHeight = (width - (2 * DEFAULT_SIZE) - 3);
+      this->downButton->setPosition(width - DEFAULT_SIZE - 1, 0);
+   }
+   definePositionAndSize();
 }
 
 /************************************************************************
@@ -175,6 +200,18 @@ Rect ScrollBar::getBody()
  ************************************************************************/
 void ScrollBar::doDraw(Rect pBody)
 {
+   if(getParent() != NULL)
+   {
+      Rect curParentBody = getParent()->getBody();
+      if(parentBody != curParentBody)
+      {
+         /* Must update position of our children */
+         this->body.set(getX(), getY(), getX() + getWidth() - 1, getY() + 
+               getHeight() - 1);
+
+         parentBody = curParentBody;
+      }
+   }
 }
 
 /************************************************************************

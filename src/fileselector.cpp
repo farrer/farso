@@ -572,10 +572,18 @@ void FileSelector::doAfterChildTreat()
                }
                else
                {
-                  /* Is without the last one */
-                  newDir = curDir;
-                  newDir.erase(newDir.length()-1, 1); //remove the last"/"
-                  newDir.erase( newDir.find_last_of(FILE_SEL_SLASH));
+                  /* Try to remove the last directory, if any */
+                  size_t pos = newDir.find_last_of(FILE_SEL_SLASH);
+                  if(pos != Kobold::String::npos)
+                  {
+                     newDir = curDir;
+                     newDir.erase(newDir.length()-1, 1); //remove the last"/"
+                     newDir.erase(pos);
+                  } 
+                  else
+                  {
+                     newDir = curDir + Kobold::String("..") + FILE_SEL_SLASH;
+                  }
                }
             }
             else

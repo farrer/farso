@@ -227,7 +227,6 @@ void FileSelector::changeCurDir(Kobold::String newDir)
    total = 0;
 
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_WINDOWS
-   dir = opendir(newDir.c_str());
    if(dir)
 #else
    if(hSearch != INVALID_HANDLE_VALUE)

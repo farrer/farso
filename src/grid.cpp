@@ -261,8 +261,11 @@ bool Grid::doTreat(bool leftButtonPressed, bool rightButtonPressed,
          }
 
          /* No press - or not yet released -, just over element */
-         Controller::setEvent(this, EVENT_GRID_OVER_ELEMENT);
-         return true;
+         if(leftButtonPressed)
+         {
+            Controller::setEvent(this, EVENT_GRID_CLICKING_ELEMENT);
+            return true;
+         }
       }
    }
 
@@ -280,16 +283,14 @@ bool Grid::doTreat(bool leftButtonPressed, bool rightButtonPressed,
          if(el->isInner(mrX, mrY))
          {
             current = el;
-            setDirty();
-            Controller::setEvent(this, EVENT_GRID_OVER_ELEMENT);
-            return true;
+            /* Selected current, but no event for this. */
+            return false;
          }
 
          el = (GridElement*) el->getNext();
       }
    }
   
-   /* Outside the grid, no event. */
    return false;
 }
 

@@ -84,8 +84,8 @@ enum EventType
    EVENT_TEXTENTRY_EDITING,
    /*! When done the editing of a text entry */
    EVENT_TEXTENTRY_EDITION_DONE,
-   /*! When cursor is over a grid's element */
-   EVENT_GRID_OVER_ELEMENT,
+   /*! When cursor is over and clicking a grid's element */
+   EVENT_GRID_CLICKING_ELEMENT,
    /*! When just selected a grid's element (after release) */
    EVENT_GRID_SELECTED_ELEMENT,
    /*! Accepted a file selection (to load or save) */

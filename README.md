@@ -9,6 +9,7 @@ Farso have the following widgets:
  * Button
  * CheckBox
  * Container
+ * FileSelector
  * Grid
  * Label
  * Picture

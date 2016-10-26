@@ -11,6 +11,7 @@ src/fileselector.cpp
 src/font.cpp
 src/grid.cpp
 src/label.cpp
+src/menu.cpp
 src/picture.cpp
 src/progressbar.cpp
 src/rect.cpp
@@ -39,6 +40,7 @@ src/fileselector.h
 src/font.h
 src/grid.h
 src/label.h
+src/menu.h
 src/picture.h
 src/progressbar.h
 src/rect.h

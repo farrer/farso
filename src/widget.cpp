@@ -57,7 +57,6 @@ Widget::Widget(WidgetType type, int x, int y, int width, int height,
       /* And be added to the controller as a 'root' widget */
       Controller::addWidget(this);
    }
-   assert(this->renderer != NULL);
 
    defineParentContainer();
 
@@ -73,6 +72,27 @@ Widget::Widget(WidgetType type, int x, int y, int width, int height,
       this->y = y;
    }
 
+}
+
+/***********************************************************************
+ *                            Constructor                              *
+ ***********************************************************************/
+Widget::Widget(WidgetType type)
+{
+   assert( (type == WIDGET_TYPE_MENU) || 
+           (type == WIDGET_TYPE_USER_CREATED) );
+
+   this->available = true;
+   this->visible = true;
+   this->x = 0;
+   this->y = 0;
+   this->width = 0;
+   this->height = 0;
+   this->dirty = true;
+   this->type = type;
+   this->parent = NULL;
+   this->renderer = NULL;
+   Controller::addWidget(this);
 }
 
 /***********************************************************************
@@ -179,8 +199,12 @@ void Widget::setSize(int width, int height)
       if(parent == NULL)
       {
          /* Must recreate its renderer */
-         delete this->renderer;
+         if(this->renderer != NULL)
+         {
+            delete this->renderer;
+         }
          this->renderer = Controller::createNewWidgetRenderer(width, height);
+         //FIXME: must reset renderer pointer to all of its children.
       }
    }
 }
@@ -477,6 +501,12 @@ void Widget::addChild(Widget* child)
  ***********************************************************************/
 WidgetRenderer* Widget::getWidgetRenderer()
 {
+   if((renderer == NULL) && (parent != NULL))
+   {
+      /* Renderer not yet defined, must ask its parent. */
+      renderer = parent->getWidgetRenderer();
+   }
+
    return renderer;
 }
 

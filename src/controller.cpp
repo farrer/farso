@@ -405,6 +405,9 @@ void Controller::setEvent(Widget* owner, EventType type)
  ***********************************************************************/
 bool Controller::addWidget(Widget* widget)
 {
+   assert(widget != NULL);
+   assert(widget->getParent() == NULL);
+
    if(widget->getParent() != NULL)
    {
       Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
@@ -430,25 +433,6 @@ void Controller::setActiveWindow(Window* window)
 {
    if(window != activeWindow)
    {
-#if FARSO_HAS_OGRE == 1
-      if(rendererType == RENDERER_TYPE_OGRE3D)
-      {
-         /* Bring the window to front (removing and reinserting at 
-          *  the overlay ) */
-         OgreJunction* ogreJunction = (OgreJunction*) junction;
-         if(window != NULL)
-         {
-            OgreWidgetRenderer* ogreRenderer = (OgreWidgetRenderer*) 
-               window->getWidgetRenderer();
-
-            ogreJunction->getOverlay()->remove2D(
-                  ogreRenderer->getOverlayContainer());
-            ogreJunction->getOverlay()->add2D(
-                  ogreRenderer->getOverlayContainer());
-         }
-      }
-#endif
-
       Window* lastActive = activeWindow;
       activeWindow = window;
 
@@ -461,6 +445,45 @@ void Controller::setActiveWindow(Window* window)
       {
          lastActive->inactivate();
       }
+   }
+}
+
+/***********************************************************************
+ *                         setActiveMenu                               *
+ ***********************************************************************/
+void Controller::setActiveMenu(Menu* menu)
+{
+   assert(menu == NULL || activeMenu == NULL);
+   activeMenu = menu;
+}
+
+/***********************************************************************
+ *                            bringFront                               *
+ ***********************************************************************/
+void Controller::bringFront(Widget* widget)
+{
+   assert(widget != NULL);
+   assert(widget->getParent() == NULL);
+
+#if FARSO_HAS_OGRE == 1
+   /* As ogre3d renderer controlls by itself the rendering order, we must
+    * treat it in an distinct way */
+   if(rendererType == RENDERER_TYPE_OGRE3D)
+   {
+      OgreJunction* ogreJunction = (OgreJunction*) junction;
+      OgreWidgetRenderer* ogreRenderer = (OgreWidgetRenderer*) 
+         widget->getWidgetRenderer();
+
+      ogreJunction->getOverlay()->remove2D(
+            ogreRenderer->getOverlayContainer());
+      ogreJunction->getOverlay()->add2D(
+            ogreRenderer->getOverlayContainer());
+   }
+#endif
+   if(widget != widgets->getFirst())
+   {
+      widgets->removeWithoutDelete(widget);
+      widgets->insertAtBegin(widget);
    }
 }
 
@@ -557,23 +580,35 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    }
 
    float depth = 0.0f;
-
-   /* Must always treat active window events before others. */
+   
    Window* curActive = activeWindow;
-   if(curActive)
-   {
-      /* Make sure the active window is first
-       * Note: doing here, instead of inside setActiveWindow because
-       * that function could be called while looping through the list,
-       * which could mess things up on the list. */
-      if(curActive != widgets->getFirst())
-      {
-         widgets->removeWithoutDelete(curActive);
-         widgets->insertAtBegin(curActive);
-      }
 
-      gotEvent |= verifyEvents(curActive, leftButtonPressed, 
-            rightButtonPressed, mouseX, mouseY, !gotEvent);
+   if(activeMenu)
+   {
+      /* When a menu is active, must make sure we have it at front of
+       * all other 'root' widgets (even of windows). */
+      if(activeMenu != widgets->getFirst())
+      {
+         bringFront(activeMenu);
+      }
+   }
+   else
+   {
+      /* Must always treat active window events before others. */
+      if(curActive)
+      {
+         /* Make sure the active window is first
+          * Note: doing here, instead of inside setActiveWindow because
+          * that function could be called while looping through the list,
+          * which could mess things up on the list. */
+         if(curActive != widgets->getFirst())
+         {
+            bringFront(curActive);
+         }
+
+         gotEvent |= verifyEvents(curActive, leftButtonPressed, 
+               rightButtonPressed, mouseX, mouseY, !gotEvent);
+      }
    }
 
    /* Check all other widgets */
@@ -659,6 +694,7 @@ Kobold::List* Controller::widgets = NULL;
 Kobold::List* Controller::toRemoveWidgets = NULL;
 bool Controller::inited = false;
 Window* Controller::activeWindow = NULL;
+Menu* Controller::activeMenu = NULL;
 Event Controller::event(NULL, EVENT_NONE);
 RendererType Controller::rendererType = RENDERER_TYPE_OPENGL; 
 int Controller::width = 0;

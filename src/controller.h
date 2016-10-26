@@ -30,6 +30,7 @@
 #include "fileselector.h"
 #include "grid.h"
 #include "label.h"
+#include "menu.h"
 #include "picture.h"
 #include "progressbar.h"
 #include "scrollbar.h"
@@ -171,6 +172,10 @@ class Controller
       /*! The the event got at last verifyEvents call */
       static const Event getLastEvent();
 
+      /*! Set a recently opened menu to be the active one 
+       * \param menu pointer to the menu. */
+      static void setActiveMenu(Menu* menu);
+
       /*! Set an event happened. Only valid if called by the widget when
        * treating events (otherwise will be cleaned on next 
        * verifyEvent call.
@@ -203,6 +208,11 @@ class Controller
       /*! \return real filename for fonts, skins and cursors files */
       static Kobold::String getRealFilename(Kobold::String filename);
 
+      /*! Bring a widget to the front (be rendered first).
+       * \param widget pointer to the Widget to be at front. 
+       * \note widget must be a 'root' widget (without parents). */
+      static void bringFront(Widget* widget);
+
    private:
       /*! No instances allowed */
       Controller(){};
@@ -232,6 +242,7 @@ class Controller
                                      (ie: without a parent) widgets. */
       static bool inited; /**< Inited flag.*/
       static Window* activeWindow; /**< Current active window */
+      static Menu* activeMenu; /**< Current active menu */
       static Event event; /**< Last event. */
       static RendererType rendererType; /**< Current controller renderer type*/
 

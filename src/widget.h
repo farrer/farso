@@ -56,7 +56,8 @@ class Widget : public Kobold::ListElement, public Kobold::List
          WIDGET_TYPE_TEXT_ENTRY,
          WIDGET_TYPE_SCROLL_TEXT,
          WIDGET_TYPE_GRID,
-         WIDGET_TYPE_FILE_SELECTOR
+         WIDGET_TYPE_FILE_SELECTOR,
+         WIDGET_TYPE_MENU
       };
 
       /*! Constructor
@@ -64,6 +65,14 @@ class Widget : public Kobold::ListElement, public Kobold::List
        * \param parent pointer to parent Widget (if any). */
       Widget(WidgetType type, int x, int y, int width, int height, 
             Widget* parent);
+
+      /*! Special constructor. Only used for non-parent widgets that
+       * doesn't know its dimensions from start (for now, only Menus). 
+       * \param type widget type.
+       * \note widget with this constructor should create its renderer 
+       *       before been able to use, with a setSize call with width and
+       *       height different from zero.*/
+      Widget(WidgetType type);
       
       /*! Destructor */
       virtual ~Widget();

@@ -96,7 +96,13 @@ enum EventType
    EVENT_FILESELECTOR_SELECTED_FILE,
    /*! When selected a directory on the file selector list (and thus, changed
     * its current directory displayed) */
-   EVENT_FILESELECTOR_SELECTED_DIRECTORY
+   EVENT_FILESELECTOR_SELECTED_DIRECTORY,
+   /*! When pressing something on the menu */
+   EVENT_MENU_PRESSING,
+   /*! When a menu is closed, after selecting an item */
+   EVENT_MENU_SELECTED,
+   /*! When a menu is closed, without selecting any item */
+   EVENT_MENU_CLOSED
 };
 
 /*! A Farso event definition */

@@ -274,13 +274,13 @@ void ScrollText::doDraw(Rect pBody)
    if(skin != NULL)
    {
       skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_LEFT, 
-            pX, pY + 1, pX2, pY2 - 1);
+            pX, pY, pX2, pY2);
       skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_RIGHT, 
-            pX, pY + 1 , pX2, pY2 - 1);
+            pX, pY , pX2, pY2);
       skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_TOP,
-            pX+1, pY, pX2-1, pY2);
+            pX, pY, pX2, pY2);
       skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_BOTTOM,
-            pX+1, pY, pX2-1, pY2);
+            pX, pY, pX2, pY2);
    }
    else
    {

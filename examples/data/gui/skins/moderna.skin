@@ -188,16 +188,22 @@ element = progressBar
 
 # Some special borders
 element = borderLeft
-   borderDelta = 0,2,0,2
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 15,166,17,168
+   bottomLeftCorner = 15,185,17,187
+   borderDelta = 0,3,0,3
    leftBorder = 15,173,17,174
    element = borderRight
-      borderDelta = 0,2,0,2
+      cornerDelta = 0,0,0,0
+      topRightCorner = 34,166,36,168
+      bottomRightCorner = 34,185,36,187
+      borderDelta = 0,3,0,3
       rightBorder = 34,173,36,174
    element = borderTop
-      borderDelta = 0,0,0,0
+      borderDelta = 3,0,3,0
       topBorder = 23,166,24,168
    element = borderBottom
-      borderDelta = 0,0,0,0
+      borderDelta = 3,0,3,0
       bottomBorder = 23,185,24,187
 
 # TextEntry

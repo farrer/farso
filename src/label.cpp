@@ -180,13 +180,13 @@ void Label::doDraw(Rect pBody)
       {
          /* Let's draw its border */
          skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_LEFT,
-               rx1, ry1 + 1, rx2, ry2 - 1);
+               rx1, ry1, rx2, ry2);
          skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_RIGHT,
-               rx1, ry1 + 1 , rx2, ry2 - 1);
+               rx1, ry1 , rx2, ry2);
          skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_TOP,
-               rx1 + 1, ry1, rx2-1, ry2);
+               rx1, ry1, rx2, ry2);
          skin->drawElement(surface, Skin::SKIN_TYPE_BORDER_BOTTOM,
-               rx1 + 1, ry1, rx2-1, ry2);
+               rx1, ry1, rx2, ry2);
       }
 
       if((!fontName.empty()) && (fontSize != -1))

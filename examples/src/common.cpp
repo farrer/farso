@@ -189,6 +189,8 @@ void Example::createOtherWindow()
    new Farso::CheckBox(0, 88, 100, "Check box", true, window);
    (new Farso::CheckBox(0, 110, 100, "Disabled", false, window))->disable();
    (new Farso::CheckBox(0, 132, 100, "Checked", true, window))->disable();
+   createMenu();
+   (new Farso::Button(0,152,100,21, "Menu", window))->setMenu(menu);
 
    Farso::Picture* pic = new Farso::Picture(120, 0, "cursor/talk.png", window);
    pic->setMouseHint("I'm a png image!");
@@ -279,6 +281,19 @@ void Example::addAllWidgetsToContainer(Farso::Container* cont)
    scrollText->addText("And more text maybe it is now, right?");
    scrollText->addLineBreak();
    scrollText->addText("Now it really is, I'm sure!");
+}
+
+/************************************************************************
+ *                              createMenu                              *
+ ************************************************************************/
+void Example::createMenu()
+{
+   menu = new Farso::Menu();
+   menu->beginCreate();
+   menu->insertItem("First item");
+   menu->insertSeparator();
+   menu->insertItem("Another gitem ");
+   menu->endCreate();
 }
 
 /************************************************************************

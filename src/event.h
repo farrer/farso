@@ -102,7 +102,10 @@ enum EventType
    /*! When a menu is closed, after selecting an item */
    EVENT_MENU_SELECTED,
    /*! When a menu is closed, without selecting any item */
-   EVENT_MENU_CLOSED
+   EVENT_MENU_CLOSED,
+   /*! When a menu is opened by another widget.
+    * \note manually opening a menu will not raise any event. */
+   EVENT_MENU_OPENED
 };
 
 /*! A Farso event definition */

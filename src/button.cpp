@@ -31,6 +31,7 @@ Button::Button(int x, int y, int width, int height, Kobold::String caption,
       :Widget(Widget::WIDGET_TYPE_BUTTON, x, y, width, height, parent)
 {
    this->setCaption(caption);
+   this->menu = NULL;
    this->pressStarted = false;
    this->pressed = false;
    this->useRoundedEdges = false;
@@ -79,6 +80,14 @@ void Button::setFont(Kobold::String fontName, int fontSize)
 {
    this->fontName = fontName;
    this->fontSize = fontSize;
+}
+
+/******************************************************************
+ *                             setMenu                            *
+ ******************************************************************/
+void Button::setMenu(Menu* menu)
+{
+   this->menu = menu;
 }
 
 /******************************************************************
@@ -148,7 +157,26 @@ bool Button::doTreat(bool leftButtonPressed, bool rightButtonPressed,
       /* Let's see if was a valid release or a cancelled one. */
       if(isInner(mrX, mrY))
       {
-         Controller::setEvent(this, EVENT_BUTTON_RELEASE);
+         if(menu)
+         {
+            /* We have a menu, let's open it. But before, we need to define
+             * the coordinate just after this button. */
+            Rect pbody(0,0,0,0);
+            WidgetRenderer* renderer = getWidgetRenderer(); 
+            if(getParent() != NULL)
+            {
+               pbody = getParent()->getBodyWithParentsApplied();
+            }
+            menu->open(renderer->getPositionX() + pbody.getX1() + getX(), 
+                       renderer->getPositionY() + pbody.getY1() + getY() + 
+                       getHeight());
+
+            Controller::setEvent(this, EVENT_MENU_OPENED);
+         }
+         else
+         {
+            Controller::setEvent(this, EVENT_BUTTON_RELEASE);
+         }
       }
       else
       {

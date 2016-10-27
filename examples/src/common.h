@@ -41,6 +41,12 @@ namespace FarsoExample
          void createWindowToTestContainers();
          /*! Add widgets to a container of the window to test containers */
          void addAllWidgetsToContainer(Farso::Container* cont);
+
+         /*! Create our menu to test */
+         void createMenu();
+
+      private:
+         Farso::Menu* menu; /**< A menu to be used */
    };
 
 }

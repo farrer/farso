@@ -23,6 +23,7 @@
 
 #include "widget.h"
 #include "skin.h"
+#include "menu.h"
 
 namespace Farso
 {
@@ -63,6 +64,10 @@ class Button: public Widget
                         Skin::SkinElementType pressedType,
                         Skin::SkinElementType onOverType,
                         Skin::SkinElementType disabledType);
+
+      /*! Set a menu to be opened when button was released 
+       * \param menu pointer to the menu to be opened */
+      void setMenu(Menu* menu);
       
       Rect getBody();
 
@@ -89,6 +94,7 @@ class Button: public Widget
       Kobold::String fontName; /**< Filename of the font to use. */
       int fontSize;          /**< Size of the font to use. */
       Rect body;             /**< Button's body */
+      Menu* menu;            /**< Optional menu to be opened */
 
       Skin::SkinElementType enabledType;  /**< Type to BUTTON_ENABLED */
       Skin::SkinElementType pressedType;  /**< Type to BUTTON_PRESSED */

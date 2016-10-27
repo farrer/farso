@@ -118,7 +118,7 @@ element = fileLabel
    textAreaDelta = 0,0,0,0
 element = directoryLabel
    textAreaDelta = 0,0,0,0
-   textFontColor = 255,25,25,255
+   textFontColor = 32,216,230,255
 
 
 # Check Box

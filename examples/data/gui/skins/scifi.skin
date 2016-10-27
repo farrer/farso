@@ -312,5 +312,7 @@ element = menu
    bottomBorder = 150,48,150,48
    backgroundDelta = 1,1,1,1
    background = 2,2,11,11
-
+   element = menuSeparator
+      borderDelta = 4,8,6,0
+      topBorder = 150,41,150,41
 

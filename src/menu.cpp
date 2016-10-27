@@ -33,8 +33,11 @@ Menu::MenuItem::MenuItem(Kobold::String caption, Widget* owner)
 {
    this->enabled = true;
    this->visible = true;
+   this->separator = false;
    this->owner = owner;
    this->icon = NULL;
+   this->pX = 0;
+   this->pY = 0;
 
    calculateNeededSize(caption, NULL);
 
@@ -50,10 +53,29 @@ Menu::MenuItem::MenuItem(Kobold::String caption, Kobold::String icon,
 {
    this->enabled = true;
    this->visible = true;
+   this->separator = false;
    this->owner = owner;
+   this->pX = 0;
+   this->pY = 0;
    this->icon = new Picture(0, 0, icon, owner);
    calculateNeededSize(caption, this->icon);
    this->label = new Label(0, 0, width, height, caption, owner);
+}
+
+/***********************************************************************
+ *                                MenuItem                             *
+ ***********************************************************************/
+Menu::MenuItem::MenuItem()
+{
+   this->pX = 0;
+   this->pY = 0;
+   this->enabled = false;
+   this->visible = true;
+   this->separator = true;
+   this->owner = owner;
+   this->icon = NULL;
+   this->label = NULL;
+   calculateNeededSize("", NULL);
 }
 
 /***********************************************************************
@@ -104,7 +126,22 @@ void Menu::MenuItem::calculateNeededSize(Kobold::String str,
  ***********************************************************************/
 void Menu::MenuItem::setPosition(int x, int y)
 {
-   this->label->setPosition(x, y);
+   /* Define internal */
+   pX = x;
+   pY = y;
+
+   /* define icon's */
+   if(this->icon)
+   {
+     this->icon->setPosition(x, y);
+      x += this->icon->getWidth() + 4;
+   }
+
+   /* define label's */
+   if(this->label)
+   {
+      this->label->setPosition(x, y);
+   }
 }
 
 /***********************************************************************
@@ -113,6 +150,22 @@ void Menu::MenuItem::setPosition(int x, int y)
 int Menu::MenuItem::getNeededHeight()
 {
    return height;
+}
+
+/***********************************************************************
+ *                                 getX                                *
+ ***********************************************************************/
+int Menu::MenuItem::getX()
+{
+   return pX;
+}
+
+/***********************************************************************
+ *                                 getX                                *
+ ***********************************************************************/
+int Menu::MenuItem::getY()
+{
+   return pY;
 }
 
 /***********************************************************************
@@ -148,7 +201,7 @@ void Menu::MenuItem::disable()
  ***********************************************************************/
 void Menu::MenuItem::enable()
 {
-   if(!enabled)
+   if((!enabled) && (!separator))
    {
       if(label)
       {
@@ -169,6 +222,14 @@ void Menu::MenuItem::enable()
 bool Menu::MenuItem::isEnabled()
 {
    return enabled;
+}
+
+/***********************************************************************
+ *                           isSeparator                               *
+ ***********************************************************************/
+bool Menu::MenuItem::isSeparator()
+{
+   return separator;
 }
 
 /***********************************************************************
@@ -224,6 +285,7 @@ Menu::Menu()
    this->current = NULL;
    this->creating = false;
    this->pressStarted = false;
+   this->hasSeparator = false;
    this->grid = new Grid(Grid::GRID_TYPE_HIGHLIGHT_FILL, this);
    this->curWidth = 0;
    this->curHeight = 0;
@@ -300,7 +362,28 @@ Menu::MenuItem* Menu::insertItem(Kobold::String text, Kobold::String icon)
 
    return item;
 }
+
+/***********************************************************************
+ *                         insertSeparator                             *
+ ***********************************************************************/
+Menu::MenuItem* Menu::insertSeparator()
+{
+   if(!creating)
+   {
+      Kobold::Log::add(
+            "Warning: couldn't insert separator while not creating the menu.");
+      return NULL;
+   }
  
+   /* Create and insert the separator */
+   MenuItem* item = new MenuItem();
+   items.insertAtEnd(item);
+
+   this->hasSeparator = true;
+
+   return item;
+}
+
 /***********************************************************************
  *                             endCreate                               *
  ***********************************************************************/     
@@ -359,8 +442,11 @@ void Menu::open(int x, int y)
          /* Define item position and its grid */
          item->setPosition(pX, pY);
 
-         grid->addElement(pX + 2, pY + 2, curWidth - 4,
-               item->getNeededHeight() - 2);
+         if(item->isEnabled())
+         {
+            grid->addElement(pX + 2, pY + 2, curWidth - 4,
+                  item->getNeededHeight() - 2);
+         }
 
          pY += item->getNeededHeight();
       }
@@ -482,6 +568,35 @@ void Menu::doDraw(Rect pBody)
       draw->setActiveColor(Colors::colorCont[2]);
       draw->doRoundedRectangle(surface, 0, 0, curWidth - 1, curHeight - 1, 
             Colors::colorCont[1]);
+
+   }
+
+   if(hasSeparator)
+   {
+      /* Must draw our separators */
+      MenuItem* item = (MenuItem*) items.getFirst();
+      for(int i = 0; i < items.getTotal(); i++)
+      {
+         if(item->isSeparator())
+         {
+            if(skin)
+            {
+               skin->drawElement(surface, Skin::SKIN_TYPE_MENU_SEPARATOR, 
+                     0, item->getY(), curWidth -1, 
+                     item->getY() + item->getNeededHeight() - 1);
+            }
+            else
+            {
+               /* Draw at the middle of the item */
+               int midY = (item->getNeededHeight() / 2) + item->getY();
+               draw->setActiveColor(Colors::colorCont[1]);
+               draw->doTwoColorsRectangle(surface, item->getX() + 4, midY - 1, 
+                      curWidth - 5, midY, Colors::colorCont[0]);
+            }
+         }
+
+         item = (MenuItem*) item->getNext();
+      }
 
    }
 }

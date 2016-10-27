@@ -57,16 +57,25 @@ class Menu : public Widget
             MenuItem(Kobold::String caption, Kobold::String icon, 
                   Widget* owner);
 
+            /*! Constructor for separators */
+            MenuItem();
+
             /*! Destructor */
             ~MenuItem();
 
             /*! Set current position of the item */
             void setPosition(int x, int y);
 
-            /*! Get the needed height for current item */
+            /*! \return current item X position */
+            int getX();
+
+            /*! \return current item X position */
+            int getY();
+
+            /*! \return the needed height for current item */
             int getNeededHeight();
 
-            /*! Get the needed width for current item */
+            /*! \return the needed width for current item */
             int getNeededWidth();
 
             /*! Disable the item (but still visible) */
@@ -76,6 +85,9 @@ class Menu : public Widget
 
             /*! \return if item is enabled or disabled */
             bool isEnabled();
+
+            /*! \return if item is of special separator type */
+            bool isSeparator();
 
             /*! Hide current menu item */
             void hide();
@@ -92,6 +104,8 @@ class Menu : public Widget
             bool enabled; /**< if enabled or disabled */
             bool visible; /**< if visible or hidden */
 
+            bool separator; /**< if element is a separtor */
+
             Label* label;  /**< item's label */
             Picture* icon; /**< item's icon */
 
@@ -99,6 +113,9 @@ class Menu : public Widget
 
             int width;   /**< Needed width */
             int height;  /**< Needed height */
+
+            int pX;      /**< X coordinate on parent */ 
+            int pY;      /**< Y coordinate on parent */
       };
 
       /*! Init the process of inserting menu items.
@@ -115,6 +132,10 @@ class Menu : public Widget
        * \param text item's caption 
        * \param icon path to icon's image. */
       MenuItem* insertItem(Kobold::String text, Kobold::String icon);
+
+      /*! Insert a separator item. A separator is just a decorative
+       * item that couldn't be selected */
+      MenuItem* insertSeparator();
       
       /*! Finish the process of inserting menu items. */
       void endCreate();
@@ -160,6 +181,7 @@ class Menu : public Widget
       Rect body; /**< Menu's body */
       bool creating; /**< While creating flag */
       bool pressStarted; /**< if press started or no */
+      bool hasSeparator; /**< If menu has a separator element */
 
       int curWidth;  /**< current width of the menu */
       int curHeight; /**< current height of the menu */

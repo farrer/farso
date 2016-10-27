@@ -540,8 +540,6 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
 {
    Farso::Rect rect, delta;
    Farso::Draw* fdraw = Farso::Controller::getDraw();
-   int width = (wx2 - wx1 + 1);
-   int height = (wy2 - wy1 + 1);
 
    /* Background */
    if(hasBackground())
@@ -549,7 +547,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       delta = getBackgroundDelta();
       rect = getBackground();
       fdraw->doStampFill(dest, wx1 + delta.getX1(), wy1 + delta.getY1(),
-            wx1 + width - delta.getX2(), wy1 + height - delta.getY2(), 
+            wx2 - delta.getX2(), wy2 - delta.getY2(), 
             src, rect.getX1(), rect.getY1(), rect.getX2(), rect.getY2());
    }
 
@@ -562,7 +560,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       {
          delta = getTopBorderDelta();
          fdraw->doStampFill(dest, wx1 + delta.getX1(), wy1 + delta.getY1(),
-               wx1 + width - delta.getX2(), 
+               wx2 - delta.getX2(), 
                wy1 + rect.getY2() - rect.getY1() + delta.getY1(), 
                src, rect.getX1(), rect.getY1(), rect.getX2(), rect.getY2());
       }
@@ -573,9 +571,9 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       {
          delta = getBottomBorderDelta();
          fdraw->doStampFill(dest, wx1 + delta.getX1(),
-               wy1 + height - delta.getY2() - (rect.getY2() - rect.getY1()),
-               wx1 + width - delta.getX2(), 
-               wy1 + height - delta.getY2(), src,
+               wy2 - delta.getY2() - (rect.getY2() - rect.getY1()),
+               wx2 - delta.getX2(), 
+               wy2 - delta.getY2(), src,
                rect.getX1(), rect.getY1(), rect.getX2(), rect.getY2());
       }
 
@@ -586,7 +584,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
          delta = getLeftBorderDelta();
          fdraw->doStampFill(dest, wx1 + delta.getX1(), wy1 + delta.getY1(),
                wx1 + delta.getX1() + (rect.getX2() - rect.getX1()), 
-               wy1 + height - delta.getY2(), src,
+               wy2 - delta.getY2(), src,
                rect.getX1(), rect.getY1(), rect.getX2(), rect.getY2());
       }
 
@@ -596,9 +594,9 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       {
          delta = getRightBorderDelta();
          fdraw->doStampFill(dest, 
-               wx1 + width - delta.getX2() - (rect.getX2() - rect.getX1()),
-               wy1 + delta.getY1(), wx1 + width - delta.getX2(), 
-               wy1 + height - delta.getY2(), src,
+               wx2 - delta.getX2() - (rect.getX2() - rect.getX1()),
+               wy1 + delta.getY1(), wx2 - delta.getX2(), 
+               wy2 - delta.getY2(), src,
                rect.getX1(), rect.getY1(), rect.getX2(), rect.getY2());
       }
    }
@@ -623,8 +621,8 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       if(rect.isDefined())
       {
          fdraw->doStampFill(dest, 
-               wx1 + width - delta.getX2() - (rect.getX2() - rect.getX1()),
-               wy1 + delta.getY1(), wx1 + width - delta.getX2(),
+               wx2 - delta.getX2() - (rect.getX2() - rect.getX1()),
+               wy1 + delta.getY1(), wx2 - delta.getX2(),
                wy1 + delta.getY1() + (rect.getY2() - rect.getY1()), src,
                rect.getX1(), rect.getY1(), rect.getX2(), rect.getY2());
       }
@@ -634,9 +632,9 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       if(rect.isDefined())
       {
          fdraw->doStampFill(dest, wx1 + delta.getX1(),
-               wy1 + height - delta.getY2() - (rect.getY2() - rect.getY1()),
+               wy2 - delta.getY2() - (rect.getY2() - rect.getY1()),
                wx1 + delta.getX1() + (rect.getX2() - rect.getX1()),
-               wy1 + height - delta.getY2(), src,
+               wy2 - delta.getY2(), src,
                rect.getX1(), rect.getY1(), rect.getX2(), rect.getY2());
       }
 
@@ -645,9 +643,9 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       if(rect.isDefined())
       {
          fdraw->doStampFill(dest, 
-               wx1 + width - delta.getX2() - (rect.getX2() - rect.getX1()),
-               wy1 + height - delta.getY2() - (rect.getY2() - rect.getY1()),
-               wx1 + width - delta.getX2(), wy1 + height - delta.getY2(), 
+               wx2 - delta.getX2() - (rect.getX2() - rect.getX1()),
+               wy2 - delta.getY2() - (rect.getY2() - rect.getY1()),
+               wx2 - delta.getX2(), wy2 - delta.getY2(), 
                src, rect.getX1(), rect.getY1(), rect.getX2(), rect.getY2());
       }
    }
@@ -1087,6 +1085,14 @@ int Skin::getElementType(Kobold::String typeName)
    else if(typeName == "directoryLabel")
    {
       return SKIN_TYPE_DIRECTORY_LABEL;
+   }
+   else if(typeName == "menu")
+   {
+      return SKIN_TYPE_MENU;
+   }
+   else if(typeName == "menuSeparator")
+   {
+      return SKIN_TYPE_MENU_SEPARATOR;
    }
 
    /* Try to get from user defined ones */

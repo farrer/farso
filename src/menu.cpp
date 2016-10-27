@@ -468,7 +468,9 @@ void Menu::doDraw(Rect pBody)
    /* Finally, let's draw it */
    if(skin)
    {
-      //TODO
+      /* Draw the menu with its skin */
+      skin->drawElement(surface, Skin::SKIN_TYPE_MENU, 0, 0, 
+            curWidth -1, curHeight -1);
    }
    else
    {

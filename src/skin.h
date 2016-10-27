@@ -82,6 +82,8 @@ class Skin
          SKIN_TYPE_GRID_BORDER,
          SKIN_TYPE_FILE_LABEL,
          SKIN_TYPE_DIRECTORY_LABEL,
+         SKIN_TYPE_MENU,
+         SKIN_TYPE_MENU_SEPARATOR,
          TOTAL_BASIC_SKIN_ELEMENT_TYPES
       };
 

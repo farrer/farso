@@ -295,4 +295,22 @@ element = gridFill
    backgroundDelta = 1,1,1,1
    background = 186,7,186,7
 
+# Menu
+element = menu
+   cornerDelta = 0,0,0,0
+   topLeftCorner = 144,41,146,43
+   bottomLeftCorner = 144,46,146,48
+   topRightCorner = 153,41,155,43
+   bottomRightCorner = 153,46,155,48
+   leftBorderDelta = 0,3,0,3
+   leftBorder = 144,44,144,44
+   rightBorderDelta = 0,3,0,3
+   rightBorder = 155,44,155,44
+   topBorderDelta = 2,0,2,0
+   topBorder = 150,41,150,41
+   bottomBorderDelta = 2,0,2,0
+   bottomBorder = 150,48,150,48
+   backgroundDelta = 1,1,1,1
+   background = 2,2,11,11
+
 

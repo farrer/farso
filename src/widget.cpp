@@ -92,6 +92,7 @@ Widget::Widget(WidgetType type)
    this->type = type;
    this->parent = NULL;
    this->renderer = NULL;
+   this->parentContainer = NULL;
    Controller::addWidget(this);
 }
 

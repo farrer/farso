@@ -259,9 +259,31 @@ void OgreDraw::doStampFill(Surface* target, int tx1, int ty1, int tx2, int ty2,
    OgreSurface* ogreSource = (OgreSurface*) source;
    OgreSurface* ogreTarget = (OgreSurface*) target;
 
-   /* Check rectangle's definition */
-   assert( (ty2 >= ty1) && (tx2 >= tx1) && 
-           (sy2 >= sy1) && (sx2 >= sx1));
+   /* Check and adjust rectangle's definition */
+   if(tx2 < tx1)
+   {
+      int tmp = tx1;
+      tx1 = tx2;
+      tx2 = tmp;
+   }
+   if(ty2 < ty1)
+   {
+      int tmp = ty1;
+      ty1 = ty2;
+      ty2 = tmp;
+   }
+   if(sx2 < sx1)
+   {
+      int tmp = sx1;
+      sx1 = sx2;
+      sx2 = tmp;
+   }
+   if(sy2 < sy1)
+   {
+      int tmp = sy1;
+      sy1 = sy2;
+      sy2 = tmp;
+   }
 
    /* Check if images aren't the same (they couldn't be, as we do 
     * memcpy on them and the behaviour will be unexpected). */
@@ -291,8 +313,18 @@ void OgreDraw::doStampFill(Surface* target, int tx1, int ty1, int tx2, int ty2,
    int tdX = tx2 - tx1 + 1;
    int tdY = ty2 - ty1 + 1;
 
-   /* Check dimensions */
-   assert((sdX <= tdX) && (sdY <= tdY));
+   /* Check and adjust dimensions (will make easy the memcpy) */
+   if(sdX > tdX)
+   {
+      sx2 = sx1 + tdX - 1;
+      sdX = tdX;
+   }
+   if(sdY > tdY)
+   {
+      sy2 = sy1 + tdY - 1;
+      sdY = tdY;
+   }
+   
    assert((sdX <= (int)sourceBox.getWidth()) && 
           (sdY <= (int)sourceBox.getHeight()));
    assert((tdX <= (int)targetBox.getWidth()) && 

@@ -30,6 +30,8 @@
 #include "scrollbar.h"
 #include "textentry.h"
 
+#include <vector>
+
 //TODO: check this Widget on Android and iOS. Probably, will need to force,
 //      on these systems, to be not navigatable (and also some adjust to
 //      get the file list on android APK).

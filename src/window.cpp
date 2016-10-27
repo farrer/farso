@@ -161,7 +161,7 @@ void Window::doDraw(Rect pBody)
             Farso::Skin::SKIN_TYPE_WINDOW_ENABLED_CLOSE_BUTTON);
       if(sk.hasCorner())
       {
-         Rect delta = sk.getCornerDelta();
+         Rect delta = sk.getBorderDelta();
          Rect rect = sk.getTopLeftCorner();
          if(rect.isDefined())
          {
@@ -169,15 +169,17 @@ void Window::doDraw(Rect pBody)
                   delta.getY1() - body.getY1());
             closeButton->setSize(rect.getWidth(), rect.getHeight());
          }
-         rect = sk.getTopRightCorner();
-         if(rect.isDefined())
+         else
          {
-            closeButton->setPosition((getWidth() - 1) - delta.getX2() - 
-                  (rect.getWidth() - 1) - body.getX1(), 
-                  delta.getY1() - body.getY1());
-            closeButton->setSize(rect.getWidth(), rect.getHeight());
+            rect = sk.getTopRightCorner();
+            if(rect.isDefined())
+            {
+               closeButton->setPosition((getWidth() - 1) - delta.getX2() - 
+                     (rect.getWidth()) - body.getX1(), 
+                     delta.getY1() - body.getY1());
+               closeButton->setSize(rect.getWidth(), rect.getHeight());
+            }
          }
-
       }
    }
    else

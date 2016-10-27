@@ -21,15 +21,15 @@ element = window
 
    # Window close button (enabled)
    element = windowEnabledCloseButton
-      cornerDelta = 0,5,6,0
+      borderDelta = 0,10,12,0
       topRightCorner = 4,3,22,21
    # Window close button (disabled)
    element = windowDisabledCloseButton
-      cornerDelta = 0,5,6,0
+      borderDelta = 0,10,12,0
       topRightCorner = 4,26,22,44
    # Window close button (on over)
    element = windowOnOverCloseButton
-      cornerDelta = 0,5,6,0
+      borderDelta = 0,10,12,0
       topRightCorner = 25,3,43,21
 
    # Window Active Title bar

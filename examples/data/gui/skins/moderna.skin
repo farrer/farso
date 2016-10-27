@@ -48,7 +48,7 @@ element = window
 
    # Window close button (enabled).
    element = windowEnabledCloseButton
-      cornerDelta = 0,0,3,0
+      borderDelta = 0,0,6,0
       topRightCorner = 70,7,97,33 
 
 # Button

@@ -14,10 +14,10 @@ element = window
    topBorder = 18,73,20,100
    bottomBorder = 10,57,12,96
    cornerDelta = 0,0,0,0
-   topLeftCorner = 52,79,147,173
-   topRightCorner = 165,79,259,173
-   bottomLeftCorner = 52,180,147,274
-   bottomRightCorner = 165,180,259,274
+   topLeftCorner = 42,79,137,173
+   topRightCorner = 145,79,239,173
+   bottomLeftCorner = 42,180,137,274
+   bottomRightCorner = 145,180,239,274
 
    # Window close button (enabled)
    element = windowEnabledCloseButton

@@ -426,9 +426,6 @@ void Menu::endCreate()
  ***********************************************************************/
 void Menu::open(int x, int y)
 {
-   setPosition(x, y);
-   show();
-
    /* Let's define each item position, and its grid element */
    int pX = 0, 
        pY = 0;
@@ -456,6 +453,20 @@ void Menu::open(int x, int y)
 
    /* define current height */
    curHeight = pY + 1;
+
+   /* Check for menu inside Farso available window */
+   if(x + curWidth > Controller::getWidth())
+   {
+      x = Controller::getWidth() - curWidth + 1;
+   }
+   if(y + curHeight > Controller::getHeight())
+   {
+      y = Controller::getHeight() - curHeight + 1;
+   }
+
+   /* Finally, set menu position and display it. */
+   setPosition(x, y);
+   show();
 
    Controller::setActiveMenu(this);
 }

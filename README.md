@@ -12,6 +12,7 @@ Farso have the following widgets:
  * FileSelector
  * Grid
  * Label
+ * Menu
  * Picture
  * ProgressBar
  * ScrollBar
@@ -23,12 +24,12 @@ Farso have the following widgets:
 
 It's fully skinable and could be extended to support your own widgets.
 
-Farso is the GUI of DNT, being this version the active of DNT Ogre3d port.
+Farso is DNT's GUI, being this version the active of DNT's Ogre3d port.
 
 ## Some History
 
 Farso is by far the oldest Free/Libre project of mime, starting as a DOS
-multitasker DOS GUI back in the late 90s (code from this old dummy
+multitasker GUI back in the late 90s (code from this old dummy
 learning-how-to-programming pascal era is at
 [https://sourceforge.net/projects/farso]). Back in 2005 it got its first major
 rewrite to C++ and was used on the former DNT project (code at src/gui folder
@@ -49,6 +50,9 @@ hosted here.
 
 
 ### Ogre3d Renderer
+
+(must recheck, as most of those are just dependencies for the example, and not
+ to Farso Ogre3d renderer itself).
 
  * Ogre3D 1.10 [http://www.ogre3d.org/]
  * Kobold [https://github.com/farrer/kobold]

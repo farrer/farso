@@ -122,7 +122,7 @@ examples/src/opengl/opengl_example.h
 
 set(FARSO_HAS_EXAMPLE 0)
 
-if(${OGRE_FOUND})
+if(${FARSO_HAS_OGRE_EXAMPLE})
    set(FARSO_EXAMPLE_SOURCES ${FARSO_COMMON_EXAMPLE_SOURCES}
                              ${FARSO_OGRE3D_EXAMPLE_SOURCES})
    set(FARSO_EXAMPLE_HEADERS ${FARSO_COMMON_EXAMPLE_HEADERS}
@@ -148,7 +148,7 @@ if(${OGRE_FOUND})
                       ${CMAKE_SOURCE_DIR}/examples/data 
                       $<TARGET_FILE_DIR:farso_ogre3d_example>/data)
    set(FARSO_HAS_EXAMPLE 1)
-endif(${OGRE_FOUND})
+endif(${FARSO_HAS_OGRE_EXAMPLE})
 
 if(${OPENGL_FOUND})
    set(FARSO_EXAMPLE_SOURCES ${FARSO_COMMON_EXAMPLE_SOURCES}
@@ -158,7 +158,10 @@ if(${OPENGL_FOUND})
    add_executable(farso_opengl_example WIN32 
                         ${FARSO_EXAMPLE_SOURCES} 
                         ${FARSO_COMMON_EXAMPLE_HEADERS})
-   target_link_libraries(farso_opengl_example farso
+
+   if(${FARSO_HAS_OGRE_EXAMPLE})
+      # Must link with all ogre example dependencies
+      target_link_libraries(farso_opengl_example farso
                         ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARY}
                         ${OGRE_LIBRARIES} 
                         ${OGRE_RTShaderSystem_LIBRARIES}
@@ -171,6 +174,31 @@ if(${OPENGL_FOUND})
                         ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY}
                         ${OGG_LIBRARY} m
                         ${LIBINTL_LIBRARIES} pthread)
+   else(${FARSO_HAS_OGRE_EXAMPLE})
+      if(${FARSO_HAS_OGRE})
+         # Must link with ogre3d dependencies
+         target_link_libraries(farso_opengl_example farso
+                        ${KOBOLD_LIBRARY}
+                        ${OGRE_LIBRARIES} 
+                        ${OGRE_RTShaderSystem_LIBRARIES}
+                        ${OGRE_Overlay_LIBRARIES}
+                        ${OGRE_Terrain_LIBRARIES}
+                        ${FREETYPE_LIBRARIES}
+                        ${OPENGL_LIBRARY}
+                        ${SDL2_IMAGE_LIBRARY}
+                        ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
+                        m ${LIBINTL_LIBRARIES} pthread)
+      else(${FARSO_HAS_OGRE})
+         # must link only with OpenGL dependencies
+         target_link_libraries(farso_opengl_example farso
+                        ${KOBOLD_LIBRARY}
+                        ${FREETYPE_LIBRARIES}
+                        ${OPENGL_LIBRARY}
+                        ${SDL2_IMAGE_LIBRARY}
+                        ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
+                        m ${LIBINTL_LIBRARIES} pthread)
+      endif(${FARSO_HAS_OGRE})
+   endif(${FARSO_HAS_OGRE_EXAMPLE})
   
    add_custom_command(TARGET farso_opengl_example PRE_BUILD
                       COMMAND ${CMAKE_COMMAND} -E copy_directory

@@ -23,7 +23,6 @@
 #include "ogrejunction.h"
 #include "../controller.h"
 
-#include <goblin/screeninfo.h>
 #include <OGRE/OgreStringConverter.h>
 #include <OGRE/OgreDataStream.h>
 #include <OGRE/RTShaderSystem/OgreRTShaderSystem.h>
@@ -69,9 +68,9 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
 
    /* Set container dimensions */
    container->setWidth(((float)realWidth) / 
-         Goblin::ScreenInfo::getWindowWidth());
+         Controller::getWidth());
    container->setHeight(((float)realHeight) / 
-         Goblin::ScreenInfo::getWindowHeight());
+         Controller::getHeight());
 }
 
 /***********************************************************************
@@ -144,8 +143,8 @@ void OgreWidgetRenderer::defineTexture()
  ***********************************************************************/
 void OgreWidgetRenderer::doSetPosition(Ogre::Real x, Ogre::Real y)
 {
-   container->setPosition(x / Goblin::ScreenInfo::getWindowWidth(),
-         y / Goblin::ScreenInfo::getWindowHeight());
+   container->setPosition(x / Controller::getWidth(),
+         y / Controller::getHeight());
 }
  
 /***********************************************************************

@@ -48,27 +48,23 @@ hosted here.
  * SDL\_image 2.x [https://www.libsdl.org/projects/SDL\_image/]
  * FreeType 2.x [https://www.freetype.org/]
 
-
 ### Ogre3d Renderer
-
-(must recheck, as most of those are just dependencies for the example, and not
- to Farso Ogre3d renderer itself).
 
  * Ogre3D 1.10 [http://www.ogre3d.org/]
  * Kobold [https://github.com/farrer/kobold]
+ * SDL2 [https://libsdl.org/download-2.0.php]
+ * SDL\_image 2.x [https://www.libsdl.org/projects/SDL\_image/]
+ * FreeType 2.x [https://www.freetype.org/]
+
+### Ogre3d Example (not required for the library itself)
+ Same as Ogre3D renderer plus:
+
  * Goblin [https://github.com/farrer/goblin]
  * Kosound [https://github.com/farrer/kosound]
  * OpenAL [http://kcat.strangesoft.net/openal.html]
  * Ogg [https://xiph.org/downloads/]
  * Vorbis [https://xiph.org/downloads/]
  * VorbisFile [https://xiph.org/downloads/]
- * SDL2 [https://libsdl.org/download-2.0.php]
- * SDL\_image 2.x [https://www.libsdl.org/projects/SDL\_image/]
- * OpenAL [http://kcat.strangesoft.net/openal.html]
- * Ogg [https://xiph.org/downloads/]
- * Vorbis [https://xiph.org/downloads/]
- * VorbisFile [https://xiph.org/downloads/]
- * FreeType 2.x [https://www.freetype.org/]
 
 ## Building
 

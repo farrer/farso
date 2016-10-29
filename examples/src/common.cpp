@@ -42,6 +42,7 @@ void Example::init(Farso::RendererType rendererType)
     * any time, and not just on init. */
    exitButton = new Farso::Button(Farso::Controller::getWidth() - 30, 0, 
          30, 30, "", NULL);
+   exitButton->setMouseHint("Exit");
    new Farso::Picture(3, 4, "other/door.png", exitButton);
    createDialogWindow();
    createWindowWithStack();

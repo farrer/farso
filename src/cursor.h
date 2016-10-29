@@ -105,8 +105,11 @@ class Cursor
        *       different string than the current one. */
       static void setTipFont(Kobold::String fontFilename, int size);
 
-      /*! \return current height to rendering textual tip */
+      /*! \return current height to render textual tip */
       static int getTipHeight();
+      
+      /*! \return current width to render textual tip */
+      static int getTipWidth();
 
       /*! \return pointer to the used renderer */
       static Farso::WidgetRenderer* getRenderer();
@@ -145,6 +148,7 @@ class Cursor
       static Farso::WidgetRenderer* renderer; /**< The renderer used */
       static Farso::WidgetRenderer* tipRenderer; /**< Renderer for text tip */
       static Kobold::String textualTip; /**< Current text tip */
+      static int tipWidth; /**< Current text tip width */
       static int tipHeight; /**< Current text tip height */
       static bool definedTipFont; /**< If tip font was explicit defined */
       static Kobold::String tipFont; /**< Current tip font name */

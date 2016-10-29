@@ -661,8 +661,25 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    cursorRenderer = Farso::Cursor::getTipRenderer();
    if( (cursorRenderer) && (cursorRenderer->isVisible()) )
    {
-      cursorRenderer->setPosition(Farso::Cursor::getX(),
-            Farso::Cursor::getY() - Farso::Cursor::getTipHeight());
+      /* Check position (keeping tip on screen) */
+      int pX = Farso::Cursor::getX();
+      int pY = Farso::Cursor::getY() - Farso::Cursor::getTipHeight();
+      
+      /* Note that we don't need to verify after getHeight, as
+       * always above cursor, its position will always be inside,
+       * even on cursor 'outside' (hotspot at limit) screen.
+       * Same for pX < 0. Never happens. */
+      if(pX + Farso::Cursor::getTipWidth() > getWidth())
+      {
+         pX = getWidth() - Farso::Cursor::getTipWidth();
+      }
+      if(pY < 0)
+      {
+         pY = 0;
+      }
+
+      cursorRenderer->setPosition(pX, pY);
+      
       cursorRenderer->render(depth);
       depth += 0.001f;
    }

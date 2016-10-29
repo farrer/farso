@@ -63,6 +63,7 @@ void Cursor::init(int size)
    tipRenderer->hide();
 
    tipHeight = 0;
+   tipWidth = 0;
    definedTipFont = false;
    tipFont = "";
    tipFontSize = 10;
@@ -361,6 +362,7 @@ void Cursor::setTextualTip(Kobold::String tip)
          tipRenderer->uploadSurface();
 
          /* Set size */
+         tipWidth = w;
          tipHeight = h;
       }
    }
@@ -382,6 +384,14 @@ void Cursor::setTipFont(Kobold::String fontFilename, int size)
    definedTipFont = true;
    tipFontSize = size;
    tipFont = fontFilename;
+}
+
+/************************************************************************
+ *                            getTipWidth                               *
+ ************************************************************************/
+int Cursor::getTipWidth()
+{
+   return tipWidth;
 }
 
 /************************************************************************
@@ -451,6 +461,7 @@ Farso::WidgetRenderer* Cursor::renderer = NULL;
 Farso::WidgetRenderer* Cursor::tipRenderer = NULL;
 Kobold::String Cursor::textualTip;
 int Cursor::tipHeight = 0;
+int Cursor::tipWidth = 0;
 bool Cursor::definedTipFont = false;
 Kobold::String Cursor::tipFont;
 int Cursor::tipFontSize = 0;

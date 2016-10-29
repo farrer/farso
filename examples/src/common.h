@@ -47,6 +47,8 @@ namespace FarsoExample
 
       private:
          Farso::Menu* menu; /**< A menu to be used */
+         Farso::Button* exitButton; /**< Button to exit example */
+         bool shouldExit; /**< Exit flag */
    };
 
 }

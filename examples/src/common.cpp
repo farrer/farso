@@ -9,6 +9,8 @@ using namespace FarsoExample;
  ************************************************************************/
 Example::Example()
 {
+   exitButton = NULL;
+   shouldExit = false;
 }
 
 /************************************************************************
@@ -38,6 +40,9 @@ void Example::init(Farso::RendererType rendererType)
 
    /* Let's create our windows. Obviously, widgets could be created
     * any time, and not just on init. */
+   exitButton = new Farso::Button(Farso::Controller::getWidth() - 30, 0, 
+         30, 30, "", NULL);
+   new Farso::Picture(3, 4, "other/door.png", exitButton);
    createDialogWindow();
    createWindowWithStack();
    createOtherWindow();
@@ -53,9 +58,10 @@ bool Example::shouldQuit()
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS &&\
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID
    /* Quit on ESC press. */
-   return Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_ESCAPE);
+   return shouldExit || 
+             Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_ESCAPE);
 #endif
-   return false;
+   return shouldExit;
 }
 
 /************************************************************************
@@ -190,7 +196,7 @@ void Example::createOtherWindow()
    (new Farso::CheckBox(0, 110, 100, "Disabled", false, window))->disable();
    (new Farso::CheckBox(0, 132, 100, "Checked", true, window))->disable();
    createMenu();
-   (new Farso::Button(0,152,100,21, "Menu", window))->setMenu(menu);
+   (new Farso::Button(0,156,100,21, "Menu", window))->setMenu(menu);
 
    Farso::Picture* pic = new Farso::Picture(120, 0, "cursor/talk.png", window);
    pic->setMouseHint("I'm a png image!");
@@ -311,6 +317,15 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
       Farso::Event event = Farso::Controller::getLastEvent();
       Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL, "Event got: %d", 
             event.getType());
+
+      /* Check exit button */
+      if(event.getType() == Farso::EVENT_BUTTON_RELEASE)
+      {
+         if(event.getWidget() == exitButton)
+         {
+            shouldExit = true;
+         }
+      }
    }
 
    /* Let's treat some dynamic skin change via keys C, M and W. */

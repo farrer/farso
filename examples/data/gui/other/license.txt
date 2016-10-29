@@ -1,0 +1,3 @@
+door.png
+   author: DNTeam (for DNT project)
+   license: GPLv3 or later.

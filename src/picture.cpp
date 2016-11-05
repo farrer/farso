@@ -30,8 +30,6 @@ using namespace Farso;
 Picture::Picture(int x, int y, Kobold::String filename, Widget* parent)
         :Widget(WIDGET_TYPE_PICTURE, x, y, 0, 0, parent) 
 {
-   assert(parent != NULL);
-   
    /* Load the image */
    image = Controller::loadImageToSurface(
          Controller::getRealFilename(filename));

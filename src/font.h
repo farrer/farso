@@ -89,13 +89,18 @@ class Font
        * \param area rectangle area to fit the characters to.
        * \return number of characters written with success. */
       int write(Surface* surface, int x, int y, Rect area, Kobold::String text);
-      int write(Surface* surface, Rect area, Kobold::String text);
+      int write(Surface* surface, Rect area, Kobold::String text, 
+            int outline = 0);
+      
+      int write(Surface* surface, Rect area, Kobold::String text, 
+                Color outlineColor, int outline);
 
       /*! Get the width, in pixels, to write the text with current font
        * at its current size.
        * \param text to get width to write.
+       * \param outline if will use an outine border, its width.
        * \return width in pixels. */
-      int getWidth(Kobold::String text);
+      int getWidth(Kobold::String text, int outline=0);
 
       /*! Get part (or the whole) string that fits an width, breaking
        * the string, if possible, on last space (ie: on words).
@@ -128,15 +133,15 @@ class Font
             /*! Destructor */
             ~CachedGlyph();
 
-            /*! Load a glyph from slot to the cache structure 
-             * \param slot slot where the glyph is rendered 
-             * \param c character correspondent to the glyph */
-            void load(FT_GlyphSlot slot, Uint16 c);
+            /*! Load a glyph from slot to the cache structure */
+            void load(FT_Bitmap slotBitmap, Uint16 c, int outline,
+                  int left, int top, int advanceX);
 
             Uint16 getChar() { return character; };
             int getAdvanceX() { return advanceX; };
             int getBitmapTop() { return bitmapTop; };
             int getBitmapLeft() { return bitmapLeft; };
+            int getOutline() { return outline; };
             FT_Bitmap* getBitmap() { return &bitmap; };
 
          private:
@@ -148,6 +153,7 @@ class Font
             int bitmapTop;
             int bitmapLeft;
             Uint16 character;
+            int outline;
       };
 
       /*! Class for keeping each face, with glyphs cache. */
@@ -163,7 +169,8 @@ class Font
             int getIncY() { return incY; };
             int getFontHeight() { return fontHeight; };
             /*! Get a glyph bitmap, using cache */
-            CachedGlyph* getGlyph(Uint16 c);
+            CachedGlyph* getGlyph(Uint16 c, int outline, 
+                  FT_Library* freeTypeLib);
 
          private:
             FT_Face* face;
@@ -189,16 +196,17 @@ class Font
        * \note this function is based on SDL_TTF code. */
       Uint16 getchUTF8(const Uint8** src, size_t *srclen);
 
-      int write(Surface* surface, int x, int y, Rect area, const Uint8* utf8);
+      int write(Surface* surface, int x, int y, Rect area, const Uint8* utf8,
+                int outline);
 
       /*! Write the text centered or at right.  */
       int centeredOrRightWrite(Surface* surface, int x, int y, Rect area, 
-            const Uint8* utf8);
+            const Uint8* utf8, int outline);
 
       /*! Flush glyphs of a line to the surface.
        * \note: must check if fits before call. */
       void flushLine(Surface* surface, int x, int y, Uint16* chars, 
-            int lastIndex, int areaWidth, int textWidth);
+            int lastIndex, int areaWidth, int textWidth, int outline);
 
       /*! Check if the glyph will fits inside the area at current position */
       bool willGlyphFits(int x, int y, Rect area, CachedGlyph* glyph);

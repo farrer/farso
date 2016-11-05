@@ -36,6 +36,8 @@
 #include <fstream>
 #include <sys/stat.h>
 
+#include FT_STROKER_H
+
 #include <assert.h>
 using namespace Farso;
 
@@ -160,25 +162,63 @@ Font::FaceInfo::~FaceInfo()
 /***********************************************************************
  *                               getGlyph                              *
  ***********************************************************************/
-Font::CachedGlyph* Font::FaceInfo::getGlyph(Uint16 c)
+Font::CachedGlyph* Font::FaceInfo::getGlyph(Uint16 c, int outline,
+      FT_Library* freeTypeLib)
 {
    assert(face != NULL);
-   int index = FT_Get_Char_Index((*face), c) % FONT_GLYPH_CACHE_SIZE;
+   int charIndex = FT_Get_Char_Index((*face), c);
+   int index = charIndex % FONT_GLYPH_CACHE_SIZE;
 
    /* Check if the character at the cache index is the same of the 
     * desired one */
-   if(cache[index].getChar() == c)
+   if( (cache[index].getChar() == c) && 
+       (cache[index].getOutline() == outline) )
    {
       /* Already in cache, let's just use it. */
       return &cache[index];
    }
 
    /* Cache miss: must load the character to the cache */
-   if(FT_Load_Char((*face), c, FT_LOAD_RENDER) != 0)
+
+   if(outline == 0)
    {
-      return NULL;
+      /* No outline, notmal character load */
+      if(FT_Load_Char((*face), c, FT_LOAD_RENDER) != 0)
+      {
+         return NULL;
+      }
+      cache[index].load((*face)->glyph->bitmap, c, outline, 
+                        (*face)->glyph->bitmap_left, 
+                        (*face)->glyph->bitmap_top,
+                        (*face)->glyph->advance.x);
    }
-   cache[index].load((*face)->glyph, c);
+   else
+   {
+      /* Must load with outline effect */
+      if(FT_Load_Glyph((*face), charIndex, FT_LOAD_NO_BITMAP) != 0)
+      {
+         return NULL;
+      }
+      FT_Stroker stroker;
+      FT_Stroker_New((*freeTypeLib), &stroker);
+      FT_Stroker_Set(stroker, (int)(outline * 64), FT_STROKER_LINECAP_ROUND,
+             FT_STROKER_LINEJOIN_ROUND, 0);
+      
+      FT_Glyph glyph;
+      if(FT_Get_Glyph((*face)->glyph, &glyph) == 0)
+      {
+         FT_Glyph_StrokeBorder(&glyph, stroker, 0, 1);
+         FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, 0, 1 );
+         FT_BitmapGlyph glyphBitmap = (FT_BitmapGlyph)glyph;
+
+         cache[index].load(glyphBitmap->bitmap, c, outline, 
+                        glyphBitmap->left, glyphBitmap->top,
+                        (*face)->glyph->advance.x);
+
+         FT_Done_Glyph(glyph);
+      }
+      FT_Stroker_Done(stroker);
+   }
 
    /* Return the just loaded glyph on the cache */
    return &cache[index];
@@ -194,6 +234,7 @@ Font::CachedGlyph::CachedGlyph()
    bitmapTop = 0;
    bitmapLeft = 0;
    character = 0;
+   outline = 0;
 }
 
 /***********************************************************************
@@ -219,25 +260,27 @@ void Font::CachedGlyph::clearBuffer()
 /***********************************************************************
  *                                load                                 *
  ***********************************************************************/
-void Font::CachedGlyph::load(FT_GlyphSlot slot, Uint16 c)
+void Font::CachedGlyph::load(FT_Bitmap slotBitmap, Uint16 c, int outline,
+                             int left, int top, int advanceX)
 {
    /* Clear any pre-existent buffer, and create a new one, with same
     * content from slot bitmap. */
    clearBuffer();
-   size_t size = slot->bitmap.pitch * slot->bitmap.rows;
+   size_t size = slotBitmap.pitch * slotBitmap.rows;
    bitmap.buffer = new unsigned char[size];
-   memcpy(&bitmap.buffer[0], &slot->bitmap.buffer[0], size);
+   memcpy(&bitmap.buffer[0], &slotBitmap.buffer[0], size);
 
    /* Copy the info that we use from bitmap */
-   bitmap.width = slot->bitmap.width;
-   bitmap.rows = slot->bitmap.rows;
-   bitmap.pitch = slot->bitmap.pitch;
-   bitmap.pixel_mode = slot->bitmap.pixel_mode;
+   bitmap.width = slotBitmap.width;
+   bitmap.rows = slotBitmap.rows;
+   bitmap.pitch = slotBitmap.pitch;
+   bitmap.pixel_mode = slotBitmap.pixel_mode;
 
    /* Define some often used variables */
-   advanceX = slot->advance.x >> 6;
-   bitmapLeft = slot->bitmap_left;
-   bitmapTop = slot->bitmap_top;
+   this->advanceX = (advanceX >> 6) /*+ outline*/;
+   bitmapLeft = left;
+   bitmapTop = top;
+   this->outline = outline;
 
    /* Set the glyph cache is now related to this character. */
    character = c;
@@ -475,7 +518,7 @@ int Font::getDefaultHeight()
 /***********************************************************************
  *                             getWidth                                *
  ***********************************************************************/
-int Font::getWidth(Kobold::String text)
+int Font::getWidth(Kobold::String text, int outline)
 {
    int curSize = 0;
    const Uint8* utf8 = (Uint8*) text.c_str();
@@ -485,7 +528,7 @@ int Font::getWidth(Kobold::String text)
    {
       /* Get the character and its glyph */
       Uint16 c = getchUTF8(&utf8, &texlen);
-      Font::CachedGlyph* glyph = curFace->getGlyph(c);
+      Font::CachedGlyph* glyph = curFace->getGlyph(c, outline, freeTypeLib);
       if(glyph == NULL)
       {
          return 0;
@@ -524,7 +567,7 @@ int Font::getWhileFits(Kobold::String text, Kobold::String& fit,
          lastSpace = texlen;
       }
 
-      Font::CachedGlyph* glyph = curFace->getGlyph(c);
+      Font::CachedGlyph* glyph = curFace->getGlyph(c, 0, freeTypeLib);
       if(glyph == NULL)
       {
          return 0;
@@ -560,23 +603,42 @@ int Font::getWhileFits(Kobold::String text, Kobold::String& fit,
  ***********************************************************************/
 int Font::write(Surface* surface, int x, int y, Rect area, Kobold::String text)
 {
-   return write(surface, x, y, area, (Uint8*) text.c_str());
+   return write(surface, x, y, area, (Uint8*) text.c_str(), 0);
 }
 
 /***********************************************************************
  *                                write                                *
  ***********************************************************************/
-int Font::write(Surface* surface, Rect area, Kobold::String text)
+int Font::write(Surface* surface, Rect area, Kobold::String text, int outline)
 {
    if(curFace == NULL)
    {
       return 0;
    }
    
-   /* Let's go down by the maximum height, to make sure all glypsh will
+   /* Let's go down by the maximum height, to make sure all glyph will
     * fit at the start position. */
    return write(surface, area.getX1() + FONT_HORIZONTAL_DELTA, 
-         area.getY1() + curFace->getFontHeight(), area, (Uint8*) text.c_str());
+         area.getY1() + curFace->getFontHeight(), area, (Uint8*) text.c_str(),
+         outline);
+}
+
+/***********************************************************************
+ *                               write                                 *
+ ***********************************************************************/
+int Font::write(Surface* surface, Rect area, Kobold::String text, 
+                Color outlineColor, int outline)
+{
+   Draw* draw = Farso::Controller::getDraw();
+   Color curColor = draw->getActiveColor();
+
+   /* First, let's write with outline color */
+   draw->setActiveColor(outlineColor);
+   write(surface, area, text, outline);
+
+   /* Now, write with active color, to be the front */
+   draw->setActiveColor(curColor);
+   return write(surface, area, text, 0);
 }
 
 /***********************************************************************
@@ -595,7 +657,8 @@ bool Font::willGlyphFits(int x, int y, Rect area, CachedGlyph* glyph)
 /***********************************************************************
  *                                write                                *
  ***********************************************************************/
-int Font::write(Surface* surface, int x, int y, Rect area, const Uint8* utf8)
+int Font::write(Surface* surface, int x, int y, Rect area, const Uint8* utf8,
+                int outline)
 {
    /* make sure surface is valid */
    assert(surface != NULL);
@@ -612,7 +675,7 @@ int Font::write(Surface* surface, int x, int y, Rect area, const Uint8* utf8)
 
    if((curAlign == TEXT_RIGHT) || (curAlign == TEXT_CENTERED))
    {
-      return centeredOrRightWrite(surface, x, y, area, utf8);
+      return centeredOrRightWrite(surface, x, y, area, utf8, outline);
    }
 
    /* Calculate ammount to 'jump' on each line */
@@ -625,7 +688,7 @@ int Font::write(Surface* surface, int x, int y, Rect area, const Uint8* utf8)
    {
       Uint16 c = getchUTF8(&utf8, &texlen);
 
-      Font::CachedGlyph* glyph = curFace->getGlyph(c);
+      Font::CachedGlyph* glyph = curFace->getGlyph(c, outline, freeTypeLib);
       
       if(glyph == NULL)
       {
@@ -666,7 +729,7 @@ int Font::write(Surface* surface, int x, int y, Rect area, const Uint8* utf8)
  *                                flushLine                            *
  ***********************************************************************/
 void Font::flushLine(Surface* surface, int x, int y, Uint16* chars, 
-      int lastIndex, int areaWidth, int textWidth)
+      int lastIndex, int areaWidth, int textWidth, int outline)
 {
    if(lastIndex < 0)
    {
@@ -689,7 +752,7 @@ void Font::flushLine(Surface* surface, int x, int y, Uint16* chars,
 
    for(int i = 0; i <= lastIndex; i++)
    {
-      glyph = curFace->getGlyph(chars[i]);
+      glyph = curFace->getGlyph(chars[i], outline, freeTypeLib);
       Farso::Controller::getDraw()->doFreeTypeStamp(surface, x, y, 
             glyph->getBitmap(), glyph->getBitmapLeft(), 
             glyph->getBitmapTop());
@@ -702,7 +765,7 @@ void Font::flushLine(Surface* surface, int x, int y, Uint16* chars,
  *                          centeredOrRightWrite                       *
  ***********************************************************************/
 int Font::centeredOrRightWrite(Surface* surface, int x, int y, Rect area, 
-      const Uint8* utf8)
+      const Uint8* utf8, int outline)
 {
    int renderedChars = 0;
    size_t texlen = strlen((char*) utf8);
@@ -719,7 +782,7 @@ int Font::centeredOrRightWrite(Surface* surface, int x, int y, Rect area,
    {
       Uint16 c = getchUTF8(&utf8, &texlen);
 
-      Font::CachedGlyph* glyph = curFace->getGlyph(c);
+      Font::CachedGlyph* glyph = curFace->getGlyph(c, outline, freeTypeLib);
       
       if(glyph == NULL)
       {
@@ -733,7 +796,7 @@ int Font::centeredOrRightWrite(Surface* surface, int x, int y, Rect area,
       {
          /* Won't fit, must flush the current toRender glyphs */
          flushLine(surface, x, y, &toRender[0], curToRender, 
-               area.getWidth(), curWidth);
+               area.getWidth(), curWidth, outline);
 
          /* go to next potential line. */
          y += curFace->getIncY();
@@ -754,7 +817,7 @@ int Font::centeredOrRightWrite(Surface* surface, int x, int y, Rect area,
                y - glyph->getBitmapTop() + (int) glyph->getBitmap()->rows,
                 area.getX1(), area.getY1(), area.getX2(), area.getY2());*/
          flushLine(surface, x, y, &toRender[0], curToRender, 
-               area.getWidth(), curWidth);
+               area.getWidth(), curWidth, outline);
          delete[] toRender;
          return renderedChars;
       }
@@ -770,7 +833,7 @@ int Font::centeredOrRightWrite(Surface* surface, int x, int y, Rect area,
    }
 
    flushLine(surface, x, y, &toRender[0], curToRender, 
-         area.getWidth(), curWidth);
+         area.getWidth(), curWidth, outline);
    delete[] toRender;
    return renderedChars;
 

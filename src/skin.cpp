@@ -658,7 +658,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       int wx1, int wy1, int wx2, int wy2, Rect bounds, Kobold::String caption)
 {
    draw(dest, src, wx1, wy1, wx2, wy2, bounds, caption, fontName, 
-         fontSize, fontAlign, fontColor);
+         fontSize, fontAlign, fontColor, fontColor, 0);
 }
 
 /***********************************************************************
@@ -667,7 +667,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
 void Skin::SkinElement::draw(Surface* dest, Surface* src, 
       int wx1, int wy1, int wx2, int wy2, Rect bounds, Kobold::String caption,
       Kobold::String fontName, int fontSize, Font::Alignment align, 
-      Color fontColor)
+      Color fontColor, Color outlineColor, int outlineWidth)
 {
    /* Do the normal draw */
    draw(dest, src, wx1, wy1, wx2, wy2);
@@ -684,7 +684,14 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
             bounds.getY1() + textAreaDelta.getY1(),
             bounds.getX2() - textAreaDelta.getX2(),
             bounds.getY2() - textAreaDelta.getY2());
-      font->write(dest, area, caption);
+      if(outlineWidth > 0)
+      {
+         font->write(dest, area, caption, outlineColor, outlineWidth);
+      }
+      else
+      {
+         font->write(dest, area, caption);
+      }
    }
 }
 
@@ -1158,10 +1165,11 @@ void Skin::drawElement(Surface* dest, int type,
 void Skin::drawElement(Surface* dest, int type, int wx1, int wy1, 
       int wx2, int wy2, Rect bounds, Kobold::String caption, 
       Kobold::String fontName, int fontSize, Font::Alignment align,
-      Color fontColor)
+      Color fontColor, Color outlineColor, int outlineWidth)
 {
    getSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2, bounds,
-         caption, fontName, fontSize, align, fontColor);
+         caption, fontName, fontSize, align, fontColor, outlineColor,
+         outlineWidth);
 }
 
 /***********************************************************************

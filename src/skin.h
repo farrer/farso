@@ -176,7 +176,8 @@ class Skin
                   int wx1, int wy1, int wx2, int wy2, 
                   Rect bounds, Kobold::String caption,
                   Kobold::String fontName, int fontSize, 
-                  Font::Alignment align, Color fontColor);
+                  Font::Alignment align, Color fontColor,
+                  Color outlineColor, int outlineWidth);
             /*! \return if this SkinElement is defined or not. */
             bool isDefined();
 
@@ -277,7 +278,8 @@ class Skin
       void drawElement(Surface* dest, int type, 
             int wx1, int wy1, int wx2, int wy2, Rect bounds, 
             Kobold::String caption, Kobold::String fontName, 
-            int fontSize, Font::Alignment align, Color fontColor);
+            int fontSize, Font::Alignment align, Color fontColor,
+            Color outlineColor = Color(0, 0, 0, 255), int outlineWidth = 0);
 
       /*! \return if the Element type is defined or not on this skin. */
       bool isElementDefined(int type);

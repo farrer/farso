@@ -60,6 +60,10 @@ class Label: public Widget
       void setFontColor(Farso::Color color);
       /*! Set font alignment of the text, instead of the default TEXT_LEFT */
       void setFontAlignment(Farso::Font::Alignment align);
+      /*! Set font outline value and color 
+       * \param outline outline width
+       * \param color outline color. */
+      void setFontOutline(int outline, Farso::Color color);
 
       /*! \return pointer to the used font of this element */
       Font* getFont();
@@ -91,6 +95,8 @@ class Label: public Widget
       bool pressStarted;        /**< Flag for press control */
       Skin::SkinElementType skinType; /**< Type of label to use with skins */
       bool useBorder;           /**< If should draw border or not */
+      int outline;              /**< Outline width */
+      Farso::Color outlineColor; /**< Color for outline */
 };
 
 }

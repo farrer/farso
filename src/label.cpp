@@ -40,6 +40,8 @@ Label::Label(int x, int y, int width, int height, Kobold::String caption,
    this->body.set(getX(), getY(), getX() + width - 1, getY() + width -1);
    this->skinType = Skin::SKIN_TYPE_LABEL;
    this->useBorder = false;
+   this->outline = 0;
+   this->outlineColor = Farso::Color(0, 0, 0, 255);
 }
 
 /******************************************************************
@@ -105,6 +107,15 @@ void Label::setFontColor(Farso::Color color)
 void Label::setFontAlignment(Farso::Font::Alignment align)
 {
    this->fontAlign = align;
+}
+
+/******************************************************************
+ *                       setFontOutline                           *
+ ******************************************************************/
+void Label::setFontOutline(int outline, Farso::Color color)
+{
+   this->outline = outline;
+   this->outlineColor = color;
 }
 
 /******************************************************************
@@ -193,7 +204,7 @@ void Label::doDraw(Rect pBody)
       {
          skin->drawElement(surface, skinType, rx1, ry1, rx2, ry2, 
                Rect(rx1, ry1, rx2, ry2), getCaption(), fontName, fontSize,
-               fontAlign, fontColor);
+               fontAlign, fontColor, outlineColor, outline);
       } 
       else
       {
@@ -237,7 +248,15 @@ void Label::doDraw(Rect pBody)
       
       /* Write the text */
       font->setAlignment(fontAlign);
-      font->write(surface, Rect(rx1, ry1, rx2, ry2), getCaption());
+      if(outline > 0)
+      {
+         font->write(surface, Rect(rx1, ry1, rx2, ry2), getCaption(),
+                     outlineColor, outline);
+      }
+      else
+      {
+         font->write(surface, Rect(rx1, ry1, rx2, ry2), getCaption());
+      }
    }
 }
 

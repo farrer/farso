@@ -73,54 +73,24 @@ bool Color::operator==(Color& color)
  ***************************************************************/
 void Colors::init()
 {
-   colorCont[0].red = 134;
-   colorCont[0].green = 134;
-   colorCont[0].blue = 134;
-   colorCont[0].alpha = 255;
-   colorCont[1].red = 70;
-   colorCont[1].green = 70;
-   colorCont[1].blue = 70;
-   colorCont[1].alpha = 255;
-   colorCont[2].red = 169;
-   colorCont[2].green = 169;
-   colorCont[2].blue = 169;
-   colorCont[2].alpha = 255;
-   colorWindow.red = 30;
-   colorWindow.green = 30;
-   colorWindow.blue = 30;
-   colorWindow.alpha = 230;
-   colorText.red = 255;
-   colorText.green = 255;
-   colorText.blue = 255;
-   colorText.alpha = 255;
-   colorSelText.red = 26;
-   colorSelText.green = 230;
-   colorSelText.blue = 25;
-   colorSelText.alpha = 255;
-   colorBar.red = 102;
-   colorBar.green = 0;
-   colorBar.blue = 0;
-   colorBar.alpha = 190;
-   colorButton.red = colorWindow.red;
-   colorButton.green = colorWindow.green;
-   colorButton.blue = colorWindow.blue;
-   colorButton.alpha = colorWindow.alpha;
-   colorMenu.red = colorWindow.red;
-   colorMenu.green = colorWindow.green;
-   colorMenu.blue = colorWindow.blue;
-   colorMenu.alpha = colorWindow.alpha;
-   colorFile.red = 240;
-   colorFile.blue = 240;
-   colorFile.green = 240;
-   colorFile.alpha = 255;
-   colorDirectory.red = 255;
-   colorDirectory.green = 20;
-   colorDirectory.blue = 20;
-   colorDirectory.alpha = 255;
-   colorHigh.red = 240;
-   colorHigh.green = 120;
-   colorHigh.blue = 0;
-   colorHigh.alpha = 255;
+   white = Color(255, 255, 255, 255);
+   black = Color(0, 0, 0, 255);
+
+   colorCont[0] = Color(134, 134, 134, 255);
+   colorCont[1] = Color(70, 70, 70, 255);
+   colorCont[2] = Color(169, 169, 169, 255);
+
+   colorWindow = Color(30, 30, 30, 230);
+   colorText = Color(255, 255, 255, 255);
+   colorSelText = Color(26, 230, 25, 255);
+
+   colorBar = Color(102, 0, 0, 190);
+   colorButton = colorWindow;
+   colorMenu = colorWindow;
+
+   colorFile = Color(240, 240, 240, 255);
+   colorDirectory = Color(255, 20, 20, 255);
+   colorHigh = Color(240, 120, 0, 255);
 }
 
 Color Colors::colorCont[3];
@@ -133,4 +103,8 @@ Color Colors::colorSelText;
 Color Colors::colorFile;
 Color Colors::colorDirectory;
 Color Colors::colorHigh;
+
+Color Colors::black;
+Color Colors::white;
+
 

@@ -75,6 +75,9 @@ class Colors
       static Color colorFile;       /**< Color for file on file lists */
       static Color colorDirectory;  /**< color for dirs on file lists */
       static Color colorHigh;          /**< Color for highlight */
+
+      static Color white;   /**< Full opaque white */
+      static Color black;   /**< Full opaque black */
    private:
       Colors(){};
 };

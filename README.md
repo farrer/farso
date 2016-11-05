@@ -12,6 +12,7 @@ Farso have the following widgets:
  * FileSelector
  * Grid
  * Label
+ * LabelledPicture
  * Menu
  * Picture
  * ProgressBar

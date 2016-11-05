@@ -57,7 +57,8 @@ class Widget : public Kobold::ListElement, public Kobold::List
          WIDGET_TYPE_SCROLL_TEXT,
          WIDGET_TYPE_GRID,
          WIDGET_TYPE_FILE_SELECTOR,
-         WIDGET_TYPE_MENU
+         WIDGET_TYPE_MENU,
+         WIDGET_TYPE_LABELLED_PICTURE
       };
 
       /*! Constructor
@@ -107,7 +108,7 @@ class Widget : public Kobold::ListElement, public Kobold::List
       Kobold::String getCaption();
 
       /*! Define widget's caption */
-      void setCaption(Kobold::String text);
+      virtual void setCaption(Kobold::String text);
 
       /*! Gets the X coordinate
        * \return x coordinate */

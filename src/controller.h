@@ -30,6 +30,7 @@
 #include "fileselector.h"
 #include "grid.h"
 #include "label.h"
+#include "labelledpicture.h"
 #include "menu.h"
 #include "picture.h"
 #include "progressbar.h"

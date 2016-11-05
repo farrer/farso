@@ -42,6 +42,9 @@ WidgetRenderer::WidgetRenderer(int width, int height,
    this->realWidth = draw->smallestPowerOfTwo(width);
    this->realHeight = draw->smallestPowerOfTwo(height);
 
+   this->targetX.setCurrent(0);
+   this->targetY.setCurrent(0);
+
    /* Nullify things */
    this->surface = NULL;
    this->updating = false;

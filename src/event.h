@@ -105,7 +105,11 @@ enum EventType
    EVENT_MENU_CLOSED,
    /*! When a menu is opened by another widget.
     * \note manually opening a menu will not raise any event. */
-   EVENT_MENU_OPENED
+   EVENT_MENU_OPENED,
+   /*! When pressing inside a LabelledPicture */
+   EVENT_LABELLEDPICTURE_PRESSING,
+   /*! Just after LabelledPicture press release */
+   EVENT_LABELLEDPICTURE_CLICKED
 };
 
 /*! A Farso event definition */

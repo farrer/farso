@@ -122,7 +122,7 @@ void Widget::setCaption(Kobold::String text)
 {
    if(caption != text)
    {
-      dirty = true;
+      setDirty();
       caption = text;
    }
 }

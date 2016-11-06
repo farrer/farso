@@ -76,7 +76,9 @@ class Label: public Widget
       void disableBorder();
 
 
+      /* From widget */
       Farso::Rect getBody();
+      void setDirty();
 
    protected:
       

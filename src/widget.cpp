@@ -120,8 +120,11 @@ Kobold::String Widget::getCaption()
  ***********************************************************************/
 void Widget::setCaption(Kobold::String text)
 {
-   dirty = true;
-   caption = text;
+   if(caption != text)
+   {
+      dirty = true;
+      caption = text;
+   }
 }
 
 /***********************************************************************

@@ -315,6 +315,7 @@ void Widget::draw(bool force)
    if(!visible)
    {
       /* No need to draw invisible widgets. */
+      dirty = false;
       return;
    }
    bool wasDirty = dirty;
@@ -350,6 +351,11 @@ void Widget::draw(bool force)
  ***********************************************************************/
 bool Widget::isDirty()
 {
+   if(!visible)
+   {
+      /* A not-visible widget will never be dirty */
+      return false;
+   }
    if(dirty)
    {
       /* This is dirty: will redraw it and its children.*/
@@ -418,9 +424,15 @@ void Widget::hide()
 {
    visible = false;
    available = false;
-   dirty = true;
 
-   if(parent == NULL)
+   /* Note that when hidden, there's no need to redraw itself.
+    * But we must tell our parent. */
+   dirty = false;
+   if(getParent() != NULL)
+   {
+      getParent()->setDirty();
+   }
+   else
    {
       renderer->hide();
    }

@@ -37,7 +37,20 @@ LabelledPicture::LabelledPicture(int x, int y, int width, int height,
 {
    body.set(getX(), getY(), getX() + getWidth() - 1, getY() + getHeight() - 1);
    
+   /* Load and create the picture */
    picture = new Picture(0, 0, imageFile, this);
+
+   /* Make sure picture fits. */
+   assert((width >= picture->getWidth()) && (height >= picture->getHeight()));
+
+   /* Let's adjust picture position to be centered on X, if needed */
+   if(picture->getWidth() < width)
+   {
+      int pX = (width - picture->getWidth()) / 2;
+      picture->setPosition(pX, 0);
+   }
+
+   /* Finally, let's define its label */
    label = new Label(0, picture->getHeight(), width - 1, 
                      height - picture->getHeight() - 1, caption, this);
    label->setFontColor(frontColor);

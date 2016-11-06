@@ -56,6 +56,8 @@ LabelledPicture::LabelledPicture(int x, int y, int width, int height,
    label->setFontColor(frontColor);
    label->setFontAlignment(Farso::Font::TEXT_CENTERED);
    label->setFontOutline(2, outlineColor);
+
+   pressStarted = false;
 }
 
 /************************************************************************

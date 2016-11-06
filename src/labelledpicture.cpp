@@ -70,6 +70,18 @@ void LabelledPicture::setCaption(Kobold::String text)
 }
 
 /************************************************************************
+ *                               setDirty                               *
+ ************************************************************************/
+void LabelledPicture::setDirty()
+{
+   Widget::setDirty();
+   if(getParent())
+   {
+      getParent()->setDirty();
+   }
+}
+
+/************************************************************************
  *                               doDraw                                 *
  ************************************************************************/
 void LabelledPicture::doDraw(Rect pBody)

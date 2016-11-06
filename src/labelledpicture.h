@@ -55,6 +55,9 @@ class LabelledPicture : public Widget
        * \param text new caption to the label of LabelledPicture */
       void setCaption(Kobold::String text);
 
+      /*! Set as dirty */
+      void setDirty();
+
    protected:
       
       void doDraw(Rect pBody);

@@ -513,7 +513,7 @@ bool Widget::isInner(int x, int y)
  ***********************************************************************/
 void Widget::addChild(Widget* child)
 {
-   insert(child);
+   insertAtEnd(child);
 }
 
 /***********************************************************************

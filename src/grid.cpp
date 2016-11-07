@@ -79,14 +79,23 @@ int Grid::GridElement::getIndex()
  *                                  Grid                               *
  ***********************************************************************/
 Grid::Grid(GridType gridType, Widget* parent)
-     :Widget(Widget::WIDGET_TYPE_GRID,
-             0, 0,
-             parent->getBody().getWidth(), parent->getBody().getHeight(),
-             parent)
+     :Widget(Widget::WIDGET_TYPE_GRID, parent)
 {
+   assert(parent != NULL);
+
    /* Note that grid area will be fully parent's area  */
-   this->body = Rect(getX(), getY(), getX() + parent->getBody().getWidth() - 1, 
-                     getY() + parent->getBody().getHeight() -1);
+   if( (parent->getBody().getWidth() > 0) &&
+       (parent->getBody().getHeight() > 0) )
+   {
+      this->body = Rect(getX(), getY(), 
+                        getX() + parent->getBody().getWidth() - 1, 
+                        getY() + parent->getBody().getHeight() -1);
+      setSize(parent->getBody().getWidth(), parent->getBody().getHeight());
+   }
+   else
+   {
+      this->body = Rect(getX(), getY(), getX(), getY()); 
+   }
    this->parentBody = parent->getBody();
    this->current  = NULL;
    this->gridType = gridType;

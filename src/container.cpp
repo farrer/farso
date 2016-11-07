@@ -26,7 +26,7 @@ using namespace Farso;
  *                             Constructor                             *
  ***********************************************************************/
 Container::Container(ContainerType type, Widget* parent)
-          :Widget(WIDGET_TYPE_CONTAINER, 0, 0, 0, 0, parent)
+          :Widget(WIDGET_TYPE_CONTAINER, parent)
 {
    assert(parent != NULL);
    contType = type;

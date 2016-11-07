@@ -35,6 +35,8 @@ using namespace Farso;
 Widget::Widget(WidgetType type, int x, int y, int width, int height, 
       Widget* parent)
 {
+   assert((width > 0) && (height > 0));
+
    this->available = true;
    this->visible = true;
    this->width = width;
@@ -68,11 +70,8 @@ Widget::Widget(WidgetType type, int x, int y, int width, int height,
 /***********************************************************************
  *                            Constructor                              *
  ***********************************************************************/
-Widget::Widget(WidgetType type)
+Widget::Widget(WidgetType type, Widget* parent)
 {
-   assert( (type == WIDGET_TYPE_MENU) || 
-           (type == WIDGET_TYPE_USER_CREATED) );
-
    this->available = true;
    this->visible = true;
    this->x = 0;
@@ -81,10 +80,24 @@ Widget::Widget(WidgetType type)
    this->height = 0;
    this->dirty = true;
    this->type = type;
-   this->parent = NULL;
-   this->renderer = NULL;
-   this->parentContainer = NULL;
-   Controller::addWidget(this);
+   this->parent = parent;
+
+   if(parent)
+   {
+      /* Set this one as a child of its parent */
+      this->parent->addChild(this);
+      /* Must use the parent's renderer. */
+      this->renderer = this->parent->getWidgetRenderer();
+   }
+   else
+   {
+      /* Without parent, should create its renderer later with setSize call */
+      this->renderer = NULL;
+      /* And be added to the controller as a 'root' widget */
+      Controller::addWidget(this);
+   }
+   
+   defineParentContainer();
 }
 
 /***********************************************************************

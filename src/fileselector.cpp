@@ -54,7 +54,7 @@ using namespace Farso;
  ***********************************************************************/
 FileSelector::FileSelector(bool load, Kobold::String dir, bool nav, 
       Widget* parent)
-             :Widget(Widget::WIDGET_TYPE_FILE_SELECTOR, 0,0,0,0, parent)
+             :Widget(Widget::WIDGET_TYPE_FILE_SELECTOR, parent)
 {
    curDir = dir;
    filter = "";

@@ -74,7 +74,8 @@ class Grid : public Widget
 
       /*! Constructor
        * \param gridType current type
-       * \param parent grid's parent. The grid will use full parent's body. */ 
+       * \param parent grid's parent. Mandatory, as the grid will use 
+       *               full parent's body. */ 
       Grid(GridType gridType, Widget* parent);
       /*! Destructor */
       ~Grid();

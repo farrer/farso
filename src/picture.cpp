@@ -28,7 +28,7 @@ using namespace Farso;
  *                              Constructor                             *
  ************************************************************************/
 Picture::Picture(int x, int y, Kobold::String filename, Widget* parent)
-        :Widget(WIDGET_TYPE_PICTURE, x, y, 0, 0, parent) 
+        :Widget(WIDGET_TYPE_PICTURE, parent) 
 {
    /* Load the image */
    image = Controller::loadImageToSurface(
@@ -36,6 +36,9 @@ Picture::Picture(int x, int y, Kobold::String filename, Widget* parent)
    
    /* Set size based on loaded image */
    setSize(image->getWidth(), image->getHeight());
+
+   /* define its position */
+   setPosition(x, y);
 
    body.set(getX(), getY(), getX() + getWidth() - 1, getY() + getHeight() - 1);
 }

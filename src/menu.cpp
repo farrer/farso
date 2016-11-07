@@ -280,7 +280,7 @@ bool Menu::MenuItem::isVisible()
  *                                Menu                                 *
  ***********************************************************************/
 Menu::Menu()
-     : Widget(Widget::WIDGET_TYPE_MENU)
+     :Widget(Widget::WIDGET_TYPE_MENU, NULL)
 {
    this->current = NULL;
    this->creating = false;

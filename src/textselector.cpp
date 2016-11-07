@@ -47,7 +47,7 @@ TextSelector::TextOption::~TextOption()
  *                             Constructor                             *
  ***********************************************************************/
 TextSelector::TextSelector(Widget* parent)
-             :Widget(WIDGET_TYPE_TEXT_SELECTOR, 0, 0, 0, 0, parent),
+             :Widget(WIDGET_TYPE_TEXT_SELECTOR, parent),
               options(Kobold::LIST_TYPE_ADD_AT_END)
 {
    assert(parent != NULL);

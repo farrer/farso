@@ -109,7 +109,12 @@ enum EventType
    /*! When pressing inside a LabelledPicture */
    EVENT_LABELLEDPICTURE_PRESSING,
    /*! Just after LabelledPicture press release */
-   EVENT_LABELLEDPICTURE_CLICKED
+   EVENT_LABELLEDPICTURE_CLICKED,
+   /*! When pressing inside a ClickablePicture */
+   EVENT_CLICKABLEPICTURE_PRESSING,
+   /*! Just after ClickablePicture press release */
+   EVENT_CLICKABLEPICTURE_CLICKED
+
 };
 
 /*! A Farso event definition */

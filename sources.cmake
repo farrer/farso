@@ -1,6 +1,7 @@
 set(FARSO_SOURCES
 src/button.cpp
 src/checkbox.cpp
+src/clickablepicture.cpp
 src/colors.cpp
 src/container.cpp
 src/controller.cpp
@@ -31,6 +32,7 @@ src/window.cpp
 set(FARSO_HEADERS
 src/button.h
 src/checkbox.h
+src/clickablepicture.h
 src/colors.h
 src/container.h
 src/controller.h

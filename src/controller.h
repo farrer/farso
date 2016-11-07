@@ -23,6 +23,7 @@
 
 #include "button.h"
 #include "checkbox.h"
+#include "clickablepicture.h"
 #include "container.h"
 #include "cursor.h"
 #include "draw.h"

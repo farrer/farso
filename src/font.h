@@ -95,6 +95,11 @@ class Font
       int write(Surface* surface, Rect area, Kobold::String text, 
                 Color outlineColor, int outline);
 
+      /*! Write, trying to break only on spaces (avoiding breaking inner a 
+       * word, when possible. */
+      int writeBreakingOnSpaces(Surface* surface, Rect area, 
+            Kobold::String text, Color outlineColor, int outline);
+
       /*! Get the width, in pixels, to write the text with current font
        * at its current size.
        * \param text to get width to write.

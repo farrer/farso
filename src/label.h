@@ -75,6 +75,11 @@ class Label: public Widget
       /*! Disable the use of borders */
       void disableBorder();
 
+      /*! Toggle this label to break line on last space got, if possible, 
+       * instead of the normal behaviour of breaking on last character that
+       * fits (ie: setting this will avoid to break a sentence
+       * in the middle of a word). */
+      void enableBreakLineOnSpace();
 
       /* From widget */
       Farso::Rect getBody();
@@ -99,6 +104,8 @@ class Label: public Widget
       bool useBorder;           /**< If should draw border or not */
       int outline;              /**< Outline width */
       Farso::Color outlineColor; /**< Color for outline */
+      bool breakLineOnSpace;    /**< If will break label's caption lines on
+                                     last space, when possible */
 };
 
 }

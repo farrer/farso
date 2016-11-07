@@ -642,6 +642,54 @@ int Font::write(Surface* surface, Rect area, Kobold::String text,
 }
 
 /***********************************************************************
+ *                        writeBreakingOnSpaces                        *
+ ***********************************************************************/
+int Font::writeBreakingOnSpaces(Surface* surface, Rect area, 
+      Kobold::String text, Color outlineColor, int outline)
+{
+   Kobold::String wontFit = text;
+   Kobold::String fit;
+
+   /* Get current width to break things */
+   int width = area.getWidth() - (2 * FONT_HORIZONTAL_DELTA);
+
+   /*  define initial position */
+   int curWrote = 0;
+   int curY = area.getY1() + curFace->getFontHeight();
+   int incY = curFace->getFontHeight();
+
+   /* Let's write it */
+   while((!wontFit.empty()) && (curY <= area.getY2()))
+   {
+      text = wontFit;
+      getWhileFits(text, fit, wontFit, width);
+
+      if(fit.empty())
+      {
+         /* Nothing fits, must exit. */
+         return curWrote;
+      }
+
+      /* Write the text */
+      if(outline > 0)
+      {
+         write(surface, Rect(area.getX1(), curY, area.getX2(), area.getY2()), 
+               fit, outlineColor, outline);
+      }
+      else
+      {
+         write(surface, Rect(area.getX1(), curY, area.getX2(), area.getY2()),
+               fit);
+      }
+
+      /* Check if we are yet inside the rectange */
+      curY += incY;
+   }
+
+   return curWrote;
+}
+
+/***********************************************************************
  *                           willGlyphFits                             *
  ***********************************************************************/
 bool Font::willGlyphFits(int x, int y, Rect area, CachedGlyph* glyph)

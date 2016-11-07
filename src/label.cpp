@@ -42,6 +42,7 @@ Label::Label(int x, int y, int width, int height, Kobold::String caption,
    this->useBorder = false;
    this->outline = 0;
    this->outlineColor = Farso::Color(0, 0, 0, 255);
+   this->breakLineOnSpace = false;
 }
 
 /******************************************************************
@@ -179,12 +180,24 @@ int Label::getFontSize()
 }
 
 /******************************************************************
+ *                   enableBreakLineOnSpace                       *
+ ******************************************************************/
+void Label::enableBreakLineOnSpace()
+{
+   breakLineOnSpace = true;
+}
+
+/******************************************************************
  *                              doDraw                            *
  ******************************************************************/
 void Label::doDraw(Rect pBody)
 {
    Farso::Skin* skin = Farso::Controller::getSkin();
    Farso::Surface* surface = getWidgetRenderer()->getSurface();
+   Farso::Draw* draw = Farso::Controller::getDraw();
+   
+   Font* font;
+   Color color = fontColor;
 
    int x1 = getX();
    int y1 = getY();
@@ -212,22 +225,30 @@ void Label::doDraw(Rect pBody)
                rx1, ry1, rx2, ry2);
       }
 
-      if((!fontName.empty()) && (fontSize != -1))
+      /* Draw the skin, without the text */
+      skin->drawElement(surface, skinType, rx1, ry1, rx2, ry2); 
+
+      /* Define font to use */
+      Skin::SkinElement skEl = skin->getSkinElement(skinType);
+      font = getFont();
+      if(fontSize != -1)
       {
-         skin->drawElement(surface, skinType, rx1, ry1, rx2, ry2, 
-               Rect(rx1, ry1, rx2, ry2), getCaption(), fontName, fontSize,
-               fontAlign, fontColor, outlineColor, outline);
-      } 
+         font->setSize(fontSize);
+      }
       else
       {
-         skin->drawElement(surface, skinType, rx1, ry1, rx2, ry2, 
-               Rect(rx1, ry1, rx2, ry2), getCaption());
+         font->setSize(skEl.getFontSize());
       }
+      
+      /* set text color */
+      if(!definedColor)
+      {
+         color = skEl.getFontColor();
+      }
+
    }
    else
    {
-      Farso::Draw* draw = Farso::Controller::getDraw();
-
       /* let's draw its border, if needed */
       if(useBorder)
       {
@@ -236,7 +257,7 @@ void Label::doDraw(Rect pBody)
       }
 
       /* define font to use */
-      Font* font = getFont();
+      font = getFont();
 
       /* Define font size to use */
       if(fontSize != -1)
@@ -249,25 +270,36 @@ void Label::doDraw(Rect pBody)
       }
       
       /* set text color */
-      if(definedColor)
+      if(!definedColor)
       {
-         draw->setActiveColor(fontColor);
+         color = Colors::colorText;
       }
-      else
-      {
-         draw->setActiveColor(Colors::colorText);
-      }
-      
-      /* Write the text */
+   }
+
+   /* Let's write the caption, as defined by user or defaults. */
+   if(!getCaption().empty())
+   {
+      draw->setActiveColor(color);
       font->setAlignment(fontAlign);
-      if(outline > 0)
+
+      if(breakLineOnSpace)
       {
-         font->write(surface, Rect(rx1, ry1, rx2, ry2), getCaption(),
-                     outlineColor, outline);
+         /* Write trying to break line only on spaces. */
+         font->writeBreakingOnSpaces(surface, Rect(rx1, ry1, rx2, ry2), 
+               getCaption(), outlineColor, outline);
       }
       else
       {
-         font->write(surface, Rect(rx1, ry1, rx2, ry2), getCaption());
+         /* Normal write */
+         if(outline > 0)
+         {
+            font->write(surface, Rect(rx1, ry1, rx2, ry2), getCaption(),
+                  outlineColor, outline);
+         }
+         else
+         {
+            font->write(surface, Rect(rx1, ry1, rx2, ry2), getCaption());
+         }
       }
    }
 }

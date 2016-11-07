@@ -53,6 +53,8 @@ class ClickablePicture : public Widget
       /*! Disable the draw of a border when the image is clicked */
       void disableBorderWhenClicked();
 
+      void setDirty();
+
    protected:
       
       void doDraw(Rect pBody);

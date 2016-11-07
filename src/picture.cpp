@@ -90,3 +90,15 @@ Rect Picture::getBody()
    return body;
 }
 
+/************************************************************************
+ *                               setDirty                               *
+ ************************************************************************/
+void Picture::setDirty()
+{
+   if(getParent())
+   {
+      getParent()->setDirty();
+   }
+   Widget::setDirty();
+}
+

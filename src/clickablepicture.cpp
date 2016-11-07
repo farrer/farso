@@ -84,6 +84,18 @@ void ClickablePicture::disableBorderWhenClicked()
 }
 
 /************************************************************************
+ *                               setDirty                               *
+ ************************************************************************/
+void ClickablePicture::setDirty()
+{
+   if(getParent())
+   {
+      getParent()->setDirty();
+   }
+   Widget::setDirty();
+}
+
+/************************************************************************
  *                               doDraw                                 *
  ************************************************************************/
 void ClickablePicture::doDraw(Rect pBody)

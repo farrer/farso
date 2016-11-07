@@ -48,6 +48,8 @@ class Picture : public Widget
       /*! \return picture body - the rectangle defining its area */
       Rect getBody();
 
+      /*! Mark the picture as dirty (usually called by one of its children) */
+      void setDirty();
 
    protected:
       /*! Do the picture draw on parent's renderer surface */

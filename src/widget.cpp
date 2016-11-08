@@ -581,12 +581,15 @@ bool Widget::treat(bool leftButtonPressed, bool rightButtonPressed,
       ((this->getType() == WIDGET_TYPE_TEXT_ENTRY) &&
        ((TextEntry*) this == (TextEntry*) Kobold::Keyboard::getEditor())))
    {
+#endif
       if(doTreat(leftButtonPressed, rightButtonPressed, 
                mouseX, mouseY, mrX, mrY))
       {
          /* Event got, no need to check children. */
          return true;
       }
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
    }
 #endif
    

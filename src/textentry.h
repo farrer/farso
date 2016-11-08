@@ -21,6 +21,11 @@
 #ifndef _farso_text_entry_h
 #define _farso_text_entry_h
 
+#include <kobold/platform.h>
+
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
+
 #include "widget.h"
 #include <kobold/keyboard.h>
 
@@ -78,6 +83,8 @@ class TextEntry : public Kobold::KeyboardTextEditor, public Widget
 };
 
 }
+
+#endif
 
 #endif
 

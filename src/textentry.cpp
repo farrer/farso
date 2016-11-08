@@ -18,6 +18,11 @@
   along with Farso.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <kobold/platform.h>
+
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
+
 #include "textentry.h"
 #include "controller.h"
 using namespace Farso;
@@ -386,4 +391,5 @@ void TextEntry::doAfterChildTreat()
    /* Nothing to do */
 }
 
+#endif
 

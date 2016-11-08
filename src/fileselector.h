@@ -21,6 +21,11 @@
 #ifndef _farso_file_selector_h
 #define _farso_file_selector_h
 
+#include <kobold/platform.h>
+
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
+
 #include <kobold/kstring.h>
 #include "widget.h"
 
@@ -130,6 +135,8 @@ class FileSelector: public Widget
 };
 
 }
+
+#endif
 
 #endif
 

@@ -20,6 +20,9 @@
 
 #include <kobold/platform.h>
 
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
+
 #if KOBOLD_PLATFORM == KOBOLD_PLATFORM_WINDOWS
    #include <windows.h>
 #else
@@ -656,4 +659,5 @@ void FileSelector::doAfterChildTreat()
    }
 }
 
+#endif
 

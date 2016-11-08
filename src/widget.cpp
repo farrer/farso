@@ -574,6 +574,9 @@ bool Widget::treat(bool leftButtonPressed, bool rightButtonPressed,
    
    /* Note that if is editing a text, we just need to treat events
     * on the text editor itself. */
+
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
    if((!Kobold::Keyboard::isEditingText()) ||
       ((this->getType() == WIDGET_TYPE_TEXT_ENTRY) &&
        ((TextEntry*) this == (TextEntry*) Kobold::Keyboard::getEditor())))
@@ -585,6 +588,7 @@ bool Widget::treat(bool leftButtonPressed, bool rightButtonPressed,
          return true;
       }
    }
+#endif
    
    /* Apply body to mouse coordinates (as the children are relative to it). */
    Rect body = getBodyWithParentsApplied();

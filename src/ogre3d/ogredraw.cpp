@@ -291,15 +291,18 @@ void OgreDraw::doStampFill(Surface* target, int tx1, int ty1, int tx2, int ty2,
            (target->getTextureName() != source->getTextureName()) );
 
    /* Check pixel formats compatibility. */
-   if(ogreSource->getPixelFormat() != ogreTarget->getPixelFormat())
+   if( (stampType == STAMP_TYPE_COPY) &&
+       (ogreSource->getPixelFormat() != ogreTarget->getPixelFormat()) )
    {
       Ogre::LogManager::getSingleton().getDefaultLog()->stream()
          << "ERROR: Couldn't doStampFill with different PixelFormats: '"
          << ogreSource->getPixelFormat() << "' and '"
-         << ogreTarget->getPixelFormat() << "'";
+         << ogreTarget->getPixelFormat()
+         << "' while TYPE_COPY, due to optimizations.";
       return;
    }
-   Ogre::PixelFormat pixelFormat = ogreSource->getPixelFormat();
+   Ogre::PixelFormat srcPixelFormat = ogreSource->getPixelFormat();
+   Ogre::PixelFormat tgtPixelFormat = ogreTarget->getPixelFormat();
 
    /* Get pixel box and data pointers. */
    const Ogre::PixelBox sourceBox = ogreSource->getPixelBox();
@@ -400,12 +403,12 @@ void OgreDraw::doStampFill(Surface* target, int tx1, int ty1, int tx2, int ty2,
          for(int x = tx1; x <= tx2; x++)
          {
             /* Get pixels */
-            getPixel(pSrc, pixelFormat, sr, sg, sb, sa);
-            getPixel(pDest, pixelFormat, tr, tg, tb, ta);
+            getPixel(pSrc, srcPixelFormat, sr, sg, sb, sa);
+            getPixel(pDest, tgtPixelFormat, tr, tg, tb, ta);
 
             /* Blend them and set on target */
             blendColor(sr, sg, sb, sa, tr, tg, tb, ta);
-            setPixel(pDest, pixelFormat, tr, tg, tb, ta);  
+            setPixel(pDest, tgtPixelFormat, tr, tg, tb, ta);  
 
             curSrcX++;
             if(curSrcX > sx2)

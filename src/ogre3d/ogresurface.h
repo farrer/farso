@@ -26,12 +26,14 @@
 #include <OGRE/OgreHardwarePixelBuffer.h>
 #include <OGRE/OgrePixelFormat.h>
 #include <OGRE/OgreTexture.h>
-
+#include <OGRE/OgreImage.h>
 
 namespace Farso
 {
 
-/*! The surface is a bidimensional space where we can draw to */
+/*! Surface implementation for Ogre3d. If it's a regular widget surface,
+ * it's implemented as an Ogre::Texture, instead (if a loaded image) it's 
+ * implemented by the Ogre::Image. */
 class OgreSurface : public Surface
 {
    public:
@@ -63,7 +65,8 @@ class OgreSurface : public Surface
        * Must be called while locked */
       const Ogre::PixelBox getPixelBox();
 
-      /**! \return the surface's texture*/
+      /*! \return ogre texture related to this surface, if any.
+       * \note must only be called to Surfaces related to WidgetRenderer */
       Ogre::TexturePtr getTexture();
 
       int getRealWidth();
@@ -73,6 +76,7 @@ class OgreSurface : public Surface
       Ogre::TexturePtr texture; /**< The manual dynamic texture */
       Ogre::PixelBox pixelBox;  /**< Pixel box related to the dynamic texture*/
       Ogre::PixelFormat pixelFormat; /**< Its format */
+      Ogre::Image* image; /**< The image, if this surface is an loaded one */
 };
 
 }

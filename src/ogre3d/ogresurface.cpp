@@ -32,6 +32,8 @@ using namespace Farso;
 OgreSurface::OgreSurface(Kobold::String name, int width, int height)
             :Surface(name, width, height)
 {
+   this->image = NULL;
+
    /* Create the ogre manual's surface */
    this->texture = Ogre::TextureManager::getSingleton().createManual(
          name, 
@@ -53,10 +55,10 @@ OgreSurface::OgreSurface(Kobold::String filename, Kobold::String group)
 {
    this->locked = false;
    this->ownedTexture = false;
-   this->texture = Ogre::TextureManager::getSingleton().load(filename, group,
-         Ogre::TEX_TYPE_2D);
-   this->width = this->texture->getWidth();
-   this->height = this->texture->getHeight();
+   this->image = new Ogre::Image();
+   this->image->load(filename, group);
+   this->width = this->image->getWidth();
+   this->height = this->image->getHeight();
 }
 
 /******************************************************************
@@ -64,6 +66,10 @@ OgreSurface::OgreSurface(Kobold::String filename, Kobold::String group)
  ******************************************************************/
 OgreSurface::~OgreSurface()
 {
+   if(image)
+   {
+      delete image;
+   }
    if(ownedTexture)
    {
       Ogre::TextureManager::getSingleton().remove(texture->getName());
@@ -77,12 +83,21 @@ void OgreSurface::lock()
 {
    assert(!locked);
    locked = true;
-   Ogre::HardwarePixelBufferSharedPtr pixelBuffer = texture->getBuffer();
 
-   pixelFormat = texture->getFormat();
+   if(image == NULL)
+   {
+      Ogre::HardwarePixelBufferSharedPtr pixelBuffer = texture->getBuffer();
 
-   pixelBuffer->lock(Ogre::HardwareBuffer::HBL_NORMAL); 
-   pixelBox = pixelBuffer->getCurrentLock();
+      pixelFormat = texture->getFormat();
+
+      pixelBuffer->lock(Ogre::HardwareBuffer::HBL_NORMAL); 
+      pixelBox = pixelBuffer->getCurrentLock();
+   }
+   else
+   {
+      pixelFormat = image->getFormat();
+      pixelBox = image->getPixelBox();
+   }
 }
 
 /******************************************************************
@@ -92,7 +107,10 @@ void OgreSurface::unlock()
 {
    assert(locked);
    locked = false;
-   texture->getBuffer()->unlock();
+   if(image == NULL)
+   {
+      texture->getBuffer()->unlock();
+   }
 }
 
 /******************************************************************
@@ -126,7 +144,7 @@ Ogre::TexturePtr OgreSurface::getTexture()
  ******************************************************************/
 int OgreSurface::getRealWidth()
 {
-   return texture->getWidth();
+   return width;
 }
 
 /******************************************************************
@@ -134,7 +152,7 @@ int OgreSurface::getRealWidth()
  ******************************************************************/
 int OgreSurface::getRealHeight()
 {
-   return texture->getHeight();
+   return height;
 }
 
 

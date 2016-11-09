@@ -340,6 +340,7 @@ void Cursor::setTextualTip(Kobold::String tip)
          }
          else
          {
+            skin->getSurface()->lock();
             if(definedTipFont)
             {
                /* Render with specific font defined */
@@ -354,6 +355,7 @@ void Cursor::setTextualTip(Kobold::String tip)
                skin->drawElement(surface, Skin::SKIN_TYPE_CURSOR_TEXTUAL_TIP,
                      0, 0, w - 1, h - 1, Rect(0, 0, w - 1, h - 1), textualTip);
             }
+            skin->getSurface()->unlock();
          }
          
          surface->unlock();

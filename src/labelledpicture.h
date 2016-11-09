@@ -55,6 +55,10 @@ class LabelledPicture : public Widget
        * \param text new caption to the label of LabelledPicture */
       void setCaption(Kobold::String text);
 
+      /*! Change the default font size.
+       * \param size size to use for the label's font. */
+      void setFontSize(int size);
+
       /*! Set as dirty */
       void setDirty();
 

@@ -85,6 +85,14 @@ void LabelledPicture::setCaption(Kobold::String text)
 }
 
 /************************************************************************
+ *                             setFontSize                              *
+ ************************************************************************/
+void LabelledPicture::setFontSize(int size)
+{
+   label->setFontSize(size);
+}
+
+/************************************************************************
  *                               setDirty                               *
  ************************************************************************/
 void LabelledPicture::setDirty()

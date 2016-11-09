@@ -108,7 +108,13 @@ Ogre::OverlayContainer* OgreWidgetRenderer::getOverlayContainer()
 void OgreWidgetRenderer::defineTexture()
 {
    OgreSurface* ogreSurface = (OgreSurface*) surface;
-   Ogre::Technique* tech = material->getTechnique(0);
+   Ogre::Technique* tech = material->getBestTechnique();
+
+   if(!tech)
+   {
+      /* Let's use the first one. */
+      tech = material->getTechnique(0);
+   }
 
    /* Verify if need to create a pass */
    int numPasses = tech->getNumPasses();

@@ -461,11 +461,17 @@ void Widget::show()
 {
    visible = true;
    available = true;
-   dirty = true;
 
    if(parent == NULL)
    {
       renderer->show();
+   }
+   else
+   {
+      /* We only dirtify ourselves if we have a parent, in the case we must
+       * redraw ourselves on it. If without parents, it´s just a matter of
+       * redisplaying our widget renderer texture. */
+      dirty = true;
    }
 }
 

@@ -58,6 +58,7 @@ LabelledPicture::LabelledPicture(int x, int y, int width, int height,
    label->setFontOutline(2, outlineColor);
 
    pressStarted = false;
+   drawBorder = false;
 }
 
 /************************************************************************
@@ -105,11 +106,35 @@ void LabelledPicture::setDirty()
 }
 
 /************************************************************************
+ *                          enableBorderWhenClicked                     *
+ ************************************************************************/
+void LabelledPicture::enableBorderWhenClicked()
+{
+   if(pressStarted && !drawBorder)
+   {
+      setDirty();
+   }
+   drawBorder = true;
+}
+
+/************************************************************************
+ *                         disableBorderWhenClicked                     *
+ ************************************************************************/
+void LabelledPicture::disableBorderWhenClicked()
+{
+   if(pressStarted && drawBorder)
+   {
+      setDirty();
+   }
+   drawBorder = false;
+}
+
+/************************************************************************
  *                               doDraw                                 *
  ************************************************************************/
 void LabelledPicture::doDraw(Rect pBody)
 {
-   if(pressStarted)
+   if(pressStarted && drawBorder)
    {
       Skin* skin = Controller::getSkin();
       Draw* draw = Controller::getDraw();
@@ -147,7 +172,10 @@ bool LabelledPicture::doTreat(bool leftButtonPressed, bool rightButtonPressed,
          if(!pressStarted)
          {
             pressStarted = true;
-            setDirty();
+            if(drawBorder)
+            {
+               setDirty();
+            }
          }
          Controller::setEvent(this, EVENT_LABELLEDPICTURE_PRESSING);
          return true;
@@ -156,7 +184,10 @@ bool LabelledPicture::doTreat(bool leftButtonPressed, bool rightButtonPressed,
    else if(pressStarted)
    {
       pressStarted = false;
-      setDirty();
+      if(drawBorder)
+      {
+         setDirty();
+      }
 
       if(isInner(mrX, mrY))
       {

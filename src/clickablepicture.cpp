@@ -138,7 +138,10 @@ bool ClickablePicture::doTreat(bool leftButtonPressed, bool rightButtonPressed,
          if(!pressStarted)
          {
             pressStarted = true;
-            setDirty();
+            if(useBorder)
+            {
+               setDirty();
+            }
          }
          Controller::setEvent(this, EVENT_CLICKABLEPICTURE_PRESSING);
          return true;
@@ -147,7 +150,10 @@ bool ClickablePicture::doTreat(bool leftButtonPressed, bool rightButtonPressed,
    else if(pressStarted)
    {
       pressStarted = false;
-      setDirty();
+      if(useBorder)
+      {
+         setDirty();
+      }
 
       if(isInner(mrX, mrY))
       {

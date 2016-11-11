@@ -61,6 +61,13 @@ class LabelledPicture : public Widget
 
       /*! Set as dirty */
       void setDirty();
+   
+      /*! Enable the draw of a border when the image is clicked
+       * \note default is disabled. */
+      void enableBorderWhenClicked();
+   
+      /*! Disable the draw of a border when the image is clicked */
+      void disableBorderWhenClicked();
 
    protected:
       
@@ -75,6 +82,7 @@ class LabelledPicture : public Widget
       Picture* picture;  /**< The related picture */
       Farso::Rect body;  /**< Its body */
       bool pressStarted; /**< When pressing a label */
+      bool drawBorder;   /**< If will draw a border when clicked. */
 };
 
 }

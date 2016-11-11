@@ -247,7 +247,7 @@ void ScrollText::addLineBreak()
 /***********************************************************************
  *                                getBody                              *
  ***********************************************************************/
-Rect ScrollText::getBody()
+Farso::Rect ScrollText::getBody()
 {
    return body;
 }

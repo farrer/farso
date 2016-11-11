@@ -54,7 +54,7 @@ bool Skin::SkinElement::hasBackground()
 /***********************************************************************
  *                          getBackgroundDelta                         *
  ***********************************************************************/
-Rect& Skin::SkinElement::getBackgroundDelta()
+Farso::Rect& Skin::SkinElement::getBackgroundDelta()
 {
    return backgroundDelta;
 }
@@ -62,7 +62,7 @@ Rect& Skin::SkinElement::getBackgroundDelta()
 /***********************************************************************
  *                             getBackground                           *
  ***********************************************************************/
-Rect& Skin::SkinElement::getBackground()
+Farso::Rect& Skin::SkinElement::getBackground()
 {
    return background;
 }
@@ -79,7 +79,7 @@ bool Skin::SkinElement::hasBorder()
 /***********************************************************************
  *                            getBorderDelta                           *
  ***********************************************************************/
-Rect& Skin::SkinElement::getBorderDelta()
+Farso::Rect& Skin::SkinElement::getBorderDelta()
 {
    return borderDelta;
 }
@@ -87,7 +87,7 @@ Rect& Skin::SkinElement::getBorderDelta()
 /***********************************************************************
  *                         getLeftBorderDelta                          *
  ***********************************************************************/
-Rect& Skin::SkinElement::getLeftBorderDelta(bool onlyIfDefined)
+Farso::Rect& Skin::SkinElement::getLeftBorderDelta(bool onlyIfDefined)
 {
    if((!onlyIfDefined) || (leftBorderDelta.isDefined()))
    {
@@ -99,7 +99,7 @@ Rect& Skin::SkinElement::getLeftBorderDelta(bool onlyIfDefined)
 /***********************************************************************
  *                        getRightBorderDelta                          *
  ***********************************************************************/
-Rect& Skin::SkinElement::getRightBorderDelta(bool onlyIfDefined)
+Farso::Rect& Skin::SkinElement::getRightBorderDelta(bool onlyIfDefined)
 {
    if((!onlyIfDefined) || (rightBorderDelta.isDefined()))
    {
@@ -111,7 +111,7 @@ Rect& Skin::SkinElement::getRightBorderDelta(bool onlyIfDefined)
 /***********************************************************************
  *                          getTopBorderDelta                          *
  ***********************************************************************/
-Rect& Skin::SkinElement::getTopBorderDelta(bool onlyIfDefined)
+Farso::Rect& Skin::SkinElement::getTopBorderDelta(bool onlyIfDefined)
 {
    if((!onlyIfDefined) || (topBorderDelta.isDefined()))
    {
@@ -123,7 +123,7 @@ Rect& Skin::SkinElement::getTopBorderDelta(bool onlyIfDefined)
 /***********************************************************************
  *                        getBottomBorderDelta                         *
  ***********************************************************************/
-Rect& Skin::SkinElement::getBottomBorderDelta(bool onlyIfDefined)
+Farso::Rect& Skin::SkinElement::getBottomBorderDelta(bool onlyIfDefined)
 {
    if((!onlyIfDefined) || (bottomBorderDelta.isDefined()))
    {
@@ -135,14 +135,15 @@ Rect& Skin::SkinElement::getBottomBorderDelta(bool onlyIfDefined)
 /***********************************************************************
  *                            getLeftBorder                            *
  ***********************************************************************/
-Rect& Skin::SkinElement::getLeftBorder()
+Farso::Rect& Skin::SkinElement::getLeftBorder()
 {
    return leftBorder;
 }
 
 /***********************************************************************
  *                             getTopBorder                            *
- ***********************************************************************/       Rect& Skin::SkinElement::getTopBorder()
+ ***********************************************************************/
+Farso::Rect& Skin::SkinElement::getTopBorder()
 {
    return topBorder;
 }
@@ -150,7 +151,7 @@ Rect& Skin::SkinElement::getLeftBorder()
 /***********************************************************************
  *                           getRightBorder                            *
  ***********************************************************************/ 
-Rect& Skin::SkinElement::getRightBorder()
+Farso::Rect& Skin::SkinElement::getRightBorder()
 {
    return rightBorder;
 }
@@ -158,7 +159,7 @@ Rect& Skin::SkinElement::getRightBorder()
 /***********************************************************************
  *                           getBottomBorder                           *
  ***********************************************************************/
-Rect& Skin::SkinElement::getBottomBorder()
+Farso::Rect& Skin::SkinElement::getBottomBorder()
 {
    return bottomBorder;
 }
@@ -175,7 +176,7 @@ bool Skin::SkinElement::hasCorner()
 /***********************************************************************
  *                            getCornerDelta                           *
  ***********************************************************************/
-Rect& Skin::SkinElement::getCornerDelta()
+Farso::Rect& Skin::SkinElement::getCornerDelta()
 {
    return cornerDelta;
 }
@@ -183,7 +184,7 @@ Rect& Skin::SkinElement::getCornerDelta()
 /***********************************************************************
  *                           getTopLeftCorner                          *
  ***********************************************************************/
-Rect& Skin::SkinElement::getTopLeftCorner()
+Farso::Rect& Skin::SkinElement::getTopLeftCorner()
 {
    return topLeftCorner;
 }
@@ -191,7 +192,7 @@ Rect& Skin::SkinElement::getTopLeftCorner()
 /***********************************************************************
  *                          getTopRightCorner                          *
  ***********************************************************************/
-Rect& Skin::SkinElement::getTopRightCorner()
+Farso::Rect& Skin::SkinElement::getTopRightCorner()
 {
    return topRightCorner;
 }
@@ -199,7 +200,7 @@ Rect& Skin::SkinElement::getTopRightCorner()
 /***********************************************************************
  *                          getBottomLeftCorner                        *
  ***********************************************************************/
-Rect& Skin::SkinElement::getBottomLeftCorner()
+Farso::Rect& Skin::SkinElement::getBottomLeftCorner()
 {
    return bottomLeftCorner;
 }
@@ -207,7 +208,7 @@ Rect& Skin::SkinElement::getBottomLeftCorner()
 /***********************************************************************
  *                         getBottomRightCorner                        *
  ***********************************************************************/
-Rect& Skin::SkinElement::getBottomRightCorner()
+Farso::Rect& Skin::SkinElement::getBottomRightCorner()
 {
    return bottomRightCorner;
 }
@@ -215,7 +216,7 @@ Rect& Skin::SkinElement::getBottomRightCorner()
 /***********************************************************************
  *                           getTextAreaDelta                          *
  ***********************************************************************/
-Rect& Skin::SkinElement::getTextAreaDelta()
+Farso::Rect& Skin::SkinElement::getTextAreaDelta()
 {
    return textAreaDelta;
 }
@@ -386,7 +387,7 @@ void Skin::SkinElement::defBoundValue(int& bx1, int& by1, int& bx2, int& by2,
 /***********************************************************************
  *                              getBody                                *
  ***********************************************************************/
-Rect Skin::SkinElement::getBody(int width, int height)
+Farso::Rect Skin::SkinElement::getBody(int width, int height)
 {
    int bx1 = 0;
    int bx2 = width - 1;
@@ -432,7 +433,7 @@ Rect Skin::SkinElement::getBody(int width, int height)
 /***********************************************************************
  *                            getMinSize                               *
  ***********************************************************************/
-Rect Skin::SkinElement::getMinSize()
+Farso::Rect Skin::SkinElement::getMinSize()
 {
    if(!minSize.isDefined())
    {
@@ -445,7 +446,7 @@ Rect Skin::SkinElement::getMinSize()
 /***********************************************************************
  *                             getBounds                               *
  ***********************************************************************/
-Rect Skin::SkinElement::getBounds(int width, int height)
+Farso::Rect Skin::SkinElement::getBounds(int width, int height)
 {
    int x1=10000, y1=10000, x2=-1, y2=-1;
    Farso::Rect rect;

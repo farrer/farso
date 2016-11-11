@@ -85,7 +85,7 @@ void Picture::doAfterChildTreat()
 /************************************************************************
  *                                getBody                               *
  ************************************************************************/
-Rect Picture::getBody()
+Farso::Rect Picture::getBody()
 {
    return body;
 }

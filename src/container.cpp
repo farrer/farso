@@ -102,7 +102,7 @@ int Container::getChildY(int y, int height)
 /***********************************************************************
  *                               getBody                               *
  ***********************************************************************/
-Rect Container::getBody()
+Farso::Rect Container::getBody()
 {
    return body;
 }

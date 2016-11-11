@@ -628,7 +628,7 @@ bool Widget::treat(bool leftButtonPressed, bool rightButtonPressed,
 /***********************************************************************
  *                      getBodyWithParentsApplied                      *
  ***********************************************************************/
-Rect Widget::getBodyWithParentsApplied()
+Farso::Rect Widget::getBodyWithParentsApplied()
 {
    Rect body = getBody();
    

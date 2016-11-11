@@ -198,7 +198,7 @@ void Button::doAfterChildTreat()
 /******************************************************************
  *                              getBody                           *
  ******************************************************************/
-Rect Button::getBody()
+Farso::Rect Button::getBody()
 {
    return body;
 }

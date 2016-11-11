@@ -266,7 +266,7 @@ void CheckBox::toggle()
 /******************************************************************
  *                            getBody                             *
  ******************************************************************/
-Rect CheckBox::getBody()
+Farso::Rect CheckBox::getBody()
 {
    return body;
 }

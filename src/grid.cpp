@@ -54,7 +54,7 @@ bool Grid::GridElement::isInner(int x, int y)
 /***********************************************************************
  *                                  getArea                            *
  ***********************************************************************/
-Rect Grid::GridElement::getArea()
+Farso::Rect Grid::GridElement::getArea()
 {
    return area;
 }
@@ -158,7 +158,7 @@ Grid::GridElement* Grid::addElement(int x, int y, int width, int height,
 /***********************************************************************
  *                                 getBody                             *
  ***********************************************************************/
-Rect Grid::getBody()
+Farso::Rect Grid::getBody()
 {
    return body;
 }

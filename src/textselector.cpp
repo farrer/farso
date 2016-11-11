@@ -205,7 +205,7 @@ void TextSelector::doAfterChildTreat()
 /***********************************************************************
  *                                getBody                              *
  ***********************************************************************/
-Rect TextSelector::getBody()
+Farso::Rect TextSelector::getBody()
 {
    return body;
 }

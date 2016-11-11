@@ -77,7 +77,7 @@ Container* StackTab::insertTab(Kobold::String name)
 /************************************************************************
  *                             getBody                                  *
  ************************************************************************/
-Rect StackTab::getBody()
+Farso::Rect StackTab::getBody()
 {
    return body;
 }

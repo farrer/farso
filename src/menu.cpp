@@ -72,7 +72,7 @@ Menu::MenuItem::MenuItem()
    this->enabled = false;
    this->visible = true;
    this->separator = true;
-   this->owner = owner;
+   this->owner = NULL;
    this->icon = NULL;
    this->label = NULL;
    calculateNeededSize("", NULL);
@@ -547,7 +547,7 @@ void Menu::setSize(int width, int height)
 /***********************************************************************
  *                             getBody                                 *
  ***********************************************************************/
-Rect Menu::getBody()
+Farso::Rect Menu::getBody()
 {
    return body;
 }

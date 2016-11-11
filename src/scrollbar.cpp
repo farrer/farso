@@ -186,7 +186,7 @@ int ScrollBar::getCurrent()
 /************************************************************************
  *                               getBody                                *
  ************************************************************************/
-Rect ScrollBar::getBody()
+Farso::Rect ScrollBar::getBody()
 {
    return body;
 }

@@ -78,7 +78,7 @@ void ProgressBar::setColor(Color color)
 /***********************************************************************
  *                               getBody                               *
  ***********************************************************************/
-Rect ProgressBar::getBody()
+Farso::Rect ProgressBar::getBody()
 {
    return body;
 }

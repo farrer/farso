@@ -101,9 +101,9 @@ void OgreDraw::setPixel(Uint8* pixel, Ogre::PixelFormat pixelFormat,
       pixel[3] = red;
 #else
       pixel[3] = alpha;
-      pixel[2] = blue;
+      pixel[0] = blue;
       pixel[1] = green;
-      pixel[0] = red;
+      pixel[2] = red;
 #endif
    }
    else
@@ -186,9 +186,9 @@ void OgreDraw::getPixel(Uint8* pixel, Ogre::PixelFormat pixelFormat,
       red = pixel[3];
 #else
       alpha = pixel[3];
-      blue = pixel[2];
+      blue = pixel[0];
       green = pixel[1];
-      red = pixel[0];
+      red = pixel[2];
 #endif
    }
    else

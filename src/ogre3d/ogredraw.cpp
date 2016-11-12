@@ -21,6 +21,7 @@
 #include "ogredraw.h"
 #include "ogresurface.h"
 
+#include <kobold/platform.h>
 #include <OGRE/OgreMath.h>
 #include <OGRE/OgreLogManager.h>
 
@@ -100,10 +101,18 @@ void OgreDraw::setPixel(Uint8* pixel, Ogre::PixelFormat pixelFormat,
       pixel[2] = green;
       pixel[3] = red;
 #else
+   #if KOBOLD_PLATFORM == KOBOLD_PLATFORM_IOS
+      //XXX on iOS, ogre3d mixed blue with red channels.
       pixel[3] = alpha;
       pixel[0] = blue;
       pixel[1] = green;
       pixel[2] = red;
+   #else
+      pixel[3] = alpha;
+      pixel[2] = blue;
+      pixel[1] = green;
+      pixel[0] = red;
+   #endif
 #endif
    }
    else
@@ -185,10 +194,18 @@ void OgreDraw::getPixel(Uint8* pixel, Ogre::PixelFormat pixelFormat,
       green = pixel[2];
       red = pixel[3];
 #else
+   #if KOBOLD_PLATFORM == KOBOLD_PLATFORM_IOS
+      //XXX on iOS, ogre3d mixed blue with red channels.
       alpha = pixel[3];
       blue = pixel[0];
       green = pixel[1];
       red = pixel[2];
+   #else
+      alpha = pixel[3];
+      blue = pixel[2];
+      green = pixel[1];
+      red = pixel[0];
+   #endif
 #endif
    }
    else

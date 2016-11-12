@@ -21,6 +21,9 @@
 #include "grid.h"
 #include "controller.h"
 #include "cursor.h"
+
+#include <assert.h>
+
 using namespace Farso;
 
 /***********************************************************************

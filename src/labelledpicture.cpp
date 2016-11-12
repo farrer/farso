@@ -21,6 +21,8 @@
 #include "labelledpicture.h"
 #include "controller.h"
 
+#include <assert.h>
+
 using namespace Farso;
 
 /************************************************************************

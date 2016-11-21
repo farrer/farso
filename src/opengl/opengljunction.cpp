@@ -62,8 +62,9 @@ void OpenGLJunction::enter2dMode()
    
    /* Set to the 2d one */
    glLoadIdentity();
-   gluOrtho2D(0.0f, (GLdouble) Controller::getWidth(), 
-              0.0f, (GLdouble) Controller::getHeight());
+   glOrtho(0.0f, (GLdouble) Controller::getWidth(), 
+           0.0f, (GLdouble) Controller::getHeight(),
+           -1, 1);
 
    /* Identity to current model view */
    glMatrixMode(GL_MODELVIEW);

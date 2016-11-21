@@ -18,6 +18,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules")
 # Define some options
 option(FARSO_STATIC "Static build" FALSE)
 option(FARSO_DEBUG "Enable debug symbols" FALSE)
+option(FARSO_USE_OGRE_OVERLAY "Use overlays as Farso Ogre3D renderer" FALSE)
 
 # Let's assume, until found otherwise, that we can compile the 
 # Ogre3D example.
@@ -104,6 +105,12 @@ endif(${OGG_FOUND})
 FIND_PACKAGE(OGRE)
 if(${OGRE_FOUND})
    set(FARSO_HAS_OGRE 1)
+   if(${FARSO_USE_OGRE_OVERLAY})
+      set(FARSO_USE_OGRE_OVERLAY 1)
+   else(${FARSO_USE_OGRE_OVERLAY})
+      set(FARSO_USE_OGRE_OVERLAY 0)
+   endif(${FARSO_USE_OGRE_OVERLAY})
+
    include_directories(${OGRE_INCLUDE_DIR})
    
    # With Ogre3D, Goblin is mandatory only for example
@@ -171,6 +178,9 @@ message("\n******************************************************")
 message("Farso building options: ")
 if(${FARSO_HAS_OGRE})
    message("   Ogre3d renderer: enabled")
+   if(${FARSO_USE_OGRE_OVERLAY})
+      message("      Using overlays.")
+   endif(${FARSO_USE_OGRE_OVERLAY})
 else(${FARSO_HAS_OGRE})
    message("   Ogre3d renderer: disabled")
 endif(${FARSO_HAS_OGRE})

@@ -22,7 +22,11 @@
 #define _farso_ogre_junction_h
 
 #include "../controller.h"
-#include <OGRE/Overlay/OgreOverlay.h>
+#if FARSO_USE_OGRE_OVERLAY == 1
+   #include <OGRE/Overlay/OgreOverlay.h>
+#else
+   #include <OGRE/OgreSceneManager.h>
+#endif
 
 namespace Farso
 {
@@ -36,15 +40,24 @@ class OgreJunction : public ControllerRendererJunction
       /*! Destructor */
       ~OgreJunction();
 
+#if FARSO_USE_OGRE_OVERLAY == 1
       /*! \return the overlay used for Farso */
       Ogre::Overlay* getOverlay();
+#endif
+      /*! Define the scene manager to use */
+      void setSceneManager(Ogre::SceneManager* sceneManager);
+      /*! \return used scene manager */
+      Ogre::SceneManager* getSceneManager();
+
 
       void enter2dMode(){};
       void restore3dMode(){};
 
    private:
+#if FARSO_USE_OGRE_OVERLAY == 1
       Ogre::Overlay* overlay; /**< Overlay to render farso to */
-
+#endif
+      Ogre::SceneManager* sceneManager; /**< SceneManager to use */
 };
 
 

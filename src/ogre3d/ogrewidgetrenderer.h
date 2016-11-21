@@ -24,9 +24,15 @@
 #include <kobold/kstring.h>
 #include <kobold/target.h>
 
-#include <OGRE/Overlay/OgreOverlay.h>
-#include <OGRE/Overlay/OgreOverlayManager.h>
-#include <OGRE/Overlay/OgreOverlayContainer.h>
+#if FARSO_USE_OGRE_OVERLAY == 1
+   #include <OGRE/Overlay/OgreOverlay.h>
+   #include <OGRE/Overlay/OgreOverlayManager.h>
+   #include <OGRE/Overlay/OgreOverlayContainer.h>
+#else
+   #include <OGRE/OgreManualObject.h>
+   #include <OGRE/OgreSceneNode.h>
+#endif
+
 #include <OGRE/OgreTechnique.h>
 #include <OGRE/OgreMaterialManager.h>
 #include <OGRE/OgreMaterial.h>
@@ -52,8 +58,13 @@ class OgreWidgetRenderer : public WidgetRenderer
       /*! Destructor */
       ~OgreWidgetRenderer();
 
+#if FARSO_USE_OGRE_OVERLAY == 1
       /*! \return respective OverlayContainer pointer */
       Ogre::OverlayContainer* getOverlayContainer();
+#else
+      /*! Set Z position (bringing the renderer to front or back */
+      void setZ(float z);
+#endif
 
       /*! Not needed for Ogre3D */
       void uploadSurface();
@@ -77,7 +88,21 @@ class OgreWidgetRenderer : public WidgetRenderer
       /*! Update the texture renderer of this widget. */
       void defineTexture();
 
+
+#if FARSO_USE_OGRE_OVERLAY == 1
       Ogre::OverlayContainer* container; /**< Container of the texture */
+#else
+      Ogre::ManualObject* manualObject; /**< 2D object for texture */
+      Ogre::SceneNode* sceneNode;       /**< Scene Node used for 2D object */
+      float manualWidth;                /**< Width for the manual object */
+      float manualHeight;               /**< Height for the manual object */
+
+      float curZ;  /**< current Z position [-1, 1]. */
+
+      /* Bellow to avoid update manual object at same position */
+      float curX;                       /**< Current X position */
+      float curY;                       /**< Current Y position */
+#endif
       Ogre::MaterialPtr material;        /**< Material used */
       Ogre::TextureUnitState* texState;  /**< Texture Unit State */
 };

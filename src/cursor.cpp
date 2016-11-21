@@ -29,6 +29,7 @@
 
 #if FARSO_HAS_OGRE == 1
    #include "ogre3d/ogrejunction.h"
+   #include "ogre3d/ogrewidgetrenderer.h"
 #endif
 
 using namespace Farso;
@@ -47,20 +48,26 @@ void Cursor::init(int size)
 
    cursors = new Kobold::List();
    junction = Controller::createNewJunction("farso_curso_junction");
-#if FARSO_HAS_OGRE == 1
-   if(Controller::getRendererType() == RENDERER_TYPE_OGRE3D)
-   {
-      /* Make sure the cursor overlay is above normal widget's overlay */
-      OgreJunction* ogreJunction = (OgreJunction*) junction;
-      ogreJunction->getOverlay()->setZOrder(200);
-   }
-#endif
 
    renderer = Controller::createNewWidgetRenderer(size, size, junction);
 
    tipRenderer = Controller::createNewWidgetRenderer(CURSOR_TIP_MAX_WIDTH, 
          CURSOR_TIP_MAX_HEIGHT, junction);
    tipRenderer->hide();
+
+#if FARSO_HAS_OGRE == 1
+   if(Controller::getRendererType() == RENDERER_TYPE_OGRE3D)
+   {
+      /* Make sure the cursor overlay is above normal widget's overlay */
+#if FARSO_USE_OGRE_OVERLAY == 1
+      OgreJunction* ogreJunction = (OgreJunction*) junction;
+      ogreJunction->getOverlay()->setZOrder(200);
+#else
+      ((OgreWidgetRenderer*)renderer)->setZ(0.2f);
+      ((OgreWidgetRenderer*)tipRenderer)->setZ(0.2f);
+#endif
+   }
+#endif
 
    tipHeight = 0;
    tipWidth = 0;

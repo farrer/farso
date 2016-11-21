@@ -26,11 +26,11 @@ Example::~Example()
 /************************************************************************
  *                                  init                                *
  ************************************************************************/
-void Example::init(Farso::RendererType rendererType)
+void Example::init(Farso::RendererType rendererType, void* extraInfo)
 {
    /* Init Farso, with desired renderer */
    Farso::Controller::init(rendererType, EXAMPLE_WINDOW_WIDTH, 
-         EXAMPLE_WINDOW_HEIGHT, 32, "data/gui/");
+         EXAMPLE_WINDOW_HEIGHT, 32, "data/gui/", extraInfo);
 
    /* Set a default font (this is only needed when not using a skin). */
    Farso::FontManager::setDefaultFont("fonts/LiberationSans-Regular.ttf");

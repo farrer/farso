@@ -31,7 +31,7 @@ Ogre3dExample::~Ogre3dExample()
 bool Ogre3dExample::doInit()
 {
    example = new Example();
-   example->init(Farso::RENDERER_TYPE_OGRE3D);
+   example->init(Farso::RENDERER_TYPE_OGRE3D, getSceneManager());
    return true;
 }
 

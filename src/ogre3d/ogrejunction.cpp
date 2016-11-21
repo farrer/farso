@@ -28,8 +28,11 @@ using namespace Farso;
  *************************************************************************/
 OgreJunction::OgreJunction(Kobold::String name)
 {
+#if FARSO_USE_OGRE_OVERLAY == 1
    overlay = Ogre::OverlayManager::getSingletonPtr()->create(name);
    overlay->show();
+#endif
+   sceneManager = NULL;
 }
 
 /*************************************************************************
@@ -37,9 +40,12 @@ OgreJunction::OgreJunction(Kobold::String name)
  *************************************************************************/
 OgreJunction::~OgreJunction()
 {
+#if FARSO_USE_OGRE_OVERLAY == 1
    Ogre::OverlayManager::getSingletonPtr()->destroy(overlay);
+#endif
 }
 
+#if FARSO_USE_OGRE_OVERLAY == 1
 /*************************************************************************
  *                             getOverlay                                *
  *************************************************************************/
@@ -47,6 +53,22 @@ Ogre::Overlay* OgreJunction::getOverlay()
 {
    return overlay;
 }
+#endif
 
+/*************************************************************************
+ *                          setSceneManager                              *
+ *************************************************************************/
+void OgreJunction::setSceneManager(Ogre::SceneManager* sceneManager)
+{
+   this->sceneManager = sceneManager;
+}
+
+/*************************************************************************
+ *                          getSceneManager                              *
+ *************************************************************************/
+Ogre::SceneManager* OgreJunction::getSceneManager()
+{
+   return sceneManager;
+}
 
 

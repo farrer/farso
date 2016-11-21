@@ -49,20 +49,22 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
    /* Create the drawable surface */
    this->surface = new OgreSurface(name, realWidth, realHeight);
 
+   /* Create the material to use */
+   Ogre::ResourceManager::ResourceCreateOrRetrieveResult matRes;
+   matRes = Ogre::MaterialManager::getSingleton().createOrRetrieve(name,
+         "gui");
+   material = matRes.first.staticCast<Ogre::Material>();
+
+   defineTexture();
+
+   OgreJunction* ogreJunction = (OgreJunction*) junction;
+
+#if FARSO_USE_OGRE_OVERLAY == 1
    /* Define the container and set it to the overlay */
    this->container = (Ogre::OverlayContainer*)
          Ogre::OverlayManager::getSingletonPtr()->createOverlayElement(
             "Panel", name);
-   OgreJunction* ogreJunction = (OgreJunction*) junction;
    ogreJunction->getOverlay()->add2D(this->container);
-
-   /* Create the material to use */
-   Ogre::ResourceManager::ResourceCreateOrRetrieveResult matRes;
-   matRes = Ogre::MaterialManager::getSingleton().createOrRetrieve(
-         this->container->getName(), "gui");
-   material = matRes.first.staticCast<Ogre::Material>();
-
-   defineTexture();
 
    container->setMaterialName(material->getName());
 
@@ -71,17 +73,75 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
          Controller::getWidth());
    container->setHeight(((float)realHeight) / 
          Controller::getHeight());
+#else
+   curX = 0.0f;
+   curY = 0.0f;
+   curZ = (Controller::getTotalRootWidgets() - 10) * (0.01f);
+
+   /* Create the manual object to use. */
+   manualObject = ogreJunction->getSceneManager()->createManualObject(name);
+
+   /* define dimensions for manual object coordinates */
+   manualWidth = (realWidth / (float)Controller::getWidth()) * 2.0f;
+   manualHeight = (realHeight / (float)Controller::getHeight()) * 2.0f;
+
+   float pX = -1.0f + manualWidth;
+   float pY = 1.0f - manualHeight;
+   
+   /* Set identity rendering */
+   manualObject->setUseIdentityProjection(true);
+   manualObject->setUseIdentityView(true);
+   manualObject->begin(material->getName(), 
+                       Ogre::RenderOperation::OT_TRIANGLE_LIST);
+      manualObject->position(pX, pY, 0.0f);
+      manualObject->textureCoord(1, 1);
+      manualObject->position(pX, 1.0f, 0.0f);
+      manualObject->textureCoord(1, 0);
+      manualObject->position(-1.0f, 1.0f, 0.0f);
+      manualObject->textureCoord(0, 0);
+      manualObject->position(-1.0f, pY, 0.0f);
+      manualObject->textureCoord(0, 1);
+
+      manualObject->index(0);
+      manualObject->index(1);
+      manualObject->index(2);
+      manualObject->index(2);
+      manualObject->index(3);
+      manualObject->index(0);
+   manualObject->end();
+
+   /* Always visible bounding box */
+   Ogre::AxisAlignedBox aabInf;
+   aabInf.setInfinite();
+   manualObject->setBoundingBox(aabInf);
+   
+   /* Define render queue position */
+   manualObject->setRenderQueueGroup(Ogre::RENDER_QUEUE_OVERLAY - 1);
+   
+   /* Attach it */
+   sceneNode = ogreJunction->getSceneManager()->getRootSceneNode()->
+      createChildSceneNode();
+   sceneNode->attachObject(manualObject);
+   sceneNode->setPosition(0.0f, 0.0f, curZ);
+#endif
 }
 
 /***********************************************************************
  *                            ~OgreWidgetRenderer                          *
  ***********************************************************************/
 OgreWidgetRenderer::~OgreWidgetRenderer()
-{  
+{
+#if FARSO_USE_OGRE_OVERLAY == 1
    /* Clear the container of the overlay */
    OgreJunction* ogreJunction = (OgreJunction*) junction;
    ogreJunction->getOverlay()->remove2D(container);
    Ogre::OverlayManager::getSingletonPtr()->destroyOverlayElement(container);
+#else
+   sceneNode->detachObject(manualObject);
+   OgreJunction* ogreJunction = (OgreJunction*) junction;
+   ogreJunction->getSceneManager()->destroySceneNode(sceneNode);
+   ogreJunction->getSceneManager()->destroyManualObject(manualObject);
+#endif
 
    /* Remove Shaders from material */
    Ogre::RTShader::ShaderGenerator::getSingleton().
@@ -94,6 +154,7 @@ OgreWidgetRenderer::~OgreWidgetRenderer()
    delete surface;
 }
 
+#if FARSO_USE_OGRE_OVERLAY == 1
 /***********************************************************************
  *                         getOverlayContainer                         *
  ***********************************************************************/
@@ -101,6 +162,16 @@ Ogre::OverlayContainer* OgreWidgetRenderer::getOverlayContainer()
 {
    return container;
 }
+#else
+/***********************************************************************
+ *                                setZ                                 *
+ ***********************************************************************/
+void OgreWidgetRenderer::setZ(float z)
+{
+   curZ = z;
+   sceneNode->setPosition(0.0f, 0.0f, z);
+}
+#endif
 
 /***********************************************************************
  *                            redefineTexture                          *
@@ -149,8 +220,46 @@ void OgreWidgetRenderer::defineTexture()
  ***********************************************************************/
 void OgreWidgetRenderer::doSetPosition(Ogre::Real x, Ogre::Real y)
 {
+#if FARSO_USE_OGRE_OVERLAY == 1
    container->setPosition(x / Controller::getWidth(),
          y / Controller::getHeight());
+#else
+   if((curX == x) && (curY == y))
+   {
+      /* No need to update at same position */
+      return;
+   }
+
+   /* Update current position */
+   curX = x;
+   curY = y;
+
+   /* Recalculate manual object coordinates */
+   float x1 = -1.0f + (x / (float)Controller::getWidth()) * 2.0f;
+   float y2 = 1.0f - (y / (float)Controller::getHeight()) * 2.0f;
+   float x2 = x1 + manualWidth;
+   float y1 = y2 - manualHeight;
+
+   /* Update it */
+   manualObject->beginUpdate(0);
+      
+      manualObject->position(x2, y1, 0.0f);
+      manualObject->textureCoord(1, 1);
+      manualObject->position(x2, y2, 0.0f);
+      manualObject->textureCoord(1, 0);
+      manualObject->position(x1, y2, 0.0f);
+      manualObject->textureCoord(0, 0);
+      manualObject->position(x1, y1, 0.0f);
+      manualObject->textureCoord(0, 1);
+
+      manualObject->index(0);
+      manualObject->index(1);
+      manualObject->index(2);
+      manualObject->index(2);
+      manualObject->index(3);
+      manualObject->index(0);
+   manualObject->end();
+#endif
 }
  
 /***********************************************************************
@@ -158,7 +267,11 @@ void OgreWidgetRenderer::doSetPosition(Ogre::Real x, Ogre::Real y)
  ***********************************************************************/
 void OgreWidgetRenderer::doShow()
 {
+#if FARSO_USE_OGRE_OVERLAY == 1
    container->show();
+#else
+   sceneNode->setVisible(true);
+#endif
 }
 
 /***********************************************************************
@@ -166,7 +279,11 @@ void OgreWidgetRenderer::doShow()
  ***********************************************************************/
 void OgreWidgetRenderer::doHide()
 {
+#if FARSO_USE_OGRE_OVERLAY == 1
    container->hide();
+#else
+   sceneNode->setVisible(false);
+#endif
 }
 
 /***********************************************************************

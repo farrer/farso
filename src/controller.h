@@ -85,10 +85,12 @@ class Controller
        *                Must end with a trail '/'.
        * \note baseDir is ignored on Ogre3d, in favor of its own resource 
        *               manager (thus make sure that baseDir is at a defined
-       *               resource group). */
+       *               resource group). 
+       * \param any extra information needed for renderer. For OpenGL, just 
+       *        pass NULL, for Ogre3D, the pointer to the sceneManager used. */
       static void init(RendererType rendererType, 
             int screenWidth, int screenHeight, int maxCursorSize, 
-            Kobold::String baseDir);
+            Kobold::String baseDir, void* extraInfo);
       /*! Finish with the farso controller (usually called at exit). */
       static void finish();
 
@@ -215,6 +217,9 @@ class Controller
        * \note widget must be a 'root' widget (without parents). */
       static void bringFront(Widget* widget);
 
+      /*! \return total number of root (ie: without parents) widgets. */
+      static int getTotalRootWidgets();
+
    private:
       /*! No instances allowed */
       Controller(){};
@@ -226,6 +231,15 @@ class Controller
             WidgetToRemove(Widget* w) { widget = w; };
             Widget* widget;
       };
+
+      /*! Create a new ControllerRendererJunction for the current renderer
+       *  type, to be used elsewhere.
+       *  \param name name to be used for the junction. Must be unique.
+       *  \param extraInfo needed exra info for renderer. See @init for what 
+       *         to pass here.
+       *  \return junction created (or NULL if error) */
+      static ControllerRendererJunction* createNewJunction(Kobold::String name,
+            void* extraInfo);
 
       /*! Verify events for specific widget */
       static bool verifyEvents(Widget* widget, 

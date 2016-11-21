@@ -41,7 +41,7 @@ OpenGLExample::OpenGLExample()
    glcontext = SDL_GL_CreateContext(window);
 
    example = new Example();
-   example->init(Farso::RENDERER_TYPE_OPENGL);
+   example->init(Farso::RENDERER_TYPE_OPENGL, NULL);
 }
 
 /************************************************************************

@@ -48,7 +48,7 @@ using namespace Farso;
  ***********************************************************************/
 void Controller::init(RendererType rendererType,
       int screenWidth, int screenHeight, int maxCursorSize,
-      Kobold::String baseDir)
+      Kobold::String baseDir, void* extraInfo)
 {
    if(!inited)
    {
@@ -59,8 +59,8 @@ void Controller::init(RendererType rendererType,
       Controller::baseDir = baseDir;
 
       /* Create based on renderer type */
-      Controller::junction = createNewJunction("farso_default_junction");
-
+      Controller::junction = createNewJunction("farso_default_junction",
+                                               extraInfo);
       switch(rendererType)
       {
          case RENDERER_TYPE_OPENGL:
@@ -192,6 +192,26 @@ Kobold::String Controller::getRealFilename(Kobold::String filename)
  ***********************************************************************/
 ControllerRendererJunction* Controller::createNewJunction(Kobold::String name)
 {
+   void* extraInfo = NULL;
+#if FARSO_HAS_OGRE == 1
+   if(rendererType == RENDERER_TYPE_OGRE3D)
+   {
+      /* Must retrieve SceneManager from current Controller junction */
+      OgreJunction* ogreJunction = (OgreJunction*) Controller::junction;
+      extraInfo = ogreJunction->getSceneManager();
+   }
+#endif
+
+   return createNewJunction(name, extraInfo);
+}
+
+
+/***********************************************************************
+ *                           createNewJunction                         *
+ ***********************************************************************/
+ControllerRendererJunction* Controller::createNewJunction(Kobold::String name,
+      void* extraInfo)
+{
    switch(rendererType)
    {
       case RENDERER_TYPE_OPENGL:
@@ -204,7 +224,9 @@ ControllerRendererJunction* Controller::createNewJunction(Kobold::String name)
 #endif
       case RENDERER_TYPE_OGRE3D:
 #if FARSO_HAS_OGRE == 1
-         return new OgreJunction(name);
+         OgreJunction* ogreJunction = new OgreJunction(name);
+         ogreJunction->setSceneManager((Ogre::SceneManager*)extraInfo);
+         return ogreJunction;
 #else
          Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
                "ERROR: Ogre3d isn't available!");
@@ -465,26 +487,45 @@ void Controller::bringFront(Widget* widget)
    assert(widget != NULL);
    assert(widget->getParent() == NULL);
 
-#if FARSO_HAS_OGRE == 1
-   /* As ogre3d renderer controlls by itself the rendering order, we must
-    * treat it in an distinct way */
-   if(rendererType == RENDERER_TYPE_OGRE3D)
-   {
-      OgreJunction* ogreJunction = (OgreJunction*) junction;
-      OgreWidgetRenderer* ogreRenderer = (OgreWidgetRenderer*) 
-         widget->getWidgetRenderer();
-
-      ogreJunction->getOverlay()->remove2D(
-            ogreRenderer->getOverlayContainer());
-      ogreJunction->getOverlay()->add2D(
-            ogreRenderer->getOverlayContainer());
-   }
-#endif
+   /* Bring the widget to list's front, if not yet */
    if(widget != widgets->getFirst())
    {
       widgets->removeWithoutDelete(widget);
       widgets->insertAtBegin(widget);
    }
+
+#if FARSO_HAS_OGRE == 1
+   /* As ogre3d renderer controlls by itself the rendering order, we must
+    * treat it with something special */
+   if(rendererType == RENDERER_TYPE_OGRE3D)
+   {
+#if FARSO_USE_OGRE_OVERLAY == 1
+      OgreWidgetRenderer* ogreRenderer = (OgreWidgetRenderer*) 
+            widget->getWidgetRenderer();
+
+      OgreJunction* ogreJunction = (OgreJunction*) junction;
+     
+      ogreJunction->getOverlay()->remove2D(
+            ogreRenderer->getOverlayContainer());
+      ogreJunction->getOverlay()->add2D(
+            ogreRenderer->getOverlayContainer());
+#else
+      /* Must reset all widgets Z. */
+      OgreWidgetRenderer* ogreRenderer;
+      float curZ = 0.01f;
+      Widget* w = (Widget*) widgets->getFirst();
+      for(int i = 0; i < widgets->getTotal(); i++)
+      {
+         ogreRenderer  = (OgreWidgetRenderer*) w->getWidgetRenderer();
+         ogreRenderer->setZ(curZ);
+         curZ -= 0.01f;
+
+         w = (Widget*) w->getNext();
+      }
+#endif
+   }
+#endif
+
 }
 
 /***********************************************************************
@@ -699,6 +740,14 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
 RendererType Controller::getRendererType()
 {
    return rendererType;
+}
+
+/***********************************************************************
+ *                      getTotalRootWidgets                            *
+ ***********************************************************************/
+int Controller::getTotalRootWidgets()
+{
+   return widgets->getTotal();
 }
 
 /***********************************************************************

@@ -23,6 +23,27 @@
 
 using namespace Farso;
 
+/*! Vertex shader for Farso Ogre3d renderer. Basically,
+ * defines texture and polygon coordinates. */
+static Ogre::String farso_ogre_glsl_vs_source(
+      "void main(void)"
+      "{"
+      "    gl_TexCoord[0] = gl_MultiTexCoord0;"
+      "    gl_FrontColor = gl_Color;"
+      "    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
+      "}"
+);
+/*! Fragment shader for Farso Ogre3d rendererer. Just use the texture
+ * as color definition, without other influences. */
+static Ogre::String farso_ogre_glsl_fs_source(
+      "uniform sampler2D texture0;"
+      "void main(void)"
+      "{"
+      "    gl_FragColor = texture2D(texture0, gl_TexCoord[0].st) * gl_Color;"
+      "}"
+);
+
+
 /*************************************************************************
  *                            OgreJunction                               *
  *************************************************************************/
@@ -33,6 +54,23 @@ OgreJunction::OgreJunction(Kobold::String name)
    overlay->show();
 #endif
    sceneManager = NULL;
+
+   /* Create and load our shaders */
+   vertexShader = 
+      Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+         name + "VP_glsl", 
+         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+         "glsl", Ogre::GPT_VERTEX_PROGRAM);
+   vertexShader->setSource(farso_ogre_glsl_vs_source);
+   vertexShader->load();
+
+   fragmentShader = 
+      Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+         name + "FP_glsl", 
+         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+         "glsl", Ogre::GPT_FRAGMENT_PROGRAM);
+   fragmentShader->setSource(farso_ogre_glsl_fs_source);
+   fragmentShader->load();
 }
 
 /*************************************************************************
@@ -71,4 +109,19 @@ Ogre::SceneManager* OgreJunction::getSceneManager()
    return sceneManager;
 }
 
+/*************************************************************************
+ *                       getVertexProgramName                            *
+ *************************************************************************/
+Ogre::String OgreJunction::getVertexProgramName()
+{
+   return vertexShader->getName();
+}
+
+/*************************************************************************
+ *                       getFragmentProgramName                          *
+ *************************************************************************/
+Ogre::String OgreJunction::getFragmentProgramName()
+{
+   return fragmentShader->getName();
+}
 

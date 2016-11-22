@@ -46,6 +46,9 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
    /* Nullify things */
    this->texState = NULL;
 
+   /* Set junction to use */
+   this->ogreJunction = (OgreJunction*) junction;
+
    /* Create the drawable surface */
    this->surface = new OgreSurface(name, realWidth, realHeight);
 
@@ -56,8 +59,6 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
    material = matRes.first.staticCast<Ogre::Material>();
 
    defineTexture();
-
-   OgreJunction* ogreJunction = (OgreJunction*) junction;
 
 #if FARSO_USE_OGRE_OVERLAY == 1
    /* Define the container and set it to the overlay */
@@ -186,6 +187,9 @@ void OgreWidgetRenderer::defineTexture()
       /* Let's use the first one. */
       tech = material->getTechnique(0);
    }
+   /* As we are using a shader, let's set the technique as RTSS to avoid our
+    * Goblin listener try to recreate a technique for it. */
+   tech->setSchemeName(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
 
    /* Verify if need to create a pass */
    int numPasses = tech->getNumPasses();
@@ -205,14 +209,17 @@ void OgreWidgetRenderer::defineTexture()
       texState = tech->getPass(0)->createTextureUnitState(texture->getName());
    }
    texState->setTexture(texture);
-
    texState->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+   
    tech->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
    tech->getPass(0)->setDepthWriteEnabled(false);
    tech->getPass(0)->setDepthCheckEnabled(false);
    tech->getPass(0)->setLightingEnabled(false);
    tech->getPass(0)->setCullingMode(Ogre::CULL_NONE);
    tech->getPass(0)->setColourWriteEnabled(true);
+
+   tech->getPass(0)->setVertexProgram(ogreJunction->getVertexProgramName());
+   tech->getPass(0)->setFragmentProgram(ogreJunction->getFragmentProgramName());
 }
 
 /***********************************************************************

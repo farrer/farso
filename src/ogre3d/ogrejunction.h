@@ -27,6 +27,8 @@
 #else
    #include <OGRE/OgreSceneManager.h>
 #endif
+#include <OGRE/OgreHighLevelGpuProgramManager.h>
+#include <OGRE/OgreHighLevelGpuProgram.h>
 
 namespace Farso
 {
@@ -49,6 +51,11 @@ class OgreJunction : public ControllerRendererJunction
       /*! \return used scene manager */
       Ogre::SceneManager* getSceneManager();
 
+      /*! \return name of the loaded vertex program */
+      Ogre::String getVertexProgramName();
+      /*! \return name of the loaded fragment program */
+      Ogre::String getFragmentProgramName();
+
 
       void enter2dMode(){};
       void restore3dMode(){};
@@ -58,6 +65,8 @@ class OgreJunction : public ControllerRendererJunction
       Ogre::Overlay* overlay; /**< Overlay to render farso to */
 #endif
       Ogre::SceneManager* sceneManager; /**< SceneManager to use */
+      Ogre::HighLevelGpuProgramPtr vertexShader;   /**< Vertex shader to use */
+      Ogre::HighLevelGpuProgramPtr fragmentShader;/**< Fragment shader to use */
 };
 
 

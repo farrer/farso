@@ -39,6 +39,7 @@
 
 #include "../surface.h"
 #include "../widgetrenderer.h"
+#include "ogrejunction.h"
 
 namespace Farso
 {
@@ -105,6 +106,7 @@ class OgreWidgetRenderer : public WidgetRenderer
 #endif
       Ogre::MaterialPtr material;        /**< Material used */
       Ogre::TextureUnitState* texState;  /**< Texture Unit State */
+      OgreJunction* ogreJunction; /**< OgreJunction to use */
 };
 
 }

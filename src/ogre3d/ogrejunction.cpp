@@ -20,9 +20,12 @@
 
 #include "ogrejunction.h"
 #include <OGRE/Overlay/OgreOverlayManager.h>
+#include <kobold/platform.h>
 
 using namespace Farso;
 
+#if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
+    KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
 /*! Vertex shader for Farso Ogre3d renderer. Basically,
  * defines texture and polygon coordinates. */
 static Ogre::String farso_ogre_glsl_vs_source(
@@ -42,7 +45,30 @@ static Ogre::String farso_ogre_glsl_fs_source(
       "    gl_FragColor = texture2D(texture0, gl_TexCoord[0].st) * gl_Color;"
       "}"
 );
-
+static Ogre::String farso_ogre_shader_type = "glsl";
+#else
+static Ogre::String farso_ogre_shader_type = "glsles";
+static Ogre::String farso_ogre_glsl_vs_source(
+      "#version 100\n"
+      "attribute vec4 position;"
+      "attribute vec4 uv0;"
+      "varying vec4 outUV0;"
+      "void main()"
+      "{"
+      "   gl_Position = position;"
+      "   outUV0 = uv0;"
+      "}"
+);
+static Ogre::String farso_ogre_glsl_fs_source(
+      "#version 100\n"
+      "uniform sampler2D sampler;"
+      "varying vec4 outUV0;"
+      "void main()"
+      "{"
+      "   gl_FragColor = texture2D(sampler, outUV0.xy);"
+      "}"
+);
+#endif
 
 /*************************************************************************
  *                            OgreJunction                               *
@@ -60,7 +86,7 @@ OgreJunction::OgreJunction(Kobold::String name)
       Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
          name + "VP_glsl", 
          Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-         "glsl", Ogre::GPT_VERTEX_PROGRAM);
+         farso_ogre_shader_type, Ogre::GPT_VERTEX_PROGRAM);
    vertexShader->setSource(farso_ogre_glsl_vs_source);
    vertexShader->load();
 
@@ -68,7 +94,7 @@ OgreJunction::OgreJunction(Kobold::String name)
       Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
          name + "FP_glsl", 
          Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-         "glsl", Ogre::GPT_FRAGMENT_PROGRAM);
+         farso_ogre_shader_type, Ogre::GPT_FRAGMENT_PROGRAM);
    fragmentShader->setSource(farso_ogre_glsl_fs_source);
    fragmentShader->load();
 }

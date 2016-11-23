@@ -224,6 +224,7 @@ bool ScrollBar::doTreat(bool leftButtonPressed, bool rightButtonPressed,
           * on afterChildTreat. */
          return false;
       }
+      bool defineReference = true;
 
       if((scrollReference[0] != UNDEFINED_REFERENCE) &&
          (scrollReference[1] != UNDEFINED_REFERENCE))
@@ -260,11 +261,15 @@ bool ScrollBar::doTreat(bool leftButtonPressed, bool rightButtonPressed,
          else
          {
             Controller::setEvent(this, EVENT_SCROLLBAR_UNCHANGED);
+            defineReference = false;
          }
       }
       /* Let's define the new reference. */
-      scrollReference[0] = mrX;
-      scrollReference[1] = mrY;
+      if(defineReference)
+      {
+         scrollReference[0] = mrX;
+         scrollReference[1] = mrY;
+      }
 
       return true;
    }

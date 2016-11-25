@@ -36,14 +36,26 @@ namespace Farso
 class Picture : public Widget
 {
    public:
-      /*! Constructor 
+      /*! Constructor, loading an image. 
        * \param x left coordinate
        * \param y top coordinate
        * \param filename image's file name. 
-       * \param parent pointer to parent's window, if any. */
+       * \param parent pointer to parent's, if any. */
       Picture(int x, int y, Kobold::String filename, Widget* parent);
+      /*! Constructor, without image (to be changed and populated later 
+       * \param x left coordinate
+       * \param y top coordinate
+       * \param parent pointer to its parent, if any */
+      Picture(int x, int y, int width, int height, Widget* parent);
       /*! Destructor */
       ~Picture();
+
+      /*! Change Picture's image to another one.
+       * \param picture pointer to a surface to be displayed at this Picture.
+       * \note the Surface's memory controll is caller's responsability (ie:
+       * all Surfaces passed to the Picture via setImage won't be freed at
+       * Picture's destructor like the default loaded one). */
+      void setImage(Farso::Surface* picture);
 
       /*! \return picture body - the rectangle defining its area */
       Rect getBody();
@@ -63,6 +75,7 @@ class Picture : public Widget
    private:
       Surface* image;      /**< Loaded image with the picture */
       Rect body;           /**< same as picture's coordinates */
+      bool ownImage;       /**< if image is owned or not */
 };
 
 }

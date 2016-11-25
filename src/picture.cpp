@@ -30,6 +30,8 @@ using namespace Farso;
 Picture::Picture(int x, int y, Kobold::String filename, Widget* parent)
         :Widget(WIDGET_TYPE_PICTURE, parent) 
 {
+   ownImage = true;
+
    /* Load the image */
    image = Controller::loadImageToSurface(
          Controller::getRealFilename(filename));
@@ -44,11 +46,42 @@ Picture::Picture(int x, int y, Kobold::String filename, Widget* parent)
 }
 
 /************************************************************************
+ *                              Constructor                             *
+ ************************************************************************/
+Picture::Picture(int x, int y, int width, int height, Widget* parent)
+        :Widget(WIDGET_TYPE_PICTURE, x, y, width, height, parent) 
+{
+   ownImage = false;
+   image = NULL; 
+   body.set(getX(), getY(), getX() + getWidth() - 1, getY() + getHeight() - 1);
+}
+
+/************************************************************************
  *                               Destructor                             *
  ************************************************************************/
 Picture::~Picture()
 {
-   delete image;
+   if((ownImage) && (image != NULL))
+   {
+      delete image;
+   }
+}
+
+/************************************************************************
+ *                             setImage                                 *
+ ************************************************************************/
+void Picture::setImage(Farso::Surface* picture)
+{
+   if((ownImage) && (image != NULL))
+   {
+      /* Must free current loaded one, as it's owned by us. */
+      delete image;
+   }
+
+   image = picture;
+   ownImage = false;
+
+   setDirty();
 }
 
 /************************************************************************

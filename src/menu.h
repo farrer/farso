@@ -95,6 +95,12 @@ class Menu : public Widget
             /*! Display current menu item */
             void show();
 
+            /*! Reset item's text.  
+             * \note this won't change menu width, so be carefull to it be
+             * enougth to contain the new string, otherwise it will be
+             * truncated. */
+            void setCaption(Kobold::String str);
+
             /*! \return if item is visible or not */
             bool isVisible();
 

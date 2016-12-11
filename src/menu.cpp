@@ -79,6 +79,18 @@ Menu::MenuItem::MenuItem()
 }
 
 /***********************************************************************
+ *                                setText                              *
+ ***********************************************************************/
+void Menu::MenuItem::setCaption(Kobold::String str)
+{
+   if(this->label)
+   {
+      calculateNeededSize(str, this->icon);
+      this->label->setCaption(str);
+   }
+}
+
+/***********************************************************************
  *                               ~MenuItem                             *
  ***********************************************************************/
 Menu::MenuItem::~MenuItem()

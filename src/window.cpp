@@ -295,6 +295,22 @@ void Window::open()
 }
 
 /***********************************************************************
+ *                                close                                *
+ ***********************************************************************/
+void Window::close()
+{
+   Controller::markToRemoveWidget(this);
+
+   /* Clear extern pointer, if any (to avoid it being valid on 
+    * next iteration) */
+   if(externPointer != NULL)
+   {
+      *externPointer = NULL;
+      externPointer = NULL;
+   }
+}
+
+/***********************************************************************
  *                             isCloseable                             *
  ***********************************************************************/
 bool Window::isCloseable()

@@ -57,6 +57,11 @@ class Window : public Widget
        * closed and should be explicitly opened with this function */
       void open();
 
+      /*! Close the window and remove it from Farso::Controller.
+       * \note the window will be mark to be closed on next 
+       *       Farso::Controller iteration*/
+      void close();
+
       /*! \return if this window could be manually closed or not */
       bool isCloseable();
 

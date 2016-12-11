@@ -279,7 +279,7 @@ bool Menu::MenuItem::isVisible()
 /***********************************************************************
  *                                Menu                                 *
  ***********************************************************************/
-Menu::Menu()
+Menu::Menu(int minWidth)
      :Widget(Widget::WIDGET_TYPE_MENU, NULL)
 {
    this->current = NULL;
@@ -289,6 +289,7 @@ Menu::Menu()
    this->grid = new Grid(Grid::GRID_TYPE_HIGHLIGHT_FILL, this);
    this->curWidth = 0;
    this->curHeight = 0;
+   this->minWidth = minWidth;
 }
 
 /***********************************************************************
@@ -333,7 +334,6 @@ Menu::MenuItem* Menu::insertItem(Kobold::String text)
    {
       curWidth = item->getNeededWidth();
    }
-
 
    return item;
 }
@@ -410,6 +410,13 @@ void Menu::endCreate()
       height += item->getNeededHeight();
 
       item = (MenuItem*) item->getNext();
+   }
+
+   /* Check minimum size */
+   if(width < minWidth)
+   {
+      curWidth = minWidth;
+      width = minWidth;
    }
 
    /* define menu size (creating its renderer) */

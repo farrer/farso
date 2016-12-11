@@ -41,8 +41,9 @@ namespace Farso
 class Menu : public Widget
 {
    public:
-      /*! Menu constructor */
-      Menu();
+      /*! Menu constructor
+       * \param minWidth minimum width for menu (0 for no minimum size). */
+      Menu(int minWidth = 0);
       /*! Menu destructor */
       ~Menu();
 
@@ -185,6 +186,8 @@ class Menu : public Widget
 
       int curWidth;  /**< current width of the menu */
       int curHeight; /**< current height of the menu */
+
+      int minWidth; /**< current minimum menu width to accept */
 };
 
 }

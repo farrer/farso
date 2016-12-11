@@ -62,6 +62,10 @@ class Container : public Widget
       /*! Destructor */
       ~Container();
 
+      /*! Set the container to be a filled one (instead of the default 
+       * transparent). */
+      void setFilled();
+
       /*! \return child X coordinate according to Container type 
        * \param x child x relative coordinate 
        * \param width child width */
@@ -89,6 +93,8 @@ class Container : public Widget
       ContainerType contType; /**< Container type */
       Rect body;        /**< Full body */
       bool dynamicSize; /**< If width and height are defined by parent's */
+
+      bool filled; /**< If the container is filled or not */
 
 };
 

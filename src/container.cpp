@@ -19,6 +19,10 @@
 */
 
 #include "container.h"
+
+#include "skin.h"
+#include "controller.h"
+
 #include <assert.h>
 using namespace Farso;
 
@@ -33,6 +37,7 @@ Container::Container(ContainerType type, Widget* parent)
    setSize(parent->getBody().getWidth(), parent->getBody().getHeight());
    body.set(getX(), getX(), getX() + getWidth() - 1, getX() + getHeight() - 1);
    dynamicSize = true;
+   filled = false;
 }
 
 /***********************************************************************
@@ -47,6 +52,7 @@ Container::Container(ContainerType type, int x, int y, int width, int height,
    setSize(width, height);
    body.set(getX(), getY(), getX() + width - 1, getY() + height - 1);
    dynamicSize = false;
+   filled = false;
 }
 
 /***********************************************************************
@@ -54,6 +60,14 @@ Container::Container(ContainerType type, int x, int y, int width, int height,
  ***********************************************************************/
 Container::~Container()
 {
+}
+
+/***********************************************************************
+ *                               setFilled                             *
+ ***********************************************************************/
+void Container::setFilled()
+{
+   filled = true;
 }
 
 /***********************************************************************
@@ -128,6 +142,39 @@ void Container::doDraw(Rect pBody)
    /* Reset body to allow skin changes on the fly */
    body.set(getX(), getY(), 
             getX() + getWidth() - 1, getY() + getHeight() - 1);
+
+   if(filled)
+   {
+      Farso::Skin* skin = Farso::Controller::getSkin();
+      Farso::Surface* surface = getWidgetRenderer()->getSurface();
+      
+      int xt = getX();
+      int yt = getY();
+
+      int rx1 = pBody.getX1() + xt;
+      int ry1 = pBody.getY1() + yt;
+      int rx2 = pBody.getX1() + xt + getWidth() - 1;
+      int ry2 = pBody.getY1() + yt + getHeight() - 1;
+
+      if(skin != NULL)
+      {
+         skin->drawElement(surface, Skin::SKIN_TYPE_BUTTON_ENABLED, 
+               rx1, ry1, rx2, ry2);
+      }
+      else
+      {
+         Farso::Draw* draw = Farso::Controller::getDraw();
+
+         /* Draw the background */
+         draw->setActiveColor(Colors::colorButton);
+         draw->doFilledRectangle(surface, rx1+1, ry1+1, rx2-1, ry2-1);
+
+         /* Draw the edges */
+         draw->setActiveColor(Colors::colorCont[0]);
+         draw->doTwoColorsRectangle(surface, rx1, ry1, rx2, ry2,
+               Colors::colorCont[1]); 
+      }
+   }
 }
 
 /***********************************************************************
@@ -151,9 +198,9 @@ void Container::doAfterChildTreat()
  ***********************************************************************/
 void Container::setDirty()
 {
-   /* As a container, if someone marked us as dirty, we must also mark
-    * our parent, as we don't know how to render our background. */
-   if(getParent() != NULL)
+   /* As a not filled container, if someone marked us as dirty, we must also
+    * mark our parent, as we don't know how to render our background. */
+   if((!filled) && (getParent() != NULL))
    {
       getParent()->setDirty();
    }

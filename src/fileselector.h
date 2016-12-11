@@ -77,6 +77,10 @@ class FileSelector: public Widget
       Rect getBody();
       void setDirty();
 
+      /*! Check if selector if of 'load' type 
+       * \return true if load type, false if save */
+      bool isLoadType();
+
    protected:
 
       /* From Widget */

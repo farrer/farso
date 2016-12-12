@@ -59,7 +59,8 @@ class Widget : public Kobold::ListElement, public Kobold::List
          WIDGET_TYPE_FILE_SELECTOR,
          WIDGET_TYPE_MENU,
          WIDGET_TYPE_LABELLED_PICTURE,
-         WIDGET_TYPE_CLICKABLE_PICTURE
+         WIDGET_TYPE_CLICKABLE_PICTURE,
+         WIDGET_TYPE_SPIN
       };
 
       /*! Constructor

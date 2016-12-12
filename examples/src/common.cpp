@@ -151,6 +151,16 @@ void Example::createWindowWithStack()
    Farso::TextEntry* textEntry = new Farso::TextEntry(0, 46, 100, 21, tabCont);
    textEntry->setCaption("text disabled");
 
+   Farso::Spin* spin = new Farso::Spin(Farso::Spin::VALUE_TYPE_INTEGER, 0, 
+         70, tabCont);
+   spin->setValue(10);
+   spin->setRange(0, 100);
+
+   spin = new Farso::Spin(Farso::Spin::VALUE_TYPE_FLOAT, 0, 92, tabCont);
+   spin->setValue(100.0f);
+   spin->setFloatDelta(0.1f);
+   spin->setRange(-1000, 1000);
+
    /* Disable the last TextEntry */
    textEntry->disable();
 

@@ -113,8 +113,9 @@ enum EventType
    /*! When pressing inside a ClickablePicture */
    EVENT_CLICKABLEPICTURE_PRESSING,
    /*! Just after ClickablePicture press release */
-   EVENT_CLICKABLEPICTURE_CLICKED
-
+   EVENT_CLICKABLEPICTURE_CLICKED,
+   /*! Changed (or tried to change) current value of a spin */
+   EVENT_SPIN_CHANGED
 };
 
 /*! A Farso event definition */

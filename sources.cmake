@@ -20,6 +20,7 @@ src/rect.cpp
 src/scrollbar.cpp
 src/scrolltext.cpp
 src/skin.cpp
+src/spin.cpp
 src/stacktab.cpp
 src/surface.cpp
 src/textentry.cpp
@@ -51,6 +52,7 @@ src/rect.h
 src/scrollbar.h
 src/scrolltext.h
 src/skin.h
+src/spin.h
 src/stacktab.h
 src/surface.h
 src/textentry.h

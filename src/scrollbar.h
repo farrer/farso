@@ -46,7 +46,7 @@ class ScrollBar : public Widget
        * \param y coordinate on parent
        * \param widthOrHeight desired width (if horizontal scroll) or 
        *                      height (if vertical scroll) of the ScrollBar.
-       * \param parent pointer to its parent */
+       * \param parent pointer to its parent. */
       ScrollBar(ScrollType type, int x, int y, int widthOrHeight, 
             Widget* parent);
       /*! Destructor */

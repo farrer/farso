@@ -38,6 +38,7 @@
 #include "scrollbar.h"
 #include "scrolltext.h"
 #include "skin.h"
+#include "spin.h"
 #include "stacktab.h"
 #include "textentry.h"
 #include "textselector.h"

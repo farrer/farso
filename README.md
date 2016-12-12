@@ -19,6 +19,7 @@ Farso have the following widgets:
  * ProgressBar
  * ScrollBar
  * ScrollText
+ * Spin
  * StackTab
  * TextEntry
  * TextSelector

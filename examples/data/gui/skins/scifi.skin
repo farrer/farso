@@ -114,6 +114,9 @@ element = buttonDisabled
 # Label
 element = label
    textAreaDelta = 0,0,0,0
+element = labelDisabled
+   textAreaDelta = 0,0,0,0
+   textFontColor = 120,120,120,255
 element = fileLabel
    textAreaDelta = 0,0,0,0
 element = directoryLabel

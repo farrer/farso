@@ -39,6 +39,7 @@ Label::Label(int x, int y, int width, int height, Kobold::String caption,
    this->pressStarted = false;
    this->body.set(getX(), getY(), getX() + width - 1, getY() + width -1);
    this->skinType = Skin::SKIN_TYPE_LABEL;
+   this->definedSkin = false;
    this->useBorder = false;
    this->outline = 0;
    this->outlineColor = Farso::Color(0, 0, 0, 255);
@@ -86,6 +87,7 @@ void Label::disableBorder()
 void Label::setSkinType(Skin::SkinElementType type)
 {
    this->skinType = type;
+   this->definedSkin = true;
 }
 
 /******************************************************************
@@ -212,6 +214,20 @@ void Label::doDraw(Rect pBody)
 
    if(skin != NULL)
    {
+      /* Let's check if we need to define skin based on enable/disable state */
+      if(!definedSkin)
+      {
+         /* Not hard defined skin, let's check which skin we should use */
+         if(isAvailable())
+         {
+            skinType = Skin::SKIN_TYPE_LABEL;
+         }
+         else
+         {
+            skinType = Skin::SKIN_TYPE_LABEL_DISABLED;
+         }
+      }
+
       if(useBorder)
       {
          /* Let's draw its border */
@@ -272,7 +288,14 @@ void Label::doDraw(Rect pBody)
       /* set text color */
       if(!definedColor)
       {
-         color = Colors::colorText;
+         if(isAvailable())
+         {
+            color = Colors::colorText;
+         }
+         else
+         {
+            color = Colors::colorCont[1];
+         }
       }
    }
 

@@ -55,6 +55,11 @@ class CheckBox : public Widget
       /*! \return checkbox body (in this case, its full area) */
       Rect getBody();
 
+      /*! Enable the checkbox */
+      void enable();
+      /*! Disable the checkbox */
+      void disable();
+
    protected:
       /*! Draw the checkbox on parent's body */
       void doDraw(Rect pBody);

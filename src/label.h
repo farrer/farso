@@ -101,6 +101,7 @@ class Label: public Widget
       bool definedColor;        /**< If color is defined */
       bool pressStarted;        /**< Flag for press control */
       Skin::SkinElementType skinType; /**< Type of label to use with skins */
+      bool definedSkin;         /**< If defined skinType to use */
       bool useBorder;           /**< If should draw border or not */
       int outline;              /**< Outline width */
       Farso::Color outlineColor; /**< Color for outline */

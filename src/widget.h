@@ -162,10 +162,10 @@ class Widget : public Kobold::ListElement, public Kobold::List
       bool isAvailable();
 
       /*! Set available as true. */
-      void enable();
+      virtual void enable();
 
       /*! Set available as false */
-      void disable();
+      virtual void disable();
 
       /*! Verify if need to redraw the Widget (or some of its children). 
        * \note: the flag will be cleaned with a call to draw. */

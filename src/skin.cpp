@@ -1018,6 +1018,10 @@ int Skin::getElementType(Kobold::String typeName)
    {
       return SKIN_TYPE_LABEL;
    }
+   else if(typeName == "labelDisabled")
+   {
+      return SKIN_TYPE_LABEL_DISABLED;
+   }
    else if(typeName == "textOption")
    {
       return SKIN_TYPE_TEXT_OPTION;

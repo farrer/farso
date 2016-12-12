@@ -28,6 +28,11 @@
 #include <OGRE/RTShaderSystem/OgreRTShaderSystem.h>
 #include <OGRE/OgreMath.h>
 
+#if FARSO_USE_OGRE_OVERLAY == 1
+   #include <OGRE/Overlay/OgreOverlayContainer.h>
+   #include <OGRE/Overlay/OgreOverlayManager.h>
+#endif
+
 using namespace Farso;
 
 /***********************************************************************

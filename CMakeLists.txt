@@ -18,7 +18,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules")
 # Define some options
 option(FARSO_STATIC "Static build" FALSE)
 option(FARSO_DEBUG "Enable debug symbols" FALSE)
-option(FARSO_USE_OGRE_OVERLAY "Use overlays as Farso Ogre3D renderer" FALSE)
+option(FARSO_USE_OGRE_OVERLAY "Use overlays as Farso Ogre3D renderer" TRUE)
 
 # Let's assume, until found otherwise, that we can compile the 
 # Ogre3D example.

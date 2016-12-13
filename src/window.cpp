@@ -93,6 +93,20 @@ void Window::defineBody()
 
    if(skin)
    {
+      /* define title bar bounds */
+      if(active)
+      {
+         titleBar = skin->getSkinElement(
+               Farso::Skin::SKIN_TYPE_WINDOW_ACTIVE_TITLE_BAR).getBounds(
+                  getWidth(), getHeight());
+      }
+      else
+      {
+         titleBar = skin->getSkinElement(
+               Farso::Skin::SKIN_TYPE_WINDOW_INACTIVE_TITLE_BAR).getBounds(
+                  getWidth(), getHeight());
+      }
+
       /* Define Body: just bellow titleBar, and within borders. */
       Rect insideBorder = skin->getSkinElement(
             Farso::Skin::SKIN_TYPE_WINDOW).getBody(getWidth(), getHeight());
@@ -135,10 +149,6 @@ void Window::doDraw(Rect pBody)
       
       if(active)
       {
-         /* Define the title bar rectangle */
-         titleBar = skin->getSkinElement(
-               Farso::Skin::SKIN_TYPE_WINDOW_ACTIVE_TITLE_BAR).getBounds(
-                  getWidth(), getHeight());
          /* Draw it with title */
          skin->drawElement(surface, 
                Farso::Skin::SKIN_TYPE_WINDOW_ACTIVE_TITLE_BAR, x1, y1, x2, y2,
@@ -146,10 +156,6 @@ void Window::doDraw(Rect pBody)
       }
       else
       {
-         /* Define the title bar rectangle */
-         titleBar = skin->getSkinElement(
-               Farso::Skin::SKIN_TYPE_WINDOW_INACTIVE_TITLE_BAR).getBounds(
-                  getWidth(), getHeight());
          /* Write inactive title bar with caption */
          skin->drawElement(surface, 
                Farso::Skin::SKIN_TYPE_WINDOW_INACTIVE_TITLE_BAR, 

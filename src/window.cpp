@@ -373,7 +373,15 @@ bool Window::doTreat(bool leftButtonPressed, bool rightButtonPressed,
       }
       if(!moveStarted)
       {
-         if((titleBar.isInner(mrX, mrY)))
+         /* Calculate button on current body coordinates. */
+         Rect closeButtonBody = closeButton->getBody();
+         Rect closeReal = Rect(closeButtonBody.getX1() + body.getX1(),
+                               closeButtonBody.getY1() + body.getY1(),
+                               closeButtonBody.getX2() + body.getX1(),
+                               closeButtonBody.getY2() + body.getY1());
+         /* Only start move if not pressing at close button. */
+         if((titleBar.isInner(mrX, mrY)) && 
+            (!closeReal.isInner(mrX, mrY)))
          {
             /* Must define the current difference */
             moveStarted = true;

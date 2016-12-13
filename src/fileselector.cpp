@@ -364,6 +364,20 @@ void FileSelector::setLabels()
    int totalFiles = files.size();
    int first = scrollBar->getCurrent();
 
+   /* Define dir and file colors to use */
+   Skin* skin = Controller::getSkin();
+   Color fileColor = Colors::colorFile;
+   Color dirColor = Colors::colorDirectory;
+   if(skin != NULL)
+   {
+      Skin::SkinElement el = skin->getSkinElement(
+            Skin::SKIN_TYPE_DIRECTORY_LABEL);
+      dirColor = el.getFontColor();
+      el = skin->getSkinElement(Skin::SKIN_TYPE_FILE_LABEL);
+      fileColor = el.getFontColor();
+   }
+
+   /* Let's set all labels */
    for(int i = 0; i < numLines; i++)
    {
       /* Define text */
@@ -378,12 +392,12 @@ void FileSelector::setLabels()
       /* Define color */
       if(i + first <= lastDir)
       {
-         labels[i]->setFontColor(Colors::colorDirectory);
+         labels[i]->setFontColor(dirColor);
          labels[i]->setSkinType(Skin::SKIN_TYPE_DIRECTORY_LABEL);
       }
       else
       {
-         labels[i]->setFontColor(Colors::colorFile);
+         labels[i]->setFontColor(fileColor);
          labels[i]->setSkinType(Skin::SKIN_TYPE_FILE_LABEL);
       }
    }

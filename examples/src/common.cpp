@@ -375,6 +375,16 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
          Farso::Controller::loadSkin("skins/scifi.skin");
       }
    }
+   else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_K))
+   {
+      if((Farso::Controller::getSkin() == NULL) ||
+            (Farso::Controller::getSkin()->getFilename() !=
+             "skins/clean.skin"))
+      {
+         Farso::Controller::loadSkin("skins/clean.skin");
+      }
+   }
+
 #endif
 
 }

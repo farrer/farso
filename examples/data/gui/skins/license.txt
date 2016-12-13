@@ -1,3 +1,8 @@
+clean skin
+ \
+  author: farrer (DNTeam)
+  license: CC-By-SA 3.0
+
 moderna skin
  \
   Adapted by DNTeam from:

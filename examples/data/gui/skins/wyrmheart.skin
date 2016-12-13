@@ -245,7 +245,7 @@ element = textEntry
       bottomBorder = 17,55,17,56
       backgroundDelta = 2,2,2,2
       background = 17,52,18,53
-      textFontColor = 155,155,155,255
+      textFontColor = 255,255,255,255
 
 # Cursor Textual Tip
 element = cursorTextualTip

@@ -101,6 +101,7 @@ void StackTab::doDraw(Rect pBody)
    Skin* skin = Controller::getSkin();
    Draw* draw = Controller::getDraw();
    Font* font;
+   Color fontColor;
    Farso::Surface* surface = getWidgetRenderer()->getSurface();
 
    /* Define coordinates on parent's surface */
@@ -120,6 +121,7 @@ void StackTab::doDraw(Rect pBody)
       Skin::SkinElement el = skin->getSkinElement(Skin::SKIN_TYPE_BORDER_LEFT);
       font = FontManager::getFont(el.getFontName());
       font->setSize(el.getFontSize());
+      fontColor = el.getFontColor();
       Rect r = el.getMinSize();
       borderSize.set(0, 0, r.getWidth() - 1, r.getHeight() -1);
    }
@@ -127,6 +129,7 @@ void StackTab::doDraw(Rect pBody)
    {
       font = FontManager::getDefaultFont();
       font->setSize(10);
+      fontColor = Colors::colorText;
    }
   
    /* Define current body */
@@ -190,7 +193,7 @@ void StackTab::doDraw(Rect pBody)
       }
 
       /* render the title text */
-      draw->setActiveColor(Colors::colorText);
+      draw->setActiveColor(fontColor);
       font->setAlignment(Font::TEXT_CENTERED);
       font->write(surface, Rect(curX, y1, curX + incX, y1 + 20), tab->name);
 

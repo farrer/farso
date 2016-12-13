@@ -294,7 +294,7 @@ void TextEntry::doDraw(Rect pBody)
    }
 
    /* Draw the text */
-   if(isAvailable())
+   if((isAvailable()) || (skin))
    {
       draw->setActiveColor(fontColor);
    }

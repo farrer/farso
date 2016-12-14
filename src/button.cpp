@@ -150,9 +150,8 @@ bool Button::doTreat(bool leftButtonPressed, bool rightButtonPressed,
    }
    else if(pressStarted)
    {
+      bool shouldRelease = true;
       pressStarted = false;
-      /* released the button when press procedure is active. */
-      release();
       
       /* Let's see if was a valid release or a cancelled one. */
       if(isInner(mrX, mrY))
@@ -169,9 +168,11 @@ bool Button::doTreat(bool leftButtonPressed, bool rightButtonPressed,
             }
             menu->open(renderer->getPositionX() + pbody.getX1() + getX(), 
                        renderer->getPositionY() + pbody.getY1() + getY() + 
-                       getHeight());
+                       getHeight(), this);
 
             Controller::setEvent(this, EVENT_MENU_OPENED);
+            /* Let's keep the button pressed */
+            shouldRelease = false;
          }
          else
          {
@@ -183,6 +184,10 @@ bool Button::doTreat(bool leftButtonPressed, bool rightButtonPressed,
          Controller::setEvent(this, EVENT_BUTTON_PRESS_CANCELLED);
       }
 
+      if(shouldRelease)
+      {
+         release();
+      }
       return true;
    }
    return false;

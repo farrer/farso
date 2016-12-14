@@ -148,7 +148,7 @@ class Menu : public Widget
       void endCreate();
 
       /*! Open the menu at x,y absolute screen position */
-      void open(int x, int y);
+      void open(int x, int y, Widget* caller = NULL);
 
       /*! Close the menu, if its opened, without generating any event */
       void close();
@@ -194,6 +194,9 @@ class Menu : public Widget
       int curHeight; /**< current height of the menu */
 
       int minWidth; /**< current minimum menu width to accept */
+
+      Widget* caller; /**< Pointer to the current Widget that opened the menu,
+                           if any */
 };
 
 }

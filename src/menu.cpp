@@ -444,8 +444,11 @@ void Menu::endCreate()
 /***********************************************************************
  *                               open                                  *
  ***********************************************************************/
-void Menu::open(int x, int y)
+void Menu::open(int x, int y, Widget* caller)
 {
+   /* Define its caller */
+   this->caller = caller;
+
    /* Let's define each item position, and its grid element */
    int pX = 0, 
        pY = 0;
@@ -498,6 +501,11 @@ void Menu::close()
 {
    hide();
    Controller::setActiveMenu(NULL);
+   if((caller != NULL) && (caller->getType() == Widget::WIDGET_TYPE_BUTTON))
+   {
+      Button* callerButton = static_cast<Button*>(caller);
+      callerButton->release();
+   }
 }
 
 /***********************************************************************

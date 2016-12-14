@@ -68,6 +68,12 @@ class Button: public Widget
       /*! Set a menu to be opened when button was released 
        * \param menu pointer to the menu to be opened */
       void setMenu(Menu* menu);
+
+      /*! Release a 'pressed' button.
+       * \note this function will not set any event and, if the user continue
+       *       to press the button, will have no effect at all.
+       * \note usually used only at Menu's close call */
+      void release();
       
       Rect getBody();
 
@@ -80,7 +86,6 @@ class Button: public Widget
       void doAfterChildTreat();
 
       void press();
-      void release();
 
    private:
       bool useRoundedEdges; /**< If will use rounded edges or 90 degrees. */

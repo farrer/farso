@@ -298,6 +298,10 @@ void Example::addAllWidgetsToContainer(Farso::Container* cont)
    scrollText->addText("And more text maybe it is now, right?");
    scrollText->addLineBreak();
    scrollText->addText("Now it really is, I'm sure!");
+   Farso::Spin* spin = new Farso::Spin(Farso::Spin::VALUE_TYPE_INTEGER, 0, 
+         360, cont);
+   spin->setValue(20);
+   spin->setRange(-50, 50);
 }
 
 /************************************************************************

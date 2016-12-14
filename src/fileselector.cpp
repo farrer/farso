@@ -59,6 +59,7 @@ FileSelector::FileSelector(bool load, Kobold::String dir, bool nav,
       Widget* parent)
              :Widget(Widget::WIDGET_TYPE_FILE_SELECTOR, parent)
 {
+   lastDir = -1;
    curDir = dir;
    filter = "";
    loading = load;
@@ -220,6 +221,7 @@ void FileSelector::changeCurDir(Kobold::String newDir)
 
    /* Clear current displayed */
    files.clear();
+   lastDir = -1;
 
    /* Change to dir */
    curDir = newDir;

@@ -21,7 +21,7 @@
 #include "spin.h"
 #include "controller.h"
 
-#include <string>
+#include <sstream>
 
 #include <assert.h>
 

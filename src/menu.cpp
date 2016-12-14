@@ -490,6 +490,13 @@ void Menu::open(int x, int y, Widget* caller)
    /* Finally, set menu position and display it. */
    setPosition(x, y);
    show();
+   
+   if(current)
+   {
+      /* Must redraw it without any item selected. */
+      current = NULL;
+      setDirty();
+   }
 
    Controller::setActiveMenu(this);
 }

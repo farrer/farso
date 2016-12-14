@@ -21,6 +21,8 @@
 #include "spin.h"
 #include "controller.h"
 
+#include <string>
+
 #include <assert.h>
 
 using namespace Farso;
@@ -81,7 +83,7 @@ Spin::~Spin()
  ***********************************************************************/
 void Spin::setValueText()
 {
-   Ogre::StringStream ss;
+   std::stringstream ss;
    if(type == VALUE_TYPE_INTEGER)
    {
       ss << static_cast<int>(value);

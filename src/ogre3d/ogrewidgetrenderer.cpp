@@ -85,7 +85,11 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
    curZ = (Controller::getTotalRootWidgets() - 10) * (0.01f);
 
    /* Create the manual object to use. */
+#if OGRE_VERSION_MAJOR == 1
    manualObject = ogreJunction->getSceneManager()->createManualObject(name);
+#else
+   manualObject = ogreJunction->getSceneManager()->createManualObject();
+#endif
 
    /* define dimensions for manual object coordinates */
    manualWidth = (realWidth / (float)Controller::getWidth()) * 2.0f;
@@ -116,11 +120,13 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
       manualObject->index(0);
    manualObject->end();
 
+#if OGRE_VERSION_MAJOR == 1
    /* Always visible bounding box */
    Ogre::AxisAlignedBox aabInf;
    aabInf.setInfinite();
    manualObject->setBoundingBox(aabInf);
-   
+#endif
+
    /* Define render queue position */
    manualObject->setRenderQueueGroup(Ogre::RENDER_QUEUE_OVERLAY - 1);
    
@@ -194,8 +200,13 @@ void OgreWidgetRenderer::defineTexture()
    }
    /* As we are using a shader, let's set the technique as RTSS to avoid our
     * Goblin listener try to recreate a technique for it. */
+#if OGRE_VERSION_MAJOR == 1   
    tech->setSchemeName(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
-
+#else 
+   Ogre::RTShader::ShaderGenerator::getSingleton().validateMaterial(
+         Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME, 
+         material->getName());
+#endif
    /* Verify if need to create a pass */
    int numPasses = tech->getNumPasses();
    if(numPasses == 0)

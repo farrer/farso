@@ -22,19 +22,15 @@
 #define _farso_ogre_surface_h
 
 #include "../surface.h"
-
-#include <OGRE/OgreHardwarePixelBuffer.h>
-#include <OGRE/OgrePixelFormat.h>
-#include <OGRE/OgreTexture.h>
-#include <OGRE/OgreImage.h>
+#include "../sdl/sdlsurface.h"
 
 namespace Farso
 {
 
-/*! Surface implementation for Ogre3d. If it's a regular widget surface,
- * it's implemented as an Ogre::Texture, instead (if a loaded image) it's 
- * implemented by the Ogre::Image. */
-class OgreSurface : public Surface
+/*! Surface implementation for Ogre3d. Always use a SDL_Surface to represent it,
+ * event if a image loaded from disk (in this case, the Ogre::Image is copied 
+ * to the surface after loading). */
+class OgreSurface : public SDLSurface
 {
    public:
       /*! Constructor, for a new empty drawable surface.
@@ -50,33 +46,9 @@ class OgreSurface : public Surface
       /*! Destructor */
       ~OgreSurface();
 
-      /*! Lock the surface to draw.
-       * \note: must be called before start to draw on it. */
-      void lock();
+   protected:
+      bool load(Kobold::String filename, Kobold::String group);
 
-      /*! Unlock surface after draw.
-       * \note: must be called when done with draw on it. */
-      void unlock();
-
-      /*! \return OgreSurface PixelFormat. Must be called while locked */
-      Ogre::PixelFormat getPixelFormat();
-
-      /*! \return OgreSurface PixelBox to edit / read. 
-       * Must be called while locked */
-      const Ogre::PixelBox getPixelBox();
-
-      /*! \return ogre texture related to this surface, if any.
-       * \note must only be called to Surfaces related to WidgetRenderer */
-      Ogre::TexturePtr getTexture();
-
-      int getRealWidth();
-      int getRealHeight();
-
-   private:
-      Ogre::TexturePtr texture; /**< The manual dynamic texture */
-      Ogre::PixelBox pixelBox;  /**< Pixel box related to the dynamic texture*/
-      Ogre::PixelFormat pixelFormat; /**< Its format */
-      Ogre::Image* image; /**< The image, if this surface is an loaded one */
 };
 
 }

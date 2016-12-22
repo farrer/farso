@@ -116,7 +116,7 @@ void OpenGLWidgetRenderer::doShow()
 /************************************************************************
  *                              doRender                                *
  ************************************************************************/
-void OpenGLWidgetRenderer::doRender(float depth)
+void OpenGLWidgetRenderer::doRender()
 {
    glEnable(GL_BLEND);
    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -131,13 +131,13 @@ void OpenGLWidgetRenderer::doRender(float depth)
       glTranslatef(posX, posY, 0.0f);
       glBegin(GL_QUADS);
          glTexCoord2f(0.0f, propY);
-         glVertex3f(0.0f, 0.0f, depth);
+         glVertex3f(0.0f, 0.0f, 0.0f);
          glTexCoord2f(0.0f, 0.0f);
-         glVertex3f(0.0f, height, depth);
+         glVertex3f(0.0f, height, 0.0f);
          glTexCoord2f(propX, 0.0f);
-         glVertex3f(width, height, depth);
+         glVertex3f(width, height, 0.0f);
          glTexCoord2f(propX, propY);
-         glVertex3f(width, 0.0f, depth);
+         glVertex3f(width, 0.0f, 0.0f);
       glEnd();
    glPopMatrix();
 

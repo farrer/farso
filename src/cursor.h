@@ -43,6 +43,7 @@ class Cursor
    public:
 
       /*! Cursor initialize 
+       * \note called by Controller::init. No need to call it.
        * \param size maximun cursor size (in pixels).
        * \note each cursor will be of maximun size x size, in pixels. */
       static void init(int size);
@@ -156,7 +157,6 @@ class Cursor
       static Kobold::Timer tipTimer; /**< Timer of last set tip */
       static int maxSize; /**< Maximum cursor size */
       static CursorImage* current; /**< Current cursor image, if any */
-      static ControllerRendererJunction* junction; /**< Own junction */
 };
 
 }

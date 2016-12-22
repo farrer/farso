@@ -37,6 +37,8 @@ class OpenGLJunction : public ControllerRendererJunction
       /*! Restore the projection and model view matrix to state before
        * call to enter2dMode() */
       void restore3dMode();
+      
+      const bool shouldManualRender() const {return true;};
 };
 
 }

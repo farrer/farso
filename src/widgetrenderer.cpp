@@ -155,11 +155,11 @@ bool WidgetRenderer::isVisible()
 /***********************************************************************
  *                               render                                *
  ***********************************************************************/
-void WidgetRenderer::render(float depth)
+void WidgetRenderer::render()
 {
    if(visible)
    {
-      doRender(depth);
+      doRender();
    }
 }
 

@@ -30,6 +30,8 @@
 namespace Farso
 {
 
+#define FARSO_WIDGET_RENDERER_FIRST_SUB_GROUP     0
+#define FARSO_WIDGET_RENDERER_LAST_SUB_GROUP      6
 
 class ControllerRendererJunction;
 
@@ -81,15 +83,24 @@ class WidgetRenderer
       /*! \return if widget is actually displayed or hidden */
       bool isVisible();
 
-      /*! Render the widget surface 
-       * \param depth depth factor (z) */
-      void render(float depth);
+      /*! Render the widget surface */ 
+      void render();
 
       /*! \return the drawabe surface */
       Surface* getSurface();
 
       /*! Upload the surface to the renderer */
       virtual void uploadSurface() = 0;
+
+      /*! Set on which render queue should render the widget. This is 
+       * used to keep some widgets over others when the render order isn't
+       * controlled by their position on the list (ie: when their render 
+       * information is grouped at a Vertex Buffer or Vao, for example)
+       * \param renderQueueId identifier of the render queue to use.
+       * \note the range of render queue ids could vary between each renderer,
+       *       (use WIDGET_RENDERER_FIRST_SUB_GROUP and 
+       *            WIGET_RENDERER_LAST_SUB_GROUP) */
+      virtual void setRenderQueueSubGroup(int renderQueueId) = 0;
 
    protected:
 
@@ -103,10 +114,8 @@ class WidgetRenderer
       /*! Do needed actions to show the renderer */
       virtual void doShow() = 0;
 
-      /*! Do the render of the widget surface 
-       * \param depth depth factor (z) */
-      virtual void doRender(float depth) = 0;
-
+      /*! Do the render of the widget surface */ 
+      virtual void doRender() = 0;
 
       Surface* surface;      /**< The drawable surface */
 

@@ -19,10 +19,11 @@
 */
 
 #include "ogresurface.h"
+#include "ogredraw.h"
 #include "../controller.h"
-#include <assert.h>
-#include <OGRE/OgreTextureManager.h>
 
+#include <assert.h>
+#include <OGRE/OgreImage.h>
 
 using namespace Farso;
 
@@ -30,35 +31,44 @@ using namespace Farso;
  *                           constructor                          *
  ******************************************************************/
 OgreSurface::OgreSurface(Kobold::String name, int width, int height)
-            :Surface(name, width, height)
+            :SDLSurface(name, width, height)
 {
-   this->image = NULL;
-
-   /* Create the ogre manual's surface */
-   this->texture = Ogre::TextureManager::getSingleton().createManual(
-         name, 
-         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-         Ogre::TEX_TYPE_2D, width, height, 0, Ogre::PF_A8R8G8B8,
-         Ogre::TU_DYNAMIC_WRITE_ONLY_DISCARDABLE);
-   
-   /* Empty the entire texture surface, as transparent */
-   lock();
-   clear();
-   unlock();
 }
 
 /******************************************************************
  *                           constructor                          *
  ******************************************************************/
 OgreSurface::OgreSurface(Kobold::String filename, Kobold::String group)
-            :Surface(filename, group)
+            :SDLSurface(filename, group, false)
 {
-   this->locked = false;
-   this->ownedTexture = false;
-   this->image = new Ogre::Image();
-   this->image->load(filename, group);
-   this->width = this->image->getWidth();
-   this->height = this->image->getHeight();
+   load(filename, group);
+}
+
+/******************************************************************
+ *                              load                              *
+ ******************************************************************/
+bool OgreSurface::load(Kobold::String filename, Kobold::String group)
+{
+   /* Load Ogre::Image from disk */
+   Ogre::Image ogreImage;
+   ogreImage.load(filename, group);
+   
+   /* Set our dimensions (as not directly used to video card, no need to
+    * be power of two: we'll ever blit it to a power of two surface of
+    * widget's renderer before sending it to the video card anyway). */
+   this->width = ogreImage.getWidth();
+   this->height = ogreImage.getHeight();
+
+   /* Create our SDL surface with the dimensions we now known. */
+   createSurface(this->width, this->height);
+
+   /* Copy the image to our Surface */
+   OgreDraw* ogreDraw = static_cast<OgreDraw*>(Controller::getDraw());
+   this->lock();
+   ogreDraw->doOgreImageCopy(this, &ogreImage);
+   this->unlock();
+
+   return true;
 }
 
 /******************************************************************
@@ -66,93 +76,5 @@ OgreSurface::OgreSurface(Kobold::String filename, Kobold::String group)
  ******************************************************************/
 OgreSurface::~OgreSurface()
 {
-   if(image)
-   {
-      delete image;
-   }
-   if(ownedTexture)
-   {
-      Ogre::TextureManager::getSingleton().remove(texture->getName());
-   }
 }
-
-/******************************************************************
- *                                lock                            *
- ******************************************************************/
-void OgreSurface::lock()
-{
-   assert(!locked);
-   locked = true;
-
-   if(image == NULL)
-   {
-      Ogre::HardwarePixelBufferSharedPtr pixelBuffer = texture->getBuffer();
-
-      pixelFormat = texture->getFormat();
-
-      pixelBuffer->lock(Ogre::HardwareBuffer::HBL_NORMAL); 
-      pixelBox = pixelBuffer->getCurrentLock();
-   }
-   else
-   {
-      pixelFormat = image->getFormat();
-      pixelBox = image->getPixelBox();
-   }
-}
-
-/******************************************************************
- *                               unlock                           *
- ******************************************************************/
-void OgreSurface::unlock()
-{
-   assert(locked);
-   locked = false;
-   if(image == NULL)
-   {
-      texture->getBuffer()->unlock();
-   }
-}
-
-/******************************************************************
- *                           getPixelFormat                       *
- ******************************************************************/
-Ogre::PixelFormat OgreSurface::getPixelFormat()
-{
-   assert(locked);
-   return pixelFormat;
-}
-
-/******************************************************************
- *                            getPixelBox                         *
- ******************************************************************/
-const Ogre::PixelBox OgreSurface::getPixelBox()
-{
-   assert(locked);
-   return pixelBox;
-}
-
-/******************************************************************
- *                            getTexture                          *
- ******************************************************************/
-Ogre::TexturePtr OgreSurface::getTexture()
-{
-   return texture;
-}
-
-/******************************************************************
- *                            getWidth                            *
- ******************************************************************/
-int OgreSurface::getRealWidth()
-{
-   return width;
-}
-
-/******************************************************************
- *                           getHeight                            *
- ******************************************************************/
-int OgreSurface::getRealHeight()
-{
-   return height;
-}
-
 

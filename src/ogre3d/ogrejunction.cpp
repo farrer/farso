@@ -19,10 +19,22 @@
 */
 
 #include "ogrejunction.h"
-#include <OGRE/Overlay/OgreOverlayManager.h>
+
+#if FARSO_USE_OGRE_OVERLAY == 0
+   #include <OGRE/OgreRoot.h>
+#else
+   #include <OGRE/Overlay/OgreOverlayManager.h>
+#endif
+
 #include <kobold/platform.h>
 
 using namespace Farso;
+
+
+/* Only need those shaders for Ogre 1.x or 2.0 (and with overlays). */
+#if FARSO_USE_OGRE_OVERLAY == 1 && \
+    (OGRE_VERSION_MAJOR == 1 || \
+    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0))
 
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
@@ -70,33 +82,61 @@ static Ogre::String farso_ogre_glsl_fs_source(
 );
 #endif
 
+#endif
+
 /*************************************************************************
  *                            OgreJunction                               *
  *************************************************************************/
-OgreJunction::OgreJunction(Kobold::String name)
+OgreJunction::OgreJunction(Kobold::String name, 
+      Ogre::SceneManager* sceneManager)
 {
-#if FARSO_USE_OGRE_OVERLAY == 1
-   overlay = Ogre::OverlayManager::getSingletonPtr()->create(name);
+   this->sceneManager = sceneManager;
+
+#if FARSO_USE_OGRE_OVERLAY == 0
+   /* Default renderer, with movable and renderable implementations */
+
+   /* Must set our needed render queues to v2 */
+   sceneManager->getRenderQueue()->setRenderQueueMode(
+         FARSO_DEFAULT_RENDER_QUEUE, Ogre::RenderQueue::FAST);
+
+   /* We must register the WidgetMoveble factory */
+   ogreWidgetMovableFactory = new OgreWidgetMovableFactory();
+   Ogre::Root::getSingleton().addMovableObjectFactory(
+         ogreWidgetMovableFactory);
+
+#else
+   /* Overlay Renderer (fallback) */
+
+   #if OGRE_VERSION_MAJOR == 1 || \
+       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+      /* Create our overlay */
+      overlay = Ogre::OverlayManager::getSingletonPtr()->create(name);
+      
+      /* Create and load our shaders */
+      vertexShader = 
+         Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+               name + "VP_glsl", 
+               Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+               farso_ogre_shader_type, Ogre::GPT_VERTEX_PROGRAM);
+      vertexShader->setSource(farso_ogre_glsl_vs_source);
+      vertexShader->load();
+
+      fragmentShader = 
+         Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+               name + "FP_glsl", 
+               Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+               farso_ogre_shader_type, Ogre::GPT_FRAGMENT_PROGRAM);
+      fragmentShader->setSource(farso_ogre_glsl_fs_source);
+      fragmentShader->load();
+   #else
+      /* Create our overlay */
+      overlay = Ogre::v1::OverlayManager::getSingletonPtr()->create(name);
+   #endif
+
+   /* Set our render queue group to farso ( != of overlays one), and show it */
+   overlay->setRenderQueueGroup(FARSO_DEFAULT_RENDER_QUEUE);
    overlay->show();
 #endif
-   sceneManager = NULL;
-
-   /* Create and load our shaders */
-   vertexShader = 
-      Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-         name + "VP_glsl", 
-         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-         farso_ogre_shader_type, Ogre::GPT_VERTEX_PROGRAM);
-   vertexShader->setSource(farso_ogre_glsl_vs_source);
-   vertexShader->load();
-
-   fragmentShader = 
-      Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-         name + "FP_glsl", 
-         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-         farso_ogre_shader_type, Ogre::GPT_FRAGMENT_PROGRAM);
-   fragmentShader->setSource(farso_ogre_glsl_fs_source);
-   fragmentShader->load();
 }
 
 /*************************************************************************
@@ -104,27 +144,25 @@ OgreJunction::OgreJunction(Kobold::String name)
  *************************************************************************/
 OgreJunction::~OgreJunction()
 {
-#if FARSO_USE_OGRE_OVERLAY == 1
-   Ogre::OverlayManager::getSingletonPtr()->destroy(overlay);
-#endif
-}
 
-#if FARSO_USE_OGRE_OVERLAY == 1
-/*************************************************************************
- *                             getOverlay                                *
- *************************************************************************/
-Ogre::Overlay* OgreJunction::getOverlay()
-{
-   return overlay;
-}
+#if FARSO_USE_OGRE_OVERLAY == 0
+   /* Unregister our widget's movable factory */
+   if(ogreWidgetMovableFactory)
+   {
+      Ogre::Root::getSingleton().removeMovableObjectFactory(
+            ogreWidgetMovableFactory);
+      delete ogreWidgetMovableFactory;
+      ogreWidgetMovableFactory = NULL;
+   }
+#else
+   /* Destroy our overlays */
+   #if OGRE_VERSION_MAJOR == 1 || \
+       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+      Ogre::OverlayManager::getSingletonPtr()->destroy(overlay);
+   #else
+      Ogre::v1::OverlayManager::getSingletonPtr()->destroy(overlay);
+   #endif
 #endif
-
-/*************************************************************************
- *                          setSceneManager                              *
- *************************************************************************/
-void OgreJunction::setSceneManager(Ogre::SceneManager* sceneManager)
-{
-   this->sceneManager = sceneManager;
 }
 
 /*************************************************************************
@@ -135,6 +173,9 @@ Ogre::SceneManager* OgreJunction::getSceneManager()
    return sceneManager;
 }
 
+#if OGRE_VERSION_MAJOR == 1 || \
+    (FARSO_USE_OGRE_OVERLAY == 1 && OGRE_VERSION_MAJOR == 2 && \
+     OGRE_VERSION_MINOR == 0)
 /*************************************************************************
  *                       getVertexProgramName                            *
  *************************************************************************/
@@ -150,4 +191,5 @@ Ogre::String OgreJunction::getFragmentProgramName()
 {
    return fragmentShader->getName();
 }
+#endif
 

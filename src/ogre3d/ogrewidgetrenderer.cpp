@@ -19,19 +19,33 @@
 */
 
 #include "ogrewidgetrenderer.h"
+
 #include "ogresurface.h"
 #include "ogrejunction.h"
 #include "../controller.h"
 
 #include <OGRE/OgreStringConverter.h>
 #include <OGRE/OgreDataStream.h>
-#include <OGRE/RTShaderSystem/OgreRTShaderSystem.h>
 #include <OGRE/OgreMath.h>
+#include <OGRE/OgreTextureManager.h>
+
+#if OGRE_VERSION_MAJOR == 1 || \
+    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+   #include <OGRE/RTShaderSystem/OgreRTShaderSystem.h>
+#else
+   #include <OGRE/OgreRoot.h>
+   #include <OGRE/OgreHlmsManager.h>
+   #include <OGRE/OgreHlmsDatablock.h>
+   #include <OGRE/Hlms/Unlit/OgreHlmsUnlit.h>
+   #include <OGRE/Hlms/Pbs/OgreHlmsPbsPrerequisites.h>
+#endif
 
 #if FARSO_USE_OGRE_OVERLAY == 1
    #include <OGRE/Overlay/OgreOverlayContainer.h>
    #include <OGRE/Overlay/OgreOverlayManager.h>
 #endif
+
+#include <OGRE/OgreHardwarePixelBuffer.h>
 
 using namespace Farso;
 
@@ -48,93 +62,91 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
    this->realWidth = draw->smallestPowerOfTwo(width);
    this->realHeight = draw->smallestPowerOfTwo(height);
 
-   /* Nullify things */
-   this->texState = NULL;
-
    /* Set junction to use */
    this->ogreJunction = (OgreJunction*) junction;
 
-   /* Create the drawable surface */
-   this->surface = new OgreSurface(name, realWidth, realHeight);
+   /* Create the drawable surface and map its contents to a PixelBox to 
+    * make easer the update-to-texture proccess */
+   OgreSurface* ogreSurface = new OgreSurface(name, realWidth, realHeight);
+   this->surface = ogreSurface;
+   pixelBox = Ogre::PixelBox(realWidth, realHeight,
+         1, Ogre::PF_A8B8G8R8, ogreSurface->getSurface()->pixels);
+
+   /* Create the ogre texture to render the widget */
+   this->texture = Ogre::TextureManager::getSingleton().createManual(
+         name, 
+         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+         Ogre::TEX_TYPE_2D, realWidth, realHeight, 0, Ogre::PF_A8R8G8B8,
+         Ogre::TU_DYNAMIC_WRITE_ONLY);
+
+#if OGRE_VERSION_MAJOR == 1 || \
+    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+
+   /* Nullify things */
+   this->texState = NULL;
 
    /* Create the material to use */
    Ogre::ResourceManager::ResourceCreateOrRetrieveResult matRes;
    matRes = Ogre::MaterialManager::getSingleton().createOrRetrieve(name,
          "gui");
    material = matRes.first.staticCast<Ogre::Material>();
+#endif
 
+   uploadSurface();
    defineTexture();
 
 #if FARSO_USE_OGRE_OVERLAY == 1
-   /* Define the container and set it to the overlay */
-   this->container = (Ogre::OverlayContainer*)
-         Ogre::OverlayManager::getSingletonPtr()->createOverlayElement(
-            "Panel", name);
-   ogreJunction->getOverlay()->add2D(this->container);
 
-   container->setMaterialName(material->getName());
+   /* Define the container and set it to the overlay */
+   #if OGRE_VERSION_MAJOR == 1 || \
+       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+   this->container = static_cast<Ogre::OverlayContainer*>(
+         Ogre::OverlayManager::getSingletonPtr()->createOverlayElement(
+            "Panel", name));
+   #else
+   this->container = static_cast<Ogre::v1::OverlayContainer*>(
+         Ogre::v1::OverlayManager::getSingletonPtr()->createOverlayElement(
+            "Panel", name));
+   #endif
+   ogreJunction->getOverlay()->add2D(this->container);
 
    /* Set container dimensions */
    container->setWidth(((float)realWidth) / 
          Controller::getWidth());
    container->setHeight(((float)realHeight) / 
          Controller::getHeight());
-#else
-   curX = 0.0f;
-   curY = 0.0f;
-   curZ = (Controller::getTotalRootWidgets() - 10) * (0.01f);
 
-   /* Create the manual object to use. */
-#if OGRE_VERSION_MAJOR == 1
-   manualObject = ogreJunction->getSceneManager()->createManualObject(name);
+#if OGRE_VERSION_MAJOR == 1 || \
+    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+   container->setMaterialName(material->getName());
 #else
-   manualObject = ogreJunction->getSceneManager()->createManualObject();
+   /* Note: we still need to set the material name, as at 
+    * OgreOverlayElement::_update it will check if the datablock name is
+    * equal to the defined material name, trying to get a datablock
+    * with the name if they aren't equal. */
+   container->setDatablock(datablock);
+   container->setMaterialName(name);
 #endif
 
-   /* define dimensions for manual object coordinates */
-   manualWidth = (realWidth / (float)Controller::getWidth()) * 2.0f;
-   manualHeight = (realHeight / (float)Controller::getHeight()) * 2.0f;
+#else
+   Ogre::SceneManager* sceneManager = ogreJunction->getSceneManager();
 
-   float pX = -1.0f + manualWidth;
-   float pY = 1.0f - manualHeight;
-   
-   /* Set identity rendering */
-   manualObject->setUseIdentityProjection(true);
-   manualObject->setUseIdentityView(true);
-   manualObject->begin(material->getName(), 
-                       Ogre::RenderOperation::OT_TRIANGLE_LIST);
-      manualObject->position(pX, pY, 0.0f);
-      manualObject->textureCoord(1, 1);
-      manualObject->position(pX, 1.0f, 0.0f);
-      manualObject->textureCoord(1, 0);
-      manualObject->position(-1.0f, 1.0f, 0.0f);
-      manualObject->textureCoord(0, 0);
-      manualObject->position(-1.0f, pY, 0.0f);
-      manualObject->textureCoord(0, 1);
+   /* Create our renderable and set its datablock */
+   renderable = new OgreWidgetRenderable(name, realWidth, realHeight);
 
-      manualObject->index(0);
-      manualObject->index(1);
-      manualObject->index(2);
-      manualObject->index(2);
-      manualObject->index(3);
-      manualObject->index(0);
-   manualObject->end();
+   /* Define our movable and attach our renderable to it */
+   movable = static_cast<OgreWidgetMovable*>(
+         sceneManager->createMovableObject(
+            OgreWidgetMovableFactory::FACTORY_TYPE_NAME,
+            &sceneManager->_getEntityMemoryManager(Ogre::SCENE_DYNAMIC)));
 
-#if OGRE_VERSION_MAJOR == 1
-   /* Always visible bounding box */
-   Ogre::AxisAlignedBox aabInf;
-   aabInf.setInfinite();
-   manualObject->setBoundingBox(aabInf);
-#endif
+   movable->attachOgreWidgetRenderable(renderable); 
+   renderable->setDatablock(datablock);
 
-   /* Define render queue position */
-   manualObject->setRenderQueueGroup(Ogre::RENDER_QUEUE_OVERLAY - 1);
-   
-   /* Attach it */
-   sceneNode = ogreJunction->getSceneManager()->getRootSceneNode()->
-      createChildSceneNode();
-   sceneNode->attachObject(manualObject);
-   sceneNode->setPosition(0.0f, 0.0f, curZ);
+   /* Finally, add them to a SceneNode */
+   sceneNode = sceneManager->getRootSceneNode()->createChildSceneNode();
+   sceneNode->attachObject(movable);
+   sceneNode->setPosition(0.0f, 0.0f, 0.0f);
 #endif
 }
 
@@ -147,50 +159,57 @@ OgreWidgetRenderer::~OgreWidgetRenderer()
    /* Clear the container of the overlay */
    OgreJunction* ogreJunction = (OgreJunction*) junction;
    ogreJunction->getOverlay()->remove2D(container);
+   #if OGRE_VERSION_MAJOR == 1 || \
+       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
    Ogre::OverlayManager::getSingletonPtr()->destroyOverlayElement(container);
+   #else
+   Ogre::v1::OverlayManager::getSingletonPtr()->destroyOverlayElement(
+         container);
+   #endif
 #else
-   sceneNode->detachObject(manualObject);
+   sceneNode->detachObject(movable);
+   movable->detachOgreWidgetRenderable(renderable);
    OgreJunction* ogreJunction = (OgreJunction*) junction;
    ogreJunction->getSceneManager()->destroySceneNode(sceneNode);
-   ogreJunction->getSceneManager()->destroyManualObject(manualObject);
+   ogreJunction->getSceneManager()->destroyMovableObject(movable);
+   delete renderable;
 #endif
 
+#if OGRE_VERSION_MAJOR == 1 || \
+    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
    /* Remove Shaders from material */
    Ogre::RTShader::ShaderGenerator::getSingleton().
       removeAllShaderBasedTechniques(material->getName());
 
    /* Free the material used */
    Ogre::MaterialManager::getSingleton().remove(material->getName());
+#endif
 
    /* Free the surface and its texture */
    delete surface;
+   Ogre::TextureManager::getSingleton().remove(texture->getName());
 }
 
+/***********************************************************************
+ *                         setRenderQueueSubGroup                      *
+ ***********************************************************************/
+void OgreWidgetRenderer::setRenderQueueSubGroup(int renderQueueId)
+{
 #if FARSO_USE_OGRE_OVERLAY == 1
-/***********************************************************************
- *                         getOverlayContainer                         *
- ***********************************************************************/
-Ogre::OverlayContainer* OgreWidgetRenderer::getOverlayContainer()
-{
-   return container;
-}
+   container->setRenderQueueSubGroup(static_cast<Ogre::uint8>(renderQueueId));
 #else
-/***********************************************************************
- *                                setZ                                 *
- ***********************************************************************/
-void OgreWidgetRenderer::setZ(float z)
-{
-   curZ = z;
-   sceneNode->setPosition(0.0f, 0.0f, z);
-}
+   renderable->setRenderQueueSubGroup(static_cast<Ogre::uint8>(renderQueueId));
 #endif
+}
 
 /***********************************************************************
  *                            redefineTexture                          *
  ***********************************************************************/
 void OgreWidgetRenderer::defineTexture()
 {
-   OgreSurface* ogreSurface = (OgreSurface*) surface;
+#if OGRE_VERSION_MAJOR == 1 || \
+    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+   /* Using 1.x materials */
    Ogre::Technique* tech = material->getBestTechnique();
 
    if(!tech)
@@ -202,11 +221,11 @@ void OgreWidgetRenderer::defineTexture()
     * Goblin listener try to recreate a technique for it. */
 #if OGRE_VERSION_MAJOR == 1   
    tech->setSchemeName(Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME);
-#else 
+#endif
    Ogre::RTShader::ShaderGenerator::getSingleton().validateMaterial(
          Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME, 
          material->getName());
-#endif
+
    /* Verify if need to create a pass */
    int numPasses = tech->getNumPasses();
    if(numPasses == 0)
@@ -215,7 +234,6 @@ void OgreWidgetRenderer::defineTexture()
    }
    /* Get or create new texture */
    int numTextures = tech->getPass(0)->getNumTextureUnitStates();
-   Ogre::TexturePtr texture = ogreSurface->getTexture(); 
    if(numTextures != 0)
    {
       texState = tech->getPass(0)->getTextureUnitState(0);
@@ -236,6 +254,27 @@ void OgreWidgetRenderer::defineTexture()
 
    tech->getPass(0)->setVertexProgram(ogreJunction->getVertexProgramName());
    tech->getPass(0)->setFragmentProgram(ogreJunction->getFragmentProgramName());
+#else
+   /* Using Ogre's Unlit HLMS */
+   Ogre::HlmsManager* hlmsManager = Ogre::Root::getSingleton().getHlmsManager();
+   Ogre::HlmsUnlit* hlmsUnlit = static_cast<Ogre::HlmsUnlit*>(
+         hlmsManager->getHlms(Ogre::HLMS_UNLIT));
+
+   /* Macroblock with depth write, depth check and culling disabled */
+   Ogre::HlmsMacroblock macroBlock;
+   macroBlock.mDepthCheck = false;
+   macroBlock.mDepthWrite = false;
+   macroBlock.mCullMode = Ogre::CULL_NONE;
+
+   Ogre::HlmsBlendblock blendBlock;
+   blendBlock.mDestBlendFactor = Ogre::SBF_ONE_MINUS_SOURCE_ALPHA;
+   
+   /* Let's create and define our datablock */
+   datablock = static_cast<Ogre::HlmsUnlitDatablock*>(
+         hlmsUnlit->createDatablock(name, name,
+            macroBlock, blendBlock, Ogre::HlmsParamVec()));
+   datablock->setTexture(Ogre::PBSM_DIFFUSE, 0, texture);
+#endif
 }
 
 /***********************************************************************
@@ -247,41 +286,7 @@ void OgreWidgetRenderer::doSetPosition(Ogre::Real x, Ogre::Real y)
    container->setPosition(x / Controller::getWidth(),
          y / Controller::getHeight());
 #else
-   if((curX == x) && (curY == y))
-   {
-      /* No need to update at same position */
-      return;
-   }
-
-   /* Update current position */
-   curX = x;
-   curY = y;
-
-   /* Recalculate manual object coordinates */
-   float x1 = -1.0f + (x / (float)Controller::getWidth()) * 2.0f;
-   float y2 = 1.0f - (y / (float)Controller::getHeight()) * 2.0f;
-   float x2 = x1 + manualWidth;
-   float y1 = y2 - manualHeight;
-
-   /* Update it */
-   manualObject->beginUpdate(0);
-      
-      manualObject->position(x2, y1, 0.0f);
-      manualObject->textureCoord(1, 1);
-      manualObject->position(x2, y2, 0.0f);
-      manualObject->textureCoord(1, 0);
-      manualObject->position(x1, y2, 0.0f);
-      manualObject->textureCoord(0, 0);
-      manualObject->position(x1, y1, 0.0f);
-      manualObject->textureCoord(0, 1);
-
-      manualObject->index(0);
-      manualObject->index(1);
-      manualObject->index(2);
-      manualObject->index(2);
-      manualObject->index(3);
-      manualObject->index(0);
-   manualObject->end();
+   renderable->setPosition(x, y);
 #endif
 }
  
@@ -312,7 +317,7 @@ void OgreWidgetRenderer::doHide()
 /***********************************************************************
  *                                doRender                             *
  ***********************************************************************/
-void OgreWidgetRenderer::doRender(float depth)
+void OgreWidgetRenderer::doRender()
 {
 }
 
@@ -321,5 +326,13 @@ void OgreWidgetRenderer::doRender(float depth)
  ***********************************************************************/
 void OgreWidgetRenderer::uploadSurface()
 {
+   /* The idea here is similar to the opengl implementation: we just update
+    * the texture with the contents of the rendering surface (represented
+    * by it PixelBox bellow). */
+   OgreSurface* ogreSurface = static_cast<OgreSurface*>(surface);
+
+   ogreSurface->lock();
+   texture->getBuffer()->blitFromMemory(pixelBox);
+   ogreSurface->unlock();
 }
 

@@ -27,11 +27,6 @@
 #include "font.h"
 #include <assert.h>
 
-#if FARSO_HAS_OGRE == 1
-   #include "ogre3d/ogrejunction.h"
-   #include "ogre3d/ogrewidgetrenderer.h"
-#endif
-
 using namespace Farso;
 
 #define CURSOR_TIP_MAX_WIDTH   256
@@ -47,27 +42,16 @@ void Cursor::init(int size)
    SDL_ShowCursor(SDL_DISABLE);
 
    cursors = new Kobold::List();
-   junction = Controller::createNewJunction("farso_curso_junction");
 
-   renderer = Controller::createNewWidgetRenderer(size, size, junction);
+   renderer = Controller::createNewWidgetRenderer(size, size);
 
    tipRenderer = Controller::createNewWidgetRenderer(CURSOR_TIP_MAX_WIDTH, 
-         CURSOR_TIP_MAX_HEIGHT, junction);
+         CURSOR_TIP_MAX_HEIGHT);
    tipRenderer->hide();
 
-#if FARSO_HAS_OGRE == 1
-   if(Controller::getRendererType() == RENDERER_TYPE_OGRE3D)
-   {
-      /* Make sure the cursor overlay is above normal widget's overlay */
-#if FARSO_USE_OGRE_OVERLAY == 1
-      OgreJunction* ogreJunction = (OgreJunction*) junction;
-      ogreJunction->getOverlay()->setZOrder(200);
-#else
-      ((OgreWidgetRenderer*)renderer)->setZ(0.2f);
-      ((OgreWidgetRenderer*)tipRenderer)->setZ(0.2f);
-#endif
-   }
-#endif
+   /* Make sure the cursor will always render above all widgets */
+   renderer->setRenderQueueSubGroup(FARSO_WIDGET_RENDERER_LAST_SUB_GROUP);
+   tipRenderer->setRenderQueueSubGroup(FARSO_WIDGET_RENDERER_LAST_SUB_GROUP);
 
    tipHeight = 0;
    tipWidth = 0;
@@ -98,11 +82,6 @@ void Cursor::finish()
    {
       delete tipRenderer;
       tipRenderer = NULL;
-   }
-   if(junction != NULL)
-   {
-      delete junction;
-      junction = NULL;
    }
    if(cursors != NULL)
    {
@@ -477,7 +456,6 @@ int Cursor::tipFontSize = 0;
 Kobold::Timer Cursor::tipTimer;
 int Cursor::maxSize = 0;
 Cursor::CursorImage* Cursor::current = NULL;
-ControllerRendererJunction* Cursor::junction = NULL;
 
 /************************************************************************
  *                             CursorImage                              *

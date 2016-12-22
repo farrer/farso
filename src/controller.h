@@ -51,10 +51,12 @@ namespace Farso
 {
 
 /*! Interface to some junction data between the controller and each renderer
- * implementation. (For example, Ogre3d will keep overlay info here) */
+ * implementation. 
+ * \note Will only have one instance. */
 class ControllerRendererJunction
 {
    public:
+      /*! Construct and define any needed information. */
       ControllerRendererJunction(){};
       virtual ~ControllerRendererJunction(){};
 
@@ -62,6 +64,10 @@ class ControllerRendererJunction
       virtual void enter2dMode() = 0;
       /*! Restore the rendering to the state before call to enter2dMode() */
       virtual void restore3dMode() = 0;
+
+      /*! \return if widget's render should be made by ourselves (true),
+       *  or by the original renderer engine (ie: Ogre) */
+      virtual const bool shouldManualRender() const = 0;
 };
 
 enum RendererType
@@ -130,12 +136,6 @@ class Controller
       /*! \return pointer to current overlay used */
       static ControllerRendererJunction* getJunction();
 
-      /*! Create a new ControllerRendererJunction for the current renderer
-       *  type, to be used elsewhere.
-       *  \param name name to be used for the junction. Must be unique.
-       *  \return junction created (or NULL if error) */
-      static ControllerRendererJunction* createNewJunction(Kobold::String name);
- 
       /*! Add a widget that has no parent.
        * \note: widget's should have no parent.
        * \param widget pointer to the widget to add.
@@ -194,8 +194,7 @@ class Controller
        * \param junction pointer to junction to use or NULL to use the
        *        current controller's one.
        * \note The caller is responsible to delete it when no more needed */
-      static WidgetRenderer* createNewWidgetRenderer(int width, int height,
-            ControllerRendererJunction* junction = NULL);
+      static WidgetRenderer* createNewWidgetRenderer(int width, int height);
 
       /*! Load an image from file to a new surface.
        * \param filename name of the image's file to load

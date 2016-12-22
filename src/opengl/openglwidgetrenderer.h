@@ -37,12 +37,15 @@ class OpenGLWidgetRenderer: public WidgetRenderer
 
       void uploadSurface();
 
+      /* not used.  */
+      void setRenderQueueSubGroup(int renderQueueId){};
+
    protected:
       
       void doSetPosition(float x, float y);
       void doHide();
       void doShow();
-      void doRender(float depth);
+      void doRender();
 
    private:
 

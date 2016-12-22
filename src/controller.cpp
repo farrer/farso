@@ -190,25 +190,6 @@ Kobold::String Controller::getRealFilename(Kobold::String filename)
 /***********************************************************************
  *                           createNewJunction                         *
  ***********************************************************************/
-ControllerRendererJunction* Controller::createNewJunction(Kobold::String name)
-{
-   void* extraInfo = NULL;
-#if FARSO_HAS_OGRE == 1
-   if(rendererType == RENDERER_TYPE_OGRE3D)
-   {
-      /* Must retrieve SceneManager from current Controller junction */
-      OgreJunction* ogreJunction = (OgreJunction*) Controller::junction;
-      extraInfo = ogreJunction->getSceneManager();
-   }
-#endif
-
-   return createNewJunction(name, extraInfo);
-}
-
-
-/***********************************************************************
- *                           createNewJunction                         *
- ***********************************************************************/
 ControllerRendererJunction* Controller::createNewJunction(Kobold::String name,
       void* extraInfo)
 {
@@ -224,8 +205,8 @@ ControllerRendererJunction* Controller::createNewJunction(Kobold::String name,
 #endif
       case RENDERER_TYPE_OGRE3D:
 #if FARSO_HAS_OGRE == 1
-         OgreJunction* ogreJunction = new OgreJunction(name);
-         ogreJunction->setSceneManager((Ogre::SceneManager*)extraInfo);
+         OgreJunction* ogreJunction = new OgreJunction(name, 
+               static_cast<Ogre::SceneManager*>(extraInfo));
          return ogreJunction;
 #else
          Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
@@ -240,15 +221,8 @@ ControllerRendererJunction* Controller::createNewJunction(Kobold::String name,
 /***********************************************************************
  *                       createNewWidgetRenderer                       *
  ***********************************************************************/
-WidgetRenderer* Controller::createNewWidgetRenderer(int width, int height,
-    ControllerRendererJunction* junction)
+WidgetRenderer* Controller::createNewWidgetRenderer(int width, int height)
 {
-   if(junction == NULL)
-   {
-      /* Must use the current one */
-      junction = getJunction();
-   }
-
    switch(rendererType)
    {
       case RENDERER_TYPE_OPENGL:
@@ -350,7 +324,7 @@ bool Controller::loadSkin(Kobold::String filename)
    }
 
    /* Must mark all widgets dirty (to be redraw with the new skin - or
-    * the failsafe 'no-skins' mode with failed to load the skin). */
+    * the failsafe 'no-skins' mode when failed to load the skin). */
    markAllDirty();
 
    return success;
@@ -494,38 +468,26 @@ void Controller::bringFront(Widget* widget)
       widgets->insertAtBegin(widget);
    }
 
-#if FARSO_HAS_OGRE == 1
-   /* As ogre3d renderer controlls by itself the rendering order, we must
-    * treat it with something special */
-   if(rendererType == RENDERER_TYPE_OGRE3D)
+   if(!junction->shouldManualRender())
    {
-#if FARSO_USE_OGRE_OVERLAY == 1
-      OgreWidgetRenderer* ogreRenderer = (OgreWidgetRenderer*) 
-            widget->getWidgetRenderer();
+      /* Must reset all widgets sub group renderer.
+       * Note: Starting at LAST-1, as mouse cursor should be at last */
+      int curSubId = FARSO_WIDGET_RENDERER_LAST_SUB_GROUP -1;
 
-      OgreJunction* ogreJunction = (OgreJunction*) junction;
-     
-      ogreJunction->getOverlay()->remove2D(
-            ogreRenderer->getOverlayContainer());
-      ogreJunction->getOverlay()->add2D(
-            ogreRenderer->getOverlayContainer());
-#else
-      /* Must reset all widgets Z. */
-      OgreWidgetRenderer* ogreRenderer;
-      float curZ = 0.01f;
-      Widget* w = (Widget*) widgets->getFirst();
+      Widget* w = static_cast<Widget*>(widgets->getFirst());
       for(int i = 0; i < widgets->getTotal(); i++)
       {
-         ogreRenderer  = (OgreWidgetRenderer*) w->getWidgetRenderer();
-         ogreRenderer->setZ(curZ);
-         curZ -= 0.01f;
+         w->getWidgetRenderer()->setRenderQueueSubGroup(curSubId);
 
-         w = (Widget*) w->getNext();
+         /* Go to next level, if available */
+         if(curSubId > FARSO_WIDGET_RENDERER_FIRST_SUB_GROUP)
+         {
+            curSubId--;
+         }
+
+         w = static_cast<Widget*>(w->getNext());
       }
-#endif
    }
-#endif
-
 }
 
 /***********************************************************************
@@ -620,8 +582,6 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       toRemoveWidgets->remove(wPtr);
    }
 
-   float depth = 0.0f;
-   
    Window* curActive = activeWindow;
 
    if(activeMenu)
@@ -665,7 +625,7 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       w = (Widget*) w->getNext();
    }
 
-   if(rendererType != RENDERER_TYPE_OGRE3D)
+   if(junction->shouldManualRender())
    {
       /* Most render widgets from back to front */
       w = (Widget*) widgets->getLast();
@@ -673,9 +633,8 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       {
          if(w->isVisible())
          {
-            w->getWidgetRenderer()->render(depth);
+            w->getWidgetRenderer()->render();
          }
-         depth += 0.001f;
 
          w = (Widget*) w->getPrevious();
       }
@@ -691,8 +650,7 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    {
       cursorRenderer->setPosition(Farso::Cursor::getX(),
                                   Farso::Cursor::getY());
-      cursorRenderer->render(depth);
-      depth += 0.001f;
+      cursorRenderer->render();
    }
 
    /* Check if current tip, if any, expired */
@@ -721,8 +679,7 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
 
       cursorRenderer->setPosition(pX, pY);
       
-      cursorRenderer->render(depth);
-      depth += 0.001f;
+      cursorRenderer->render();
    }
 
 #endif
@@ -766,3 +723,4 @@ RendererType Controller::rendererType = RENDERER_TYPE_OPENGL;
 int Controller::width = 0;
 int Controller::height = 0;
 Kobold::String Controller::baseDir;
+

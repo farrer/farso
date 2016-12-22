@@ -22,13 +22,14 @@
 #define _farso_opengl_surface_h
 
 #include "../surface.h"
+#include "../sdl/sdlsurface.h"
 #include <SDL2/SDL.h>
 
 namespace Farso
 {
 
 /*! The Surface implementation for OpenGL Renderer: SDL's one. */
-class OpenGLSurface : public Surface
+class OpenGLSurface : public SDLSurface
 {
    public:
       /*! Constructor */
@@ -37,32 +38,6 @@ class OpenGLSurface : public Surface
       OpenGLSurface(Kobold::String filename, Kobold::String group);
       /*! Destructor */
       ~OpenGLSurface();
-
-      /*! Lock the surface to draw.
-       * \note: must be called before start to draw on it. */
-      void lock();
-
-      /*! Unlock surface after draw.
-       * \note: must be called when done with draw on it. */
-      void unlock();
-
-      /*! Get the real surface width (usually, surfaces are created as power 
-       * of two, so this function will reflect that) */
-      int getRealWidth();
-
-      /*! Get the real surface height (usually, surfaces are created as power 
-       * of two, so this function will reflect that) */
-      int getRealHeight();
-
-      /*! \return SDL_Surface */
-      SDL_Surface* getSurface();
-
-   private:
-
-      SDL_Surface* surface; /**< The SDL Surface */
-
-      int realWidth; /**< Width as power of two */
-      int realHeight; /**< Height as power of two */
 };
 
 }

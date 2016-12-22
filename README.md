@@ -53,7 +53,7 @@ hosted here.
 
 ### Ogre3d Renderer
 
- * Ogre3D 1.10 [http://www.ogre3d.org/]
+ * Ogre3D 1.10 or 2.1 [http://www.ogre3d.org/]
  * Kobold [https://github.com/farrer/kobold]
  * SDL2 [https://libsdl.org/download-2.0.php]
  * SDL\_image 2.x [https://www.libsdl.org/projects/SDL\_image/]

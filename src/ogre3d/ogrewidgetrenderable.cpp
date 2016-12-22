@@ -170,7 +170,7 @@ void OgreWidgetRenderable::createVAO()
    vertexBuffers.push_back(vertexBuffer);
 
    vao = vaoManager->createVertexArrayObject(vertexBuffers, indexBuffer, 
-         Ogre::v1::RenderOperation::OT_TRIANGLE_LIST);
+         Ogre::OT_TRIANGLE_LIST);
 
    mVaoPerLod[Ogre::VpNormal].push_back(vao);
    mVaoPerLod[Ogre::VpShadow].push_back(vao);

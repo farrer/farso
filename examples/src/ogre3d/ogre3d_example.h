@@ -27,12 +27,15 @@ class Ogre3dExample : public Goblin::BaseApp
 
    protected:
       /* virtual functions from Goblin */
-      Ogre::String getApplicationUnixName() { return APP_NAME; };
-      Ogre::String getBaseDataDir() { return BASE_DATA_DIR; };
-      int getDefaultWindowWidth() { return DEFAULT_WINDOW_WIDTH; };
-      int getDefaultWindowHeight() { return DEFAULT_WINDOW_HEIGHT; };
-      Orientation getDefaultOrientation() { return LANDSCAPE; };
-      int getMinWidthToUseDoubleSizedGui() { return WIDTH_TO_DOUBLE_SIZE; };
+      const Ogre::String getApplicationUnixName() const { return APP_NAME; };
+      const Ogre::String getBaseDataDir() const { return BASE_DATA_DIR; };
+      const int getDefaultWindowWidth() const { return DEFAULT_WINDOW_WIDTH; };
+      const int getDefaultWindowHeight() const {return DEFAULT_WINDOW_HEIGHT;};
+      const Orientation getDefaultOrientation() const { return LANDSCAPE; };
+      const int getMinWidthToUseDoubleSizedGui() const 
+      { 
+         return WIDTH_TO_DOUBLE_SIZE; 
+      };
       
       /* virtual functions from Goblin */
       bool doInit();

@@ -111,7 +111,21 @@ void OgreDraw::getPixel(Uint8* pixel, Ogre::PixelFormat pixelFormat,
       blue = pixel[1];
       alpha = pixel[0];
 #endif
-   } 
+   }
+   else if(pixelFormat == Ogre::PF_R8G8B8)
+   {
+#if OGRE_ENDIAN == OGRE_ENDIAN_BIG
+      red = pixel[0];
+      green = pixel[1];
+      blue = pixel[2];
+      alpha = 255;
+#else
+      red = pixel[3];
+      green = pixel[2];
+      blue = pixel[1];
+      alpha = 255;
+#endif
+   }
    else if(pixelFormat == Ogre::PF_B8G8R8A8)
    {
 #if OGRE_ENDIAN == OGRE_ENDIAN_BIG

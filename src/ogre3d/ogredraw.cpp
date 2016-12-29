@@ -120,9 +120,9 @@ void OgreDraw::getPixel(Uint8* pixel, Ogre::PixelFormat pixelFormat,
       blue = pixel[2];
       alpha = 255;
 #else
-      red = pixel[3];
-      green = pixel[2];
-      blue = pixel[1];
+      red = pixel[2];
+      green = pixel[1];
+      blue = pixel[0];
       alpha = 255;
 #endif
    }

@@ -24,10 +24,14 @@
 
 #include <kobold/platform.h>
 
+#if FARSO_HAS_OPENGL == 1
+
 #if KOBOLD_PLATFORM == KOBOLD_PLATFORM_MACOS
    #include <SDL2_Image/SDL_image.h>
 #else 
    #include <SDL2/SDL_image.h>
+#endif
+
 #endif
 
 #include <kobold/log.h>
@@ -88,6 +92,7 @@ SDLSurface::SDLSurface(Kobold::String filename, Kobold::String group,
 {
    if(load)
    {
+#if FARSO_HAS_OPENGL == 1
       Draw* draw = Controller::getDraw();
 
       /* Load image from source */
@@ -112,6 +117,10 @@ SDLSurface::SDLSurface(Kobold::String filename, Kobold::String group,
                "Warning: loaded non-power of two image: '%s' (%d x %d)",
                filename.c_str(), surface->w, surface->h);
       }
+#else
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+        "Error: load SDL image from disk is only supported by Farso's OpenGL.");
+#endif
    }
    else
    {

@@ -62,23 +62,23 @@ static Ogre::String farso_ogre_shader_type = "glsl";
 static Ogre::String farso_ogre_shader_type = "glsles";
 static Ogre::String farso_ogre_glsl_vs_source(
       "#version 100\n"
-      "attribute vec4 position;"
-      "attribute vec4 uv0;"
-      "varying vec4 outUV0;"
-      "void main()"
-      "{"
-      "   gl_Position = position;"
-      "   outUV0 = uv0;"
-      "}"
+      "attribute highp vec4 position;\n"
+      "attribute highp vec4 uv0;\n"
+      "varying highp vec4 outUV0;\n"
+      "void main()\n"
+      "{\n"
+      "   gl_Position = position;\n"
+      "   outUV0 = uv0;\n"
+      "}\n"
 );
 static Ogre::String farso_ogre_glsl_fs_source(
       "#version 100\n"
-      "uniform sampler2D sampler;"
-      "varying vec4 outUV0;"
-      "void main()"
-      "{"
-      "   gl_FragColor = texture2D(sampler, outUV0.xy);"
-      "}"
+      "uniform sampler2D sampler;\n"
+      "varying highp vec4 outUV0;\n"
+      "void main()\n"
+      "{\n"
+      "   gl_FragColor = texture2D(sampler, outUV0.xy);\n"
+      "}\n"
 );
 #endif
 
@@ -131,10 +131,9 @@ OgreJunction::OgreJunction(Kobold::String name,
    #else
       /* Create our overlay */
       overlay = Ogre::v1::OverlayManager::getSingletonPtr()->create(name);
+      /* Set our render queue group to farso ( != of overlays one), and show it */
+      overlay->setRenderQueueGroup(FARSO_DEFAULT_RENDER_QUEUE);
    #endif
-
-   /* Set our render queue group to farso ( != of overlays one), and show it */
-   overlay->setRenderQueueGroup(FARSO_DEFAULT_RENDER_QUEUE);
    overlay->show();
 #endif
 }

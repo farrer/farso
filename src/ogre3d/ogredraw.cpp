@@ -25,7 +25,9 @@
 #include <kobold/log.h>
 
 #include <OGRE/OgreImage.h>
-#include <OGRE/OgrePixelBox.h>
+#if OGRE_VERSION_MAJOR > 1
+   #include <OGRE/OgrePixelBox.h>
+#endif
 
 #include <string.h>
 
@@ -148,10 +150,18 @@ void OgreDraw::getPixel(Uint8* pixel, Ogre::PixelFormat pixelFormat,
       green = pixel[2];
       blue = pixel[3];
 #else
+   #if KOBOLD_PLATFORM == KOBOLD_PLATFORM_IOS
+      //XXX on iOS, ogre3d mixed blue with red channels.
+      alpha = pixel[3];
+      red = pixel[0];
+      green = pixel[1];
+      blue = pixel[2];
+   #else
       alpha = pixel[3];
       red = pixel[2];
       green = pixel[1];
       blue = pixel[0];
+   #endif
 #endif
    }
    else if(pixelFormat == Ogre::PF_A8B8G8R8)

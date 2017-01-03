@@ -195,10 +195,12 @@ OgreWidgetRenderer::~OgreWidgetRenderer()
  ***********************************************************************/
 void OgreWidgetRenderer::setRenderQueueSubGroup(int renderQueueId)
 {
+#if OGRE_VERSION_MAJOR > 1
 #if FARSO_USE_OGRE_OVERLAY == 1
    container->setRenderQueueSubGroup(static_cast<Ogre::uint8>(renderQueueId));
 #else
    renderable->setRenderQueueSubGroup(static_cast<Ogre::uint8>(renderQueueId));
+#endif
 #endif
 }
 

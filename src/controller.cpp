@@ -442,6 +442,7 @@ void Controller::setActiveWindow(Window* window)
          lastActive->inactivate();
       }
    }
+   forceBringToFrontCall = true;
 }
 
 /***********************************************************************
@@ -451,6 +452,7 @@ void Controller::setActiveMenu(Menu* menu)
 {
    assert(menu == NULL || activeMenu == NULL);
    activeMenu = menu;
+   forceBringToFrontCall = true;
 }
 
 /***********************************************************************
@@ -460,6 +462,7 @@ void Controller::bringFront(Widget* widget)
 {
    assert(widget != NULL);
    assert(widget->getParent() == NULL);
+   forceBringToFrontCall = false;
 
    /* Bring the widget to list's front, if not yet */
    if(widget != widgets->getFirst())
@@ -575,11 +578,19 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    event.set(NULL, EVENT_NONE);
 
    /* Let's remove all to be removed widgets. */
+   bool removed = false;
    while(toRemoveWidgets->getTotal() > 0)
    {
       WidgetToRemove* wPtr = (WidgetToRemove*) toRemoveWidgets->getFirst();
       removeWidget(wPtr->widget);
       toRemoveWidgets->remove(wPtr);
+      removed = true;
+   }
+   /* If removed and have widgets, must bring it to front */
+   if((removed) && (widgets->getTotal() > 0))
+   {
+      bringFront((activeWindow) ? activeWindow 
+                   : static_cast<Widget*>(widgets->getFirst()));
    }
 
    Window* curActive = activeWindow;
@@ -588,7 +599,7 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    {
       /* When a menu is active, must make sure we have it at front of
        * all other 'root' widgets (even of windows). */
-      if(activeMenu != widgets->getFirst())
+      if( (forceBringToFrontCall) || (activeMenu != widgets->getFirst()) )
       {
          bringFront(activeMenu);
       }
@@ -602,7 +613,7 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
           * Note: doing here, instead of inside setActiveWindow because
           * that function could be called while looping through the list,
           * which could mess things up on the list. */
-         if(curActive != widgets->getFirst())
+         if( (forceBringToFrontCall) || (curActive != widgets->getFirst()) )
          {
             bringFront(curActive);
          }
@@ -723,4 +734,5 @@ RendererType Controller::rendererType = RENDERER_TYPE_OPENGL;
 int Controller::width = 0;
 int Controller::height = 0;
 Kobold::String Controller::baseDir;
+bool Controller::forceBringToFrontCall = false;
 

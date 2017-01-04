@@ -262,6 +262,9 @@ class Controller
       static Event event; /**< Last event. */
       static RendererType rendererType; /**< Current controller renderer type*/
 
+      static bool forceBringToFrontCall; /**< When the active widget changed 
+                                           and we must call bringToFront */
+
       static int width; /**< Width available */
       static int height; /**< height available */
 

@@ -60,6 +60,7 @@ Widget::Widget(WidgetType type, int x, int y, int width, int height,
       this->renderer = Controller::createNewWidgetRenderer(width, height);
       /* And be added to the controller as a 'root' widget */
       Controller::addWidget(this);
+      Controller::bringFront(this);
    }
 
    defineParentContainer();

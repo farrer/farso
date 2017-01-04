@@ -2,7 +2,7 @@
 
 ## About
 Farso is a graphical user interface written in C++ with OpenGL and Ogre3D 
-renderers.
+ (both 1.10 and 2.1) renderers.
 
 Farso have the following widgets:  
 
@@ -56,7 +56,6 @@ hosted here.
  * Ogre3D 1.10 or 2.1 [http://www.ogre3d.org/]
  * Kobold [https://github.com/farrer/kobold]
  * SDL2 [https://libsdl.org/download-2.0.php]
- * SDL\_image 2.x [https://www.libsdl.org/projects/SDL\_image/]
  * FreeType 2.x [https://www.freetype.org/]
 
 ### Ogre3d Example (not required for the library itself)
@@ -94,5 +93,13 @@ There are some options that could be passed to CMake script:
 
  * FARSO\_DEBUG -> Build the library with debugging symbols;
  * FARSO\_STATIC -> Build a .a static library, instead of the shared one.
+
+## Some Visual
+
+![Clean Skin](http://dnteam.org/farso/farso_clean.png)
+![Scifi Skin](http://dnteam.org/farso/farso_scifi.png)
+![Wyrmheart Skin](http://dnteam.org/farso/farso_wyr.png)
+![Moderna Skin](http://dnteam.org/farso/farso_moderna.png)
+![No Skin](http://dnteam.org/farso/farso_no_skin.png)
 
 

@@ -80,8 +80,10 @@ OgreWidgetRenderable::~OgreWidgetRenderable()
    }
    if(vertexBuffer)
    {
-      vertexBuffer->map( 0, vertexBuffer->getNumElements());
-      vertexBuffer->unmap(Ogre::UO_UNMAP_ALL);
+      if(vertexBuffer->getMappingState() != Ogre::MS_UNMAPPED)
+      {
+         vertexBuffer->unmap(Ogre::UO_UNMAP_ALL);
+      }
 
       vaoManager->destroyVertexBuffer(vertexBuffer);
       vertexBuffer = NULL;

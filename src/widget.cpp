@@ -329,12 +329,6 @@ void Widget::enable()
  ***********************************************************************/
 void Widget::draw(bool force)
 {
-   if(!visible)
-   {
-      /* No need to draw invisible widgets. */
-      dirty = false;
-      return;
-   }
    bool wasDirty = dirty;
 
    /* Draw it */
@@ -444,7 +438,6 @@ void Widget::hide()
 
    /* Note that when hidden, there's no need to redraw itself.
     * But we must tell our parent. */
-   dirty = false;
    if(getParent() != NULL)
    {
       getParent()->setDirty();
@@ -466,13 +459,6 @@ void Widget::show()
    if(parent == NULL)
    {
       renderer->show();
-   }
-   else
-   {
-      /* We only dirtify ourselves if we have a parent, in the case we must
-       * redraw ourselves on it. If without parents, it´s just a matter of
-       * redisplaying our widget renderer texture. */
-      dirty = true;
    }
 }
 

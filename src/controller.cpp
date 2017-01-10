@@ -532,7 +532,7 @@ bool Controller::verifyEvents(Widget* widget,
    }
 
    /* redraw the widget (and its children, if needed) */
-   if(widget->isDirty())
+   if((widget->isDirty()) && (widget->isVisible()))
    {
       Surface* surface = widget->getWidgetRenderer()->getSurface();
       if(skin != NULL)

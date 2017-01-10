@@ -343,7 +343,7 @@ void Widget::draw(bool force)
    Widget* child = (Widget*) getFirst();
    for(int i = 0; i < getTotal(); i++)
    {
-      if(force || wasDirty || child->isDirty())
+      if((child->isVisible()) && (force || wasDirty || child->isDirty()))
       {
          child->draw(wasDirty || force);
       }

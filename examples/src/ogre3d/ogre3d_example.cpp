@@ -26,9 +26,9 @@ Ogre3dExample::~Ogre3dExample()
 }
 
 /************************************************************************
- *                                 doInit                               *
+ *                               doCycleInit                            *
  ************************************************************************/
-bool Ogre3dExample::doInit()
+bool Ogre3dExample::doCycleInit(int callCount, bool& shouldAbort)
 {
    example = new Example();
    example->init(Farso::RENDERER_TYPE_OGRE3D, getSceneManager());

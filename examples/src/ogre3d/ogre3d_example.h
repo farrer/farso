@@ -38,7 +38,7 @@ class Ogre3dExample : public Goblin::BaseApp
       };
       
       /* virtual functions from Goblin */
-      bool doInit();
+      bool doCycleInit(int callCount, bool& shouldAbort);
       void getDataDirectories(Ogre::String** dataDirectories,
             Ogre::String** dataGroups, int& total);
       void doLowMemoryClean();

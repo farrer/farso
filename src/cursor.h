@@ -118,6 +118,12 @@ class Cursor
       /*! \return pointer to the renderer used for textual tips */
       static Farso::WidgetRenderer* getTipRenderer();
 
+      /*! Hide the cursor and tip renderer */
+      static void hide();
+
+      /*! Show the cursor (and tip, when defined) */
+      static void show();
+
    private:
 
       /*! The cursor image container */

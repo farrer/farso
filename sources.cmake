@@ -28,6 +28,8 @@ src/textselector.cpp
 src/widget.cpp
 src/widgetrenderer.cpp
 src/window.cpp
+src/sdl/sdlsurface.cpp
+src/sdl/sdldraw.cpp
 )
 
 set(FARSO_HEADERS
@@ -60,14 +62,14 @@ src/textselector.h
 src/widget.h
 src/widgetrenderer.h
 src/window.h
+src/sdl/sdlsurface.h
+src/sdl/sdldraw.h
 )
 
 set(FARSO_FULL_SOURCES ${FARSO_SOURCES})
 set(FARSO_FULL_HEADERS ${FARSO_HEADERS})
 
 set(FARSO_OPENGL_SOURCES
-src/sdl/sdlsurface.cpp
-src/sdl/sdldraw.cpp
 src/opengl/opengldraw.cpp
 src/opengl/opengljunction.cpp
 src/opengl/openglsurface.cpp
@@ -75,8 +77,6 @@ src/opengl/openglwidgetrenderer.cpp
 )
 
 set(FARSO_OPENGL_HEADERS 
-src/sdl/sdlsurface.h
-src/sdl/sdldraw.h
 src/opengl/opengldraw.h
 src/opengl/opengljunction.h
 src/opengl/openglsurface.h

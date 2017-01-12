@@ -379,17 +379,20 @@ void FileSelector::setLabels()
       fileColor = el.getFontColor();
    }
 
-   /* Let's set all labels */
+   /* Let's set all labels and enable / disable grid elements */
+   Grid::GridElement* gridElement = grid->getByIndex(0);
    for(int i = 0; i < numLines; i++)
    {
       /* Define text */
       if(i + first < totalFiles)
       {
          labels[i]->setCaption(files[i + first]);
+         gridElement->enable();
       }
       else
       {
          labels[i]->setCaption("");
+         gridElement->disable();
       }
       /* Define color */
       if(i + first <= lastDir)
@@ -402,6 +405,8 @@ void FileSelector::setLabels()
          labels[i]->setFontColor(fileColor);
          labels[i]->setSkinType(Skin::SKIN_TYPE_FILE_LABEL);
       }
+
+      gridElement = static_cast<Grid::GridElement*>(gridElement->getNext());
    }
 }
 

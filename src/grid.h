@@ -57,19 +57,28 @@ class Grid : public Widget
             bool isInner(int x, int y);
 
             /*! \return element's relative area */
-            Rect getArea();
+            const Rect getArea() { return area; };
 
             /*! \return text to be displayed on mouse over */
-            Kobold::String getMouseHint();
+            const Kobold::String getMouseHint() { return mouseHint; };
 
             /*! \return element's index (defined as an incremented integer 
              * from initial 0, for each added element). */
-            int getIndex();
+            const int getIndex() { return index; };
+
+            /*! Enable the selection of this grid element */
+            void enable();
+            /*! Disable this grid element */
+            void disable();
+            /* \return if the element is enabled or not */
+            const bool isEnabled() { return enabled; };
 
          private:
             Rect area;  /**< Element's area */
             Kobold::String mouseHint; /**< Text to display on mouse over */
             int index; /**< Element's index */
+
+            bool enabled; /**< If is enabled or not */
       };
 
       /*! Constructor
@@ -96,6 +105,11 @@ class Grid : public Widget
 
       /*! \return pointer to GridElement actally active (under cursor) */
       GridElement* getCurrent();
+
+      /*! Get a Grid element by its index
+       * \param index [0, total) 
+       * \return pointer to the grid element or NULL */
+      GridElement* getByIndex(int index);
 
       /*! Enable the draw of a border for grid's whole area */
       void enableBorder();

@@ -36,6 +36,7 @@ Grid::GridElement::GridElement(int x, int y, int width, int height,
 {
    this->mouseHint = mouseHint;
    this->index = index;
+   this->enabled = true;
 }
 
 /***********************************************************************
@@ -55,34 +56,27 @@ bool Grid::GridElement::isInner(int x, int y)
 }
 
 /***********************************************************************
- *                                  getArea                            *
+ *                                enable                               *
  ***********************************************************************/
-Farso::Rect Grid::GridElement::getArea()
+void Grid::GridElement::enable()
 {
-   return area;
+   enabled = true;
 }
 
 /***********************************************************************
- *                               getMouseHint                          *
+ *                                disable                              *
  ***********************************************************************/
-Kobold::String Grid::GridElement::getMouseHint()
+void Grid::GridElement::disable()
 {
-   return mouseHint;
-}
-
-/***********************************************************************
- *                               getIndex                              *
- ***********************************************************************/
-int Grid::GridElement::getIndex()
-{
-   return index;
+   enabled = false;
 }
 
 /***********************************************************************
  *                                  Grid                               *
  ***********************************************************************/
 Grid::Grid(GridType gridType, Widget* parent)
-     :Widget(Widget::WIDGET_TYPE_GRID, parent)
+     :Widget(Widget::WIDGET_TYPE_GRID, parent),
+      elements(Kobold::LIST_TYPE_ADD_AT_END)
 {
    assert(parent != NULL);
 
@@ -295,7 +289,7 @@ bool Grid::doTreat(bool leftButtonPressed, bool rightButtonPressed,
    if(current)
    {
       /* Already have a selected element, let's check if remains selected */
-      if(!current->isInner(mrX, mrY))
+      if((!current->isInner(mrX, mrY)) || (!current->isEnabled()))
       {
          /* No longer selected */
          current = NULL;
@@ -348,7 +342,7 @@ bool Grid::doTreat(bool leftButtonPressed, bool rightButtonPressed,
       for(int i = 0; i < elements.getTotal(); i++)
       {
          /* Check if inner area */
-         if(el->isInner(mrX, mrY))
+         if((el->isEnabled()) && (el->isInner(mrX, mrY)))
          {
             current = el;
             /* Selected current, but no event for this. */
@@ -359,7 +353,7 @@ bool Grid::doTreat(bool leftButtonPressed, bool rightButtonPressed,
             return false;
          }
 
-         el = (GridElement*) el->getNext();
+         el = static_cast<GridElement*>(el->getNext());
       }
    }
   
@@ -371,5 +365,23 @@ bool Grid::doTreat(bool leftButtonPressed, bool rightButtonPressed,
  ***********************************************************************/
 void Grid::doAfterChildTreat()
 {
+}
+
+/***********************************************************************
+ *                               getByIndex                            *
+ ***********************************************************************/
+Grid::GridElement* Grid::getByIndex(int index)
+{
+   GridElement* el = (GridElement*) elements.getFirst();
+   Rect area;
+   for(int i = 0; i < elements.getTotal(); i++)
+   {
+      if(el->getIndex() == index)
+      {
+         return el;
+      }
+      el = static_cast<GridElement*>(el->getNext());
+   }
+   return NULL;
 }
 

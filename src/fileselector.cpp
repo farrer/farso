@@ -328,6 +328,7 @@ void FileSelector::changeCurDir(Kobold::String newDir)
          {
             lastDir = j;
             files.push_back(str);
+            j++;
          }
       }
 
@@ -342,10 +343,9 @@ void FileSelector::changeCurDir(Kobold::String newDir)
          {
             /* Passed filter, so Insert at list */
             files.push_back(str);
+            j++;
          }
       }
-      
-      j++;
    }
 
    strings.clear();

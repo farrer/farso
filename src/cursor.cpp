@@ -275,9 +275,7 @@ void Cursor::setTextualTip(Kobold::String tip)
       }
       else
       {
-         /* let's mark as visible and set its contents */
-         tipRenderer->show();
-         
+         /* Let's set its contents, to later set it visible */
          Draw* draw = Controller::getDraw();
          Surface* surface = tipRenderer->getSurface();
          Skin* skin = Controller::getSkin();

@@ -669,7 +669,8 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    
    /* Render cursor tip */
    cursorRenderer = Farso::Cursor::getTipRenderer();
-   if( (cursorRenderer) && (cursorRenderer->isVisible()) )
+   bool shouldBeVisible = !Farso::Cursor::getTextualTip().empty();
+   if((cursorRenderer) && ((cursorRenderer->isVisible()) || (shouldBeVisible)))
    {
       /* Check position (keeping tip on screen) */
       int pX = Farso::Cursor::getX();
@@ -689,6 +690,11 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       }
 
       cursorRenderer->setPosition(pX, pY);
+      if(!cursorRenderer->isVisible())
+      {
+         /* Should be visible, let's show it */
+         cursorRenderer->show();
+      }
       
       cursorRenderer->render();
    }

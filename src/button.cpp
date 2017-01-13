@@ -35,6 +35,7 @@ Button::Button(int x, int y, int width, int height, Kobold::String caption,
    this->pressStarted = false;
    this->pressed = false;
    this->useRoundedEdges = false;
+   this->useDecorations = true;
    this->fontName = FontManager::getDefaultFontFilename();
    this->fontSize = 10;
    this->enabledType = Skin::SKIN_TYPE_BUTTON_ENABLED;
@@ -52,11 +53,33 @@ Button::~Button()
 }
 
 /******************************************************************
+ *                       setWithoutDecorations                    *
+ ******************************************************************/     
+void Button::setWithoutDecorations()
+{
+   this->useDecorations = false;
+   setDirty();
+}
+
+/******************************************************************
  *                         setRoundedEdges                        *
  ******************************************************************/
 void Button::setRoundedEdges()
 {
    this->useRoundedEdges = true;
+   setDirty();
+}
+
+/******************************************************************
+ *                            setDirty                            *
+ ******************************************************************/
+void Button::setDirty()
+{
+   if((!useDecorations) && (getParent()))
+   {
+      getParent()->setDirty();
+   }
+   Widget::setDirty();
 }
 
 /******************************************************************
@@ -97,7 +120,10 @@ void Button::press()
 {
    if(!pressed)
    {
-      setDirty();
+      if(useDecorations)
+      {
+         setDirty();
+      }
       pressed = true;
    }
 }
@@ -109,7 +135,10 @@ void Button::release()
 {
    if(pressed)
    {
-      setDirty();
+      if(useDecorations)
+      {
+         setDirty();
+      }
       pressed = false;
    }
 }
@@ -234,21 +263,31 @@ void Button::doDraw(Rect pBody)
    {
       Kobold::String useCaption = (specialCaption) ? "" : getCaption();
 
-      /* Use the skin */
-      if(pressed)
+      if(useDecorations)
       {
-         skin->drawElement(surface, pressedType, rx1, ry1, rx2, ry2, 
-               Rect(rx1, ry1, rx2, ry2), useCaption);
+         /* Use the skin */
+         if(pressed)
+         {
+            skin->drawElement(surface, pressedType, rx1, ry1, rx2, ry2, 
+                  Rect(rx1, ry1, rx2, ry2), useCaption);
+         }
+         else if(isAvailable())
+         {
+            skin->drawElement(surface, enabledType, rx1, ry1, rx2, ry2, 
+                  Rect(rx1, ry1, rx2, ry2), useCaption);
+         } 
+         else if(!isAvailable())
+         {
+            skin->drawElement(surface, disabledType, rx1, ry1, rx2, ry2, 
+                  Rect(rx1, ry1, rx2, ry2), useCaption);
+         }
       }
-      else if(isAvailable())
+      else if(!specialCaption)
       {
-         skin->drawElement(surface, enabledType, rx1, ry1, rx2, ry2, 
-               Rect(rx1, ry1, rx2, ry2), useCaption);
-      } 
-      else if(!isAvailable())
-      {
-         skin->drawElement(surface, disabledType, rx1, ry1, rx2, ry2, 
-               Rect(rx1, ry1, rx2, ry2), useCaption);
+         /* Without decorations and not a special caption, just act
+          * as a common label. */
+         skin->drawElement(surface, Skin::SKIN_TYPE_LABEL, rx1, ry1, rx2, ry2, 
+                  Rect(rx1, ry1, rx2, ry2), useCaption);
       }
 
       if(specialCaption)
@@ -278,7 +317,7 @@ void Button::doDraw(Rect pBody)
          rx1 = (((getWidth()) - bounds.getWidth()) / 2) + rx1;
          ry1 = (((getWidth()) - bounds.getHeight()) / 2) + ry1;
 
-         if(pressed)
+         if(pressed && useDecorations)
          {
             rx1++;
             ry1++;
@@ -294,33 +333,36 @@ void Button::doDraw(Rect pBody)
       /* No skins: default draw. */
       Farso::Draw* draw = Farso::Controller::getDraw();
 
-      /* Define contorn colors (depends on if pressed or not) */
-      Farso::Color cont1;
-      Farso::Color cont2;
-      if(pressed)
+      if(useDecorations)
       {
-         cont1 = Colors::colorCont[1];
-         cont2 = Colors::colorCont[0];
-      }
-      else
-      {
-         cont1 = Colors::colorCont[0];
-         cont2 = Colors::colorCont[1];
-      }
-      
-      /* Draw the background */
-      draw->setActiveColor(Colors::colorButton);
-      draw->doFilledRectangle(surface, rx1+1, ry1+1, rx2-1, ry2-1);
+         /* Define contorn colors (depends on if pressed or not) */
+         Farso::Color cont1;
+         Farso::Color cont2;
+         if(pressed)
+         {
+            cont1 = Colors::colorCont[1];
+            cont2 = Colors::colorCont[0];
+         }
+         else
+         {
+            cont1 = Colors::colorCont[0];
+            cont2 = Colors::colorCont[1];
+         }
 
-      /* Draw the edges */
-      draw->setActiveColor(cont1);
-      if(useRoundedEdges)
-      {
-         draw->doRoundedRectangle(surface, rx1, ry1, rx2, ry2, cont2);
-      }
-      else
-      {
-         draw->doTwoColorsRectangle(surface, rx1, ry1, rx2, ry2, cont2);
+         /* Draw the background */
+         draw->setActiveColor(Colors::colorButton);
+         draw->doFilledRectangle(surface, rx1+1, ry1+1, rx2-1, ry2-1);
+
+         /* Draw the edges */
+         draw->setActiveColor(cont1);
+         if(useRoundedEdges)
+         {
+            draw->doRoundedRectangle(surface, rx1, ry1, rx2, ry2, cont2);
+         }
+         else
+         {
+            draw->doTwoColorsRectangle(surface, rx1, ry1, rx2, ry2, cont2);
+         }
       }
 
       /* Write the text */
@@ -341,7 +383,7 @@ void Button::doDraw(Rect pBody)
             Font* font = FontManager::getFont(fontName);
             font->setSize(fontSize);
             font->setAlignment(Font::TEXT_CENTERED);
-            if(pressed)
+            if(pressed && useDecorations)
             {
                font->write(surface, Rect(rx1 + 1, ry1 + 1, rx2, ry2), 
                      getCaption());
@@ -356,7 +398,7 @@ void Button::doDraw(Rect pBody)
       {
          Farso::Draw* draw = Farso::Controller::getDraw();
          draw->setActiveColor(Colors::colorText);
-         if(pressed)
+         if(pressed && useDecorations)
          {
             ry1++;
             ry2++;
@@ -384,8 +426,8 @@ void Button::doDraw(Rect pBody)
       }
    }
 
-   /* Set body (when pressed, a bit changed) */
-   if(pressed)
+   /* Set body (when pressed and with decorations, a bit changed) */
+   if(pressed && useDecorations)
    {
       this->body.set(getX() + 1, getY() + 1, 
                      getX() + getWidth() - 2, getY() + getHeight() - 2);

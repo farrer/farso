@@ -48,6 +48,9 @@ class Button: public Widget
       /*! Destructor */
       ~Button();
 
+      /*! Set this button to be without any decorations, just the caption */
+      void setWithoutDecorations();
+
       /*! Set the button to be with rounded edges (instead of the default
        * rectangle).
        * \note this has no effect when using a skin. */
@@ -76,6 +79,7 @@ class Button: public Widget
       void release();
       
       Rect getBody();
+      void setDirty();
 
    protected:
       /*! Draw the button */
@@ -88,6 +92,7 @@ class Button: public Widget
       void press();
 
    private:
+      bool useDecorations;  /**< If use decorations or not */
       bool useRoundedEdges; /**< If will use rounded edges or 90 degrees. */
       bool pressStarted;    /**< If is currently on-press procedure. This
                                  not means it's actually pressed, as the 

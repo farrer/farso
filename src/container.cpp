@@ -30,7 +30,8 @@ using namespace Farso;
  *                             Constructor                             *
  ***********************************************************************/
 Container::Container(ContainerType type, Widget* parent)
-          :Widget(WIDGET_TYPE_CONTAINER, parent)
+          :Widget(WIDGET_TYPE_CONTAINER, parent),
+           distance(0, 0, 0, 0)
 {
    assert(parent != NULL);
    contType = type;
@@ -43,8 +44,27 @@ Container::Container(ContainerType type, Widget* parent)
 /***********************************************************************
  *                             Constructor                             *
  ***********************************************************************/
-Container::Container(ContainerType type, int x, int y, int width, int height, 
-      Widget* parent)
+Container::Container(ContainerType type, Rect rect, Widget* parent)
+          :Widget(WIDGET_TYPE_CONTAINER, parent),
+           distance(rect)
+{
+   assert(parent != NULL);
+   contType = type;
+
+   setPosition(distance.getX1(), distance.getY1());
+   setSize(parent->getBody().getWidth() - distance.getX1() - distance.getX2(), 
+           parent->getBody().getHeight()- distance.getY1() - distance.getY2());
+
+   body.set(getX(), getX(), getX() + getWidth() - 1, getX() + getHeight() - 1);
+   dynamicSize = true;
+   filled = false;
+}
+
+/***********************************************************************
+ *                             Constructor                             *
+ ***********************************************************************/
+Container::Container(ContainerType type, int x, int y, 
+      int width, int height, Widget* parent)
           :Widget(WIDGET_TYPE_CONTAINER, x, y, width, height, parent)
 {
    contType = type;
@@ -136,8 +156,9 @@ void Container::doDraw(Rect pBody)
 {
    if((dynamicSize) && (getParent() != NULL))
    {
-      setSize(getParent()->getBody().getWidth(), 
-              getParent()->getBody().getHeight());
+      setSize(getParent()->getBody().getWidth() - distance.getX1() - 
+              distance.getX2(), getParent()->getBody().getHeight() - 
+              distance.getY1() - distance.getY2());
    }
    /* Reset body to allow skin changes on the fly */
    body.set(getX(), getY(), 

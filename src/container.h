@@ -54,11 +54,23 @@ class Container : public Widget
          TYPE_BOTTOM_CENTERED
       };
 
-      /*! Create a container within full parent's body */
+      /*! Create a container within full parent's body 
+       * \param type container's type
+       * \param parent container's parent (mandatory) */
       Container(ContainerType type, Widget* parent);
-      /*! Create a container at an specific position on parent's body */
+      /*! Create a container at an specific distance from parent's body bounds.
+       * \note The container's will be defined as the rectangle defined by:
+       *       pBody.x1 + rect.x1, pBody.y1 + rect.y1, 
+       *       pBody.x2 - rect.x2, pBody.y2 - rect.y2
+       * \param rect rectangle with distances to each parentBody bound.
+       * \param parent container's parent (mandatory). 
+       * \param type container's type. */
+      Container(ContainerType type, Rect rect, Widget* parent);
+      /*! Create a container at an specific position on parent's body,
+       * \note parent is optional here. */
       Container(ContainerType type, int x, int y, int width, int height, 
             Widget* parent);
+
       /*! Destructor */
       ~Container();
 
@@ -92,9 +104,11 @@ class Container : public Widget
    private:
       ContainerType contType; /**< Container type */
       Rect body;        /**< Full body */
+      bool filled; /**< If the container is filled or not */
+
       bool dynamicSize; /**< If width and height are defined by parent's */
 
-      bool filled; /**< If the container is filled or not */
+      Rect distance; /**< Distance to each parent's body bounds */
 
 };
 

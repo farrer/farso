@@ -57,8 +57,8 @@ Button::~Button()
  ******************************************************************/     
 void Button::setWithoutDecorations()
 {
-   this->useDecorations = false;
    setDirty();
+   this->useDecorations = false;
 }
 
 /******************************************************************

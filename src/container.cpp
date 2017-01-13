@@ -50,6 +50,7 @@ Container::Container(ContainerType type, Rect rect, Widget* parent)
 {
    assert(parent != NULL);
    contType = type;
+   filled = false;
 
    setPosition(distance.getX1(), distance.getY1());
    setSize(parent->getBody().getWidth() - distance.getX1() - distance.getX2(), 
@@ -57,7 +58,7 @@ Container::Container(ContainerType type, Rect rect, Widget* parent)
 
    body.set(getX(), getX(), getX() + getWidth() - 1, getX() + getHeight() - 1);
    dynamicSize = true;
-   filled = false;
+
 }
 
 /***********************************************************************
@@ -68,11 +69,11 @@ Container::Container(ContainerType type, int x, int y,
           :Widget(WIDGET_TYPE_CONTAINER, x, y, width, height, parent)
 {
    contType = type;
+   filled = false;
    setPosition(x, y);
    setSize(width, height);
    body.set(getX(), getY(), getX() + width - 1, getY() + height - 1);
    dynamicSize = false;
-   filled = false;
 }
 
 /***********************************************************************

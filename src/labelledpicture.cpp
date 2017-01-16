@@ -100,11 +100,7 @@ void LabelledPicture::setFontSize(int size)
  ************************************************************************/
 void LabelledPicture::setDirty()
 {
-   Widget::setDirty();
-   if(getParent())
-   {
-      getParent()->setDirty();
-   }
+   setDirtyWithParent();
 }
 
 /************************************************************************

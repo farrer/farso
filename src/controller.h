@@ -42,6 +42,7 @@
 #include "stacktab.h"
 #include "textentry.h"
 #include "textselector.h"
+#include "treeview.h"
 #include "widget.h"
 #include "window.h"
 

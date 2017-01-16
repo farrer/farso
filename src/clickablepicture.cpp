@@ -88,11 +88,7 @@ void ClickablePicture::disableBorderWhenClicked()
  ************************************************************************/
 void ClickablePicture::setDirty()
 {
-   if(getParent())
-   {
-      getParent()->setDirty();
-   }
-   Widget::setDirty();
+   setDirtyWithParent();
 }
 
 /************************************************************************

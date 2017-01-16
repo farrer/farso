@@ -58,11 +58,7 @@ Label::~Label()
  ******************************************************************/
 void Label::setDirty()
 {
-   if(getParent())
-   {
-      getParent()->setDirty();
-   }
-   Widget::setDirty();
+   setDirtyWithParent();
 }
 
 /******************************************************************

@@ -54,11 +54,16 @@ class ScrollBar : public Widget
 
       /*! Set the totals information for the scroll bar.
        * \param maxDisplayed max number of displayed elements at a single time
-       * \param total current total number of elements to be displayed. */
-      void setTotals(int maxDisplayed, int total);
+       * \param total current total number of elements to be displayed. 
+       * \param initial new initial displayed */
+      void setTotals(int maxDisplayed, int total, int initial = 0);
 
       /*! \return index of the first displayed element [0, total - 1] */
       int getCurrent();
+
+      /*! Set the index of the first element to be displayed.
+       * \param current the index [0, total - 1] */
+      void setCurrent(int current);
       
       Rect getBody();
       void setSize(int width, int height);
@@ -87,6 +92,8 @@ class ScrollBar : public Widget
       int initial;
       int maxDisplayed;
       int total;
+      int maxInitial;    /**< Max value initial can have (to avoid displaying
+                              empty elements when near the total) */
 
       bool scrollButtonPressing;
       int scrollReference[2];

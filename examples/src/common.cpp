@@ -49,6 +49,7 @@ void Example::init(Farso::RendererType rendererType, void* extraInfo)
    createOtherWindow();
    createLoadSaveWindow();
    createWindowToTestContainers();
+   createTreeViewWindow();
 }
 
 /************************************************************************
@@ -305,6 +306,43 @@ void Example::addAllWidgetsToContainer(Farso::Container* cont)
 }
 
 /************************************************************************
+ *                           createTreeViewWindow                       *
+ ************************************************************************/
+void Example::createTreeViewWindow()
+{
+   /* Create the window and set its position */
+   Farso::Window* window = new Farso::Window(320, 320, "TreeList");
+   window->setPosition(200, 200);
+  
+   /* TextEntry to insert elements and buttons to insert/remove */
+   treeViewEntry = new Farso::TextEntry(0, 0, 170, 21, window);
+   treeViewInsertButton = new Farso::Button(171, 0, 80, 21, "Insert", window);
+   treeViewRemoveButton = new Farso::Button(252, 0, 21, 21, "", window);
+   new Farso::Picture(3, 3, "other/trash.png", treeViewRemoveButton);
+   
+   /* The TreeView populated with some elements */
+   Farso::Container* cont = new Farso::Container(
+         Farso::Container::TYPE_TOP_LEFT, Farso::Rect(0, 22, 0, 0), window);
+   treeView = new Farso::TreeView(cont);
+   char buf[32];
+   for(int i = 0; i < 10; i++)
+   {
+      sprintf(&buf[0], "root%d", i);
+      Farso::TreeView::TreeViewElement* el = treeView->addRootElement(buf);
+      if(i % 2 == 0)
+      {
+         for(int j = 0; j <= i; j++)
+         {
+            sprintf(&buf[0], "child%d_%d", i, j);
+            el->addChild(buf);
+         }
+      }
+   }
+   
+   window->open();
+}
+
+/************************************************************************
  *                              createMenu                              *
  ************************************************************************/
 void Example::createMenu()
@@ -333,12 +371,33 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
       Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL, "Event got: %d", 
             event.getType());
 
-      /* Check exit button */
       if(event.getType() == Farso::EVENT_BUTTON_RELEASE)
       {
+         /* Check exit button */
          if(event.getWidget() == exitButton)
          {
             shouldExit = true;
+         }
+         else if(event.getWidget() == treeViewInsertButton)
+         {
+            /* Let's insert a new element on the tree */
+            if(!treeView->getSelected())
+            {
+               /* Insert it as a root element */
+               treeView->addRootElement(treeViewEntry->getCaption());
+            }
+            else
+            {
+               /* Insert as a child one */
+               treeView->getSelected()->addChild(treeViewEntry->getCaption());
+            }
+         }
+         else if(event.getWidget() == treeViewRemoveButton)
+         {
+            if(treeView->getSelected())
+            {
+               treeView->remove(treeView->getSelected());
+            }
          }
       }
    }

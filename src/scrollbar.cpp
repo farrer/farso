@@ -39,6 +39,7 @@ ScrollBar::ScrollBar(ScrollType type, int x, int y, int widthOrHeight,
 {
    this->scrollType = type;
    this->initial = 0;
+   this->maxInitial = 0;
    this->total = 0;
    this->maxDisplayed = 0;
    this->scrollButtonPressing = false;
@@ -112,8 +113,9 @@ void ScrollBar::definePositionAndSize()
 {
    /* Calculate variation for each position */
    realWidthOrHeight = (widthOrHeight - (2 * DEFAULT_SIZE) - 3);
-   float deltaInit = (initial) / (float)total;
-   float deltaEnd = (initial + maxDisplayed) / (float)total;
+   float totalDiv = (float)(total != 0) ? total : 1.0f;
+   float deltaInit = (initial) / totalDiv;
+   float deltaEnd = (initial + maxDisplayed) / totalDiv;
 
    /* Make sure variations are lesser than 1 (could be greater in case
     * that the ammount displayed (total) is lesser than the maxDisplayed) */
@@ -162,14 +164,28 @@ void ScrollBar::definePositionAndSize()
 /************************************************************************
  *                              setTotals                               *
  ************************************************************************/
-void ScrollBar::setTotals(int maxDisplayed, int total)
+void ScrollBar::setTotals(int maxDisplayed, int total, int initial)
 {
+   assert(initial < total || (total == 0 && initial == 0));
+   assert(initial >= 0);
+
    if((this->maxDisplayed != maxDisplayed) ||
       (this->total != total))
    {
-      this->initial = 0;
+      /* define values */
+      this->initial = initial;
       this->maxDisplayed = maxDisplayed;
       this->total = total;
+
+      /* define limits */
+      if(total > maxDisplayed)
+      {
+         maxInitial = total - maxDisplayed;
+      }
+      else
+      {
+        maxInitial = 0;
+      }
 
       definePositionAndSize();
    }
@@ -181,6 +197,21 @@ void ScrollBar::setTotals(int maxDisplayed, int total)
 int ScrollBar::getCurrent()
 {
    return initial;
+}
+
+/************************************************************************
+ *                              setCurrent                              *
+ ************************************************************************/
+void ScrollBar::setCurrent(int current)
+{
+   assert(initial < total || (total == 0 && initial == 0));
+   assert(initial >= 0);
+
+   if(initial != current)
+   {
+      initial = current;
+      setDirty();
+   }
 }
 
 /************************************************************************
@@ -251,9 +282,9 @@ bool ScrollBar::doTreat(bool leftButtonPressed, bool rightButtonPressed,
             {
                initial = 0;
             }
-            else if(initial > total - maxDisplayed)
+            else if(initial > maxInitial)
             {
-               initial = total - maxDisplayed;
+               initial = maxInitial;
             }
             Controller::setEvent(this, EVENT_SCROLLBAR_CHANGED);
             definePositionAndSize();

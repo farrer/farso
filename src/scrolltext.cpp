@@ -344,11 +344,7 @@ bool ScrollText::doTreat(bool leftButtonPressed, bool rightButtonPressed,
  ***********************************************************************/
 void ScrollText::setDirty()
 {
-   if(getParent() != NULL)
-   {
-      getParent()->setDirty();
-   }
-   Widget::setDirty();
+   setDirtyWithParent();
 }
 
 /***********************************************************************

@@ -89,8 +89,7 @@ void StackTab::setDirty()
 {
    /* The stack bar don't know how to render its background, so if
     * it's dirty, must set it's parent dirty too. */
-   getParent()->setDirty();
-   setDirtyValue(true);
+   setDirtyWithParent();
 }
 
 /************************************************************************

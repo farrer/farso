@@ -23,6 +23,7 @@ Farso have the following widgets:
  * StackTab
  * TextEntry
  * TextSelector
+ * TreeView
  * Window
 
 It's fully skinable and could be extended to support your own widgets.

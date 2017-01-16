@@ -115,7 +115,13 @@ enum EventType
    /*! Just after ClickablePicture press release */
    EVENT_CLICKABLEPICTURE_CLICKED,
    /*! Changed (or tried to change) current value of a spin */
-   EVENT_SPIN_CHANGED
+   EVENT_SPIN_CHANGED,
+   /*! When expanded a TreeViewElement */
+   EVENT_TREEVIEW_EXPANDED,
+   /*! When collapsed a TreeViewElement */
+   EVENT_TREEVIEW_COLLAPSED,
+   /*! When selected a TreeViewElement */
+   EVENT_TREEVIEW_SELECTED
 };
 
 /*! A Farso event definition */

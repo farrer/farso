@@ -53,6 +53,9 @@ class Grid : public Widget
             /*! Destructor */
             ~GridElement();
 
+            /*! Set the grid area */
+            void set(int x, int y, int width, int height);
+
             /*! Check if point (x, y) is inner the element */
             bool isInner(int x, int y);
 

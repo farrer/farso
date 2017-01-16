@@ -30,7 +30,6 @@ Button::Button(int x, int y, int width, int height, Kobold::String caption,
       Widget* parent)
       :Widget(Widget::WIDGET_TYPE_BUTTON, x, y, width, height, parent)
 {
-   this->setCaption(caption);
    this->menu = NULL;
    this->pressStarted = false;
    this->pressed = false;
@@ -43,6 +42,7 @@ Button::Button(int x, int y, int width, int height, Kobold::String caption,
    this->onOverType = Skin::SKIN_TYPE_BUTTON_ON_OVER;
    this->pressedType = Skin::SKIN_TYPE_BUTTON_PRESSED;
    this->body.set(getX(), getY(), getX() + width - 1, getY() + height - 1);
+   this->setCaption(caption);
 }
 
 /******************************************************************
@@ -75,11 +75,14 @@ void Button::setRoundedEdges()
  ******************************************************************/
 void Button::setDirty()
 {
-   if((!useDecorations) && (getParent()))
+   if(!useDecorations)
    {
-      getParent()->setDirty();
+      setDirtyWithParent();
    }
-   Widget::setDirty();
+   else
+   {
+      Widget::setDirty();
+   }
 }
 
 /******************************************************************

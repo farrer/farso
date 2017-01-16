@@ -25,6 +25,7 @@ src/stacktab.cpp
 src/surface.cpp
 src/textentry.cpp
 src/textselector.cpp
+src/treeview.cpp
 src/widget.cpp
 src/widgetrenderer.cpp
 src/window.cpp
@@ -59,6 +60,7 @@ src/stacktab.h
 src/surface.h
 src/textentry.h
 src/textselector.h
+src/treeview.h
 src/widget.h
 src/widgetrenderer.h
 src/window.h

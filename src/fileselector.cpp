@@ -185,8 +185,7 @@ Rect FileSelector::getBody()
  ***********************************************************************/
 void FileSelector::setDirty()
 {
-   getParent()->setDirty();
-   Widget::setDirty();
+   setDirtyWithParent();
 }
 
 /***********************************************************************
@@ -511,7 +510,9 @@ void FileSelector::doDraw(Rect pBody)
       grid->clearElements();
       while(labels.size() > 0)
       {
+         /* Remove label from grid (it's its child) */
          grid->remove(labels[labels.size() - 1]);
+         /* Remove from the vector */
          labels.pop_back();
       }
       createLabelsAndGridElements();

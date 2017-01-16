@@ -31,12 +31,12 @@ using namespace Farso;
  ***********************************************************************/
 Grid::GridElement::GridElement(int x, int y, int width, int height, 
                                Kobold::String mouseHint, int index)
-                  :Kobold::ListElement(),
-                   area(x, y, x + width - 1, y + height - 1)
+                  :Kobold::ListElement()
 {
    this->mouseHint = mouseHint;
    this->index = index;
    this->enabled = true;
+   set(x, y, width, height);
 }
 
 /***********************************************************************
@@ -44,6 +44,14 @@ Grid::GridElement::GridElement(int x, int y, int width, int height,
  ***********************************************************************/
 Grid::GridElement::~GridElement()
 {
+}
+
+/***********************************************************************
+ *                                   set                               *
+ ***********************************************************************/
+void Grid::GridElement::set(int x, int y, int width, int height)
+{
+   area.set(x, y, x + width - 1, y + height - 1);
 }
 
 /***********************************************************************
@@ -176,10 +184,12 @@ void Grid::setDirty()
    if(gridType != GRID_TYPE_HIGHLIGHT_NONE)
    {
       /* Must redraw the parent on changes, to redo its background */
-      getParent()->setDirty();
+      setDirtyWithParent();
    }
-
-   Widget::setDirty();
+   else
+   {
+      Widget::setDirty();
+   }
 }
 
 /***********************************************************************
@@ -344,11 +354,14 @@ bool Grid::doTreat(bool leftButtonPressed, bool rightButtonPressed,
          /* Check if inner area */
          if((el->isEnabled()) && (el->isInner(mrX, mrY)))
          {
-            current = el;
-            /* Selected current, but no event for this. */
-            if(gridType != GRID_TYPE_HIGHLIGHT_NONE)
+            if(current != el)
             {
-               setDirty();
+               current = el;
+               /* Selected current, but no event for this. */
+               if(gridType != GRID_TYPE_HIGHLIGHT_NONE)
+               {
+                  setDirty();
+               }
             }
             return false;
          }

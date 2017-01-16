@@ -60,7 +60,8 @@ class Widget : public Kobold::ListElement, public Kobold::List
          WIDGET_TYPE_MENU,
          WIDGET_TYPE_LABELLED_PICTURE,
          WIDGET_TYPE_CLICKABLE_PICTURE,
-         WIDGET_TYPE_SPIN
+         WIDGET_TYPE_SPIN,
+         WIDGET_TYPE_TREE_VIEW
       };
 
       /*! Constructor
@@ -130,7 +131,7 @@ class Widget : public Kobold::ListElement, public Kobold::List
 
       /*! Set Widget relative (to its parent's body) coordinates
        * \param x -> x coordinate
-       * \param y -> y coordinate */
+       * \param y -> y coordinate */ 
       void setPosition(int x, int y);
 
       /*! Set X coordinate */
@@ -141,10 +142,10 @@ class Widget : public Kobold::ListElement, public Kobold::List
       
       /*! Set widget's size. 
        * \note the cost to call it on a widget without a parent 
-       * (parent == NULL) is much more, as it'll need it's renderer to be
-       * recreated.
+       * (parent == NULL) is much more, as will need to recreate its 
+       * renderer and tell all children of the change.
        * \param width -> new widget's width
-       * \param height -> new widget's height*/
+       * \param height -> new widget's height */ 
       virtual void setSize(int width, int height);
 
       /*! Set widget's width */
@@ -177,6 +178,9 @@ class Widget : public Kobold::ListElement, public Kobold::List
 
       /*! Set the Widget as dirty (ie: that will need to be redraw). */
       virtual void setDirty();
+
+      /*! Set the Widget as dirty and also its parent (if any). */
+      void setDirtyWithParent();
 
       /*! Set Text to display when mouse is over the widget */
       void setMouseHint(Kobold::String txt);
@@ -248,9 +252,6 @@ class Widget : public Kobold::ListElement, public Kobold::List
        * For example, a Window will transform an EVENT_BUTTON_RELEASED of
        * its close Button to its own EVENT_WINDOW_CLOSED, closing itself. */
       virtual void doAfterChildTreat() = 0;
-
-      /*! Children should be able to redefine dirty variable */
-      void setDirtyValue(bool val);
 
       /*! Define the nearest container parent if exists. */
       void defineParentContainer();

@@ -128,10 +128,6 @@ Farso::Rect Picture::getBody()
  ************************************************************************/
 void Picture::setDirty()
 {
-   if(getParent())
-   {
-      getParent()->setDirty();
-   }
-   Widget::setDirty();
+   setDirtyWithParent();
 }
 

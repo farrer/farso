@@ -210,11 +210,7 @@ void Spin::disable()
  ***********************************************************************/
 void Spin::setDirty()
 {
-   if(getParent())
-   {
-      getParent()->setDirty();
-   }
-   Widget::setDirty();
+   setDirtyWithParent();
 }
 
 /***********************************************************************

@@ -45,9 +45,19 @@ namespace FarsoExample
          /*! Create our menu to test */
          void createMenu();
 
+         /*! Create a window to test the TreeView widget */
+         void createTreeViewWindow();
+
       private:
          Farso::Menu* menu; /**< A menu to be used */
          Farso::Button* exitButton; /**< Button to exit example */
+         
+         Farso::TreeView* treeView; /**< A tree view to use */
+         Farso::TextEntry* treeViewEntry; /**< Text Entry to enter new elements
+                                               on the tree view */
+         Farso::Button* treeViewInsertButton; /**< Button to insert */
+         Farso::Button* treeViewRemoveButton; /**< Button to remove */
+
          bool shouldExit; /**< Exit flag */
    };
 

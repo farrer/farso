@@ -222,11 +222,13 @@ void Container::setDirty()
 {
    /* As a not filled container, if someone marked us as dirty, we must also
     * mark our parent, as we don't know how to render our background. */
-   if((!filled) && (getParent() != NULL))
+   if(!filled)
    {
-      getParent()->setDirty();
+      setDirtyWithParent();
    }
-
-   setDirtyValue(true);
+   else
+   {
+      Widget::setDirty();
+   }
 }
 

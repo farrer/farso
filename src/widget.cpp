@@ -158,8 +158,7 @@ void Widget::setPosition(int x, int y)
          this->y = y;
 
          /* As changed its position, must dirty its parent too */
-         parent->setDirty();
-         setDirty();
+         setDirtyWithParent();
       }
    }
 }
@@ -215,6 +214,12 @@ void Widget::setSize(int width, int height)
          this->renderer = Controller::createNewWidgetRenderer(width, height);
          //FIXME: must reset renderer pointer to all of its children.
       }
+      else
+      {
+         /* As changed its position, must dirty its parent too */
+         setDirtyWithParent();
+      }
+
    }
 }
 
@@ -405,11 +410,18 @@ void Widget::setDirty()
 }
 
 /***********************************************************************
- *                           setDirtyValue                             *
+ *                         setDirtyWithParent                          *
  ***********************************************************************/
-void Widget::setDirtyValue(bool val)
+void Widget::setDirtyWithParent()
 {
-   dirty = val;
+   if(!dirty)
+   {
+      if(parent)
+      {
+         parent->setDirty();
+      }
+      dirty = true;
+   }
 }
 
 /***********************************************************************
@@ -433,18 +445,21 @@ Kobold::String Widget::getMouseHint()
  ***********************************************************************/
 void Widget::hide()
 {
-   visible = false;
-   available = false;
+   if(visible)
+   {
+      visible = false;
+      available = false;
 
-   /* Note that when hidden, there's no need to redraw itself.
-    * But we must tell our parent. */
-   if(getParent() != NULL)
-   {
-      getParent()->setDirty();
-   }
-   else
-   {
-      renderer->hide();
+      /* Note that when hidden, there's no need to redraw itself.
+       * But we must tell our parent. */
+      if(getParent() != NULL)
+      {
+         getParent()->setDirty();
+      }
+      else
+      {
+         renderer->hide();
+      }
    }
 }
 
@@ -453,12 +468,15 @@ void Widget::hide()
  ***********************************************************************/
 void Widget::show()
 {
-   visible = true;
-   available = true;
-
-   if(parent == NULL)
+   if(!visible)
    {
-      renderer->show();
+      visible = true;
+      available = true;
+
+      if(parent == NULL)
+      {
+         renderer->show();
+      }
    }
 }
 

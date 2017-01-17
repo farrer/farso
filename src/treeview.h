@@ -23,12 +23,14 @@
 
 #include <kobold/kstring.h>
 #include <kobold/list.h>
+#include <vector>
 
 #include "widget.h"
 #include "grid.h"
 #include "label.h"
 #include "button.h"
 #include "scrollbar.h"
+
 
 namespace Farso
 {

@@ -22,6 +22,7 @@
 #include "controller.h"
 #include "event.h"
 #include <math.h>
+#include <assert.h>
 using namespace Farso;
 
 #define DEFAULT_SIZE  20

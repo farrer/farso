@@ -71,7 +71,36 @@ TreeView::TreeViewElement* TreeView::TreeViewElement::addChild(
       Kobold::String caption, void* data)
 {
    TreeViewElement* child = new TreeViewElement(owner, this, caption, data);
-   children.insert(child);
+
+   if((!owner->ordered) || (children.getTotal() == 0))
+   {
+      children.insert(child);
+   }
+   else
+   {
+      /* Must find where to insert */
+      bool inserted = false;
+      TreeViewElement* el = static_cast<TreeViewElement*>(children.getFirst());
+      for(int i = 0; i < children.getTotal(); i++)
+      {
+         if(caption.compare(el->getCaption()) <= 0)
+         {
+            inserted = true;
+            children.insertBefore(child, el);
+            break;
+         }
+         el = static_cast<TreeViewElement*>(el->getNext());
+      }
+      if(!inserted)
+      {
+         /* Greater than all current elements, insert as last */
+         children.insert(child);
+      }
+   }
+
+
+
+
    if(expanded)
    {
       /* We have a new potentially displayed element must increment the 
@@ -168,9 +197,10 @@ void TreeView::TreeViewElement::collapse()
    {
       bool wasVisible = owner->isVisible(this);
       expanded = false;
-      /* Decrement total displayed */
-      currentDisplayed -= children.getTotal();
-      incParentCurrentDisplayed(-children.getTotal());
+      /* Decrement total displayed, keeping only the node itself */
+      int totalDisplayedChildren = currentDisplayed - 1;
+      currentDisplayed = 1;
+      incParentCurrentDisplayed(-totalDisplayedChildren);
       owner->setDirty();
       if(!wasVisible)
       {
@@ -291,12 +321,13 @@ const bool TreeView::TreeViewElement::hasChild(
 /***********************************************************************
  *                             Constructor                             *
  ***********************************************************************/
-TreeView::TreeView(Widget* parent)
+TreeView::TreeView(bool ordered, Widget* parent)
          :Widget(Widget::WIDGET_TYPE_TREE_VIEW, parent),
           elements(Kobold::LIST_TYPE_ADD_AT_END)
 {
    assert(parent != NULL);
 
+   this->ordered = ordered;
    curInitialElement = NULL;
    curInitialElementIndex = -1;
    curSelected = NULL;
@@ -356,7 +387,33 @@ TreeView::TreeViewElement* TreeView::addRootElement(Kobold::String caption,
       void* data)
 {
    TreeViewElement* root = new TreeViewElement(this, NULL, caption, data);
-   elements.insert(root);
+
+   if((!ordered) || (elements.getTotal() == 0))
+   {
+      /* Just insert as last */
+      elements.insert(root);
+   }
+   else
+   {
+      /* Must find where to insert */
+      bool inserted = false;
+      TreeViewElement* el = static_cast<TreeViewElement*>(elements.getFirst());
+      for(int i = 0; i < elements.getTotal(); i++)
+      {
+         if(caption.compare(el->getCaption()) <= 0)
+         {
+            inserted = true;
+            elements.insertBefore(root, el);
+            break;
+         }
+         el = static_cast<TreeViewElement*>(el->getNext());
+      }
+      if(!inserted)
+      {
+         /* Greater than all current elements, insert as last */
+         elements.insert(root);
+      }
+   }
    setDirty();
 
    if(curInitialElement == NULL)

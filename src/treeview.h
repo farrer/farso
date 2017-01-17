@@ -130,9 +130,10 @@ class TreeView: public Widget
       };
 
       /*! Constructor 
+       * \param ordered if will insert elements alphabetically ordered
        * \param parent pointer to its parent. Mandatory.
        * \note the TreeView will take full parent's body to itself. */
-      TreeView(Widget* parent);
+      TreeView(bool ordered, Widget* parent);
 
       /*! Destructor */
       ~TreeView();
@@ -210,6 +211,7 @@ class TreeView: public Widget
       Grid* grid;                 /**< Grid for selecting displayed elements */
 
       Rect body; /**< Current body */
+      bool ordered; /**< If insert should be ordered */
 
       int numLines; /**< Number of lines available for selectors */
       TreeViewElement* curInitialElement; /**< Current initial displayed */

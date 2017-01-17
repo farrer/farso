@@ -323,7 +323,7 @@ void Example::createTreeViewWindow()
    /* The TreeView populated with some elements */
    Farso::Container* cont = new Farso::Container(
          Farso::Container::TYPE_TOP_LEFT, Farso::Rect(0, 22, 0, 0), window);
-   treeView = new Farso::TreeView(cont);
+   treeView = new Farso::TreeView(false, cont);
    char buf[32];
    for(int i = 0; i < 10; i++)
    {

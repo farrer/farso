@@ -56,6 +56,9 @@ class TreeView: public Widget
             /*! Add a child element */
             TreeViewElement* addChild(Kobold::String caption, void* data=NULL);
 
+            /*! \return the related element's data */
+            void* getData() const { return data; };
+
             /*! Remove a direct child element of this one
              * \note will also remove its children.
              * \param element direct child element to be removed 

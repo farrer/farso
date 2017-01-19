@@ -98,9 +98,6 @@ TreeView::TreeViewElement* TreeView::TreeViewElement::addChild(
       }
    }
 
-
-
-
    if(expanded)
    {
       /* We have a new potentially displayed element must increment the 
@@ -777,6 +774,7 @@ void TreeView::doAfterChildTreat()
          {
             curSelected = sel;
             setDirty();
+            Controller::setEvent(this, EVENT_TREEVIEW_SELECTED);
          }
       }
    }

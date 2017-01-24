@@ -284,6 +284,37 @@ TreeView::TreeViewElement* TreeView::TreeViewElement::getLastExpandedChild()
 }
 
 /***********************************************************************
+ *                          getChildWithData                           *
+ ***********************************************************************/
+TreeView::TreeViewElement* TreeView::TreeViewElement::getChildWithData(
+      void* data)
+{
+   TreeViewElement* el = static_cast<TreeViewElement*>(children.getFirst());
+   for(int i = 0; i < children.getTotal(); i++)
+   {
+      /* Check if child has the data */
+      if(el->getData() == data)
+      {
+         return el;
+      }
+      else
+      {
+         /* Check if grand child has the data */
+         TreeViewElement* child = el->getChildWithData(data);
+         if(child)
+         {
+            return child;
+         }
+      }
+
+      /* Neither, check next child */
+      el = static_cast<TreeViewElement*>(el->getNext());
+   }
+
+   return NULL;
+}
+
+/***********************************************************************
  *                               hasChild                              *
  ***********************************************************************/
 const bool TreeView::TreeViewElement::hasChild(
@@ -443,7 +474,7 @@ bool TreeView::removeRootElement(TreeView::TreeViewElement* element)
  
 /***********************************************************************
  *                               remove                                *
- ***********************************************************************/     
+ ***********************************************************************/
 bool TreeView::remove(TreeViewElement* element)
 {
    if(element->getParent())
@@ -452,6 +483,38 @@ bool TreeView::remove(TreeViewElement* element)
    }
 
    return removeRootElement(element);
+}
+
+/***********************************************************************
+ *                         selectNodeByData                            *
+ ***********************************************************************/
+void TreeView::selectNodeByData(void* data)
+{
+   TreeViewElement* el = static_cast<TreeViewElement*>(elements.getFirst());
+   for(int i = 0; i < elements.getTotal(); i++)
+   {
+      /* Check if is itself the owner */
+      if(el->getData() == data)
+      {
+         curSelected = el;
+         setDirty();
+         break;
+      }
+      else
+      {
+         /* Check if any child has the data */
+         TreeViewElement* child = el->getChildWithData(data);
+         if(child)
+         {
+            curSelected = child;
+            setDirty();
+            break;
+         }
+      }
+
+      /* Neither, must check next root element */
+      el = static_cast<TreeViewElement*>(el->getNext());
+   }
 }
 
 /***********************************************************************
@@ -618,7 +681,7 @@ void TreeView::setLabels(int curInitial, int totalVisible)
  ***********************************************************************/
 void TreeView::resetCurInitialElement(int curInitial)
 {
-   /* Let's reset our selected selected */
+   /* Let's reset our selected */
    curSelected = NULL;
    curInitialElement = NULL;
 

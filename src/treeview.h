@@ -106,6 +106,10 @@ class TreeView: public Widget
             /*! \return the last visible child of a element. If no child
              * is visible, return itselef */
             TreeViewElement* getLastExpandedChild();
+            /*! Get the first child with an specific data
+             * \param data pointer to get the child
+             * \return child found or NULL if none has the data */
+            TreeViewElement* getChildWithData(void* data);
 
             /*! \return pointer to its parent, if any */
             TreeViewElement* getParent() { return parent; };
@@ -162,6 +166,12 @@ class TreeView: public Widget
 
       /*! \return current element selected on the view or NULL */
       TreeViewElement* getSelected() { return curSelected; };
+
+      /*! Select a node by its data
+       * \param data pointer to the node's data to be selected.
+       * \note if more than one node with the data is found, will
+       *       select the one from the the earlier root element */
+      void selectNodeByData(void* data);
 
       /* From Widget */
       Rect getBody();

@@ -47,6 +47,18 @@ TextEntry::~TextEntry()
 {
 }
 
+/***********************************************************************
+ *                             setCaption                              *
+ ***********************************************************************/
+void TextEntry::setCaption(Kobold::String text)
+{
+   if(getCaption() != text)
+   {
+      Widget::setCaption(text);
+      cursorPos = 0;
+      cursorIndex = 0;
+   }
+}
 
 /***********************************************************************
  *                          getStringLength                            *
@@ -119,7 +131,7 @@ void TextEntry::appendToCursor(Kobold::String textToAppend)
    text.insert(cursorIndex, textToAppend);
    cursorPos += getStringLength(textToAppend);
    cursorIndex += textToAppend.length();
-   setCaption(text);
+   Widget::setCaption(text);
 }
 
 /***********************************************************************
@@ -135,7 +147,7 @@ void TextEntry::deleteCharacterFromCursor(bool after)
       {   
          text.erase(cursorIndex, 
                getNextCharacterInit(text, cursorIndex) - cursorIndex);
-         setCaption(text);
+         Widget::setCaption(text);
       }
    }
    else
@@ -146,7 +158,7 @@ void TextEntry::deleteCharacterFromCursor(bool after)
          int indexOfPrev = getPreviousCharacterInit(text, cursorIndex);
          text.erase(indexOfPrev, cursorIndex - indexOfPrev);
          cursorIndex = indexOfPrev;
-         setCaption(text);
+         Widget::setCaption(text);
       }
    }
 }

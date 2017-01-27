@@ -57,6 +57,7 @@ class TextEntry : public Kobold::KeyboardTextEditor, public Widget
 
       /* Function from Widget */
       Rect getBody();
+      void setCaption(Kobold::String text);
 
    protected:
 

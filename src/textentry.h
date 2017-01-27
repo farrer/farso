@@ -78,6 +78,7 @@ class TextEntry : public Kobold::KeyboardTextEditor, public Widget
       Rect body;     /**< Current body */
       int cursorPos; /**< Current cursor position on widget X axys */
       bool editing; /**< If is actually editing the text entry */
+      bool shouldStopEdition; /**< If received to stop edition */
       unsigned int cursorIndex; /**< Current cursor index on the string */
 
 };

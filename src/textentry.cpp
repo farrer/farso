@@ -37,6 +37,7 @@ TextEntry::TextEntry(int x, int y, int width, int height, Widget* parent)
    cursorPos = 0;
    cursorIndex = 0;
    editing = false;
+   shouldStopEdition = false;
 }
 
 /***********************************************************************
@@ -217,8 +218,7 @@ void TextEntry::doneWithEditing()
 {
    if(editing)
    {
-      editing = false;
-      setDirty();
+      shouldStopEdition = true;
    }
 }
 
@@ -351,8 +351,9 @@ bool TextEntry::doTreat(bool leftButtonPressed, bool rightButtonPressed,
    if(editing)
    {
       /* Let's see if edition done by pressing outside the entry */
-      if((leftButtonPressed) && (!isInner(mrX, mrY)))
+      if((shouldStopEdition) || ((leftButtonPressed) && (!isInner(mrX, mrY))))
       {
+         shouldStopEdition = false;
          editing = false;
          Controller::setEvent(this, EVENT_TEXTENTRY_EDITION_DONE);
          Kobold::Keyboard::stopEditingText();

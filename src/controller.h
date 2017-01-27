@@ -221,6 +221,10 @@ class Controller
       /*! \return total number of root (ie: without parents) widgets. */
       static int getTotalRootWidgets();
 
+      /*! \return if mouse was over any farso widget on last call to 
+       *          verifyEvents */
+      static const bool wasMouseOverWidget() { return mouseOverWidget; };
+
    private:
       /*! No instances allowed */
       Controller(){};
@@ -270,6 +274,8 @@ class Controller
       static int height; /**< height available */
 
       static Kobold::String baseDir; /**< Base directory */
+
+      static bool mouseOverWidget; /**< If mouse is under any widget */
 };
 
 };

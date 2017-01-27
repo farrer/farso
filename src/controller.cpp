@@ -571,6 +571,7 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       int mouseX, int mouseY)
 {
    bool gotEvent = false;
+   mouseOverWidget = false;
 
    /* Enter 2d rendering mode */
    junction->enter2dMode();
@@ -631,6 +632,15 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       {
          gotEvent |= verifyEvents(w, leftButtonPressed, rightButtonPressed, 
                mouseX, mouseY, !gotEvent);
+      }
+
+      /* Verify if mouse is over any widget (note: stop checking after
+       * got that is over a widget) */
+      if((!mouseOverWidget) && (w->isVisible()))
+      {
+         int relMouseX = mouseX - w->getWidgetRenderer()->getPositionX();
+         int relMouseY = mouseY - w->getWidgetRenderer()->getPositionY();
+         mouseOverWidget = w->isInner(relMouseX, relMouseY);
       }
 
       w = (Widget*) w->getNext();
@@ -741,4 +751,5 @@ int Controller::width = 0;
 int Controller::height = 0;
 Kobold::String Controller::baseDir;
 bool Controller::forceBringToFrontCall = false;
+bool Controller::mouseOverWidget = false;
 

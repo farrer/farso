@@ -486,6 +486,18 @@ bool TreeView::remove(TreeViewElement* element)
 }
 
 /***********************************************************************
+ *                             unselect                                *
+ ***********************************************************************/
+void TreeView::unselect()
+{
+   if(curSelected)
+   {
+      curSelected = NULL;
+      setDirty();
+   }
+}
+
+/***********************************************************************
  *                         selectNodeByData                            *
  ***********************************************************************/
 void TreeView::selectNodeByData(void* data)

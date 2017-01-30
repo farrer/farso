@@ -180,6 +180,9 @@ class TreeView: public Widget
        * \return pointer to the found node or NULL. */
       TreeViewElement* getNodeByData(void* data);
 
+      /*! Unselect any selected node */
+      void unselect();
+
       /* From Widget */
       Rect getBody();
       void setDirty();

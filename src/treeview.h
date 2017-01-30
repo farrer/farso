@@ -173,6 +173,13 @@ class TreeView: public Widget
        *       select the one from the the earlier root element */
       void selectNodeByData(void* data);
 
+      /*! Get a tree node by its data
+       * \param data pointer to the data of the node to retrieve. 
+       * \note if more than one node with the same data, will return the
+       *       earliest found. 
+       * \return pointer to the found node or NULL. */
+      TreeViewElement* getNodeByData(void* data);
+
       /* From Widget */
       Rect getBody();
       void setDirty();

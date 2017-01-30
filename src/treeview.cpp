@@ -490,15 +490,26 @@ bool TreeView::remove(TreeViewElement* element)
  ***********************************************************************/
 void TreeView::selectNodeByData(void* data)
 {
+   TreeViewElement* el = getNodeByData(data);
+   if(el)
+   {
+      curSelected = el;
+      setDirty();
+   }
+}
+
+/***********************************************************************
+ *                           getNodeByData                             *
+ ***********************************************************************/
+TreeView::TreeViewElement* TreeView::getNodeByData(void* data)
+{
    TreeViewElement* el = static_cast<TreeViewElement*>(elements.getFirst());
    for(int i = 0; i < elements.getTotal(); i++)
    {
       /* Check if is itself the owner */
       if(el->getData() == data)
       {
-         curSelected = el;
-         setDirty();
-         break;
+         return el;
       }
       else
       {
@@ -506,15 +517,15 @@ void TreeView::selectNodeByData(void* data)
          TreeViewElement* child = el->getChildWithData(data);
          if(child)
          {
-            curSelected = child;
-            setDirty();
-            break;
+            return child;
          }
       }
 
       /* Neither, must check next root element */
       el = static_cast<TreeViewElement*>(el->getNext());
    }
+
+   return NULL;
 }
 
 /***********************************************************************

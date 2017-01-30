@@ -81,7 +81,7 @@ class Container : public Widget
       /*! \return child X coordinate according to Container type 
        * \param x child x relative coordinate 
        * \param width child width */
-      int getChildX(int x, int width);
+      const int getChildX(int x, int width) const;
 
       /*! \return child Y coordinate according to Container type 
        * \param y child y relative coordinate 

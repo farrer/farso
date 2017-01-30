@@ -108,26 +108,26 @@ class Widget : public Kobold::ListElement, public Kobold::List
             int mouseX, int mouseY, int mrX, int mrY);
 
       /*! \return the widget's caption. */
-      Kobold::String getCaption();
+      const Kobold::String getCaption() const { return caption; };
 
       /*! Define widget's caption */
       virtual void setCaption(Kobold::String text);
 
       /*! Gets the X coordinate
        * \return x coordinate */
-      int getX();
+      const int getX() const;
 
       /*! Gets the widget's width.
        * \return width */
-      int getWidth();
+      const int getWidth() const { return width; };
 
       /*! Gets the y coordinate
        * \return y coordinate */
-      int getY();
+      const int getY() const;
 
       /*! Gets the height
        * \return height */
-      int getHeight();
+      const int getHeight() const { return height; };
 
       /*! Set Widget relative (to its parent's body) coordinates
        * \param x -> x coordinate
@@ -161,7 +161,9 @@ class Widget : public Kobold::ListElement, public Kobold::List
       //void getCoordinates(int& xa, int& ya, int& xb, int& yb);
 
       /*! \return widget's availability. */ 
-      bool isAvailable();
+      const bool isAvailable() const { return available; };
+      /*! \retur widget's availablility */
+      const bool isEnabled() const { return available; };
 
       /*! Set available as true. */
       virtual void enable();
@@ -174,7 +176,7 @@ class Widget : public Kobold::ListElement, public Kobold::List
       bool isDirty();
 
       /*! Verify if the widget itself is dirty (ignoring its children state).*/
-      bool isSelfDirty();
+      const bool isSelfDirty() const { return dirty; };
 
       /*! Set the Widget as dirty (ie: that will need to be redraw). */
       virtual void setDirty();
@@ -185,17 +187,17 @@ class Widget : public Kobold::ListElement, public Kobold::List
       /*! Set Text to display when mouse is over the widget */
       void setMouseHint(Kobold::String txt);
       /*! Get current text to disaply when mouse is over */
-      Kobold::String getMouseHint();
+      const Kobold::String getMouseHint() const { return mouseHint; };
    
       /*! Hide the widget */
       void hide();
       /*! Show the widget */
       void show();
       /*! Get visibility status */
-      bool isVisible();
+      const bool isVisible() const;
 
       /*! \return widget type */
-      WidgetType getType();
+      const WidgetType getType() const { return type; };
 
       /*! \return pointer to parent Widget, if any */
       Widget* getParent();
@@ -257,9 +259,9 @@ class Widget : public Kobold::ListElement, public Kobold::List
       void defineParentContainer();
 
       /*! \return x coordinate without any container transformation */
-      int getXWithoutTransform();
+      const int getXWithoutTransform() const { return x; };
       /*! \return y coordinate without any container transformation */
-      int getYWithoutTransform();
+      const int getYWithoutTransform() const { return y; };
 
    private:
       

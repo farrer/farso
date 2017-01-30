@@ -94,7 +94,7 @@ void Container::setFilled()
 /***********************************************************************
  *                               getChildX                             *
  ***********************************************************************/
-int Container::getChildX(int x, int width)
+const int Container::getChildX(int x, int width) const
 {
    switch(contType)
    {

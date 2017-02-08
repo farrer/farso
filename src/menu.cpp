@@ -29,7 +29,8 @@ using namespace Farso;
 /***********************************************************************
  *                                MenuItem                             *
  ***********************************************************************/
-Menu::MenuItem::MenuItem(Kobold::String caption, Widget* owner)
+Menu::MenuItem::MenuItem(Kobold::String caption, Kobold::String rightText,
+      Widget* owner)
 {
    this->enabled = true;
    this->visible = true;
@@ -39,17 +40,27 @@ Menu::MenuItem::MenuItem(Kobold::String caption, Widget* owner)
    this->pX = 0;
    this->pY = 0;
 
-   calculateNeededSize(caption, NULL);
+   calculateNeededSize(caption, rightText, NULL);
 
-   /* Create the label */
+   /* Create the needed labels */
    this->label = new Label(0, 0, width, height, caption, owner);
+   if(!rightText.empty())
+   {
+      this->rightLabel = new Label(0, 0, width, height, rightText, owner);
+      this->rightLabel->setFontAlignment(Font::TEXT_RIGHT);
+      this->rightLabel->disable();
+   }
+   else
+   {
+      this->rightLabel = NULL;
+   }
 }
 
 /***********************************************************************
  *                                MenuItem                             *
  ***********************************************************************/
-Menu::MenuItem::MenuItem(Kobold::String caption, Kobold::String icon, 
-                         Widget* owner)
+Menu::MenuItem::MenuItem(Kobold::String caption, Kobold::String rightText,
+      Kobold::String icon, Widget* owner)
 {
    this->enabled = true;
    this->visible = true;
@@ -58,8 +69,19 @@ Menu::MenuItem::MenuItem(Kobold::String caption, Kobold::String icon,
    this->pX = 0;
    this->pY = 0;
    this->icon = new Picture(0, 0, icon, owner);
-   calculateNeededSize(caption, this->icon);
+   calculateNeededSize(caption, rightText, this->icon);
+
    this->label = new Label(0, 0, width, height, caption, owner);
+   if(!rightText.empty())
+   {
+      this->rightLabel = new Label(0, 0, width, height, rightText, owner);
+      this->rightLabel->setFontAlignment(Font::TEXT_RIGHT);
+      this->rightLabel->disable();
+   }
+   else
+   {
+      this->rightLabel = NULL;
+   }
 }
 
 /***********************************************************************
@@ -75,7 +97,8 @@ Menu::MenuItem::MenuItem()
    this->owner = NULL;
    this->icon = NULL;
    this->label = NULL;
-   calculateNeededSize("", NULL);
+   this->rightLabel = NULL;
+   calculateNeededSize("", "", NULL);
 }
 
 /***********************************************************************
@@ -85,7 +108,14 @@ void Menu::MenuItem::setCaption(Kobold::String str)
 {
    if(this->label)
    {
-      calculateNeededSize(str, this->icon);
+      if(this->rightLabel)
+      {
+         calculateNeededSize(str, this->rightLabel->getCaption(), this->icon);
+      }
+      else
+      {
+         calculateNeededSize(str, "", this->icon);
+      }
       this->label->setCaption(str);
    }
 }
@@ -100,8 +130,8 @@ Menu::MenuItem::~MenuItem()
 /***********************************************************************
  *                       calculateNeededSize                           *
  ***********************************************************************/
-void Menu::MenuItem::calculateNeededSize(Kobold::String str, 
-      Farso::Picture* pic)
+void Menu::MenuItem::calculateNeededSize(Kobold::String str,
+      Kobold::String rightText, Farso::Picture* pic)
 {
    Skin* skin = Controller::getSkin();
    Font* font;
@@ -131,12 +161,18 @@ void Menu::MenuItem::calculateNeededSize(Kobold::String str,
          height = pic->getHeight() + 2;
       }
    }
+
+   if(!rightText.empty())
+   {
+      /* Must use its size plus an ammount to separate it from caption */
+      width += font->getWidth(rightText) + 20;
+   }
 }
 
 /***********************************************************************
  *                             setPosition                             *
  ***********************************************************************/
-void Menu::MenuItem::setPosition(int x, int y)
+void Menu::MenuItem::setPosition(int x, int y, int width)
 {
    /* Define internal */
    pX = x;
@@ -153,6 +189,11 @@ void Menu::MenuItem::setPosition(int x, int y)
    if(this->label)
    {
       this->label->setPosition(x, y);
+   }
+   if(this->rightLabel)
+   {
+      this->rightLabel->setPosition(0, y);
+      this->rightLabel->setWidth(width - 2);
    }
 }
 
@@ -328,7 +369,7 @@ void Menu::beginCreate()
 /***********************************************************************
  *                           insertItem                                *
  ***********************************************************************/
-Menu::MenuItem* Menu::insertItem(Kobold::String text)
+Menu::MenuItem* Menu::insertItem(Kobold::String text, Kobold::String rightText)
 {
    if(!creating)
    {
@@ -338,7 +379,7 @@ Menu::MenuItem* Menu::insertItem(Kobold::String text)
    }
 
    /* Create and insert item */
-   MenuItem* item = new MenuItem(text, grid);
+   MenuItem* item = new MenuItem(text, rightText, grid);
    items.insertAtEnd(item);
 
    /* Check current menu width */
@@ -353,7 +394,8 @@ Menu::MenuItem* Menu::insertItem(Kobold::String text)
 /***********************************************************************
  *                           insertItem                                *
  ***********************************************************************/
-Menu::MenuItem* Menu::insertItem(Kobold::String text, Kobold::String icon)
+Menu::MenuItem* Menu::insertItem(Kobold::String text, Kobold::String rightText,
+      Kobold::String icon)
 {
    if(!creating)
    {
@@ -363,7 +405,7 @@ Menu::MenuItem* Menu::insertItem(Kobold::String text, Kobold::String icon)
    }
    
    /* Create and insert item */
-   MenuItem* item = new MenuItem(text, icon, grid);
+   MenuItem* item = new MenuItem(text, rightText, icon, grid);
    items.insertAtEnd(item);
 
    /* Check current menu width */
@@ -460,7 +502,7 @@ void Menu::open(int x, int y, Widget* caller)
       if(item->isVisible())
       {
          /* Define item position and its grid */
-         item->setPosition(pX, pY);
+         item->setPosition(pX, pY, curWidth);
 
          if(item->isEnabled())
          {

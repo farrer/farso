@@ -52,11 +52,12 @@ class Menu : public Widget
       {
          public:
             /*! Constructor */
-            MenuItem(Kobold::String caption, Widget* owner);
+            MenuItem(Kobold::String caption, Kobold::String rightText, 
+                  Widget* owner);
 
             /*! Constructor, with icon. */
-            MenuItem(Kobold::String caption, Kobold::String icon, 
-                  Widget* owner);
+            MenuItem(Kobold::String caption, Kobold::String rightText,
+                  Kobold::String icon, Widget* owner);
 
             /*! Constructor for separators */
             MenuItem();
@@ -65,7 +66,7 @@ class Menu : public Widget
             ~MenuItem();
 
             /*! Set current position of the item */
-            void setPosition(int x, int y);
+            void setPosition(int x, int y, int width);
 
             /*! \return current item X position */
             int getX();
@@ -97,7 +98,7 @@ class Menu : public Widget
 
             /*! Reset item's text.  
              * \note this won't change menu width, so be carefull to it be
-             * enougth to contain the new string, otherwise it will be
+             * enough to contain the new string, otherwise it will be
              * truncated. */
             void setCaption(Kobold::String str);
 
@@ -106,7 +107,8 @@ class Menu : public Widget
 
          private:
             /* Calculate item needed size */
-            void calculateNeededSize(Kobold::String str, Farso::Picture* pic);
+            void calculateNeededSize(Kobold::String str, 
+                  Kobold::String rightText, Farso::Picture* pic);
 
             bool enabled; /**< if enabled or disabled */
             bool visible; /**< if visible or hidden */
@@ -114,6 +116,7 @@ class Menu : public Widget
             bool separator; /**< if element is a separtor */
 
             Label* label;  /**< item's label */
+            Label* rightLabel; /**< item's right text label */
             Picture* icon; /**< item's icon */
 
             Widget* owner; /**< pointer to the owner (a grid). */
@@ -131,14 +134,19 @@ class Menu : public Widget
 
       /*! Insert a new menu item.
        * \note should be called between beginCreate() endCreate() calls.
-       * \param text item's caption */
-      MenuItem* insertItem(Kobold::String text);
+       * \param text item's caption 
+       * \param rightText item's right aligned text (usually used for
+       *        displaying shortcut alias). */
+      MenuItem* insertItem(Kobold::String text, Kobold::String rightText="");
 
       /*! Insert a new menu item, with icon.
        * \note should be called between beginCreate() endCreate() calls.
        * \param text item's caption 
+       * \param rightText item's right aligned text (usually used for
+       *        displaying shortcut alias).
        * \param icon path to icon's image. */
-      MenuItem* insertItem(Kobold::String text, Kobold::String icon);
+      MenuItem* insertItem(Kobold::String text, Kobold::String rightText, 
+            Kobold::String icon);
 
       /*! Insert a separator item. A separator is just a decorative
        * item that couldn't be selected */

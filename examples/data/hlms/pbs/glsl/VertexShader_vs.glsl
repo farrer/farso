@@ -8,7 +8,7 @@ out gl_PerVertex
 layout(std140) uniform;
 
 @insertpiece( Common_Matrix_DeclUnpackMatrix4x4 )
-@insertpiece( Common_Matrix_DeclUnpackMatrix4x3 )
+@insertpiece( Common_Matrix_DeclUnpackMatrix3x4 )
 
 in vec4 vertex;
 
@@ -113,20 +113,20 @@ layout(binding = 0) uniform samplerBuffer worldMatBuf;
 @end @end //SkeletonTransform // !hlms_skeleton
 
 @property( hlms_skeleton )
-    @piece( worldViewMat )pass.view@end
+	@piece( worldViewMat )passBuf.view@end
 @end @property( !hlms_skeleton )
     @piece( worldViewMat )worldView@end
 @end
 
-@piece( CalculatePsPos )(@insertpiece( worldViewMat ) * @insertpiece(local_vertex)).xyz@end
+@piece( CalculatePsPos )(@insertpiece(local_vertex) * @insertpiece( worldViewMat )).xyz@end
 
 @piece( VertexTransform )
 	//Lighting is in view space
 	@property( hlms_normal || hlms_qtangent )outVs.pos		= @insertpiece( CalculatePsPos );@end
-    @property( hlms_normal || hlms_qtangent )outVs.normal	= mat3(@insertpiece( worldViewMat )) * @insertpiece(local_normal);@end
-    @property( normal_map )outVs.tangent	= mat3(@insertpiece( worldViewMat )) * @insertpiece(local_tangent);@end
+	@property( hlms_normal || hlms_qtangent )outVs.normal	= @insertpiece(local_normal) * mat3(@insertpiece( worldViewMat ));@end
+	@property( normal_map )outVs.tangent	= @insertpiece(local_tangent) * mat3(@insertpiece( worldViewMat ));@end
 @property( !hlms_dual_paraboloid_mapping )
-    gl_Position = pass.viewProj * worldPos;@end
+	gl_Position = worldPos * passBuf.viewProj;@end
 @property( hlms_dual_paraboloid_mapping )
 	//Dual Paraboloid Mapping
 	gl_Position.w	= 1.0f;
@@ -138,20 +138,21 @@ layout(binding = 0) uniform samplerBuffer worldMatBuf;
 	gl_Position.z	= (L - NearPlane) / (FarPlane - NearPlane);@end
 @end
 @piece( ShadowReceive )
-@foreach( hlms_num_shadow_maps, n )
-    outVs.posL@n = pass.shadowRcv[@n].texViewProj * vec4(worldPos.xyz, 1.0f);@end
+@foreach( hlms_num_shadow_map_lights, n )
+	@property( !hlms_shadowmap@n_is_point_light )
+		outVs.posL@n = vec4(worldPos.xyz, 1.0f) * passBuf.shadowRcv[@n].texViewProj;@end @end
 @end
 
 void main()
 {
     @insertpiece( custom_vs_preExecution )
 @property( !hlms_skeleton )
-    mat4x3 worldMat = UNPACK_MAT4x3( worldMatBuf, drawId @property( !hlms_shadowcaster )<< 1u@end );
+	mat3x4 worldMat = UNPACK_MAT3x4( worldMatBuf, drawId @property( !hlms_shadowcaster )<< 1u@end );
 	@property( hlms_normal || hlms_qtangent )
     mat4 worldView = UNPACK_MAT4( worldMatBuf, (drawId << 1u) + 1u );
 	@end
 
-    vec4 worldPos = vec4( (worldMat * vertex).xyz, 1.0f );
+	vec4 worldPos = vec4( (vertex * worldMat).xyz, 1.0f );
 @end
 
 @property( hlms_qtangent )
@@ -168,25 +169,33 @@ void main()
 
 @property( !hlms_shadowcaster )
 	@insertpiece( ShadowReceive )
-@foreach( hlms_num_shadow_maps, n )
-	outVs.posL@n.z = outVs.posL@n.z * pass.shadowRcv[@n].shadowDepthRange.y;
-	outVs.posL@n.z = (outVs.posL@n.z * 0.5) + 0.5;@end
+@foreach( hlms_num_shadow_map_lights, n )
+	@property( !hlms_shadowmap@n_is_point_light )
+		outVs.posL@n.z = outVs.posL@n.z * passBuf.shadowRcv[@n].shadowDepthRange.y;
+		outVs.posL@n.z = (outVs.posL@n.z * 0.5) + 0.5;
+	@end
+@end
 
 @property( hlms_pssm_splits )	outVs.depth = gl_Position.z;@end
 
 @end @property( hlms_shadowcaster )
     float shadowConstantBias = uintBitsToFloat( instance.worldMaterialIdx[drawId].y );
 
-	@property( !hlms_shadow_uses_depth_texture )
+	@property( !hlms_shadow_uses_depth_texture && !hlms_shadowcaster_point )
 		//Linear depth
-		outVs.depth	= (gl_Position.z + shadowConstantBias * pass.depthRange.y) * pass.depthRange.y;
+		outVs.depth	= (gl_Position.z + shadowConstantBias * passBuf.depthRange.y) * passBuf.depthRange.y;
 		outVs.depth = (outVs.depth * 0.5) + 0.5;
+	@end
+
+	@property( hlms_shadowcaster_point )
+		outVs.toCameraWS	= worldPos.xyz - passBuf.cameraPosWS.xyz;
+		outVs.constBias		= shadowConstantBias * passBuf.depthRange.y * passBuf.depthRange.y;
 	@end
 
 	//We can't make the depth buffer linear without Z out in the fragment shader;
 	//however we can use a cheap approximation ("pseudo linear depth")
 	//see http://www.yosoygames.com.ar/wp/2014/01/linear-depth-buffer-my-ass/
-	gl_Position.z = (gl_Position.z + shadowConstantBias * pass.depthRange.y) * pass.depthRange.y * gl_Position.w;
+	gl_Position.z = (gl_Position.z + shadowConstantBias * passBuf.depthRange.y) * passBuf.depthRange.y * gl_Position.w;
 @end
 
 	/// hlms_uv_count will be 0 on shadow caster passes w/out alpha test

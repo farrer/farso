@@ -11,12 +11,14 @@ struct Light
 	vec3 position;
 	vec3 diffuse;
 	vec3 specular;
-@property( hlms_num_shadow_maps )
+@property( hlms_num_shadow_map_lights )
 	vec3 attenuation;
 	vec3 spotDirection;
 	vec3 spotParams;
 @end
 };
+
+@insertpiece( DeclCubemapProbeStruct )
 
 //Uniforms that change per pass
 layout(binding = 0) uniform PassBuffer
@@ -24,15 +26,24 @@ layout(binding = 0) uniform PassBuffer
 	//Vertex shader (common to both receiver and casters)
 	mat4 viewProj;
 
+@property( hlms_shadowcaster_point )
+	vec4 cameraPosWS;	//Camera position in world space
+@end
+
 @property( !hlms_shadowcaster )
 	//Vertex shader
 	mat4 view;
-	@property( hlms_num_shadow_maps )ShadowReceiverData shadowRcv[@value(hlms_num_shadow_maps)];@end
+	@property( hlms_num_shadow_map_lights )ShadowReceiverData shadowRcv[@value(hlms_num_shadow_map_lights)];@end
 
 	//-------------------------------------------------------------------------
 
 	//Pixel shader
 	mat3 invViewMatCubemap;
+
+
+@property( hlms_use_prepass )
+	vec4 windowHeight;
+@end
 
 @property( ambient_hemisphere || ambient_fixed || envmap_scale )
 	vec4 ambientUpperHemi;
@@ -40,6 +51,12 @@ layout(binding = 0) uniform PassBuffer
 @property( ambient_hemisphere )
 	vec4 ambientLowerHemi;
 	vec4 ambientHemisphereDir;
+@end
+
+@property( irradiance_volumes )
+	vec4 irradianceOrigin;	//.w = maxPower
+	vec4 irradianceSize;	//.w = 1.0f / irradianceTexture->getHeight()
+	mat4 invView;
 @end
 
 @property( hlms_pssm_splits )@foreach( hlms_pssm_splits, n )
@@ -50,16 +67,33 @@ layout(binding = 0) uniform PassBuffer
 	vec2 depthRange;
 @end
 
-@property( hlms_forward3d )
+@property( hlms_forwardplus )
+	//Forward3D
 	//f3dData.x = minDistance;
 	//f3dData.y = invMaxDistance;
 	//f3dData.z = f3dNumSlicesSub1;
 	//f3dData.w = uint cellsPerTableOnGrid0 (floatBitsToUint);
+
+	//Clustered Forward:
+	//f3dData.x = minDistance;
+	//f3dData.y = invExponentK;
+	//f3dData.z = f3dNumSlicesSub1;
+	//f3dData.w = renderWindow->getHeight();
 	vec4 f3dData;
-	vec4 f3dGridHWW[@value( hlms_forward3d )];
+	@property( hlms_forwardplus == forward3d )
+		vec4 f3dGridHWW[@value( forward3d_num_slices )];
+	@end
+	@property( hlms_forwardplus != forward3d )
+		vec4 fwdScreenToGrid;
+	@end
 @end
+
+@property( parallax_correct_cubemaps )
+	CubemapProbe autoProbe;
+@end
+
 	@insertpiece( custom_passBuffer )
-} pass;
+} passBuf;
 @end
 
 @property( fresnel_scalar )@piece( FresnelType )vec3@end @piece( FresnelSwizzle )xyz@end @end
@@ -94,7 +128,6 @@ layout(binding = 1) uniform MaterialBuf
 } materialArray;
 @end
 
-
 @piece( InstanceDecl )
 //Uniforms that change per Item/Entity
 layout(binding = 2) uniform InstanceBuffer
@@ -109,6 +142,15 @@ layout(binding = 2) uniform InstanceBuffer
     //Must be loaded with uintBitsToFloat
     uvec4 worldMaterialIdx[4096];
 } instance;
+@end
+
+@property( envprobe_map && envprobe_map != target_envprobe_map && use_parallax_correct_cubemaps )
+@piece( PccManualProbeDecl )
+layout(binding = 3) uniform ManualProbe
+{
+	CubemapProbe probe;
+} manualProbe;
+@end
 @end
 
 @piece( VStoPS_block )
@@ -126,8 +168,9 @@ layout(binding = 2) uniform InstanceBuffer
 		@foreach( hlms_uv_count, n )
 			vec@value( hlms_uv_count@n ) uv@n;@end
 
-		@foreach( hlms_num_shadow_maps, n )
-			vec4 posL@n;@end
+		@foreach( hlms_num_shadow_map_lights, n )
+			@property( !hlms_shadowmap@n_is_point_light )
+				vec4 posL@n;@end @end
 		@property( hlms_pssm_splits )float depth;@end
 	@end
 	@property( hlms_shadowcaster )
@@ -136,8 +179,12 @@ layout(binding = 2) uniform InstanceBuffer
 			@foreach( hlms_uv_count, n )
 				vec@value( hlms_uv_count@n ) uv@n;@end
 		@end
-		@property( !hlms_shadow_uses_depth_texture )
+		@property( !hlms_shadow_uses_depth_texture && !hlms_shadowcaster_point )
 			float depth;
+		@end
+		@property( hlms_shadowcaster_point )
+			vec3 toCameraWS;
+			flat float constBias;
 		@end
 	@end
 	@insertpiece( custom_VStoPS )

@@ -217,7 +217,7 @@ void SDLDraw::doStampFill(Surface* target, int tx1, int ty1,
    }
    else if(stampType == Draw::STAMP_TYPE_COPY)
    {
-      SDL_SetSurfaceBlendMode(sourceSdl, SDL_BLENDMODE_NONE);
+      //SDL_SetSurfaceBlendMode(sourceSdl, SDL_BLENDMODE_NONE);
    }
 
    /* Blit until filled the whole target rectangle */

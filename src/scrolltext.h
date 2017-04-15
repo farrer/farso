@@ -33,7 +33,11 @@ namespace Farso
 class ScrollText : public Widget
 {
    public:
-      /*!  Constructor */
+      /*!  Constructor, using default font from current skin. 
+       * \note only use this constructor if using a Skin. Otherwise, 
+       *       the full constructor should be used.*/
+      ScrollText(int x, int y, int width, int height, Widget* parent);
+      /*! Constructor with default font definition */
       ScrollText(int x, int y, int width, int height,
                  Kobold::String defaultFont, int defaultFontSize,
                  Color defaultColor, Widget* parent);
@@ -74,7 +78,6 @@ class ScrollText : public Widget
       void setDirty();
 
    protected:
-
       /* Implementations from Widget */
       void doDraw(Rect pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
@@ -82,6 +85,8 @@ class ScrollText : public Widget
       void doAfterChildTreat(); 
 
    private:
+      /*! Init ScrollText definitions */
+      void init(int width, int height);
 
       /*! A single text sentence. The sentence is a group of text at the same 
        * line which have the same font attributes */

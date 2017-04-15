@@ -1190,3 +1190,14 @@ bool Skin::isElementDefined(int type)
    return false;
 }
 
+/***********************************************************************
+ *                         getDefaultFontInfo                          *
+ ***********************************************************************/
+void Skin::getDefaultFontInfo(Kobold::String& fontFilename, int& fontSize,
+      Farso::Color& fontColor)
+{
+   fontFilename = defaultFont;
+   fontSize = defaultFontSize;
+   fontColor = defaultFontColor;
+}
+

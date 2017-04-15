@@ -27,11 +27,41 @@ using namespace Farso;
 /***********************************************************************
  *                               ScrollText                            *
  ***********************************************************************/
+ScrollText::ScrollText(int x, int y, int width, int height, Widget* parent)
+          :Widget(Widget::WIDGET_TYPE_SCROLL_TEXT, x, y, width, height, parent),
+           lines(Kobold::LIST_TYPE_ADD_AT_END)
+{
+   /* Set defaults */
+   Skin* skin = Controller::getSkin();
+   assert(skin != NULL);
+
+   skin->getDefaultFontInfo(this->defaultFont, this->defaultFontSize,
+         this->defaultColor);
+
+   init(width, height);
+}
+
+/***********************************************************************
+ *                               ScrollText                            *
+ ***********************************************************************/
 ScrollText::ScrollText(int x, int y, int width, int height,
                        Kobold::String defaultFont, int defaultFontSize,
                        Color defaultColor, Widget* parent)
           :Widget(Widget::WIDGET_TYPE_SCROLL_TEXT, x, y, width, height, parent),
            lines(Kobold::LIST_TYPE_ADD_AT_END)
+{
+   /* Set defaults */
+   this->defaultFont = defaultFont;
+   this->defaultFontSize = defaultFontSize;
+   this->defaultColor = defaultColor;
+
+   init(width, height);
+}
+
+/***********************************************************************
+ *                                  init                               *
+ ***********************************************************************/
+void ScrollText::init(int width, int height)
 {
    body.set(getX(), getY(), getX() + width - 1, getY() + height - 1);
 
@@ -39,10 +69,7 @@ ScrollText::ScrollText(int x, int y, int width, int height,
    this->scrollBar = new ScrollBar(ScrollBar::TYPE_VERTICAL, 
          width - 20, 0, height, this); 
 
-   /* Set defaults */
-   this->defaultFont = defaultFont;
-   this->defaultFontSize = defaultFontSize;
-   this->defaultColor = defaultColor;
+   /* Clear initial */
    this->firstDisplayedLine = NULL;
    this->firstDisplayed = 0;
 

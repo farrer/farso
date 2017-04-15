@@ -288,6 +288,10 @@ class Skin
       /*! \return filename of the skin. */
       Kobold::String getFilename();
 
+      /*! Get the default font information */
+      void getDefaultFontInfo(Kobold::String& fontFilename, int& fontSize,
+            Farso::Color& fontColor);
+
    protected:
 
       /*! \return total distinct skin elements supported. */

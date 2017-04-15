@@ -242,7 +242,12 @@ void TextSelector::setUnselectedStyle(Label* label)
  ***********************************************************************/
 void TextSelector::setSelectedStyle(Label* label)
 {
-   if((selectedOption) && (selectedOption->label != label))
+   if((selectedOption != NULL) && (selectedOption->label == label))
+   {
+      /* Already selected */
+      return;
+   }
+   else if(selectedOption)
    {
       /* Unselect current selection */
       setUnselectedStyle(selectedOption->label);

@@ -43,11 +43,15 @@ class TextSelector : public Widget
       /*! Destructor */
       ~TextSelector();
 
-      /*! Add an option that can be selected by the user */
-      void addOption(Kobold::String text);
+      /*! Add an option that can be selected by the user 
+       * \param text current text of the option */
+      void addOption(Kobold::String text, int index = -1);
 
-      /*! \return index [0, max-1] of the selected option, if any.
-       * If no option was selected, will return a value < 0 */
+      /*! \return index of the selected option, if any.
+       * If no option was selected, will return a value < 0.
+       * \note if index was defined at addOption, this will be the index
+       *       returned, otherwise, will return the internal index in range
+       *       [0, max-1]. */
       int getSelectedOption();
       
       Rect getBody();
@@ -64,6 +68,9 @@ class TextSelector : public Widget
        * \return if option is in range [0, max-1] or not . */
       const bool haveOption(int option) const 
       { return option >= 0 && option < options.getTotal(); }
+
+      /*! Clear all current available options and labels. */
+      void clearOptions();
 
    protected:
       void doDraw(Rect pBody);
@@ -83,14 +90,15 @@ class TextSelector : public Widget
       {
          public:
             TextOption(int x, int y, int width, int height, 
-                       Kobold::String caption, Widget* parent);
+                       Kobold::String caption, int index, Widget* parent);
             ~TextOption();
 
-            Label* label;
+            Label* label; /**< Current label */
+            int index;    /**< Internal or External index */
       };
 
       Kobold::List options; /**< List of options to select */
-      int selected; /**< Index of current selected option */
+      int selected; /**< internal index of the selected option */
       int over; /**< Index of current on over option */
       TextOption* selectedOption; /**< Current option selected */
       Rect body; /**< Options body */

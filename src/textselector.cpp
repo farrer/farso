@@ -28,10 +28,11 @@ using namespace Farso;
  *                             Constructor                             *
  ***********************************************************************/
 TextSelector::TextOption::TextOption(int x, int y, int width, int height,
-      Kobold::String caption, Widget* parent)
+      Kobold::String caption, int index, Widget* parent)
 {
-   label = new Label(x, y, width, height, caption, parent);
-   label->setSkinType(Skin::SKIN_TYPE_TEXT_OPTION);
+   this->label = new Label(x, y, width, height, caption, parent);
+   this->label->setSkinType(Skin::SKIN_TYPE_TEXT_OPTION);
+   this->index = index;
 }
 
 /***********************************************************************
@@ -69,15 +70,19 @@ TextSelector::~TextSelector()
 /***********************************************************************
  *                              addOption                              *
  ***********************************************************************/
-void TextSelector::addOption(Kobold::String text)
+void TextSelector::addOption(Kobold::String text, int index)
 {
    Kobold::String prefix = Kobold::StringUtil::toString(
          options.getTotal() + 1) + "- ";
+   if(index < 0)
+   {
+      index = options.getTotal();
+   }
    /* We insert at the whole line, but at doDraw, we'll redefine the 
     * position according to font and skin used (allowing changing the skin
     * on the fly). */
    options.insert(new TextOption(0, 0, getWidth(), getHeight(), 
-            prefix + text, this));
+            prefix + text, index, this));
 }
 
 /***********************************************************************
@@ -85,6 +90,10 @@ void TextSelector::addOption(Kobold::String text)
  ***********************************************************************/
 int TextSelector::getSelectedOption()
 {
+   if(selectedOption)
+   {
+      return selectedOption->index;
+   }
    return selected;
 }
 
@@ -101,6 +110,29 @@ void TextSelector::unselect()
       selectedOption = NULL;
    }
 }
+
+/***********************************************************************
+ *                            clearOptions                             *
+ ***********************************************************************/
+void TextSelector::clearOptions()
+{
+   /* Remove all labels created for our selection */
+   TextOption* opt = static_cast<TextOption*>(options.getFirst());
+   for(int i = 0; i < options.getTotal(); i++)
+   {
+      remove(opt->label);
+      opt = static_cast<TextOption*>(opt->getNext());
+   }
+
+   /* Finally, remove all elements */
+   options.clear();
+
+   /* Nullify things */
+   selected = -1;
+   selectedOption = NULL;
+   over = -1;
+}
+
 
 /***********************************************************************
  *                            forceSelection                           *

@@ -56,6 +56,7 @@ TextSelector::TextSelector(Widget* parent)
    setSize(body.getWidth(), body.getHeight());
    selected = -1;
    over = -1;
+   selectedOption = NULL;
 }
 
 /***********************************************************************
@@ -85,6 +86,40 @@ void TextSelector::addOption(Kobold::String text)
 int TextSelector::getSelectedOption()
 {
    return selected;
+}
+
+/***********************************************************************
+ *                              unselect                               *
+ ***********************************************************************/
+void TextSelector::unselect()
+{
+   selected = -1;
+   over = -1;
+   if(selectedOption)
+   {
+      setUnselectedStyle(selectedOption->label);
+      selectedOption = NULL;
+   }
+}
+
+/***********************************************************************
+ *                            forceSelection                           *
+ ***********************************************************************/
+void TextSelector::forceSelection(int option)
+{
+   if((option >= 0) && (option < options.getTotal()))
+   {
+      selected = option;
+      over = option;
+
+      /* Define our label style */
+      TextOption* opt = static_cast<TextOption*>(options.getFirst());
+      for(int i = 0; i < option; i++)
+      {
+         opt = static_cast<TextOption*>(opt->getNext());
+      }
+      setSelectedStyle(opt->label);
+   }
 }
 
 /***********************************************************************
@@ -129,8 +164,6 @@ void TextSelector::doDraw(Rect pBody)
 bool TextSelector::doTreat(bool leftButtonPressed, bool rightButtonPressed, 
       int mouseX, int mouseY, int mrX, int mrY)
 {
-   Skin* skin = Controller::getSkin();
-   int wasOverAt = over;
    over = -1;
    selected = -1;
 
@@ -142,38 +175,22 @@ bool TextSelector::doTreat(bool leftButtonPressed, bool rightButtonPressed,
    {
       if(opt->label->isInner(mrX, mrY))
       {
-         if(wasOverAt != i)
+         if(selectedOption != opt)
          {
-            if(skin == NULL)
-            {
-               opt->label->setFontColor(Color(10,255,10,255));
-            }
-            else 
-            {
-               opt->label->setSkinType(Skin::SKIN_TYPE_TEXT_OPTION_OVER);
-            }
-            opt->label->setDirty();
-            getParent()->setDirty();
+            /* Redefine as selected */
+            setSelectedStyle(opt->label);
+            selectedOption = opt;
          }
          over = i;
       }
-      else
-      {
-         if(wasOverAt == i)
-         {
-            if(skin == NULL)
-            {
-               opt->label->setFontColor(Color(255,255,255,255));
-            }
-            else
-            {
-               opt->label->setSkinType(Skin::SKIN_TYPE_TEXT_OPTION);
-            }
-            opt->label->setDirty();
-            getParent()->setDirty();
-         }
-      }
       opt = (TextOption*) opt->getNext();
+   }
+
+   if((over == -1) && (selectedOption))
+   {
+      /* Unselect */
+      setUnselectedStyle(selectedOption->label);
+      selectedOption = NULL;
    }
 
    return false;
@@ -200,6 +217,49 @@ void TextSelector::doAfterChildTreat()
          opt = (TextOption*) opt->getNext();
       }
    }
+}
+
+/***********************************************************************
+ *                         setUnSelectedStyle                          *
+ ***********************************************************************/
+void TextSelector::setUnselectedStyle(Label* label)
+{
+   Skin* skin = Controller::getSkin();
+   if(skin == NULL)
+   {
+      label->setFontColor(Color(255,255,255,255));
+   }
+   else
+   {
+      label->setSkinType(Skin::SKIN_TYPE_TEXT_OPTION);
+   }
+   label->setDirty();
+   getParent()->setDirty();
+}
+
+/***********************************************************************
+ *                          setSelectedStyle                           *
+ ***********************************************************************/
+void TextSelector::setSelectedStyle(Label* label)
+{
+   if((selectedOption) && (selectedOption->label != label))
+   {
+      /* Unselect current selection */
+      setUnselectedStyle(selectedOption->label);
+      selectedOption = NULL;
+   }
+
+   Skin* skin = Controller::getSkin();
+   if(skin == NULL)
+   {
+      label->setFontColor(Color(10,255,10,255));
+   }
+   else 
+   {
+      label->setSkinType(Skin::SKIN_TYPE_TEXT_OPTION_OVER);
+   }
+   label->setDirty();
+   getParent()->setDirty();
 }
 
 /***********************************************************************

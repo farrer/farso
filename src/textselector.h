@@ -52,11 +52,24 @@ class TextSelector : public Widget
       
       Rect getBody();
 
+      /*! Unselect any selected option */
+      void unselect();
+
+      /*! Force selection of an option 
+       * \param option to select, range [0, max-1] */
+      void forceSelection(int option);
+
    protected:
       void doDraw(Rect pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();
+
+      /*! Set the label to be of unselected style */
+      void setUnselectedStyle(Label* label);
+      /*! Set the label to be of unselected style */
+      void setSelectedStyle(Label* label);
+
 
    private:
       /*! Each option definition */
@@ -73,6 +86,7 @@ class TextSelector : public Widget
       Kobold::List options; /**< List of options to select */
       int selected; /**< Index of current selected option */
       int over; /**< Index of current on over option */
+      TextOption* selectedOption; /**< Current option selected */
       Rect body; /**< Options body */
 };
 

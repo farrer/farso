@@ -22,6 +22,7 @@
 #include "controller.h"
 #include "container.h"
 #include <kobold/log.h>
+#include <assert.h>
 using namespace Farso;
 
 /***********************************************************************

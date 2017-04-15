@@ -59,6 +59,12 @@ class TextSelector : public Widget
        * \param option to select, range [0, max-1] */
       void forceSelection(int option);
 
+      /*! Check if selector have an option.
+       * \param option option index to check if exists.
+       * \return if option is in range [0, max-1] or not . */
+      const bool haveOption(int option) const 
+      { return option >= 0 && option < options.getTotal(); }
+
    protected:
       void doDraw(Rect pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 

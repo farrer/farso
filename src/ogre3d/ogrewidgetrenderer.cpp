@@ -89,7 +89,7 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
    Ogre::ResourceManager::ResourceCreateOrRetrieveResult matRes;
    matRes = Ogre::MaterialManager::getSingleton().createOrRetrieve(name,
          "gui");
-   material = matRes.first.staticCast<Ogre::Material>();
+   material = Ogre::static_pointer_cast<Ogre::Material>(matRes.first);
 #endif
 
    uploadSurface();

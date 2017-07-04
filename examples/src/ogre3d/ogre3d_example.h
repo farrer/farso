@@ -44,7 +44,8 @@ class Ogre3dExample : public Goblin::BaseApp
       void doLowMemoryClean();
       void doSendToBackground();
       void doSendToForeground();
-      void doCycle();
+      void doBeforeRender();
+      void doAfterRender();
       bool shouldQuit();
 
    private:

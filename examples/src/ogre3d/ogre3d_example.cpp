@@ -69,11 +69,18 @@ void Ogre3dExample::doSendToForeground()
 }
 
 /************************************************************************
- *                                doCycle                               *
+ *                             doBeforeRender                           *
  ************************************************************************/
-void Ogre3dExample::doCycle()
+void Ogre3dExample::doBeforeRender()
 {
    example->step(leftButtonPressed, false, mouseX, mouseY);
+}
+
+/************************************************************************
+ *                             doAfterRender                            *
+ ************************************************************************/
+void Ogre3dExample::doAfterRender()
+{
 }
 
 /************************************************************************

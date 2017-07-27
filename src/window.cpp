@@ -357,6 +357,14 @@ void Window::setExternPointer(Window** extr)
 }
 
 /***********************************************************************
+ *                          clearExternPointer                         *
+ ***********************************************************************/
+void Window::clearExternPointer()
+{
+   externPointer = NULL;
+}
+
+/***********************************************************************
  *                                treat                                *
  ***********************************************************************/
 bool Window::doTreat(bool leftButtonPressed, bool rightButtonPressed,

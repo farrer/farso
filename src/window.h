@@ -82,6 +82,9 @@ class Window : public Widget
        *        if the main pointer is NULL or not.
        * \param extr pointer to the external window pointer. */
       void setExternPointer(Window** extr);
+
+      /*! Unset the external pointer. */
+      void clearExternPointer();
       
       Rect getBody();
 

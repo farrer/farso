@@ -50,6 +50,7 @@ void Controller::init(RendererType rendererType,
       int screenWidth, int screenHeight, int maxCursorSize,
       Kobold::String baseDir, void* extraInfo)
 {
+   mutex.lock();
    if(!inited)
    {
       /* Define parameters */
@@ -97,6 +98,7 @@ void Controller::init(RendererType rendererType,
       Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
             "WARN: Tried to double init Farso!");
    }
+   mutex.unlock();
 }
 
 /***********************************************************************
@@ -104,6 +106,8 @@ void Controller::init(RendererType rendererType,
  ***********************************************************************/
 void Controller::finish()
 {
+   mutex.lock();
+
    assert(inited);
 
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
@@ -144,6 +148,8 @@ void Controller::finish()
    FontManager::finish();
 
    inited = false;
+
+   mutex.unlock();
 }
 
 /***********************************************************************
@@ -169,9 +175,10 @@ void Controller::setCursor(Kobold::String filename)
 {
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
+   mutex.lock();
       Cursor::set(getRealFilename(filename));
+   mutex.unlock();
 #endif
-
 }
 
 /***********************************************************************
@@ -291,6 +298,7 @@ void Controller::setSkin(Skin* skin)
 {
    if(skin != NULL)
    {
+      mutex.lock();
       if(Controller::skin)
       {
          /* Must unload the current one */
@@ -298,6 +306,7 @@ void Controller::setSkin(Skin* skin)
       }
       Controller::skin = skin;
       markAllDirty();
+      mutex.unlock();
    }
 }
 
@@ -306,6 +315,7 @@ void Controller::setSkin(Skin* skin)
  ***********************************************************************/
 bool Controller::loadSkin(Kobold::String filename)
 {
+   mutex.lock();
    if(skin != NULL)
    {
       /* Unload previous defined skin. */
@@ -327,6 +337,8 @@ bool Controller::loadSkin(Kobold::String filename)
     * the failsafe 'no-skins' mode when failed to load the skin). */
    markAllDirty();
 
+   mutex.unlock();
+
    return success;
 }
 
@@ -335,12 +347,14 @@ bool Controller::loadSkin(Kobold::String filename)
  ***********************************************************************/
 void Controller::unloadSkin()
 {
+   mutex.lock();
    if(skin != NULL)
    {
       delete skin;
       skin = NULL;
       markAllDirty();
    }
+   mutex.unlock();
 }
 
 /***********************************************************************
@@ -361,7 +375,13 @@ void Controller::markAllDirty()
  ***********************************************************************/
 Skin* Controller::getSkin()
 {
-   return skin;
+   Skin* res;
+
+   mutex.lock();
+   res = skin;
+   mutex.unlock();
+
+   return res;
 }
 
 /***********************************************************************
@@ -393,7 +413,9 @@ const Event Controller::getLastEvent()
  ***********************************************************************/
 void Controller::setEvent(Widget* owner, EventType type)
 {
-  event.set(owner, type);
+   mutex.lock();
+   event.set(owner, type);
+   mutex.unlock();
 }
 
 /***********************************************************************
@@ -410,8 +432,13 @@ bool Controller::addWidget(Widget* widget)
             "ERROR: couldn't add a child widget to Controller!");
       return false;
    }
-   
-   return widgets->insert(widget);
+
+   mutex.lock();
+   bool res = widgets->insert(widget);
+   bringFront(widget);
+   mutex.unlock();
+
+   return res;
 }
 
 /***********************************************************************
@@ -419,7 +446,10 @@ bool Controller::addWidget(Widget* widget)
  ***********************************************************************/
 Window* Controller::getActiveWindow()
 {
-   return activeWindow;
+   mutex.lock();
+   Window* res = activeWindow;
+   mutex.unlock();
+   return res;
 }
 
 /***********************************************************************
@@ -427,6 +457,7 @@ Window* Controller::getActiveWindow()
  ***********************************************************************/
 void Controller::setActiveWindow(Window* window)
 {
+   mutex.lock();
    if(window != activeWindow)
    {
       Window* lastActive = activeWindow;
@@ -443,6 +474,7 @@ void Controller::setActiveWindow(Window* window)
       }
    }
    forceBringToFrontCall = true;
+   mutex.unlock();
 }
 
 /***********************************************************************
@@ -451,8 +483,10 @@ void Controller::setActiveWindow(Window* window)
 void Controller::setActiveMenu(Menu* menu)
 {
    assert(menu == NULL || activeMenu == NULL);
+   mutex.lock();
    activeMenu = menu;
    forceBringToFrontCall = true;
+   mutex.unlock();
 }
 
 /***********************************************************************
@@ -462,6 +496,7 @@ void Controller::bringFront(Widget* widget)
 {
    assert(widget != NULL);
    assert(widget->getParent() == NULL);
+
    forceBringToFrontCall = false;
 
    /* Bring the widget to list's front, if not yet */
@@ -498,15 +533,9 @@ void Controller::bringFront(Widget* widget)
  ***********************************************************************/
 void Controller::markToRemoveWidget(Widget* widget)
 {
+   mutex.lock();
    toRemoveWidgets->insert(new WidgetToRemove(widget));
-}
-
-/***********************************************************************
- *                            removeWidget                             *
- ***********************************************************************/
-bool Controller::removeWidget(Widget* widget)
-{
-   return widgets->remove(widget);
+   mutex.unlock();
 }
 
 /***********************************************************************
@@ -571,6 +600,8 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       int mouseX, int mouseY)
 {
    bool gotEvent = false;
+   
+   mutex.lock();
    mouseOverWidget = false;
 
    /* Enter 2d rendering mode */
@@ -580,13 +611,15 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
 
    /* Let's remove all to be removed widgets. */
    bool removed = false;
+   
    while(toRemoveWidgets->getTotal() > 0)
    {
       WidgetToRemove* wPtr = (WidgetToRemove*) toRemoveWidgets->getFirst();
-      removeWidget(wPtr->widget);
+      widgets->remove(wPtr->widget);
       toRemoveWidgets->remove(wPtr);
       removed = true;
    }
+
    /* If removed and have widgets, must bring it to front */
    if((removed) && (widgets->getTotal() > 0))
    {
@@ -711,9 +744,10 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
 
 #endif
 
-
    /* Restore rendering mode to previously enter 2d one. */
    junction->restore3dMode();
+
+   mutex.unlock();
 
    return gotEvent;
 }
@@ -731,7 +765,11 @@ RendererType Controller::getRendererType()
  ***********************************************************************/
 int Controller::getTotalRootWidgets()
 {
-   return widgets->getTotal();
+   mutex.lock();
+   int total = widgets->getTotal();
+   mutex.unlock();
+
+   return total;
 }
 
 /***********************************************************************
@@ -752,4 +790,5 @@ int Controller::height = 0;
 Kobold::String Controller::baseDir;
 bool Controller::forceBringToFrontCall = false;
 bool Controller::mouseOverWidget = false;
+Kobold::Mutex Controller::mutex;
 

@@ -47,6 +47,7 @@
 #include "window.h"
 
 #include <kobold/list.h>
+#include <kobold/mutex.h>
 
 namespace Farso
 {
@@ -143,11 +144,6 @@ class Controller
        * \return true if added, false if something went worng. */
       static bool addWidget(Widget* widget);
 
-      /*! Remove a previously added widget from the list 
-       * \param widget pointer to the Widget to remove.
-       * \return true if success. */
-      static bool removeWidget(Widget* widget);
-
       /*! Mark a widget (from the list) to be removed on next cycle.
        * \note this function is usefull when the widget itself
        *       knowns that it needs to be deleted but still couldn't
@@ -213,11 +209,6 @@ class Controller
       /*! \return real filename for fonts, skins and cursors files */
       static Kobold::String getRealFilename(Kobold::String filename);
 
-      /*! Bring a widget to the front (be rendered first).
-       * \param widget pointer to the Widget to be at front. 
-       * \note widget must be a 'root' widget (without parents). */
-      static void bringFront(Widget* widget);
-
       /*! \return total number of root (ie: without parents) widgets. */
       static int getTotalRootWidgets();
 
@@ -254,6 +245,11 @@ class Controller
       /*! Mark all widgets dirty. Usually called when changed skins. */
       static void markAllDirty();
 
+      /*! Bring a widget to the front (be rendered first).
+       * \param widget pointer to the Widget to be at front. 
+       * \note widget must be a 'root' widget (without parents). */
+      static void bringFront(Widget* widget);
+
       static Skin* skin; /**< Current skin used, if any (null for no skins). */
       static Draw* draw; /**< Current draw interface. */
       static ControllerRendererJunction* junction; 
@@ -276,6 +272,8 @@ class Controller
       static Kobold::String baseDir; /**< Base directory */
 
       static bool mouseOverWidget; /**< If mouse is under any widget */
+
+      static Kobold::Mutex mutex; /**< Mutex for thread-safe use */
 };
 
 };

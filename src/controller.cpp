@@ -435,7 +435,10 @@ bool Controller::addWidget(Widget* widget)
 
    mutex.lock();
    bool res = widgets->insert(widget);
-   bringFront(widget);
+   if(widget->getWidgetRenderer() != NULL)
+   {
+      bringFront(widget);
+   }
    mutex.unlock();
 
    return res;

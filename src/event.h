@@ -31,6 +31,9 @@ enum EventType
 {
    /*! When no events happened */
    EVENT_NONE,
+   /*! A event type to be used for user created widgets. If the widget have
+    * more than a single event, that should be defined inner the widget */
+   EVENT_USER_DEFINED,
    /*! When just clicked the window title bar to start its move */
    EVENT_WINDOW_MOVE_INIT,
    /*! When is moving the window (even if its at the same position) */

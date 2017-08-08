@@ -10,6 +10,7 @@ using namespace FarsoExample;
  *                              Ogre3dExample                           *
  ************************************************************************/
 Ogre3dExample::Ogre3dExample()
+              :Goblin::BaseApp(Goblin::CameraConfig())
 {
    example = NULL;
 }

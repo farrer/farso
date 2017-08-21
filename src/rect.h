@@ -43,37 +43,37 @@ class Rect
       Rect& operator=(Rect r);
 
       /*! Equal operator */
-      bool operator==(Rect& r);
+      const bool operator==(Rect& r) const;
 
       /*! Not equal operator */
-      bool operator!=(Rect& r);
+      const bool operator!=(Rect& r) const;
 
       /*! Verify if point x,y is inner the rectangle */
-      bool isInner(int x, int y);
+      const bool isInner(int x, int y) const;
 
       /*! Set rectangle coordinates */
       void set(int x1, int y1, int x2, int y2);
 
       /*! \return if the rectangle was defined or not */
-      bool isDefined();
+      const bool isDefined() const;
 
       /*! \return left coordinate */
-      int getX1();
+      const int getX1() const { return x1; };
 
       /*! \return top coordinate */
-      int getY1();
+      const int getY1() const { return y1; };
 
       /*! \return right coordinate */
-      int getX2();
+      const int getX2() const { return x2; };
 
       /*! \return bottom coordinate */
-      int getY2();
+      const int getY2() const { return y2; };
 
       /*! \return current width */
-      int getWidth();
+      const int getWidth() const { return width; };
 
       /*! \rturn current height */
-      int getHeight();
+      const int getHeight() const { return height; };
 
    private:
       int x1,

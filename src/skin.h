@@ -99,64 +99,59 @@ class Skin
             /*! Destructor */
             ~SkinElement();
 
+            /*! Set an element value based on its key */
+            void set(const Kobold::String& key, int x1, int y1, int x2, int y2);
+
             /*! \return if this widget has a background definition */
-            bool hasBackground();
-            /*! \return background coordinates on texture atlas */
-            Farso::Rect& getBackground();
-            /*! \return delta to widget's coordinates where should start
-             * the background draw */
-            Farso::Rect& getBackgroundDelta();
+            const bool hasBackground() const;
 
             /*! \return if this widget has a boder definition */
-            bool hasBorder();
-            /*! \return delta where chould start border draw */
-            Farso::Rect& getBorderDelta();
-            Farso::Rect& getTopBorderDelta(bool onlyIfDefined=true);
-            Farso::Rect& getRightBorderDelta(bool onlyIfDefined=true);
-            Farso::Rect& getLeftBorderDelta(bool onlyIfDefined=true);
-            Farso::Rect& getBottomBorderDelta(bool onlyIfDefined=true);
-            /*! \return left border coordinates on texture atlas */
-            Farso::Rect& getLeftBorder();
-            /*! \return top border coordinates on texture atlas */
-            Farso::Rect& getTopBorder();
-            /*! \return right border coordinates on texture atlas */
-            Farso::Rect& getRightBorder();
-            /*! \return bottom border coordinates on texture atlas */
-            Farso::Rect& getBottomBorder();
+            const bool hasBorder() const;
+
+            const Farso::Rect& getTopBorderDelta() const; 
+            const Farso::Rect& getRightBorderDelta() const;
+            const Farso::Rect& getLeftBorderDelta() const;
+            const Farso::Rect& getBottomBorderDelta() const;
+            const Farso::Rect& getBorderDelta() const { return borderDelta; };
+
+            const Farso::Rect& getTopBorder() const { return topBorder; };
+            const Farso::Rect& getLeftBorder() const { return leftBorder; };
+            const Farso::Rect& getBottomBorder() const { return bottomBorder; };
+            const Farso::Rect& getRightBorder() const { return rightBorder; };
+            
+            const Farso::Rect& getCornerDelta() const { return cornerDelta; };
+            const Farso::Rect& getTopLeftCorner() const 
+            { return topLeftCorner; };
+            const Farso::Rect& getTopRightCorner() const 
+            { return topRightCorner; };
+            const Farso::Rect& getBottomLeftCorner() const 
+            { return bottomLeftCorner; };
+            const Farso::Rect& getBottomRightCorner() const 
+            { return bottomRightCorner; };
 
             /*! \return if this widget has a corner definition */
-            bool hasCorner();
-            /*! \return delta where chould start corner draw */
-            Rect& getCornerDelta();
-            /*! \return top-left corner coordinates on texture atlas */
-            Farso::Rect& getTopLeftCorner();
-            /*! \return top-right corner coordinates on texture atlas */
-            Farso::Rect& getTopRightCorner();
-            /*! \return bottom-left corner coordinates on texture atlas */
-            Farso::Rect& getBottomLeftCorner();
-            /*! \return bottom-right corner coordinates on texture atlas */
-            Farso::Rect& getBottomRightCorner();
+            const bool hasCorner() const;
 
             /*! \return text area delta for text rendering on element */
-            Farso::Rect& getTextAreaDelta();
+            const Farso::Rect& getTextAreaDelta() const {return textAreaDelta;};
             /*! Set the name of the font to use for its texts */
             void setFontName(Kobold::String fontName);
             /*! \return font file name */
-            Kobold::String getFontName();
+            const Kobold::String& getFontName() const;
             /*! Set font size to use for its texts */
             void setFontSize(int size);
             /*! \return font size to use */
-            int getFontSize();
+            const int getFontSize() const;
             /*! Set the font alignment to use */
             void setFontAlignment(Font::Alignment align);
             /* \return font alignment to use */
-            Font::Alignment getFontAlignment();
+            const Font::Alignment& getFontAlignment() const;
             /*! Set font color to use for element's text */
             void setFontColor(Farso::Color color);
             /*! Set font color to use for element's text */
             void setFontColor(Kobold::String colorStr);
             /*! \return font color */
-            Farso::Color getFontColor();
+            const Farso::Color& getFontColor() const;
 
             /*! Draw the Skin for this element on a Surface. 
              * \param dest drawable surface where will draw to
@@ -180,30 +175,32 @@ class Skin
                   Font::Alignment align, Color fontColor,
                   Color outlineColor, int outlineWidth);
             /*! \return if this SkinElement is defined or not. */
-            bool isDefined();
+            const bool isDefined() const;
 
             /*! \return minimun size to use this skin element
              * \note: the min size is only calculated once - and on demand -
              *        per skin element. */
-            Rect getMinSize();
+            const Rect getMinSize() const;
 
             /*! Get the rectangle who defines the bounds of this element, 
              * in widget coordinates. 
              * \param width widget's width 
              * \param height widget's height */
-            Farso::Rect getBounds(int width, int height);
+            const Farso::Rect getBounds(int width, int height) const;
 
             /*! Get the rectangle who defines the body of this element,
              * in wiget coordinates.
              * \param width widget's width
              * \param height widget's height */
-            Farso::Rect getBody(int width, int height);
+            const Farso::Rect getBody(int width, int height) const;
 
          private:
 
-            void defBoundValue(int& bx1, int& by1, int& bx2, int& by2,
-                  Rect& delta, Rect& rect, bool useDeltaX1, bool useDeltaY1, 
-                  bool useDeltaX2, bool useDeltaY2, int width, int height);
+            const void defBoundValue(int& bx1, int& by1, int& bx2, int& by2,
+                  const Rect& delta, const Rect& rect, 
+                  bool useDeltaX1, bool useDeltaY1, 
+                  bool useDeltaX2, bool useDeltaY2, int width, 
+                  int height) const;
 
             Farso::Rect borderDelta;
             Farso::Rect leftBorderDelta;
@@ -248,8 +245,9 @@ class Skin
       /*! Load the skin definition file. */
       void load();
 
-      /*! \return SkinElement definition for specific widget type */
-      SkinElement getSkinElement(int type);
+      /*! Get SkinElement for a basic type. 
+       * \return SkinElement definition for specific widget type */
+      const SkinElement& getSkinElement(int type) const;
 
       /*! \return surface with texture atlas */
       Surface* getSurface();
@@ -283,14 +281,14 @@ class Skin
             Color outlineColor = Color(0, 0, 0, 255), int outlineWidth = 0);
 
       /*! \return if the Element type is defined or not on this skin. */
-      bool isElementDefined(int type);
+      const bool isElementDefined(int type) const;
 
       /*! \return filename of the skin. */
-      Kobold::String getFilename();
+      const Kobold::String& getFilename() const;
 
       /*! Get the default font information */
-      void getDefaultFontInfo(Kobold::String& fontFilename, int& fontSize,
-            Farso::Color& fontColor);
+      const void getDefaultFontInfo(Kobold::String& fontFilename, int& fontSize,
+            Farso::Color& fontColor) const;
 
    protected:
 
@@ -310,6 +308,9 @@ class Skin
       int getElementType(Kobold::String typeName);
 
    private:
+
+      SkinElement& getInnerSkinElement(int type) const;
+
       Surface* surface; /** The surface with the skin texture atlas. */
 
       Kobold::String defaultFont; /**< Default font to use. */

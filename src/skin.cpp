@@ -29,6 +29,33 @@
 
 using namespace Farso;
 
+#define SKIN_KEY_ATLAS               "atlas"
+#define SKIN_KEY_DEFAULT_FONT        "defaultFont"
+#define SKIN_KEY_DEFAULT_FONT_SIZE   "defaultFontSize"
+#define SKIN_KEY_DEFAULT_FONT_COLOR  "defaultFontColor"
+#define SKIN_KEY_ELEMENT             "element"
+#define SKIN_KEY_BACKGROUND          "background"
+#define SKIN_KEY_BACKGROUND_DELTA    "backgroundDelta"
+#define SKIN_KEY_BORDER_DELTA        "borderDelta"
+#define SKIN_KEY_TOP_BORDER_DELTA    "topBorderDelta"
+#define SKIN_KEY_LEFT_BORDER_DELTA   "leftBorderDelta"
+#define SKIN_KEY_RIGHT_BORDER_DELTA  "rightBorderDelta"
+#define SKIN_KEY_BOTTOM_BORDER_DELTA "bottomBorderDelta"
+#define SKIN_KEY_LEFT_BORDER         "leftBorder"
+#define SKIN_KEY_RIGHT_BORDER        "rightBorder"
+#define SKIN_KEY_TOP_BORDER          "topBorder"
+#define SKIN_KEY_BOTTOM_BORDER       "bottomBorder"
+#define SKIN_KEY_CORNER_DELTA        "cornerDelta"
+#define SKIN_KEY_TOP_LEFT_CORNER     "topLeftCorner"
+#define SKIN_KEY_TOP_RIGHT_CORNER    "topRightCorner"
+#define SKIN_KEY_BOTTOM_LEFT_CORNER  "bottomLeftCorner"
+#define SKIN_KEY_BOTTOM_RIGHT_CORNER "bottomRightCorner"
+#define SKIN_KEY_TEXT_AREA_DELTA     "textAreaDelta"
+#define SKIN_KEY_TEXT_FONT           "textFont"
+#define SKIN_KEY_TEXT_FONT_SIZE      "textFontSize"
+#define SKIN_KEY_TEXT_FONT_ALIGNMENT "textAlignment"
+#define SKIN_KEY_TEXT_FONT_COLOR     "textFontColor"
+
 /***********************************************************************
  *                              Constructor                            *
  ***********************************************************************/
@@ -44,52 +71,110 @@ Skin::SkinElement::~SkinElement()
 }
 
 /***********************************************************************
+ *                                  set                                *
+ ***********************************************************************/
+void Skin::SkinElement::set(const Kobold::String& key, 
+      int x1, int y1, int x2, int y2)
+{
+   /* Define element data */
+   if(key == SKIN_KEY_BACKGROUND_DELTA)
+   {
+      backgroundDelta.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_BACKGROUND)
+   {
+      background.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_BORDER_DELTA)
+   {
+      borderDelta.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_TOP_BORDER_DELTA)
+   {
+      topBorderDelta.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_BOTTOM_BORDER_DELTA)
+   {
+      bottomBorderDelta.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_LEFT_BORDER_DELTA)
+   {
+      leftBorderDelta.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_RIGHT_BORDER_DELTA)
+   {
+      rightBorderDelta.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_LEFT_BORDER)
+   {
+      leftBorder.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_RIGHT_BORDER)
+   {
+      rightBorder.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_TOP_BORDER)
+   {
+      topBorder.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_BOTTOM_BORDER)
+   {
+      bottomBorder.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_CORNER_DELTA)
+   {
+      cornerDelta.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_TOP_LEFT_CORNER)
+   {
+      topLeftCorner.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_TOP_RIGHT_CORNER)
+   {
+      topRightCorner.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_BOTTOM_LEFT_CORNER)
+   {
+      bottomLeftCorner.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_BOTTOM_RIGHT_CORNER)
+   {
+      bottomRightCorner.set(x1, y1, x2, y2);
+   }
+   else if(key == SKIN_KEY_TEXT_AREA_DELTA)
+   {
+      textAreaDelta.set(x1, y1, x2, y2);
+   }
+   else
+   {
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+            "ERROR: Unknown key '%s' at skin!", key.c_str());
+   }
+}
+
+/***********************************************************************
  *                             hasBackground                           *
  ***********************************************************************/
-bool Skin::SkinElement::hasBackground()
+const bool Skin::SkinElement::hasBackground() const
 {
    return background.isDefined();
 }
 
 /***********************************************************************
- *                          getBackgroundDelta                         *
- ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getBackgroundDelta()
-{
-   return backgroundDelta;
-}
-
-/***********************************************************************
- *                             getBackground                           *
- ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getBackground()
-{
-   return background;
-}
-
-/***********************************************************************
  *                               hasBorder                             *
  ***********************************************************************/
-bool Skin::SkinElement::hasBorder()
+const bool Skin::SkinElement::hasBorder() const
 {
    return leftBorder.isDefined() || rightBorder.isDefined() ||
           bottomBorder.isDefined() || topBorder.isDefined();
 }
 
 /***********************************************************************
- *                            getBorderDelta                           *
- ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getBorderDelta()
-{
-   return borderDelta;
-}
-
-/***********************************************************************
  *                         getLeftBorderDelta                          *
  ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getLeftBorderDelta(bool onlyIfDefined)
+const Farso::Rect& Skin::SkinElement::getLeftBorderDelta() const
 {
-   if((!onlyIfDefined) || (leftBorderDelta.isDefined()))
+   if(leftBorderDelta.isDefined())
    {
       return leftBorderDelta;
    }
@@ -99,9 +184,9 @@ Farso::Rect& Skin::SkinElement::getLeftBorderDelta(bool onlyIfDefined)
 /***********************************************************************
  *                        getRightBorderDelta                          *
  ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getRightBorderDelta(bool onlyIfDefined)
+const Farso::Rect& Skin::SkinElement::getRightBorderDelta() const
 {
-   if((!onlyIfDefined) || (rightBorderDelta.isDefined()))
+   if(rightBorderDelta.isDefined())
    {
       return rightBorderDelta;
    }
@@ -111,9 +196,9 @@ Farso::Rect& Skin::SkinElement::getRightBorderDelta(bool onlyIfDefined)
 /***********************************************************************
  *                          getTopBorderDelta                          *
  ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getTopBorderDelta(bool onlyIfDefined)
+const Farso::Rect& Skin::SkinElement::getTopBorderDelta() const
 {
-   if((!onlyIfDefined) || (topBorderDelta.isDefined()))
+   if(topBorderDelta.isDefined())
    {
       return topBorderDelta;
    }
@@ -123,9 +208,9 @@ Farso::Rect& Skin::SkinElement::getTopBorderDelta(bool onlyIfDefined)
 /***********************************************************************
  *                        getBottomBorderDelta                         *
  ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getBottomBorderDelta(bool onlyIfDefined)
+const Farso::Rect& Skin::SkinElement::getBottomBorderDelta() const
 {
-   if((!onlyIfDefined) || (bottomBorderDelta.isDefined()))
+   if(bottomBorderDelta.isDefined())
    {
       return bottomBorderDelta;
    }
@@ -133,92 +218,12 @@ Farso::Rect& Skin::SkinElement::getBottomBorderDelta(bool onlyIfDefined)
 }
  
 /***********************************************************************
- *                            getLeftBorder                            *
- ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getLeftBorder()
-{
-   return leftBorder;
-}
-
-/***********************************************************************
- *                             getTopBorder                            *
- ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getTopBorder()
-{
-   return topBorder;
-}
-
-/***********************************************************************
- *                           getRightBorder                            *
- ***********************************************************************/ 
-Farso::Rect& Skin::SkinElement::getRightBorder()
-{
-   return rightBorder;
-}
-
-/***********************************************************************
- *                           getBottomBorder                           *
- ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getBottomBorder()
-{
-   return bottomBorder;
-}
-
-/***********************************************************************
  *                               hasCorner                             *
  ***********************************************************************/
-bool Skin::SkinElement::hasCorner()
+const bool Skin::SkinElement::hasCorner() const
 {
    return topLeftCorner.isDefined() || topRightCorner.isDefined() ||
           bottomLeftCorner.isDefined() || bottomRightCorner.isDefined();
-}
-
-/***********************************************************************
- *                            getCornerDelta                           *
- ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getCornerDelta()
-{
-   return cornerDelta;
-}
- 
-/***********************************************************************
- *                           getTopLeftCorner                          *
- ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getTopLeftCorner()
-{
-   return topLeftCorner;
-}
-
-/***********************************************************************
- *                          getTopRightCorner                          *
- ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getTopRightCorner()
-{
-   return topRightCorner;
-}
-
-/***********************************************************************
- *                          getBottomLeftCorner                        *
- ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getBottomLeftCorner()
-{
-   return bottomLeftCorner;
-}
-
-/***********************************************************************
- *                         getBottomRightCorner                        *
- ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getBottomRightCorner()
-{
-   return bottomRightCorner;
-}
-
-/***********************************************************************
- *                           getTextAreaDelta                          *
- ***********************************************************************/
-Farso::Rect& Skin::SkinElement::getTextAreaDelta()
-{
-   return textAreaDelta;
 }
 
 /***********************************************************************
@@ -232,7 +237,7 @@ void Skin::SkinElement::setFontName(Kobold::String fontName)
 /***********************************************************************
  *                            getFontName                              *
  ***********************************************************************/
-Kobold::String Skin::SkinElement::getFontName()
+const Kobold::String& Skin::SkinElement::getFontName() const
 {
    return this->fontName;
 }
@@ -248,7 +253,7 @@ void Skin::SkinElement::setFontSize(int size)
 /***********************************************************************
  *                            fetFontSize                              *
  ***********************************************************************/
-int Skin::SkinElement::getFontSize()
+const int Skin::SkinElement::getFontSize() const
 {
    return this->fontSize;
 }
@@ -264,7 +269,7 @@ void Skin::SkinElement::setFontAlignment(Font::Alignment align)
 /***********************************************************************
  *                         getFontAlignment                            *
  ***********************************************************************/
-Font::Alignment Skin::SkinElement::getFontAlignment()
+const Font::Alignment& Skin::SkinElement::getFontAlignment() const
 {
    return this->fontAlign;
 }
@@ -289,7 +294,7 @@ void Skin::SkinElement::setFontColor(Kobold::String colorStr)
 /***********************************************************************
  *                           getFontColor                              *
  ***********************************************************************/
-Farso::Color Skin::SkinElement::getFontColor()
+const Farso::Color& Skin::SkinElement::getFontColor() const
 {
    return this->fontColor;
 }
@@ -297,7 +302,7 @@ Farso::Color Skin::SkinElement::getFontColor()
 /***********************************************************************
  *                              isDefined                              *
  ***********************************************************************/
-bool Skin::SkinElement::isDefined()
+const bool Skin::SkinElement::isDefined() const
 {
    return hasBackground() || hasCorner() || hasBorder();
 }
@@ -305,9 +310,10 @@ bool Skin::SkinElement::isDefined()
 /***********************************************************************
  *                         defBoundValue                               *
  ***********************************************************************/
-void Skin::SkinElement::defBoundValue(int& bx1, int& by1, int& bx2, int& by2,
-        Rect& delta, Rect& rect, bool useDeltaX1, bool useDeltaY1, 
-        bool useDeltaX2, bool useDeltaY2, int width, int height)
+const void Skin::SkinElement::defBoundValue(int& bx1, int& by1, 
+      int& bx2, int& by2, const Rect& delta, const Rect& rect, 
+      bool useDeltaX1, bool useDeltaY1, bool useDeltaX2, bool useDeltaY2, 
+      int width, int height) const
 {
    assert(useDeltaX1 || useDeltaX2);
    assert(useDeltaY1 || useDeltaY2);
@@ -387,7 +393,7 @@ void Skin::SkinElement::defBoundValue(int& bx1, int& by1, int& bx2, int& by2,
 /***********************************************************************
  *                              getBody                                *
  ***********************************************************************/
-Farso::Rect Skin::SkinElement::getBody(int width, int height)
+const Farso::Rect Skin::SkinElement::getBody(int width, int height) const
 {
    int bx1 = 0;
    int bx2 = width - 1;
@@ -396,34 +402,26 @@ Farso::Rect Skin::SkinElement::getBody(int width, int height)
 
    if(hasBorder())
    {
-      Rect rect, delta;
-
-      rect = getTopBorder();
-      if(rect.isDefined())
+      if(topBorder.isDefined())
       {
-         delta = getTopBorderDelta();
-         by1 = delta.getY1() + rect.getHeight() + 1;
+         by1 = getTopBorderDelta().getY1() + topBorder.getHeight() + 1;
       }
 
-      rect = getLeftBorder();
-      if(rect.isDefined())
+      if(leftBorder.isDefined())
       {
-         delta = getLeftBorderDelta();
-         bx1 = delta.getX1() + rect.getWidth() + 1;
+         bx1 = getLeftBorderDelta().getX1() + leftBorder.getWidth() + 1;
       }
 
-      rect = getBottomBorder();
-      if(rect.isDefined())
+      if(bottomBorder.isDefined())
       {
-         delta = getBottomBorderDelta();
-         by2 = (height - delta.getY2()) - rect.getHeight() - 1;
+         by2 = (height - getBottomBorderDelta().getY2()) - 
+            bottomBorder.getHeight() - 1;
       }
 
-      rect = getRightBorder();
-      if(rect.isDefined())
+      if(rightBorder.isDefined())
       {
-         delta = getRightBorderDelta();
-         bx2 = (width - delta.getX2()) - rect.getWidth() - 1;
+         bx2 = (width - getRightBorderDelta().getX2()) - 
+            rightBorder.getWidth() - 1;
       }
    }
 
@@ -433,11 +431,11 @@ Farso::Rect Skin::SkinElement::getBody(int width, int height)
 /***********************************************************************
  *                            getMinSize                               *
  ***********************************************************************/
-Farso::Rect Skin::SkinElement::getMinSize()
+const Farso::Rect Skin::SkinElement::getMinSize() const
 {
    if(!minSize.isDefined())
    {
-      minSize = getBounds(0, 0);
+      return getBounds(0, 0);
    }
 
    return minSize;
@@ -446,15 +444,14 @@ Farso::Rect Skin::SkinElement::getMinSize()
 /***********************************************************************
  *                             getBounds                               *
  ***********************************************************************/
-Farso::Rect Skin::SkinElement::getBounds(int width, int height)
+const Farso::Rect Skin::SkinElement::getBounds(int width, int height) const
 {
    int x1=10000, y1=10000, x2=-1, y2=-1;
-   Farso::Rect rect;
 
    /* Background */
    if(hasBackground())
    {
-      defBoundValue(x1, y1, x2, y2, getBackgroundDelta(), getBackground(), 
+      defBoundValue(x1, y1, x2, y2, backgroundDelta, background, 
                     true, true, true, true, width, height);
    }
 
@@ -462,34 +459,30 @@ Farso::Rect Skin::SkinElement::getBounds(int width, int height)
    if(hasBorder())
    {
       /* Top border */
-      rect = getTopBorder();
-      if(rect.isDefined())
+      if(topBorder.isDefined())
       {
-         defBoundValue(x1, y1, x2, y2, getTopBorderDelta(), rect, 
-                    true, true, true, false, width, height);
+         defBoundValue(x1, y1, x2, y2, getTopBorderDelta(), topBorder, 
+               true, true, true, false, width, height);
       }
 
       /* Bottom border */
-      rect = getBottomBorder();
-      if(rect.isDefined())
+      if(bottomBorder.isDefined())
       {
-         defBoundValue(x1, y1, x2, y2, getBottomBorderDelta(), rect, 
-                       true, false, true, true, width, height);
+         defBoundValue(x1, y1, x2, y2, getBottomBorderDelta(), 
+               bottomBorder, true, false, true, true, width, height);
       }
 
       /* Left border */
-      rect = getLeftBorder();
-      if(rect.isDefined())
+      if(leftBorder.isDefined())
       {
-         defBoundValue(x1, y1, x2, y2, getLeftBorderDelta(), rect,
+         defBoundValue(x1, y1, x2, y2, getLeftBorderDelta(), leftBorder,
                        true, true, false, true, width, height);
       }
 
       /* Right border */
-      rect = getRightBorder();
-      if(rect.isDefined())
+      if(rightBorder.isDefined())
       {
-         defBoundValue(x1, y1, x2, y2, getRightBorderDelta(), rect,
+         defBoundValue(x1, y1, x2, y2, getRightBorderDelta(), rightBorder,
                        false, true, true, true, width, height);
       }
    }
@@ -498,34 +491,30 @@ Farso::Rect Skin::SkinElement::getBounds(int width, int height)
    if(hasCorner())
    {
       /* Top Left Corner */
-      rect = getTopLeftCorner();
-      if(rect.isDefined())
+      if(topLeftCorner.isDefined())
       {
-         defBoundValue(x1, y1, x2, y2, getCornerDelta(), rect,
+         defBoundValue(x1, y1, x2, y2, cornerDelta, topLeftCorner,
                        true, true, false, false, width, height);
       }
 
       /* Top Right Corner */
-      rect = getTopRightCorner();
-      if(rect.isDefined())
+      if(topRightCorner.isDefined())
       {
-         defBoundValue(x1, y1, x2, y2, getCornerDelta(), rect,
+         defBoundValue(x1, y1, x2, y2, cornerDelta, topRightCorner,
                        false, true, true, false, width, height);
       }
 
       /* Bottom Left Corner */
-      rect = getBottomLeftCorner();
-      if(rect.isDefined())
+      if(bottomLeftCorner.isDefined())
       {
-         defBoundValue(x1, y1, x2, y2, getCornerDelta(), rect,
+         defBoundValue(x1, y1, x2, y2, cornerDelta, bottomLeftCorner,
                        true, false, false, true, width, height);
       }
 
       /* Bottom Right Corner */
-      rect = getBottomRightCorner();
-      if(rect.isDefined())
+      if(bottomRightCorner.isDefined())
       {
-         defBoundValue(x1, y1, x2, y2, getCornerDelta(), rect,
+         defBoundValue(x1, y1, x2, y2, cornerDelta, bottomRightCorner,
                        false, false, true, true, width, height);
       }
    }
@@ -545,8 +534,8 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
    /* Background */
    if(hasBackground())
    {
-      delta = getBackgroundDelta();
-      rect = getBackground();
+      delta = backgroundDelta;
+      rect = background;
       fdraw->doStampFill(dest, wx1 + delta.getX1(), wy1 + delta.getY1(),
             wx2 - delta.getX2(), wy2 - delta.getY2(), 
             src, rect.getX1(), rect.getY1(), rect.getX2(), rect.getY2());
@@ -556,7 +545,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
    if(hasBorder())
    {
       /* Top border */
-      rect = getTopBorder();
+      rect = topBorder;
       if(rect.isDefined())
       {
          delta = getTopBorderDelta();
@@ -567,7 +556,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       }
 
       /* Bottom border */
-      rect = getBottomBorder();
+      rect = bottomBorder;
       if(rect.isDefined())
       {
          delta = getBottomBorderDelta();
@@ -579,7 +568,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       }
 
       /* Left border */
-      rect = getLeftBorder();
+      rect = leftBorder;
       if(rect.isDefined())
       {
          delta = getLeftBorderDelta();
@@ -590,7 +579,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       }
 
       /* Right border */
-      rect = getRightBorder();
+      rect = rightBorder;
       if(rect.isDefined())
       {
          delta = getRightBorderDelta();
@@ -605,10 +594,10 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
    /* Corner */
    if(hasCorner())
    {
-      delta = getCornerDelta();
+      delta = cornerDelta;
 
       /* Top Left Corner */
-      rect = getTopLeftCorner();
+      rect = topLeftCorner;
       if(rect.isDefined())
       {
          fdraw->doStampFill(dest, wx1 + delta.getX1(), wy1 + delta.getY1(),
@@ -618,7 +607,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       }
 
       /* Top Right Corner */
-      rect = getTopRightCorner();
+      rect = topRightCorner;
       if(rect.isDefined())
       {
          fdraw->doStampFill(dest, 
@@ -629,7 +618,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       }
 
       /* Bottom Left Corner */
-      rect = getBottomLeftCorner();
+      rect = bottomLeftCorner;
       if(rect.isDefined())
       {
          fdraw->doStampFill(dest, wx1 + delta.getX1(),
@@ -640,7 +629,7 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
       }
 
       /* Bottom Right Corner */
-      rect = getBottomRightCorner();
+      rect = bottomRightCorner;
       if(rect.isDefined())
       {
          fdraw->doStampFill(dest, 
@@ -696,33 +685,6 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
    }
 }
 
-#define SKIN_KEY_ATLAS               "atlas"
-#define SKIN_KEY_DEFAULT_FONT        "defaultFont"
-#define SKIN_KEY_DEFAULT_FONT_SIZE   "defaultFontSize"
-#define SKIN_KEY_DEFAULT_FONT_COLOR  "defaultFontColor"
-#define SKIN_KEY_ELEMENT             "element"
-#define SKIN_KEY_BACKGROUND          "background"
-#define SKIN_KEY_BACKGROUND_DELTA    "backgroundDelta"
-#define SKIN_KEY_BORDER_DELTA        "borderDelta"
-#define SKIN_KEY_TOP_BORDER_DELTA    "topBorderDelta"
-#define SKIN_KEY_LEFT_BORDER_DELTA   "leftBorderDelta"
-#define SKIN_KEY_RIGHT_BORDER_DELTA  "rightBorderDelta"
-#define SKIN_KEY_BOTTOM_BORDER_DELTA "bottomBorderDelta"
-#define SKIN_KEY_LEFT_BORDER         "leftBorder"
-#define SKIN_KEY_RIGHT_BORDER        "rightBorder"
-#define SKIN_KEY_TOP_BORDER          "topBorder"
-#define SKIN_KEY_BOTTOM_BORDER       "bottomBorder"
-#define SKIN_KEY_CORNER_DELTA        "cornerDelta"
-#define SKIN_KEY_TOP_LEFT_CORNER     "topLeftCorner"
-#define SKIN_KEY_TOP_RIGHT_CORNER    "topRightCorner"
-#define SKIN_KEY_BOTTOM_LEFT_CORNER  "bottomLeftCorner"
-#define SKIN_KEY_BOTTOM_RIGHT_CORNER "bottomRightCorner"
-#define SKIN_KEY_TEXT_AREA_DELTA     "textAreaDelta"
-#define SKIN_KEY_TEXT_FONT           "textFont"
-#define SKIN_KEY_TEXT_FONT_SIZE      "textFontSize"
-#define SKIN_KEY_TEXT_FONT_ALIGNMENT "textAlignment"
-#define SKIN_KEY_TEXT_FONT_COLOR     "textFontColor"
-
 /***********************************************************************
  *                              Constructor                            *
  ***********************************************************************/
@@ -752,7 +714,7 @@ Skin::~Skin()
 /***********************************************************************
  *                              getFilename                            *
  ***********************************************************************/
-Kobold::String Skin::getFilename()
+const Kobold::String& Skin::getFilename() const
 {
    return filename;
 }
@@ -760,7 +722,11 @@ Kobold::String Skin::getFilename()
 /***********************************************************************
  *                            getSkinElement                           *
  ***********************************************************************/
-Skin::SkinElement Skin::getSkinElement(int type)
+const Skin::SkinElement& Skin::getSkinElement(int type) const
+{
+   return getInnerSkinElement(type);
+}
+Skin::SkinElement& Skin::getInnerSkinElement(int type) const
 {
    if((type > SKIN_TYPE_UNKNOWN) && (type < total))
    {
@@ -868,82 +834,7 @@ void Skin::load()
             /* Parse values */
             int x1=0,y1=0,x2=0,y2=0;
             sscanf(value.c_str(), "%d,%d,%d,%d", &x1, &y1, &x2, &y2);
-
-            /* Define element data */
-            if(key == SKIN_KEY_BACKGROUND_DELTA)
-            {
-               elements[cur].getBackgroundDelta().set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_BACKGROUND)
-            {
-               elements[cur].getBackground().set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_BORDER_DELTA)
-            {
-               elements[cur].getBorderDelta().set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_TOP_BORDER_DELTA)
-            {
-               elements[cur].getTopBorderDelta(false).set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_BOTTOM_BORDER_DELTA)
-            {
-               elements[cur].getBottomBorderDelta(false).set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_LEFT_BORDER_DELTA)
-            {
-               elements[cur].getLeftBorderDelta(false).set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_RIGHT_BORDER_DELTA)
-            {
-               elements[cur].getRightBorderDelta(false).set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_LEFT_BORDER)
-            {
-               elements[cur].getLeftBorder().set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_RIGHT_BORDER)
-            {
-               elements[cur].getRightBorder().set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_TOP_BORDER)
-            {
-               elements[cur].getTopBorder().set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_BOTTOM_BORDER)
-            {
-               elements[cur].getBottomBorder().set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_CORNER_DELTA)
-            {
-               elements[cur].getCornerDelta().set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_TOP_LEFT_CORNER)
-            {
-               elements[cur].getTopLeftCorner().set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_TOP_RIGHT_CORNER)
-            {
-               elements[cur].getTopRightCorner().set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_BOTTOM_LEFT_CORNER)
-            {
-               elements[cur].getBottomLeftCorner().set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_BOTTOM_RIGHT_CORNER)
-            {
-               elements[cur].getBottomRightCorner().set(x1, y1, x2, y2);
-            }
-            else if(key == SKIN_KEY_TEXT_AREA_DELTA)
-            {
-               elements[cur].getTextAreaDelta().set(x1, y1, x2, y2);
-            }
-            else
-            {
-               Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
-                  "ERROR: Unknown key '%s' at skin: '%s'",
-                  key.c_str(), filename.c_str());
-            }
+            elements[cur].set(key, x1, y1, x2, y2); 
          }
       }
    }
@@ -1151,7 +1042,7 @@ Surface* Skin::getSurface()
 void Skin::drawElement(Surface* dest, int type, 
       int wx1, int wy1, int wx2, int wy2)
 {
-   getSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2); 
+   getInnerSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2); 
 }
 
 /***********************************************************************
@@ -1160,7 +1051,7 @@ void Skin::drawElement(Surface* dest, int type,
 void Skin::drawElement(Surface* dest, int type, 
       int wx1, int wy1, int wx2, int wy2, Rect bounds, Kobold::String caption)
 {
-   getSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2, bounds, 
+   getInnerSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2, bounds, 
          caption);
 }
 
@@ -1172,7 +1063,7 @@ void Skin::drawElement(Surface* dest, int type, int wx1, int wy1,
       Kobold::String fontName, int fontSize, Font::Alignment align,
       Color fontColor, Color outlineColor, int outlineWidth)
 {
-   getSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2, bounds,
+   getInnerSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2, bounds,
          caption, fontName, fontSize, align, fontColor, outlineColor,
          outlineWidth);
 }
@@ -1180,7 +1071,7 @@ void Skin::drawElement(Surface* dest, int type, int wx1, int wy1,
 /***********************************************************************
  *                          isElementDefined                           *
  ***********************************************************************/
-bool Skin::isElementDefined(int type)
+const bool Skin::isElementDefined(int type) const
 {
    if((type > SKIN_TYPE_UNKNOWN) && (type < total))
    {
@@ -1193,8 +1084,8 @@ bool Skin::isElementDefined(int type)
 /***********************************************************************
  *                         getDefaultFontInfo                          *
  ***********************************************************************/
-void Skin::getDefaultFontInfo(Kobold::String& fontFilename, int& fontSize,
-      Farso::Color& fontColor)
+const void Skin::getDefaultFontInfo(Kobold::String& fontFilename, int& fontSize,
+      Farso::Color& fontColor) const
 {
    fontFilename = defaultFont;
    fontSize = defaultFontSize;

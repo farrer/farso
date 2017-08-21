@@ -58,17 +58,17 @@ class Surface
       virtual void unlock() = 0;
 
       /*! \return texture name */
-      Kobold::String getTextureName();
+      const Kobold::String& getTextureName() const { return name; };
 
       /*! If you can use this Surface as a drawable target or not.
        * \note all surfaces could be used as sources, but only created
        *       ones could be used as target. */
-      bool isDrawable();
+      const bool isDrawable() const;
 
       /**! \return surfaces's width */
-      int getWidth();
+      const int getWidth() const { return width; };
       /**! \return surfaces's height */
-      int getHeight();
+      const int getHeight() const { return height; };
 
       /*! Get the real surface width (usually, surfaces are created as power 
        * of two, so this function will reflect that) */

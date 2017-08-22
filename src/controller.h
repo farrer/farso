@@ -123,7 +123,9 @@ class Controller
       /*! Set the current skin to an already loaded one.
        * \note this function is usually called to set to a derived Skin class
        *       implementation, that is created outside the usual 'loadSkin'
-       *       function call. */
+       *       function call. 
+       * \note Skin pointer will be therefore owned by the Controller who
+       *       should delete it when no longer needed. */
       static void setSkin(Skin* skin);
 
       /*! Unload the current loaded skin (if any). */

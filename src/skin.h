@@ -235,15 +235,15 @@ class Skin
             Farso::Rect minSize;
       };
 
-      /*! Constructor.
-       * \param filename skin defintion file.
-       * \note: one must load (with a call to load()) it before use the skin. */
-      Skin(Kobold::String filename);
+      /*! Constructor. */
+      Skin();
       /*! Destructor */
       virtual ~Skin();
 
-      /*! Load the skin definition file. */
-      void load();
+      /*! Load the skin definition file. 
+       * \param filename skin defintion file.
+       * \return if load was successfull */
+      bool load(const Kobold::String& filename);
 
       /*! Get SkinElement for a basic type. 
        * \return SkinElement definition for specific widget type */

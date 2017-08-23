@@ -688,12 +688,12 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
 /***********************************************************************
  *                              Constructor                            *
  ***********************************************************************/
-Skin::Skin(Kobold::String filename)
+Skin::Skin()
+     :surface(NULL),
+      defaultFontSize(10),
+      elements(NULL),
+      filename("")
 {
-   surface = NULL;
-   defaultFontSize = 10;
-   this->filename = filename;
-   elements = NULL;
 }
 
 /***********************************************************************
@@ -740,7 +740,7 @@ Skin::SkinElement& Skin::getInnerSkinElement(int type) const
 /***********************************************************************
  *                                load                                 *
  ***********************************************************************/
-void Skin::load()
+bool Skin::load(const Kobold::String& filename)
 {
    Kobold::DefParser def;
 
@@ -755,9 +755,11 @@ void Skin::load()
    if(!def.load(Controller::getRealFilename(filename), 
             (Controller::getRendererType() != RENDERER_TYPE_OGRE3D)))
    {
-      return;
-
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+            "ERROR: Failed to load skin: '%s'", filename.c_str());
+      return false;
    }
+   this->filename = filename;
 
    Kobold::String key, value;
    int cur = -1; //current element
@@ -802,7 +804,7 @@ void Skin::load()
             Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
                   "ERROR: Defined '%s' without element at skin: '%s'",
                   key.c_str(), filename.c_str());
-            break;
+            return false;
          }
 
          if(key == SKIN_KEY_TEXT_FONT)
@@ -838,6 +840,8 @@ void Skin::load()
          }
       }
    }
+
+   return true;
 }
 
 /***********************************************************************

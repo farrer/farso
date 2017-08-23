@@ -323,9 +323,8 @@ bool Controller::loadSkin(Kobold::String filename)
    }
 
    bool success = true;
-   skin = new Skin(filename);
-   skin->load();
-   if(!skin->getSurface())
+   skin = new Skin();
+   if((!skin->load(filename)) ||(!skin->getSurface()))
    {
       /* Skin couldn't be loaded. Must not use it. */
       delete skin;

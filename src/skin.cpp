@@ -229,7 +229,7 @@ const bool Skin::SkinElement::hasCorner() const
 /***********************************************************************
  *                            setFontName                              *
  ***********************************************************************/
-void Skin::SkinElement::setFontName(Kobold::String fontName)
+void Skin::SkinElement::setFontName(const Kobold::String& fontName)
 {
    this->fontName = fontName;
 }
@@ -261,7 +261,7 @@ const int Skin::SkinElement::getFontSize() const
 /***********************************************************************
  *                         setFontAlignment                            *
  ***********************************************************************/
-void Skin::SkinElement::setFontAlignment(Font::Alignment align)
+void Skin::SkinElement::setFontAlignment(const Font::Alignment& align)
 {
   this->fontAlign = align;
 }

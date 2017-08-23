@@ -135,7 +135,7 @@ class Skin
             /*! \return text area delta for text rendering on element */
             const Farso::Rect& getTextAreaDelta() const {return textAreaDelta;};
             /*! Set the name of the font to use for its texts */
-            void setFontName(Kobold::String fontName);
+            void setFontName(const Kobold::String& fontName);
             /*! \return font file name */
             const Kobold::String& getFontName() const;
             /*! Set font size to use for its texts */
@@ -143,7 +143,7 @@ class Skin
             /*! \return font size to use */
             const int getFontSize() const;
             /*! Set the font alignment to use */
-            void setFontAlignment(Font::Alignment align);
+            void setFontAlignment(const Font::Alignment& align);
             /* \return font alignment to use */
             const Font::Alignment& getFontAlignment() const;
             /*! Set font color to use for element's text */

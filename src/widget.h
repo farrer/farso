@@ -65,21 +65,34 @@ class Widget : public Kobold::ListElement, public Kobold::List
       };
 
       /*! Constructor
-       * \param type widget type.
-       * \param parent pointer to parent Widget (if any). */
-      Widget(WidgetType type, int x, int y, int width, int height, 
-            Widget* parent);
+       * \param wType widget type.
+       * \param x position on x axis
+       * \param position on y axis
+       * \param w width
+       * \param h height
+       * \param wParent pointer to parent Widget (if any). */
+      Widget(WidgetType wType, int x, int y, int w, int h, Widget* wParent);
 
       /*! Special constructor. Only used for widgets that doesn't know its
        * dimensions from start.
-       * \param type widget type.
+       * \param wType widget type.
        * \note widget with this constructor should create its renderer 
        *       before been able to use, with a setSize call with width and
        *       height different from zero.*/
-      Widget(WidgetType type, Widget* parent);
+      Widget(WidgetType wType, Widget* wParent);
       
       /*! Destructor */
       virtual ~Widget();
+
+      /*! Set an identifier to the widget.
+       * \note this is usefull to check widgets without keeping a pointer
+       *       reference to them. Usually used when inserting widgets with
+       *       a JSON file instead of the programatic method.
+       * \param id string which defines the widget ID. */
+      void setId(const Kobold::String id);
+
+      /*! \return Widget's id. Could be undefined (empty) */
+      const Kobold::String& getId() const { return id; };
 
       /*! Draw the Widget to its target renderer.
        * \param force with will force a draw, regardless of its dirty state.
@@ -108,10 +121,10 @@ class Widget : public Kobold::ListElement, public Kobold::List
             int mouseX, int mouseY, int mrX, int mrY);
 
       /*! \return the widget's caption. */
-      const Kobold::String getCaption() const { return caption; };
+      const Kobold::String& getCaption() const { return caption; };
 
       /*! Define widget's caption */
-      virtual void setCaption(Kobold::String text);
+      virtual void setCaption(const Kobold::String text);
 
       /*! Gets the X coordinate
        * \return x coordinate */
@@ -185,9 +198,9 @@ class Widget : public Kobold::ListElement, public Kobold::List
       void setDirtyWithParent();
 
       /*! Set Text to display when mouse is over the widget */
-      void setMouseHint(Kobold::String txt);
+      void setMouseHint(const Kobold::String txt);
       /*! Get current text to disaply when mouse is over */
-      const Kobold::String getMouseHint() const { return mouseHint; };
+      const Kobold::String& getMouseHint() const { return mouseHint; };
    
       /*! Hide the widget */
       void hide();
@@ -197,7 +210,7 @@ class Widget : public Kobold::ListElement, public Kobold::List
       const bool isVisible() const;
 
       /*! \return widget type */
-      const WidgetType getType() const { return type; };
+      const WidgetType& getType() const { return type; };
 
       /*! \return pointer to parent Widget, if any */
       Widget* getParent();
@@ -274,7 +287,7 @@ class Widget : public Kobold::ListElement, public Kobold::List
           height;          /**< Widget's height */
       bool available;      /**< Available or disabled? */
 
-      
+      Kobold::String id; /**< Widget identifier. Not mandatory */
       Kobold::String caption;   /**< Text of the widget */
       Kobold::String mouseHint; /**< Hint when mouse over */
 

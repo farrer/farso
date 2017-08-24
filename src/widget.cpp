@@ -32,21 +32,24 @@ using namespace Farso;
 /***********************************************************************
  *                            Constructor                              *
  ***********************************************************************/
-Widget::Widget(WidgetType type, int x, int y, int width, int height, 
-      Widget* parent)
+Widget::Widget(WidgetType wType, int x, int y, int w, int h, Widget* wParent)
+       :type(wType),
+        visible(true),
+        x(0),
+        y(0),
+        width(w),
+        height(h),
+        available(true),
+        id(""),
+        caption(""),
+        mouseHint(""),
+        parentContainer(NULL),
+        renderer(NULL),
+        parent(wParent),
+        dirty(true)
 {
    assert((width > 0) && (height > 0));
 
-   this->available = true;
-   this->visible = true;
-   this->width = width;
-   this->height = height;
-   this->dirty = true;
-   this->type = type;
-   this->x = 0;
-   this->y = 0;
-
-   this->parent = parent;
    if(parent)
    {
       /* Set this one as a child of its parent */
@@ -70,18 +73,22 @@ Widget::Widget(WidgetType type, int x, int y, int width, int height,
 /***********************************************************************
  *                            Constructor                              *
  ***********************************************************************/
-Widget::Widget(WidgetType type, Widget* parent)
+Widget::Widget(WidgetType wType, Widget* wParent)
+       :type(wType),
+        visible(true),
+        x(0),
+        y(0),
+        width(0),
+        height(0),
+        available(true),
+        id(""),
+        caption(""),
+        mouseHint(""),
+        parentContainer(NULL),
+        renderer(NULL),
+        parent(wParent),
+        dirty(true)
 {
-   this->available = true;
-   this->visible = true;
-   this->x = 0;
-   this->y = 0;
-   this->width = 0;
-   this->height = 0;
-   this->dirty = true;
-   this->type = type;
-   this->parent = parent;
-
    if(parent)
    {
       /* Set this one as a child of its parent */
@@ -113,9 +120,17 @@ Widget::~Widget()
 }
 
 /***********************************************************************
+ *                                setId                                *
+ ***********************************************************************/
+void Widget::setId(const Kobold::String id)
+{
+   this->id = id;
+}
+
+/***********************************************************************
  *                              setCaption                             *
  ***********************************************************************/
-void Widget::setCaption(Kobold::String text)
+void Widget::setCaption(const Kobold::String text)
 {
    if(caption != text)
    {
@@ -362,7 +377,7 @@ void Widget::setDirtyWithParent()
 /***********************************************************************
  *                            setMouseHint                             *
  ***********************************************************************/
-void Widget::setMouseHint(Kobold::String txt)
+void Widget::setMouseHint(const Kobold::String txt)
 {
    mouseHint = txt;
 }

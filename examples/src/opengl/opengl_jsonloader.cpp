@@ -1,54 +1,56 @@
+#include "opengl_jsonloader.h"
 
-#include "opengl_example.h"
+#if FARSO_HAS_RAPIDJSON == 1
+
 #include <kobold/log.h>
 
 using namespace FarsoExample;
 
 /************************************************************************
- *                              OpenGLExample                           *
+ *                              OpenGLJsonLoader                           *
  ************************************************************************/
-OpenGLExample::OpenGLExample()
+OpenGLJsonLoader::OpenGLJsonLoader()
 {
-   example = NULL;
+   jsonLoader = NULL;
 }
 
 /************************************************************************
- *                             ~OpenGLExample                           *
+ *                             ~OpenGLJsonLoader                           *
  ************************************************************************/
-OpenGLExample::~OpenGLExample()
+OpenGLJsonLoader::~OpenGLJsonLoader()
 {
-   if(example != NULL)
+   if(jsonLoader != NULL)
    {
-      delete example;
+      delete jsonLoader;
    }
 }
 
 /************************************************************************
  *                                   init                               *
  ************************************************************************/
-void OpenGLExample::init()
+void OpenGLJsonLoader::init()
 {
-   example = new Example();
-   example->init(Farso::RENDERER_TYPE_OPENGL, NULL);
+   jsonLoader = new JsonLoader();
+   jsonLoader->init(Farso::RENDERER_TYPE_OPENGL, NULL);
 
 }
 
 /************************************************************************
  *                                shouldQuit                            *
  ************************************************************************/
-bool OpenGLExample::shouldQuit()
+bool OpenGLJsonLoader::shouldQuit()
 {
-   return example->shouldQuit();
+   return jsonLoader->shouldQuit();
 }
 
 
 /************************************************************************
  *                                   run                                *
  ************************************************************************/
-void OpenGLExample::step(bool leftButtonPressed, bool rightButtonPressed,
+void OpenGLJsonLoader::step(bool leftButtonPressed, bool rightButtonPressed,
       int mouseX, int mouseY)
 {
-   example->step(Kobold::Mouse::isLeftButtonPressed(), 
+   jsonLoader->step(Kobold::Mouse::isLeftButtonPressed(), 
          Kobold::Mouse::isRightButtonPressed(),
          Kobold::Mouse::getX(), Kobold::Mouse::getY());
 }
@@ -58,9 +60,10 @@ void OpenGLExample::step(bool leftButtonPressed, bool rightButtonPressed,
  *********************************************************************/
 int main(int argc, char **argv)
 {
-   OpenGLExample* example = new OpenGLExample();
-   example->run();
-   delete example;
+   OpenGLJsonLoader* jsonLoader = new OpenGLJsonLoader();
+   jsonLoader->run();
+   delete jsonLoader;
 }
 
+#endif
 

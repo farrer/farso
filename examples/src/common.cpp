@@ -1,5 +1,6 @@
 
 #include "common.h"
+#include "size.h"
 #include <kobold/log.h>
 #include <kobold/platform.h>
 using namespace FarsoExample;
@@ -29,8 +30,8 @@ Example::~Example()
 void Example::init(Farso::RendererType rendererType, void* extraInfo)
 {
    /* Init Farso, with desired renderer */
-   Farso::Controller::init(rendererType, EXAMPLE_WINDOW_WIDTH, 
-         EXAMPLE_WINDOW_HEIGHT, 32, "data/gui/", extraInfo);
+   Farso::Controller::init(rendererType, FARSO_EXAMPLE_WINDOW_WIDTH, 
+         FARSO_EXAMPLE_WINDOW_HEIGHT, 32, "data/gui/", extraInfo);
 
    /* Set a default font (this is only needed when not using a skin). */
    Farso::FontManager::setDefaultFont("fonts/LiberationSans-Regular.ttf");

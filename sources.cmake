@@ -117,10 +117,12 @@ endif(${OGRE_FOUND})
 
 set(FARSO_COMMON_EXAMPLE_SOURCES
 examples/src/common.cpp
+examples/src/jsonloader.cpp
 )
 
 set(FARSO_COMMON_EXAMPLE_HEADERS
 examples/src/common.h
+examples/src/jsonloader.h
 )
 
 set(FARSO_OGRE3D_EXAMPLE_SOURCES
@@ -131,11 +133,29 @@ set(FARSO_OGRE3D_EXAMPLE_HEADERS
 examples/src/ogre3d/ogre3d_example.h
 )
 
+set(FARSO_OPENGL_COMMON_SOURCES
+examples/src/opengl/opengl_app.cpp
+)
+set(FARSO_OPENGL_COMMON_HEADERS
+examples/src/opengl/opengl_app.h
+)
+
 set(FARSO_OPENGL_EXAMPLE_SOURCES
+examples/src/opengl/opengl_app.cpp
 examples/src/opengl/opengl_example.cpp
 )
 set(FARSO_OPENGL_EXAMPLE_HEADERS
+examples/src/opengl/opengl_app.h
 examples/src/opengl/opengl_example.h
+)
+
+set(FARSO_OPENGL_JSON_SOURCES
+examples/src/opengl/opengl_app.cpp
+examples/src/opengl/opengl_jsonloader.cpp
+)
+set(FARSO_OPENGL_JSON_HEADERS
+examples/src/opengl/opengl_app.h
+examples/src/opengl/opengl_jsonloader.h
 )
 
 set(FARSO_HAS_EXAMPLE 0)
@@ -188,48 +208,60 @@ if(${FARSO_HAS_OGRE_EXAMPLE})
 endif(${FARSO_HAS_OGRE_EXAMPLE})
 
 if(${OPENGL_FOUND})
-   set(FARSO_EXAMPLE_SOURCES ${FARSO_COMMON_EXAMPLE_SOURCES}
-                             ${FARSO_OPENGL_EXAMPLE_SOURCES})
-   set(FARSO_EXAMPLE_HEADERS ${FARSO_COMMON_EXAMPLE_HEADERS}
-                             ${FARSO_OPENGL_EXAMPLE_HEADERS})
    add_executable(farso_opengl_example WIN32 
-                        ${FARSO_EXAMPLE_SOURCES} 
-                        ${FARSO_COMMON_EXAMPLE_HEADERS})
+                        ${FARSO_COMMON_EXAMPLE_SOURCES}
+                        ${FARSO_OPENGL_COMMON_SOURCES}
+                        ${FARSO_OPENGL_EXAMPLE_SOURCES}
+                        ${FARSO_COMMON_EXAMPLE_HEADERS}
+                        ${FARSO_OPENGL_COMMON_HEADERS}
+                        ${FARSO_OPENGL_EXAMPLE_HEADERS})
+
+   add_executable(farso_opengl_jsonloader WIN32 
+                        ${FARSO_COMMON_EXAMPLE_SOURCES}
+                        ${FARSO_OPENGL_COMMON_SOURCES}
+                        ${FARSO_OPENGL_JSON_SOURCES}
+                        ${FARSO_COMMON_EXAMPLE_HEADERS}
+                        ${FARSO_OPENGL_COMMON_HEADERS}
+                        ${FARSO_OPENGL_JSON_HEADERS})
 
    if(${FARSO_HAS_OGRE_EXAMPLE})
       # Must link with all ogre example dependencies
-      target_link_libraries(farso_opengl_example farso
-                        ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARY}
-                        ${FARSO_OGRE_LIBRARIES} 
-                        ${FREETYPE_LIBRARIES}
-                        ${OPENGL_LIBRARY}
-                        ${SDL2_IMAGE_LIBRARY}
-                        ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
-                        ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY}
-                        ${OGG_LIBRARY} m
-                        ${LIBINTL_LIBRARIES} pthread)
+      set(LIBRARIES farso
+                    ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARY}
+                    ${FARSO_OGRE_LIBRARIES} 
+                    ${FREETYPE_LIBRARIES}
+                    ${OPENGL_LIBRARY}
+                    ${SDL2_IMAGE_LIBRARY}
+                    ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
+                    ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY}
+                    ${OGG_LIBRARY} m
+                    ${LIBINTL_LIBRARIES} pthread)
    else(${FARSO_HAS_OGRE_EXAMPLE})
       if(${FARSO_HAS_OGRE})
          # Must link with ogre3d dependencies
-         target_link_libraries(farso_opengl_example farso
-                        ${KOBOLD_LIBRARY}
-                        ${FARSO_OGRE_LIBRARIES}
-                        ${FREETYPE_LIBRARIES}
-                        ${OPENGL_LIBRARY}
-                        ${SDL2_IMAGE_LIBRARY}
-                        ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
-                        m ${LIBINTL_LIBRARIES} pthread)
+         set(LIBRARIES farso
+                       ${KOBOLD_LIBRARY}
+                       ${FARSO_OGRE_LIBRARIES}
+                       ${FREETYPE_LIBRARIES}
+                       ${OPENGL_LIBRARY}
+                       ${SDL2_IMAGE_LIBRARY}
+                       ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
+                       m ${LIBINTL_LIBRARIES} pthread)
       else(${FARSO_HAS_OGRE})
          # must link only with OpenGL dependencies
-         target_link_libraries(farso_opengl_example farso
-                        ${KOBOLD_LIBRARY}
-                        ${FREETYPE_LIBRARIES}
-                        ${OPENGL_LIBRARY}
-                        ${SDL2_IMAGE_LIBRARY}
-                        ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
-                        m ${LIBINTL_LIBRARIES} pthread)
+         set(LIBRARIES farso
+                       ${KOBOLD_LIBRARY}
+                       ${FREETYPE_LIBRARIES}
+                       ${OPENGL_LIBRARY}
+                       ${SDL2_IMAGE_LIBRARY}
+                       ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
+                       m ${LIBINTL_LIBRARIES} pthread)
       endif(${FARSO_HAS_OGRE})
    endif(${FARSO_HAS_OGRE_EXAMPLE})
+
+
+   target_link_libraries(farso_opengl_example ${LIBRARIES})
+   target_link_libraries(farso_opengl_jsonloader ${LIBRARIES})
   
    add_custom_command(TARGET farso_opengl_example PRE_BUILD
                       COMMAND ${CMAKE_COMMAND} -E copy_directory

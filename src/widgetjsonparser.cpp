@@ -138,7 +138,7 @@ Ogre::Vector2 WidgetJsonParser::parseVector2(const rapidjson::Value& value,
       return Ogre::Vector2(it->value[0].GetFloat(), it->value[1].GetFloat());
    }
 
-   return Ogre::Vector2(0.0f, 0.0f);
+   return Ogre::Vector2(parseInt(value, name, 0.0f), 0.0f);
 }
 
 /***********************************************************************
@@ -562,12 +562,11 @@ Widget* WidgetJsonParser::parseScrollBar(const rapidjson::Value& value,
    {
       scType = ScrollBar::TYPE_VERTICAL;
    }
-   int size = parseInt(value, "size", 100);
    int maxDisplayed = parseInt(value, "maxDisplayed", 1);
    int total = parseInt(value, "total", 1);
    int initial = parseInt(value, "initial", 0);
 
-   ScrollBar* sb = new ScrollBar(scType, pos.x, pos.y, size, parent);
+   ScrollBar* sb = new ScrollBar(scType, pos.x, pos.y, size.x, parent);
    sb->setTotals(maxDisplayed, total, initial);
 
    return sb;
@@ -680,13 +679,7 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       available = parseBoolean(value, "available", true);
       pos = parseVector2(value, "position");
       size = parseVector2(value, "size");
-
-      if((size.x == 0.0f) || (size.y == 0.0f))
-      {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
-            "Error: Tried to define a widget with size == 0.0f");
-         return false;
-      }
+      Ogre::Vector2 prevPos = pos;
 
       Widget* created = NULL;
       if(type == "window")
@@ -789,7 +782,7 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       if(created->getType() == Widget::WIDGET_TYPE_WINDOW)
       {
          Window* window = static_cast<Window*>(created);
-         window->setPosition(pos.x, pos.y);
+         window->setPosition(prevPos.x, prevPos.y);
          window->open();
       }
 

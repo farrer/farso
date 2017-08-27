@@ -1,0 +1,58 @@
+
+{
+   "widget":
+   {
+      "type" : "window",
+      "id" : "main_window",
+      "caption" : "Main",
+      "position" : [100, 100],
+      "size" : [200, 250],
+      "children":
+      [
+         {
+            "type" : "checkbox",
+            "caption" : "Item to select",
+            "position" : [0, 22],
+            "size" : 180,
+            "checked" : true
+         },
+         {
+            "type" : "label",
+            "size" : [50, 21],
+            "caption" : "Label:"
+         },
+         {
+            "type" : "textEntry",
+            "position" : [51, 0],
+            "size" : [132, 21]
+         },
+         {
+            "type" : "label",
+            "position" : [0, 44],
+            "size" : [50, 21],
+            "caption" : "Label"
+         },
+         {
+            "type" : "spin",
+            "valueType" : "integer",
+            "position" : [51, 44],
+            "range" : [0, 100],
+            "delta" : 2
+         },
+         {
+            "type" : "container",
+            "containerType" : "bottomCentered",
+            "children":
+            [
+               {
+                  "type" : "button",
+                  "position" : [0, 0],
+                  "size" : [100, 21],
+                  "caption" : "Button"
+               }
+            ]
+         }
+      ]
+   }
+}
+

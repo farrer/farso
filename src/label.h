@@ -75,7 +75,7 @@ class Label: public Widget
       /*! Disable the use of borders */
       void disableBorder();
 
-      /*! Toggle this label to break line on last space got, if possible, 
+      /*! Toggle this label to break line on last space, if any, 
        * instead of the normal behaviour of breaking on last character that
        * fits (ie: setting this will avoid to break a sentence
        * in the middle of a word). */

@@ -42,8 +42,8 @@ class LabelledPicture : public Widget
        * \param imageFile file
        * \param parent pointer to parent, if any. */
       LabelledPicture(int x, int y, int width, int height, 
-            Kobold::String caption, Kobold::String imageFile, 
-            Farso::Color frontColor, Farso::Color outlineColor,
+            const Kobold::String& caption, const Kobold::String& imageFile, 
+            const Farso::Color& frontColor, const Farso::Color& outlineColor,
             int outlineWidth, Widget* parent);
       /*! Destructor */
       ~LabelledPicture();
@@ -58,6 +58,14 @@ class LabelledPicture : public Widget
       /*! Change the default font size.
        * \param size size to use for the label's font. */
       void setFontSize(int size);
+      /*! Set a font to use, instead of the default's one.
+       * \param fontName font's filename */
+      void setFont(Kobold::String fontName);
+      /*! Set color of the text, instead of default.
+       * \param color color to use for text. */
+      void setFontColor(Farso::Color color);
+      /*! Set font alignment of the text, instead of the default TEXT_LEFT */
+      void setFontAlignment(Farso::Font::Alignment align);
 
       /*! Set as dirty */
       void setDirty();

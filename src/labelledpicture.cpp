@@ -29,11 +29,9 @@ using namespace Farso;
  *                             Constructor                              *
  ************************************************************************/
 LabelledPicture::LabelledPicture(int x, int y, int width, int height, 
-                                 Kobold::String caption, 
-                                 Kobold::String imageFile, 
-                                 Farso::Color frontColor, 
-                                 Farso::Color outlineColor,
-                                 int outlineWidth, Widget* parent)
+      const Kobold::String& caption, const Kobold::String& imageFile, 
+      const Farso::Color& frontColor, const Farso::Color& outlineColor,
+      int outlineWidth, Widget* parent)
                 :Widget(Widget::WIDGET_TYPE_LABELLED_PICTURE, x, y, 
                         width, height, parent)
 {
@@ -93,6 +91,30 @@ void LabelledPicture::setCaption(Kobold::String text)
 void LabelledPicture::setFontSize(int size)
 {
    label->setFontSize(size);
+}
+
+/************************************************************************
+ *                               setFont                                *
+ ************************************************************************/
+void LabelledPicture::setFont(Kobold::String fontName)
+{
+   label->setFont(fontName);
+}
+
+/************************************************************************
+ *                             setFontColor                             *
+ ************************************************************************/
+void LabelledPicture::setFontColor(Farso::Color color)
+{
+   label->setFontColor(color);
+}
+
+/************************************************************************
+ *                          setFontAlignment                            *
+ ************************************************************************/
+void LabelledPicture::setFontAlignment(Farso::Font::Alignment align)
+{
+   label->setFontAlignment(align);
 }
 
 /************************************************************************

@@ -38,6 +38,8 @@ class ProgressBar : public Widget
       /*! Set current value (default: 0). */
       void setValue(int val);
 
+      /*! Set color of the filled rectangle.
+       * \note only usefull when not using skins */
       void setColor(Color color);
 
       Rect getBody();

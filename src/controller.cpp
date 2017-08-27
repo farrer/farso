@@ -21,6 +21,7 @@
 #include "controller.h"
 #include "colors.h"
 #include "font.h"
+#include "widgetjsonparser.h"
 
 #if FARSO_HAS_OGRE == 1
    #include "ogre3d/ogredraw.h"
@@ -41,7 +42,6 @@
 #include <assert.h>
 
 using namespace Farso;
-
 
 /***********************************************************************
  *                                 init                                *
@@ -763,7 +763,7 @@ RendererType Controller::getRendererType()
 }
 
 /***********************************************************************
- *                      getTotalRootWidgets                            *
+ *                         getTotalRootWidgets                         *
  ***********************************************************************/
 int Controller::getTotalRootWidgets()
 {
@@ -773,6 +773,17 @@ int Controller::getTotalRootWidgets()
 
    return total;
 }
+
+#if FARSO_HAS_RAPIDJSON == 1
+/***********************************************************************
+ *                           insertFromJson                            *
+ ***********************************************************************/
+const bool Controller::insertFromJson(const Kobold::String& jsonStr)
+{
+   WidgetJsonParser parser;
+   return parser.loadFromJson(jsonStr);
+}
+#endif
 
 /***********************************************************************
  *                               Static                                *

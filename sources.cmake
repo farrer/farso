@@ -27,6 +27,7 @@ src/textentry.cpp
 src/textselector.cpp
 src/treeview.cpp
 src/widget.cpp
+src/widgetjsonparser.cpp
 src/widgetrenderer.cpp
 src/window.cpp
 src/sdl/sdlsurface.cpp
@@ -62,6 +63,7 @@ src/textentry.h
 src/textselector.h
 src/treeview.h
 src/widget.h
+src/widgetjsonparser.h
 src/widgetrenderer.h
 src/window.h
 src/sdl/sdlsurface.h

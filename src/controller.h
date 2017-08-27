@@ -21,6 +21,8 @@
 #ifndef _farso_controller_h
 #define _farso_controller_h
 
+#include "farsoconfig.h"
+
 #include "button.h"
 #include "checkbox.h"
 #include "clickablepicture.h"
@@ -217,6 +219,13 @@ class Controller
       /*! \return if mouse was over any farso widget on last call to 
        *          verifyEvents */
       static const bool wasMouseOverWidget() { return mouseOverWidget; };
+
+#if FARSO_HAS_RAPIDJSON == 1
+      /*! Insert widgets from a Json string.
+       * \param jsonStr JSON string with the widgets to insert.
+       * \return true if all defined widgets were inserted, false otherwise */
+      static const bool insertFromJson(const Kobold::String& jsonStr);
+#endif
 
    private:
       /*! No instances allowed */

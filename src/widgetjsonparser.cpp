@@ -668,8 +668,6 @@ Widget* WidgetJsonParser::parseTextEntry(const rapidjson::Value& value,
 bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value, 
       Widget* parent)
 {
-   bool res = true;
-
    if(value.IsObject())
    {
       /* Check its type */
@@ -773,7 +771,19 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
          return false;
       }
 
-      /* TODO: Parse and add its children widgets. */
+      /* Parse and add its children widgets. */
+      rapidjson::Value::ConstMemberIterator it = value.FindMember("children");
+      if(it != value.MemberEnd() && it->value.IsArray())
+      {
+         for(size_t child = 0; child < it->value.Size(); child++)
+         {
+            if(!parseJsonWidget(it->value[child], created))
+            {
+               /* Error parsing a child. Abort. */
+               return false;
+            }
+         }
+      }
 
       /* Open the window, if just created one */
       if(created->getType() == Widget::WIDGET_TYPE_WINDOW)
@@ -796,7 +806,7 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       }
    }
 
-   return res;
+   return true;
 }
 
 #endif

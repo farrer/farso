@@ -67,6 +67,11 @@ namespace Farso
          int parseInt(const rapidjson::Value& value, const Kobold::String& name,
                int defaultValue);
 
+         /*! Parse a float of defined 'name' from rapidjson value.
+          * \return parsed float or default value if undefined. */
+         float parseFloat(const rapidjson::Value& value, 
+               const Kobold::String& name, float defaultValue);
+
          /*! Parse a boolean of defined 'name' from rapidjson value.
           * \return parsed boolean or default value if undefined. */
          bool parseBoolean(const rapidjson::Value& value, 

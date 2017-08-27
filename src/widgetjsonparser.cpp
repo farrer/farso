@@ -81,6 +81,21 @@ int WidgetJsonParser::parseInt(const rapidjson::Value& value,
 }
 
 /***********************************************************************
+ *                             parseFloat                              *
+ ***********************************************************************/
+float WidgetJsonParser::parseFloat(const rapidjson::Value& value, 
+      const Kobold::String& name, float defaultValue)
+{
+   rapidjson::Value::ConstMemberIterator it = value.FindMember(name.c_str());
+   if(it != value.MemberEnd() && it->value.IsFloat())
+   {
+      return it->value.GetFloat();
+   }
+
+   return defaultValue;
+}
+
+/***********************************************************************
  *                            parseBoolean                             *
  ***********************************************************************/
 bool WidgetJsonParser::parseBoolean(const rapidjson::Value& value, 
@@ -574,8 +589,35 @@ Widget* WidgetJsonParser::parseScrollText(const rapidjson::Value& value,
 Widget* WidgetJsonParser::parseSpin(const rapidjson::Value& value,
       Widget* parent)
 {
-   //TODO
-   return NULL;
+   Kobold::String spType = parseString(value, "valueType");
+   Spin::ValueType valueType = Spin::VALUE_TYPE_INTEGER;
+   if(spType == "float")
+   {
+      valueType = Spin::VALUE_TYPE_FLOAT;
+   }
+   Spin* sp = new Spin(valueType, pos.x, pos.y, parent);
+
+   bool accelerate = parseBoolean(value, "accelerate", true);
+   float val = parseFloat(value, "value", 0.0f);
+   Ogre::Vector2 range = parseVector2(value, "range");
+
+   if(valueType == Spin::VALUE_TYPE_INTEGER)
+   {
+      int delta = parseInt(value, "delta", 1);
+      sp->setIntDelta(delta, accelerate);
+   }
+   else
+   {
+      float delta = parseFloat(value, "delta", 0.5f);
+      sp->setFloatDelta(delta, accelerate);
+   }
+   sp->setValue(val);
+   if(range.x != 0.0f || range.y != 0.0f)
+   {
+      sp->setRange(range.x, range.y);
+   }
+
+   return sp;
 }
 
 /***********************************************************************
@@ -614,8 +656,10 @@ Widget* WidgetJsonParser::parseTextSelector(const rapidjson::Value& value,
 Widget* WidgetJsonParser::parseTextEntry(const rapidjson::Value& value,
       Widget* parent)
 {
-   //TODO
-   return NULL;
+   TextEntry* te = new TextEntry(pos.x, pos.y, size.x, size.y, parent);
+   te->setCaption(caption);
+
+   return te;
 }
 
 /***********************************************************************

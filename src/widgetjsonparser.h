@@ -31,6 +31,7 @@
 #include <OGRE/OgreVector2.h>
 #include "font.h"
 #include "widget.h"
+#include "grid.h"
 
 namespace Farso
 {
@@ -105,44 +106,32 @@ namespace Farso
          bool parseJsonWidget(const rapidjson::Value& value, 
                Widget* parent);
 
-         Widget* parseWindow(const rapidjson::Value& value,
-               Widget* parent);
-         Widget* parseButton(const rapidjson::Value& value,
-               Widget* parent);
-         Widget* parseCheckBox(const rapidjson::Value& value,
-               Widget* parent);
+         Widget* parseWindow(const rapidjson::Value& value, Widget* parent);
+         Widget* parseButton(const rapidjson::Value& value, Widget* parent);
+         Widget* parseCheckBox(const rapidjson::Value& value, Widget* parent);
          Widget* parseClickablePicture(const rapidjson::Value& value,
                Widget* parent);
-         Widget* parseContainer(const rapidjson::Value& value,
-               Widget* parent);
+         Widget* parseContainer(const rapidjson::Value& value, Widget* parent);
          Widget* parseFileSelector(const rapidjson::Value& value,
                Widget* parent);
-         Widget* parseGrid(const rapidjson::Value& value,
-               Widget* parent);
-         Widget* parseLabel(const rapidjson::Value& value,
-               Widget* parent);
+         Widget* parseGrid(const rapidjson::Value& value, Widget* parent);
+         bool parseGridItem(const rapidjson::Value& value, Grid* grid);
+         Widget* parseLabel(const rapidjson::Value& value, Widget* parent);
          Widget* parseLabelledPicture(const rapidjson::Value& value,
                Widget* parent);
-         Widget* parseMenu(const rapidjson::Value& value,
-               Widget* parent);
-         Widget* parsePicture(const rapidjson::Value& value,
-               Widget* parent);
+         Widget* parseMenu(const rapidjson::Value& value, Widget* parent);
+         Widget* parsePicture(const rapidjson::Value& value, Widget* parent);
          Widget* parseProgressBar(const rapidjson::Value& value,
                Widget* parent);
-         Widget* parseScrollBar(const rapidjson::Value& value,
-               Widget* parent);
+         Widget* parseScrollBar(const rapidjson::Value& value, Widget* parent);
          Widget* parseScrollText(const rapidjson::Value& value,
                Widget* parent);
-         Widget* parseSpin(const rapidjson::Value& value,
-               Widget* parent);
-         Widget* parseStackTab(const rapidjson::Value& value,
-               Widget* parent);
-         Widget* parseTextEntry(const rapidjson::Value& value,
-               Widget* parent);
+         Widget* parseSpin(const rapidjson::Value& value, Widget* parent);
+         Widget* parseStackTab(const rapidjson::Value& value, Widget* parent);
+         Widget* parseTextEntry(const rapidjson::Value& value, Widget* parent);
          Widget* parseTextSelector(const rapidjson::Value& value,
                Widget* parent);
-         Widget* parseTreeView(const rapidjson::Value& value,
-               Widget* parent);
+         Widget* parseTreeView(const rapidjson::Value& value, Widget* parent);
 
          /* Common Widget info */
          Kobold::String id;

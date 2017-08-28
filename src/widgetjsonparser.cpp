@@ -50,8 +50,10 @@ bool WidgetJsonParser::loadFromJson(const Kobold::String& jsonStr)
    doc.Parse(jsonStr.c_str());
    if(doc.HasParseError())
    {
+      rapidjson::ParseErrorCode err = doc.GetParseError();
       Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
-            "Error: tried to add widgets from an invalid JSON string!");
+            "Error: tried to add widgets from an invalid JSON string (%d).",
+            err);
       return false;
    }
    rapidjson::Value::ConstMemberIterator itor = doc.FindMember("widget");
@@ -401,8 +403,57 @@ Widget* WidgetJsonParser::parseFileSelector(const rapidjson::Value& value,
 Widget* WidgetJsonParser::parseGrid(const rapidjson::Value& value,
       Widget* parent)
 {
-   //TODO
-   return NULL;
+   /* Get grid options */
+   Grid::GridType gType = Grid::GRID_TYPE_HIGHLIGHT_NONE;
+   Kobold::String highlight = parseString(value, "highlight");
+   if(highlight == "border")
+   {
+      gType = Grid::GRID_TYPE_HIGHLIGHT_BORDER;
+   }
+   else if(highlight == "fill")
+   {
+      gType = Grid::GRID_TYPE_HIGHLIGHT_FILL;
+   }
+
+   /* Create the grid */
+   Grid* grid = new Grid(gType, parent);
+
+   /* Parse and set its items */
+   rapidjson::Value::ConstMemberIterator it = value.FindMember("items");
+   if(it != value.MemberEnd() && it->value.IsArray())
+   {
+      for(size_t item = 0; item < it->value.Size(); item++)
+      {
+         if(!parseGridItem(it->value[item], grid))
+         {
+            /* Error parsing grid item. Abort. */
+            return NULL;
+         }
+      }
+   }
+   
+   return grid;
+}
+
+/***********************************************************************
+ *                            parseGridItem                            *
+ ***********************************************************************/
+bool WidgetJsonParser::parseGridItem(const rapidjson::Value& value, Grid* grid)
+{
+   Ogre::Vector2 pos = parseVector2(value, "position");
+   Ogre::Vector2 size = parseVector2(value, "size");
+   Kobold::String hint = parseString(value, "mouseHint");
+
+   if(size.x <= 0 || size.y <= 0)
+   {
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+            "Error: GridItem should have defined size!");
+      return false;
+   }
+
+   grid->addElement(pos.x, pos.y, size.x, size.y, hint);
+
+   return true;
 }
 
 /***********************************************************************

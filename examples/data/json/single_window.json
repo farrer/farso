@@ -40,6 +40,42 @@
             "delta" : 2
          },
          {
+            "type" : "picture",
+            "filename" : "portrait/richard_bergh1.png",
+            "position" : [0, 66],
+            "children":
+            [
+               {
+                  "type" : "grid",
+                  "highlight" : "border",
+                  "items" :
+                  [
+                     {
+                        "position" : [29, 38],
+                        "size" : [8, 6],
+                        "mouseHint" : "Right eye"
+                     },
+                     {
+                        "position" : [47, 37],
+                        "size" : [11, 5],
+                        "mouseHint" : "Left eye"
+                     },
+                     {
+                        "position" : [38, 45],
+                        "size" : [11, 8],
+                        "mouseHint" : "Nose"
+                     },
+                     {
+                        "position" : [37, 56],
+                        "size" : [16, 6],
+                        "mouseHint" : "Mouth"
+                     }
+                  ]
+               }
+            ]
+            
+         },
+         {
             "type" : "container",
             "containerType" : "bottomCentered",
             "children":

@@ -216,13 +216,15 @@ if(${OPENGL_FOUND})
                         ${FARSO_OPENGL_COMMON_HEADERS}
                         ${FARSO_OPENGL_EXAMPLE_HEADERS})
 
-   add_executable(farso_opengl_jsonloader WIN32 
-                        ${FARSO_COMMON_EXAMPLE_SOURCES}
-                        ${FARSO_OPENGL_COMMON_SOURCES}
-                        ${FARSO_OPENGL_JSON_SOURCES}
-                        ${FARSO_COMMON_EXAMPLE_HEADERS}
-                        ${FARSO_OPENGL_COMMON_HEADERS}
-                        ${FARSO_OPENGL_JSON_HEADERS})
+   if(${FARSO_HAS_RAPIDJSON})
+      add_executable(farso_opengl_jsonloader WIN32 
+                           ${FARSO_COMMON_EXAMPLE_SOURCES}
+                           ${FARSO_OPENGL_COMMON_SOURCES}
+                           ${FARSO_OPENGL_JSON_SOURCES}
+                           ${FARSO_COMMON_EXAMPLE_HEADERS}
+                           ${FARSO_OPENGL_COMMON_HEADERS}
+                           ${FARSO_OPENGL_JSON_HEADERS})
+   endif(${FARSO_HAS_RAPIDJSON})
 
    if(${FARSO_HAS_OGRE_EXAMPLE})
       # Must link with all ogre example dependencies
@@ -261,7 +263,10 @@ if(${OPENGL_FOUND})
 
 
    target_link_libraries(farso_opengl_example ${LIBRARIES})
-   target_link_libraries(farso_opengl_jsonloader ${LIBRARIES})
+
+   if(${FARSO_HAS_RAPIDJSON})
+      target_link_libraries(farso_opengl_jsonloader ${LIBRARIES})
+   endif(${FARSO_HAS_RAPIDJSON})
   
    add_custom_command(TARGET farso_opengl_example PRE_BUILD
                       COMMAND ${CMAKE_COMMAND} -E copy_directory

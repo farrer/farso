@@ -132,6 +132,7 @@ namespace Farso
          Widget* parseTextSelector(const rapidjson::Value& value,
                Widget* parent);
          Widget* parseTreeView(const rapidjson::Value& value, Widget* parent);
+         bool parseChildren(const rapidjson::Value& value, Widget* parent);
 
          /* Common Widget info */
          Kobold::String id;

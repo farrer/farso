@@ -6,7 +6,7 @@
       "id" : "main_window",
       "caption" : "Main",
       "position" : [100, 100],
-      "size" : [200, 250],
+      "size" : [200, 280],
       "children":
       [
          {
@@ -74,6 +74,57 @@
                }
             ]
             
+         },
+         {
+            "type" : "container",
+            "containerType" : "topCentered",
+            "position" : [0, 150],
+            "size" : [190, 80],
+            "children":
+            [
+               {
+                  "type" : "stackTab",
+                  "tabs":
+                  [
+                     {
+                        "caption" : "1",
+                        "children":
+                        [
+                           {
+                              "type" : "clickablePicture",
+                              "filename" : "cursor/talk.png"
+                           }
+                        ]
+                     },
+                     {
+                        "caption" : "2",
+                        "children":
+                        [
+                           {
+                              "type" : "labelledPicture",
+                              "filename" : "cursor/talk.png",
+                              "caption" : "Label Pic",
+                              "fontColor" : [255, 255, 255, 255],
+                              "fontOutline" : 1,
+                              "size" : [64, 64],
+                              "fontOutlineColor" : [0, 0, 0, 255]
+                           }
+                        ]
+                     },
+                     {
+                        "caption" : "3",
+                        "children":
+                        [
+                           {
+                              "type" : "progressBar",
+                              "size" : [100, 21],
+                              "value" : 30
+                           }
+                        ]
+                     }
+                  ]
+               }
+            ]
          },
          {
             "type" : "container",

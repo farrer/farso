@@ -676,8 +676,33 @@ Widget* WidgetJsonParser::parseSpin(const rapidjson::Value& value,
 Widget* WidgetJsonParser::parseStackTab(const rapidjson::Value& value,
       Widget* parent)
 {
-   //TODO
-   return NULL;
+   /* Create the stack */
+   if(parent == NULL)
+   {
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+         "Error: StackTab must be inside a parent.");
+      return NULL;
+   }
+   StackTab* stackTab = new StackTab(parent);
+
+   /* Parse and set its tabs */
+   rapidjson::Value::ConstMemberIterator it = value.FindMember("tabs");
+   if(it != value.MemberEnd() && it->value.IsArray())
+   {
+      for(size_t tab = 0; tab < it->value.Size(); tab++)
+      {
+         /* Create the tab */
+         Kobold::String tabName = parseString(it->value[tab], "caption");
+         Container* contTab = stackTab->insertTab(tabName);
+
+         /* Parse and set its children */
+         if(!parseChildren(it->value[tab], contTab))
+         {
+            return NULL;
+         }
+      }
+   }
+   return stackTab;
 }
 
 /***********************************************************************
@@ -713,6 +738,28 @@ Widget* WidgetJsonParser::parseTextEntry(const rapidjson::Value& value,
 }
 
 /***********************************************************************
+ *                            parseChildren                            *
+ ***********************************************************************/
+bool WidgetJsonParser::parseChildren(const rapidjson::Value& value, 
+      Widget* parent)
+{
+   rapidjson::Value::ConstMemberIterator it = value.FindMember("children");
+   if(it != value.MemberEnd() && it->value.IsArray())
+   {
+      for(size_t child = 0; child < it->value.Size(); child++)
+      {
+         if(!parseJsonWidget(it->value[child], parent))
+         {
+            /* Error parsing a child. Abort. */
+            return false;
+         }
+      }
+   }
+
+   return true;
+}
+
+/***********************************************************************
  *                           parseJsonWidget                           *
  ***********************************************************************/
 bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value, 
@@ -732,6 +779,7 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       size = parseVector2(value, "size");
       Ogre::Vector2 prevPos = pos;
 
+      /* Create widget based on its type */
       Widget* created = NULL;
       if(type == "window")
       {
@@ -816,17 +864,9 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       }
 
       /* Parse and add its children widgets. */
-      rapidjson::Value::ConstMemberIterator it = value.FindMember("children");
-      if(it != value.MemberEnd() && it->value.IsArray())
+      if(!parseChildren(value, created))
       {
-         for(size_t child = 0; child < it->value.Size(); child++)
-         {
-            if(!parseJsonWidget(it->value[child], created))
-            {
-               /* Error parsing a child. Abort. */
-               return false;
-            }
-         }
+         return false;
       }
 
       /* Open the window, if just created one */

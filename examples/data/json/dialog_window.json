@@ -1,0 +1,71 @@
+{
+   "widget":
+   {
+      "type" : "window",
+      "id" : "dialog_window",
+      "caption" : "Dialog",
+      "position" : [200, 200],
+      "size" : [450, 280],
+      "children":
+      [
+         {
+            "type" : "picture",
+            "filename" : "portrait/richard_bergh1.png",
+            "position" : [5, 4]
+         },
+         {
+            "type" : "container",
+            "containerType" : "topRight",
+            "children":
+            [
+               {
+                  "type" : "scrollText",
+                  "size" : [350, 90],
+                  "text" :
+                  [
+                     {
+                        "caption" : "What is the prognosis?",
+                        "breakLine" : true
+                     },
+                     {
+                        "caption" : "But society, unlike biochemical processes, cannot escape human influences. "
+                     },
+                     {
+                        "caption" : "Man is what brings society into being. ",
+                        "fontColor" : [255, 20, 20, 255]
+                     },
+                     {
+                        "caption" : "The prognosis is in the hands of those who are willing to get rid of the worm-eaten roots of the structure."
+                     }
+                  ]
+               }
+            ]
+         },
+         {
+            "type" : "container",
+            "containerType" : "bottomCentered",
+            "position" : [0, 94],
+            "size" : [420, 180],
+            "children" :
+            [
+               {
+                  "type" : "textSelector",
+                  "options" :
+                  [
+                     {
+                        "caption" : "This was loaded from JSON?"
+                     },
+                     {
+                        "caption" : "I wanna add some text via code!"
+                     },
+                     {
+                        "caption" : "Why a portrait of August Strindberg painted by Richard Berg is quoting Frantz Fanon?"
+                     }
+                  ]
+               }
+            ]
+         }
+      ]
+   }
+}
+

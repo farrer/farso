@@ -629,8 +629,80 @@ Widget* WidgetJsonParser::parseScrollBar(const rapidjson::Value& value,
 Widget* WidgetJsonParser::parseScrollText(const rapidjson::Value& value,
       Widget* parent)
 {
-   //TODO
-   return NULL;
+   /* parse some options */
+   FontInfo font = parseFontInfo(value, "font", Font::TEXT_LEFT);
+   bool definedColor = false;
+   Color fontColor = parseColor(value, "fontColor", definedColor);
+
+   ScrollText* scroll;
+   if((!font.filename.empty()) && (font.size > 0) && (definedColor))
+   {
+      scroll = new ScrollText(pos.x, pos.y, size.x, size.y, font.filename,
+            font.size, fontColor, parent);
+   }
+   else
+   {
+      /* Make sure we have a skin defined */
+      if(Controller::getSkin() == NULL)
+      {
+         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+               "Error: ScrollText must have a default font and color "\
+               "to be used without a skin.");
+         return NULL;
+      }
+      scroll = new ScrollText(pos.x, pos.y, size.x, size.y, parent);
+   }
+
+   /* Parse its texts */
+   rapidjson::Value::ConstMemberIterator it = value.FindMember("text");
+   if(it != value.MemberEnd() && it->value.IsArray())
+   {
+      for(size_t text = 0; text < it->value.Size(); text++)
+      {
+         Kobold::String caption = parseString(it->value[text], "caption");
+         font = parseFontInfo(it->value[text], "font", Font::TEXT_LEFT);
+         definedColor = false;
+         fontColor = parseColor(it->value[text], "fontColor", definedColor);
+         bool breakLine = parseBoolean(it->value[text], "breakLine", false);
+
+         /* Add line, with its defined elements (font and color). */
+         if(!caption.empty())
+         {
+            if(definedColor)
+            {
+               if((!font.filename.empty()) && (font.size > 0))
+               {
+                  scroll->addText(caption, font.filename, font.size, 
+                        font.alignment, fontColor);
+               }
+               else
+               {
+                  scroll->addText(caption, fontColor);
+               }
+            }
+            else
+            {
+               if((!font.filename.empty()) && (font.size > 0))
+               {
+                  scroll->addText(caption, font.filename, font.size, 
+                        font.alignment);
+               }
+               else
+               {
+                  scroll->addText(caption);
+               }
+            }
+         }
+
+         /* Add a breakline if defined */
+         if(breakLine)
+         {
+            scroll->addLineBreak();
+         }
+      }
+   }
+   
+   return scroll;
 }
 
 /***********************************************************************
@@ -721,8 +793,19 @@ Widget* WidgetJsonParser::parseTreeView(const rapidjson::Value& value,
 Widget* WidgetJsonParser::parseTextSelector(const rapidjson::Value& value,
       Widget* parent)
 {
-   //TODO
-   return NULL;
+   /* Create the text selector */
+   TextSelector* sel = new TextSelector(parent);
+
+   /* Parse and set its options */
+   rapidjson::Value::ConstMemberIterator it = value.FindMember("options");
+   if(it != value.MemberEnd() && it->value.IsArray())
+   {
+      for(size_t opt = 0; opt < it->value.Size(); opt++)
+      {
+         sel->addOption(parseString(it->value[opt], "caption"));
+      }
+   }
+   return sel;
 }
 
 /***********************************************************************

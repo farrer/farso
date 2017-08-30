@@ -32,6 +32,7 @@
 #include "font.h"
 #include "widget.h"
 #include "grid.h"
+#include "treeview.h"
 
 namespace Farso
 {
@@ -132,6 +133,8 @@ namespace Farso
          Widget* parseTextSelector(const rapidjson::Value& value,
                Widget* parent);
          Widget* parseTreeView(const rapidjson::Value& value, Widget* parent);
+         bool parseTreeElement(const rapidjson::Value& value, 
+               TreeView::TreeViewElement* parent);
          bool parseChildren(const rapidjson::Value& value, Widget* parent);
 
          /* Common Widget info */

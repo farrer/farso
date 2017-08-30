@@ -783,8 +783,60 @@ Widget* WidgetJsonParser::parseStackTab(const rapidjson::Value& value,
 Widget* WidgetJsonParser::parseTreeView(const rapidjson::Value& value,
       Widget* parent)
 {
-   //TODO
-   return NULL;
+   if(!parent)
+   {
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+         "Error: TreeView must be inside a parent.");
+      return NULL;
+   }
+
+   bool ordered = parseBoolean(value, "ordered", false);
+   TreeView* treeView = new TreeView(ordered, parent);
+
+   /* Parse its elements */
+   rapidjson::Value::ConstMemberIterator it = value.FindMember("elements");
+   if(it != value.MemberEnd() && it->value.IsArray())
+   {
+      for(size_t el = 0; el < it->value.Size(); el++)
+      {
+         Kobold::String name = parseString(it->value[el], "caption");
+         TreeView::TreeViewElement* element = treeView->addRootElement(name);
+
+         /* Parse and set its children */
+         if(!parseTreeElement(it->value[el], element))
+         {
+            return NULL;
+         }
+      }
+   }
+
+   return treeView;
+}
+
+/***********************************************************************
+ *                           parseTreeElement                          *
+ ***********************************************************************/
+bool WidgetJsonParser::parseTreeElement(const rapidjson::Value& value, 
+      TreeView::TreeViewElement* parent)
+{
+   /* Parse its elements */
+   rapidjson::Value::ConstMemberIterator it = value.FindMember("elements");
+   if(it != value.MemberEnd() && it->value.IsArray())
+   {
+      for(size_t el = 0; el < it->value.Size(); el++)
+      {
+         Kobold::String name = parseString(it->value[el], "caption");
+         TreeView::TreeViewElement* element = parent->addChild(name);
+
+         /* Parse and set its children */
+         if(!parseTreeElement(it->value[el], element))
+         {
+            return false;
+         }
+      }
+   }
+
+   return true;
 }
 
 /***********************************************************************

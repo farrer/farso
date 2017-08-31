@@ -549,8 +549,51 @@ Widget* WidgetJsonParser::parseLabelledPicture(const rapidjson::Value& value,
 Widget* WidgetJsonParser::parseMenu(const rapidjson::Value& value,
       Widget* parent)
 {
-   //TODO
-   return NULL;
+   /* Parse menu options */
+   int minWidth = parseInt(value, "minWidth", 0);
+
+   if(parent)
+   {
+      Kobold::Log::add("Warning: Parent is ignored by Menu.");
+   }
+
+   /* Create the menu */
+   Menu* menu = new Menu(minWidth);
+   menu->beginCreate();
+
+   /* Parse each item */
+   rapidjson::Value::ConstMemberIterator it = value.FindMember("items");
+   if(it != value.MemberEnd() && it->value.IsArray())
+   {
+      for(size_t item = 0; item < it->value.Size(); item++)
+      {
+         Kobold::String text = parseString(it->value[item], "caption");
+         Kobold::String right = parseString(it->value[item], "right");
+         Kobold::String icon = parseString(it->value[item], "icon");
+
+         bool separator = parseBoolean(value, "separator", false);
+
+         if(!text.empty())
+         {
+            if(icon.empty())
+            {
+               menu->insertItem(text, right);
+            }
+            else
+            {
+               menu->insertItem(text, right, icon);
+            }
+         }
+
+         if(separator)
+         {
+            menu->insertSeparator();
+         }
+      }
+   }
+
+   menu->endCreate();
+   return menu;
 }
 
 /***********************************************************************

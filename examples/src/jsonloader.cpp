@@ -115,6 +115,7 @@ void JsonLoader::step(bool leftButtonPressed, bool rightButtonPressed,
          {
             Farso::Controller::insertFromJson(
                   loadFile(selector->getFilename()));
+            loadWindow->close();
          }
       }
    }

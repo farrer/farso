@@ -136,7 +136,7 @@ void Widget::setId(const Kobold::String id)
       Controller::clearIdReference(this->id);
    }
    this->id = id;
-   if(this->id.empty())
+   if(!this->id.empty())
    {
       /* Add reference to it */
       Controller::setIdReference(this->id, this);

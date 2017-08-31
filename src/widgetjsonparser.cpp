@@ -282,7 +282,7 @@ Widget* WidgetJsonParser::parseButton(const rapidjson::Value& value,
                "Warning: tried to define an unknown menu ('%s') to a button!",
                menuId.c_str());
       }
-      if(w->getType() == Widget::WIDGET_TYPE_MENU)
+      else if(w->getType() == Widget::WIDGET_TYPE_MENU)
       {
          menu = static_cast<Menu*>(w);
       }
@@ -598,7 +598,7 @@ Widget* WidgetJsonParser::parseMenu(const rapidjson::Value& value,
          Kobold::String right = parseString(it->value[item], "right");
          Kobold::String icon = parseString(it->value[item], "icon");
 
-         bool separator = parseBoolean(value, "separator", false);
+         bool separator = parseBoolean(it->value[item], "separator", false);
 
          if(!text.empty())
          {
@@ -1067,6 +1067,7 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       {
          return false;
       }
+      created->setId(id);
 
       /* Parse and add its children widgets. */
       if(!parseChildren(value, created))

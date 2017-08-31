@@ -51,6 +51,8 @@
 #include <kobold/list.h>
 #include <kobold/mutex.h>
 
+#include <map>
+
 namespace Farso
 {
 
@@ -220,6 +222,19 @@ class Controller
        *          verifyEvents */
       static const bool wasMouseOverWidget() { return mouseOverWidget; };
 
+      /*! Set Widget reference for a string identifier.
+       * \note id must be unique.
+       * \param id string identifier
+       * \param ref widget related. */
+      static void setIdReference(const Kobold::String& id, Widget* ref);
+
+      /*! Clear the reference for a string identifier 
+       * \param id string identifier to clear the reference to */
+      static void clearIdReference(const Kobold::String& id);
+
+      /*! \return Widget pointer by its unique string identifier */
+      static Widget* getWidgetById(const Kobold::String& id);
+
 #if FARSO_HAS_RAPIDJSON == 1
       /*! Insert widgets from a Json string.
        * \param jsonStr JSON string with the widgets to insert.
@@ -285,6 +300,8 @@ class Controller
       static bool mouseOverWidget; /**< If mouse is under any widget */
 
       static Kobold::Mutex mutex; /**< Mutex for thread-safe use */
+
+      static std::map<Kobold::String, Widget*> idMap; /**< Map for id->widget */
 };
 
 };

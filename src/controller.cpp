@@ -147,6 +147,8 @@ void Controller::finish()
    }
    FontManager::finish();
 
+   idMap.clear();
+
    inited = false;
 
    mutex.unlock();
@@ -786,6 +788,48 @@ const bool Controller::insertFromJson(const Kobold::String& jsonStr)
 #endif
 
 /***********************************************************************
+ *                           setIdReference                            *
+ ***********************************************************************/
+void Controller::setIdReference(const Kobold::String& id, Widget* ref)
+{
+   assert(getWidgetById(id) == NULL);
+   mutex.lock();
+   idMap[id] = ref;
+   mutex.unlock();
+}
+
+/***********************************************************************
+ *                          clearIdReference                           *
+ ***********************************************************************/
+void Controller::clearIdReference(const Kobold::String& id)
+{
+   if(getWidgetById(id) != NULL)
+   {
+      mutex.lock();
+      idMap[id] = NULL;
+      mutex.unlock();
+   }
+}
+
+/***********************************************************************
+ *                            getWidgetById                            *
+ ***********************************************************************/
+Widget* Controller::getWidgetById(const Kobold::String& id)
+{
+   Widget* res = NULL;
+
+   mutex.lock();
+   std::map<Kobold::String, Widget*>::iterator it = idMap.find(id);
+   if(it != idMap.end())
+   {
+      res = (*it).second;
+   }
+   mutex.unlock();
+
+   return res;
+}
+
+/***********************************************************************
  *                               Static                                *
  ***********************************************************************/
 Skin* Controller::skin = NULL;
@@ -804,4 +848,5 @@ Kobold::String Controller::baseDir;
 bool Controller::forceBringToFrontCall = false;
 bool Controller::mouseOverWidget = false;
 Kobold::Mutex Controller::mutex;
+std::map<Kobold::String, Widget*> Controller::idMap;
 

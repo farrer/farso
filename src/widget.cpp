@@ -112,6 +112,12 @@ Widget::Widget(WidgetType wType, Widget* wParent)
  ***********************************************************************/
 Widget::~Widget()
 {
+   if(!this->id.empty())
+   {
+      /* Remove reference from it */
+      Controller::clearIdReference(this->id);
+   }
+
    if((renderer != NULL) && (parent == NULL))
    {
       /* Renderer allocation belongs to us. Let's free it. */
@@ -124,7 +130,17 @@ Widget::~Widget()
  ***********************************************************************/
 void Widget::setId(const Kobold::String id)
 {
+   if(!this->id.empty())
+   {
+      /* Remove reference from it */
+      Controller::clearIdReference(this->id);
+   }
    this->id = id;
+   if(this->id.empty())
+   {
+      /* Add reference to it */
+      Controller::setIdReference(this->id, this);
+   }
 }
 
 /***********************************************************************

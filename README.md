@@ -26,7 +26,9 @@ Farso have the following widgets:
  * TreeView
  * Window
 
-It's fully skinable and could be extended to support your own widgets.
+They could be defined by code or by a simple JSON file.
+
+Farso is fully skinable and could be extended to support your own widgets.
 
 Farso is DNT's GUI, being this version the active of DNT's Ogre3d port.
 
@@ -43,6 +45,9 @@ rewrite, with lots of improvements and code clean-up / refactoring, which is
 hosted here.
 
 ## Dependencies
+
+### Optional
+ * Rapidjson [http://rapidjson.org]
 
 ### OpenGL Renderer
 

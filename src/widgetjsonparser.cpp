@@ -268,8 +268,31 @@ Widget* WidgetJsonParser::parseButton(const rapidjson::Value& value,
    bool decored = parseBoolean(value, "decored", true);
    bool rounded = parseBoolean(value, "rounded", false);
    FontInfo font = parseFontInfo(value, "font", Font::TEXT_CENTERED);
-   //TODO: parse and set Menu.
    //TODO: parse skin types.
+   
+   /* Parse its menu, if any */
+   Kobold::String menuId = parseString(value, "menu");
+   Menu* menu = NULL;
+   if(!menuId.empty())
+   {
+      Widget* w = Controller::getWidgetById(menuId);
+      if(w == NULL)
+      {
+         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+               "Warning: tried to define an unknown menu ('%s') to a button!",
+               menuId.c_str());
+      }
+      if(w->getType() == Widget::WIDGET_TYPE_MENU)
+      {
+         menu = static_cast<Menu*>(w);
+      }
+      else
+      {
+         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+               "Warning: tried to define widget ('%s') or type (%d) as a menu!",
+               menuId.c_str(), w->getType());
+      }
+   }
 
    /* Create and set the button */
    Button* button = new Button(pos.x, pos.y, size.x, size.y, caption,
@@ -285,6 +308,10 @@ Widget* WidgetJsonParser::parseButton(const rapidjson::Value& value,
    if(!font.filename.empty() && font.size != 0)
    {
       button->setFont(font.filename, font.size);
+   }
+   if(menu)
+   {
+      button->setMenu(menu);
    }
    return button;
 }

@@ -96,7 +96,7 @@ void OpenGLWidgetRenderer::uploadSurface()
 void OpenGLWidgetRenderer::doSetPosition(float x, float y)
 {
    posX = (int) x;
-   posY = (int) Controller::getHeight() - height - y - 2;
+   posY = (int) Controller::getHeight() - height - y;
 }
 
 /************************************************************************

@@ -46,6 +46,7 @@
 #include "textselector.h"
 #include "treeview.h"
 #include "widget.h"
+#include "widgetjsonparser.h"
 #include "window.h"
 
 #include <kobold/list.h>
@@ -236,10 +237,18 @@ class Controller
       static Widget* getWidgetById(const Kobold::String& id);
 
 #if FARSO_HAS_RAPIDJSON == 1
-      /*! Insert widgets from a Json string.
+      /*! Insert widgets from a JSON string.
        * \param jsonStr JSON string with the widgets to insert.
        * \return true if all defined widgets were inserted, false otherwise */
       static const bool insertFromJson(const Kobold::String& jsonStr);
+     
+      /*! Insert widgets from a JSON string using an specific JSON parser.
+       * \note This is used when loading extended widgets.
+       * \param jsonStr JSON string with the widgets to insert
+       * \param parser pointer to the parser to use
+       * \return true if all defined widgets were inserted. */
+      static const bool insertFromJson(const Kobold::String& jsonStr, 
+            WidgetJsonParser* parser);
 #endif
 
    private:

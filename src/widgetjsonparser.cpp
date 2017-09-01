@@ -965,6 +965,15 @@ bool WidgetJsonParser::parseChildren(const rapidjson::Value& value,
 }
 
 /***********************************************************************
+ *                         parseExtendedWidget                         *
+ ***********************************************************************/
+Widget* WidgetJsonParser::parseExtendedWidget(const Kobold::String& type, 
+      const rapidjson::Value& value, Widget* parent)
+{
+   return NULL;
+}
+
+/***********************************************************************
  *                           parseJsonWidget                           *
  ***********************************************************************/
 bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value, 
@@ -1061,6 +1070,10 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       else if(type == "treeView")
       {
          created = parseTreeView(value, parent);
+      }
+      else
+      {
+         created = parseExtendedWidget(type, value, parent);
       }
 
       if(!created)

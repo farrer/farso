@@ -42,12 +42,23 @@ namespace Farso
          /*! Constructor */
          WidgetJsonParser();
          /*! Destructor */
-         ~WidgetJsonParser();
+         virtual ~WidgetJsonParser();
 
          /*! Load widgets from a JSON string.
           * \param jsonStr string with JSON widgets
           * \return true if all widgets could be loaded */
          bool loadFromJson(const Kobold::String& jsonStr);
+
+      protected:
+
+         /*! Function to parse an extended widget. Should be overriden on
+          * applications that need to parse its own implemented widgets.
+          * \param name widget 'type' name.
+          * \param value with the widget to create.
+          * \param parent pointer to the potential parent widget.
+          * \return pointer to the widget created or NULL, if none. */
+         virtual Widget* parseExtendedWidget(const Kobold::String& type, 
+               const rapidjson::Value& value, Widget* parent);
 
       private:
          /*! Internal font info for parse */

@@ -783,7 +783,12 @@ int Controller::getTotalRootWidgets()
 const bool Controller::insertFromJson(const Kobold::String& jsonStr)
 {
    WidgetJsonParser parser;
-   return parser.loadFromJson(jsonStr);
+   return insertFromJson(jsonStr, &parser);
+}
+const bool Controller::insertFromJson(const Kobold::String& jsonStr, 
+      WidgetJsonParser* parser)
+{
+   return parser->loadFromJson(jsonStr);
 }
 #endif
 

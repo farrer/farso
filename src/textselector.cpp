@@ -32,6 +32,7 @@ TextSelector::TextOption::TextOption(int x, int y, int width, int height,
 {
    this->label = new Label(x, y, width, height, caption, parent);
    this->label->setSkinType(Skin::SKIN_TYPE_TEXT_OPTION);
+   this->label->enableBreakLineOnSpace();
    this->index = index;
 }
 
@@ -178,7 +179,7 @@ void TextSelector::doDraw(Rect pBody)
    for(int i = 0; i < options.getTotal(); i++)
    {
       /* Calculate needed height to render the entire string */
-      int height = font->getHeight(getWidth(), opt->label->getCaption());
+      int height = font->getHeight(getWidth(), opt->label->getCaption(), true);
 
       /* Define label position and size */
       opt->label->setPosition(0, curY);

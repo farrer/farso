@@ -491,15 +491,43 @@ Font::Alignment Font::getAlignment()
 /***********************************************************************
  *                            getHeight                                *
  ***********************************************************************/
-int Font::getHeight(int areaWidth, Kobold::String text)
+int Font::getHeight(int areaWidth, Kobold::String text, bool breakOnSpace)
 {
    if(curFace == NULL)
    {
       return 0;
    }
-   int width = getWidth(text);
-   int totalLines = (int) ceil(width / (float) areaWidth);
 
+   int totalLines = 0;
+
+   if(!breakOnSpace)
+   {
+      /* Direct calculate by string size */
+      int width = getWidth(text);
+      totalLines = (int) ceil(width / (float) areaWidth);
+   }
+   else
+   {
+      /* Calculate by breaking lines on space. */
+      Kobold::String fit;
+      Kobold::String wontFit = text;
+      while(!wontFit.empty())
+      {
+         Kobold::String cur = wontFit;
+         getWhileFits(cur, fit, wontFit, areaWidth);
+
+         if(fit.empty())
+         {
+            /* Text will never fits! */
+            Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL,
+               "WARN: text '%s' will never fits desired area size '%d'",
+               text.c_str(), areaWidth);
+            break;
+         }
+         totalLines++;
+      }
+   }
+   
    return (totalLines * curFace->getIncY() + 1);
 }
 
@@ -655,7 +683,7 @@ int Font::writeBreakingOnSpaces(Surface* surface, Rect area,
 
    /*  define initial position */
    int curWrote = 0;
-   int curY = area.getY1() + curFace->getFontHeight();
+   int curY = area.getY1();
    int incY = curFace->getFontHeight();
 
    /* Let's write it */

@@ -121,8 +121,10 @@ class Font
        * font at its current size on an area of defined width.
        * \param areaWidth width of the area where will write the font to
        * \param text text to get needed height
+       * \param breakOnSpace if try to break font on space.
        * \return needed height in pixels. */
-      int getHeight(int areaWidth, Kobold::String text);
+      int getHeight(int areaWidth, Kobold::String text, 
+            bool breakOnSpace);
       
       /*! Get default height for a line at current font size */
       int getDefaultHeight();

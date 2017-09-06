@@ -182,7 +182,11 @@ int Label::getFontSize()
  ******************************************************************/
 void Label::enableBreakLineOnSpace()
 {
-   breakLineOnSpace = true;
+   if(!breakLineOnSpace)
+   {
+      breakLineOnSpace = true;
+      setDirty();
+   }
 }
 
 /******************************************************************

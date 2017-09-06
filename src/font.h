@@ -113,9 +113,12 @@ class Font
        * \param fit will receive part of text that fits
        * \param wontFit will receive part of text that won't fit
        * \param width width where text should be.
+       * \param brokeOnSpace will receive true if the string were broke on
+       *        a space to fit. (false means either not broke, if the whole
+       *        string fits or broke between valid characters).
        * \return width of 'fit' */
       int getWhileFits(Kobold::String text, Kobold::String& fit,
-                       Kobold::String& wontFit, int width);
+                       Kobold::String& wontFit, int width, bool& brokeOnSpace);
 
       /*! Get the needed height, in pixels, to write the text with current
        * font at its current size on an area of defined width.

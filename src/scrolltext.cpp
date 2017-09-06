@@ -206,6 +206,8 @@ void ScrollText::addText(Kobold::String text, Kobold::String font, int size,
    /* Add characters to the sentence until line is full */
    Kobold::String fit;
    Kobold::String wontFit = text;
+   Kobold::String last;
+   bool brokeOnSpace = false;
 
    int baseWidth = getWidth() - 2 - scrollBar->getWidth() - 
       (2 * FONT_HORIZONTAL_DELTA);
@@ -215,16 +217,17 @@ void ScrollText::addText(Kobold::String text, Kobold::String font, int size,
    bool createdLine = false;
    while(!wontFit.empty())
    {
+      last = wontFit;
       text = wontFit;
-      fitWidth = f->getWhileFits(text, fit, wontFit, availableWidth);
+      fitWidth = f->getWhileFits(text, fit, wontFit, availableWidth, 
+            brokeOnSpace);
 
-      availableWidth -= fitWidth;
-
-      if(!fit.empty())
+      if(!fit.empty() && (wontFit.empty() || brokeOnSpace))
       {
          /* Add string to current sentence */
          sentence->addText(fit, fitWidth, f->getDefaultHeight());
          line->add(fitWidth, f->getDefaultHeight());
+         availableWidth -= fitWidth;
       }
       else if(createdLine)
       {
@@ -233,6 +236,11 @@ void ScrollText::addText(Kobold::String text, Kobold::String font, int size,
                "WARN: text '%s' will never fit ScrollText area at size '%d'",
                text.c_str(), size);
          return;
+      }
+      else if(!wontFit.empty() && !brokeOnSpace)
+      {
+         /* Couldn't break on space, let's put it on another line */
+         wontFit = last;
       }
 
       if(!wontFit.empty())

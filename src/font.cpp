@@ -511,10 +511,11 @@ int Font::getHeight(int areaWidth, Kobold::String text, bool breakOnSpace)
       /* Calculate by breaking lines on space. */
       Kobold::String fit;
       Kobold::String wontFit = text;
+      bool brokeOnSpace = false;
       while(!wontFit.empty())
       {
          Kobold::String cur = wontFit;
-         getWhileFits(cur, fit, wontFit, areaWidth);
+         getWhileFits(cur, fit, wontFit, areaWidth, brokeOnSpace);
 
          if(fit.empty())
          {
@@ -572,7 +573,7 @@ int Font::getWidth(Kobold::String text, int outline)
  *                          getWhileWidth                              *
  ***********************************************************************/
 int Font::getWhileFits(Kobold::String text, Kobold::String& fit,
-      Kobold::String& wontFit, int width)
+      Kobold::String& wontFit, int width, bool& brokeOnSpace)
 {
    int curSize = 0;
    const Uint8* utf8 = (Uint8*) text.c_str();
@@ -580,6 +581,7 @@ int Font::getWhileFits(Kobold::String text, Kobold::String& fit,
    size_t texlen = fulllen;
    size_t lastlen;
    size_t lastSpace = Kobold::String::npos;
+   brokeOnSpace = false;
    
    fit = "";
    wontFit = "";
@@ -604,10 +606,11 @@ int Font::getWhileFits(Kobold::String text, Kobold::String& fit,
       curSize += glyph->getAdvanceX();
       if(curSize > width)
       {
-         /* Last try yo break on last space */
+         /* Try to break on last space */
          if(lastSpace != Kobold::String::npos)
          {
             lastlen = lastSpace;
+            brokeOnSpace = true;
          }
 
          /* String greater than the maximun available width, get each of its
@@ -685,12 +688,13 @@ int Font::writeBreakingOnSpaces(Surface* surface, Rect area,
    int curWrote = 0;
    int curY = area.getY1();
    int incY = curFace->getFontHeight();
+   bool brokeOnSpace = false;
 
    /* Let's write it */
    while((!wontFit.empty()) && (curY <= area.getY2()))
    {
       text = wontFit;
-      getWhileFits(text, fit, wontFit, width);
+      getWhileFits(text, fit, wontFit, width, brokeOnSpace);
 
       if(fit.empty())
       {

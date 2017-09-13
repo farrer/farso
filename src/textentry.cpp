@@ -458,8 +458,10 @@ void TextEntry::calculateCursorPosition(int mrX, int mrY)
    int size = visibleText.length();
    Font* font = getFont();
    lastCheckX = mrX;
+   /* Transform mouse coordinate from relative to parent to the text entry. */
+   int relX = mrX - getX();
 
-   while((pos < mrX) && ((lastIndex - curInit) < size))
+   while((pos < relX) && ((lastIndex - curInit) < size))
    {
       cursorIndex = lastIndex;
       lastIndex = getNextCharacterInit(getCaption(), lastIndex);
@@ -467,7 +469,7 @@ void TextEntry::calculateCursorPosition(int mrX, int mrY)
    }
 
    /* Check if after visible */
-   if((pos < mrX) && (lastIndex >= size))
+   if((pos < relX) && (lastIndex >= size))
    {
       cursorIndex = size;
    }

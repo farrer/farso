@@ -27,6 +27,7 @@
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
 
 #include "widget.h"
+#include "font.h"
 #include <kobold/keyboard.h>
 
 namespace Farso
@@ -69,6 +70,9 @@ class TextEntry : public Kobold::KeyboardTextEditor, public Widget
 
    private:
 
+      /*! Get the prepared font to use */
+      Font* getFont();
+
       /*! Get index of next character start (utf8) */
       int getNextCharacterInit(Kobold::String str, int cur);
       /*! Get index one previous character start (utf8) */
@@ -76,11 +80,18 @@ class TextEntry : public Kobold::KeyboardTextEditor, public Widget
       /*! Get the number of characters of the text (utf8) */
       int getStringLength(Kobold::String s);
 
+      /*! Calculate cursor position, based on relative mouse position */
+      void calculateCursorPosition(int mrX, int mrY);
+
       Rect body;     /**< Current body */
-      int cursorPos; /**< Current cursor position on widget X axys */
       bool editing; /**< If is actually editing the text entry */
       bool shouldStopEdition; /**< If received to stop edition */
       unsigned int cursorIndex; /**< Current cursor index on the string */
+      Kobold::String visibleText; /**< Current visible text */
+      int curInit; /**< Current visible text first index on whole text */
+      int curEnd; /**< Current visible text last index on whole text */
+      bool redefineVisible; /**< Used to redefine or not visible text */
+      int lastCheckX; /**< last relative mouse X position checked for cursor */
 
 };
 

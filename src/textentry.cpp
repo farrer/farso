@@ -34,10 +34,14 @@ TextEntry::TextEntry(int x, int y, int width, int height, Widget* parent)
           :Widget(Widget::WIDGET_TYPE_TEXT_ENTRY, x, y, width, height, parent),
            body(x, y, x + width - 1, y + height - 1)
 {
-   cursorPos = 0;
    cursorIndex = 0;
+   curInit = 0;
+   curEnd = 0;
+   visibleText = "";
    editing = false;
    shouldStopEdition = false;
+   redefineVisible = true;
+   lastCheckX = -1;
 }
 
 /***********************************************************************
@@ -55,7 +59,6 @@ void TextEntry::setCaption(Kobold::String text)
    if(getCaption() != text)
    {
       Widget::setCaption(text);
-      cursorPos = 0;
       cursorIndex = 0;
    }
 }
@@ -129,7 +132,6 @@ void TextEntry::appendToCursor(Kobold::String textToAppend)
 {
    Kobold::String text = getCaption();
    text.insert(cursorIndex, textToAppend);
-   cursorPos += getStringLength(textToAppend);
    cursorIndex += textToAppend.length();
    Widget::setCaption(text);
 }
@@ -170,7 +172,6 @@ void TextEntry::sendCursorToInit()
 {
    if(cursorIndex != 0)
    {
-      cursorPos = 0;
       cursorIndex = 0;
       setDirty();
    }
@@ -185,7 +186,6 @@ void TextEntry::sendCursorToEnd()
    if(cursorIndex != text.length())
    {
       cursorIndex = text.length();
-      cursorPos = getStringLength(text);
       setDirty();
    }
 }
@@ -204,7 +204,6 @@ void TextEntry::changeCursorPosition(int delta)
          if(cursorIndex < text.length())
          {
             cursorIndex = getNextCharacterInit(text, cursorIndex);
-            cursorPos++;
             setDirty();
          }
          delta--;
@@ -215,7 +214,6 @@ void TextEntry::changeCursorPosition(int delta)
          if(cursorIndex > 0)
          {
             cursorIndex = getPreviousCharacterInit(text, cursorIndex);
-            cursorPos--;
             setDirty();
          }
          delta++;
@@ -250,7 +248,7 @@ void TextEntry::doDraw(Rect pBody)
    Skin* skin = Controller::getSkin();
    Draw* draw = Controller::getDraw();
    Surface* surface = getWidgetRenderer()->getSurface();
-   Font* font;
+   Font* font = getFont();
    Color fontColor;
 
    /* define coordinates on parent's surface */
@@ -276,9 +274,6 @@ void TextEntry::doDraw(Rect pBody)
                x1, y1, x2, y2);
          skEl = skin->getSkinElement(Skin::SKIN_TYPE_TEXTENTRY_DISABLED);  
       }
-      font = FontManager::getFont(skEl.getFontName());
-      font->setSize(skEl.getFontSize());
-      font->setAlignment(Font::TEXT_LEFT);
       textAreaDelta = skEl.getTextAreaDelta();
       fontColor = skEl.getFontColor();
    }  
@@ -299,9 +294,6 @@ void TextEntry::doDraw(Rect pBody)
       }
       draw->doFilledRectangle(surface, x1 + 1, y1 + 1, x2 - 1, y2 - 1);
 
-      font = FontManager::getDefaultFont();
-      font->setSize(10);
-      font->setAlignment(Font::TEXT_LEFT);
       fontColor = Colors::colorCont[1];
    }
 
@@ -315,38 +307,41 @@ void TextEntry::doDraw(Rect pBody)
       draw->setActiveColor(Colors::colorText);
    }
 
-   /* Let's define visible string */
-   int init = 0;
-   int end = (int)getCaption().length();
-   Kobold::String writeText = getCaption();
-   int maxWidth = getWidth() - 6 - 
-                  (textAreaDelta.getX1() + textAreaDelta.getX2());
-   while(font->getWidth(writeText) > maxWidth )
+   if(redefineVisible)
    {
-      if(end > (int) cursorIndex)
-      {     
-         int lastEnd = end;
-         end = getPreviousCharacterInit(writeText, lastEnd);
-         writeText.erase(writeText.length() - (lastEnd - end));
-      }
-      else
+      /* Let's define visible string */
+      curInit = 0;
+      curEnd = (int)getCaption().length();
+      visibleText = getCaption();
+      int maxWidth = getWidth() - 6 - 
+         (textAreaDelta.getX1() + textAreaDelta.getX2());
+      while(font->getWidth(visibleText) > maxWidth )
       {
-         int newInit = getNextCharacterInit(writeText, 0);
-         writeText.erase(0, newInit);
-         init += newInit;
+         if(curEnd > (int) cursorIndex)
+         {     
+            int lastEnd = curEnd;
+            curEnd = getPreviousCharacterInit(visibleText, lastEnd);
+            visibleText.erase(visibleText.length() - (lastEnd - curEnd));
+         }
+         else
+         {
+            int newInit = getNextCharacterInit(visibleText, 0);
+            visibleText.erase(0, newInit);
+            curInit += newInit;
+         }
       }
    }
+   redefineVisible = true;
 
    font->write(surface, Rect(x1 + textAreaDelta.getX1(), 
                              y1 + textAreaDelta.getY1(), 
                              x2 - textAreaDelta.getX2(), 
-                             y2 - textAreaDelta.getY2()), writeText);
+                             y2 - textAreaDelta.getY2()), visibleText);
 
    if(editing)
    {
       /* Must draw cursor */
-      Kobold::String s = getCaption().substr(init, end).substr(0, 
-            cursorIndex - init);
+      Kobold::String s = visibleText.substr(0, cursorIndex - curInit);
       int x = x1 + 2 + font->getWidth(s) + textAreaDelta.getX1();
       draw->doLine(surface, x, y1 + 3 + textAreaDelta.getY1(), 
                             x, y2 - 3 - textAreaDelta.getY2());
@@ -365,6 +360,7 @@ bool TextEntry::doTreat(bool leftButtonPressed, bool rightButtonPressed,
       /* Let's see if edition done by pressing outside the entry */
       if((shouldStopEdition) || ((leftButtonPressed) && (!isInner(mrX, mrY))))
       {
+         redefineVisible = false;
          shouldStopEdition = false;
          editing = false;
          Controller::setEvent(this, EVENT_TEXTENTRY_EDITION_DONE);
@@ -375,6 +371,18 @@ bool TextEntry::doTreat(bool leftButtonPressed, bool rightButtonPressed,
       {
          /* Still editing */
          Controller::setEvent(this, EVENT_TEXTENTRY_EDITING);
+         if((leftButtonPressed) && (isInner(mrX, mrY)))
+         {
+            if(lastCheckX != mrX)
+            {
+               calculateCursorPosition(mrX, mrY);
+               setDirty();
+            }
+         }
+         else
+         {
+            lastCheckX = -1;
+         }
       }
 
       return true;
@@ -388,6 +396,8 @@ bool TextEntry::doTreat(bool leftButtonPressed, bool rightButtonPressed,
          editing = true;
          Kobold::Keyboard::startEditingText((Kobold::KeyboardTextEditor*)this);
          Controller::setEvent(this, EVENT_TEXTENTRY_EDITION_START);
+         /* Calculate cursor position, based on clicked */
+         calculateCursorPosition(mrX, mrY);
          setDirty();
          return true;
       }
@@ -402,6 +412,66 @@ bool TextEntry::doTreat(bool leftButtonPressed, bool rightButtonPressed,
 void TextEntry::doAfterChildTreat()
 {
    /* Nothing to do */
+}
+
+/***********************************************************************
+ *                              getFont                                *
+ ***********************************************************************/
+Font* TextEntry::getFont()
+{
+   Font* font = NULL;
+   Skin* skin = Controller::getSkin();
+
+   if(skin)
+   {
+      Skin::SkinElement skEl;
+      if(isAvailable())
+      {
+         skEl = skin->getSkinElement(Skin::SKIN_TYPE_TEXTENTRY);  
+      } 
+      else
+      {
+         skEl = skin->getSkinElement(Skin::SKIN_TYPE_TEXTENTRY_DISABLED);  
+      }
+      font = FontManager::getFont(skEl.getFontName());
+      font->setSize(skEl.getFontSize());
+      font->setAlignment(Font::TEXT_LEFT);
+   }  
+   else
+   {
+      font = FontManager::getDefaultFont();
+      font->setSize(10);
+      font->setAlignment(Font::TEXT_LEFT);
+   }
+
+   return font;
+}
+
+/***********************************************************************
+ *                      calculateCursorPosition                        *
+ ***********************************************************************/
+void TextEntry::calculateCursorPosition(int mrX, int mrY)
+{
+   int lastIndex = curInit;
+   cursorIndex = 0;
+   int pos = 0;
+   int size = visibleText.length();
+   Font* font = getFont();
+   lastCheckX = mrX;
+
+   while((pos < mrX) && ((lastIndex - curInit) < size))
+   {
+      cursorIndex = lastIndex;
+      lastIndex = getNextCharacterInit(getCaption(), lastIndex);
+      pos = font->getWidth(visibleText.substr(0, lastIndex - curInit));
+   }
+
+   /* Check if after visible */
+   if((pos < mrX) && (lastIndex >= size))
+   {
+      cursorIndex = size;
+   }
+   redefineVisible = false;
 }
 
 #endif

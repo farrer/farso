@@ -188,8 +188,12 @@ OgreWidgetRenderer::~OgreWidgetRenderer()
 
    /* Free the surface and its texture */
    delete surface;
+#if OGRE_VERSION_MAJOR > 1
+   Ogre::TextureManager::getSingleton().remove(texture->getName()); 
+#else
    Ogre::TextureManager::getSingleton().remove(texture->getName(), 
          texture->getGroup());
+#endif
 }
 
 /***********************************************************************

@@ -179,15 +179,17 @@ OgreWidgetRenderer::~OgreWidgetRenderer()
     (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
    /* Remove Shaders from material */
    Ogre::RTShader::ShaderGenerator::getSingleton().
-      removeAllShaderBasedTechniques(material->getName());
+      removeAllShaderBasedTechniques(material->getName(), material->getGroup());
 
    /* Free the material used */
-   Ogre::MaterialManager::getSingleton().remove(material->getName());
+   Ogre::MaterialManager::getSingleton().remove(material->getName(), 
+         material->getGroup());
 #endif
 
    /* Free the surface and its texture */
    delete surface;
-   Ogre::TextureManager::getSingleton().remove(texture->getName());
+   Ogre::TextureManager::getSingleton().remove(texture->getName(), 
+         texture->getGroup());
 }
 
 /***********************************************************************
@@ -228,7 +230,7 @@ void OgreWidgetRenderer::defineTexture()
 #endif
    Ogre::RTShader::ShaderGenerator::getSingleton().validateMaterial(
          Ogre::RTShader::ShaderGenerator::DEFAULT_SCHEME_NAME, 
-         material->getName());
+         material->getName(), material->getGroup());
 
    /* Verify if need to create a pass */
    int numPasses = tech->getNumPasses();

@@ -416,6 +416,33 @@ void Controller::setEvent(Widget* owner, EventType type)
 {
    mutex.lock();
    event.set(owner, type);
+   if(owner)
+   {
+      owner->onEvent(type);
+   }
+   mutex.unlock();
+}
+
+/***********************************************************************
+ *                           removeListener                            *
+ ***********************************************************************/
+void Controller::removeEventListener(Widget* owner, 
+      WidgetEventListener* listener)
+{
+   assert(owner != NULL && listener != NULL);
+   mutex.lock();
+   owner->removeEventListener(listener);
+   mutex.unlock();
+}
+
+/***********************************************************************
+ *                             addListener                             *
+ ***********************************************************************/
+void Controller::addEventListener(Widget* owner, WidgetEventListener* listener)
+{
+   assert(owner != NULL && listener != NULL);
+   mutex.lock();
+   owner->addEventListener(listener);
    mutex.unlock();
 }
 

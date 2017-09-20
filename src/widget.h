@@ -28,6 +28,7 @@
 #include "draw.h"
 #include "rect.h"
 #include "farsoconfig.h"
+#include "widgeteventlistener.h"
 
 namespace Farso
 {
@@ -232,10 +233,18 @@ class Widget : public Kobold::ListElement, public Kobold::List
       /*! \return rectangle with body with parent's coordinate applyed */
       Rect getBodyWithParentsApplied();
 
-
       /*! \return rectangle defining the widget's body. All its children
        * have their coordinates relative to this body */
       virtual Rect getBody() = 0;
+
+      /*! Add an event listener to this widget.
+       * \param listener pointer to the event listener. */
+      void addEventListener(WidgetEventListener* listener);
+      /*! Remove an event listener from this widget
+       * \param lister pointer to the event listener to remove. */
+      void removeEventListener(WidgetEventListener* listener);
+      /*! Tell our listeners that an event happened on this widget */
+      void onEvent(const EventType& eventType);
 
    protected:
 
@@ -296,6 +305,8 @@ class Widget : public Kobold::ListElement, public Kobold::List
       WidgetRenderer* renderer; /**< Internal renderer, if without parents. */
       Widget* parent;   /**< Parent Widget - if any */
       bool dirty;     /**< Flag if the had changed its draw state */
+
+      Kobold::List listeners; /**< List with all event listeners */
 };
 
 }

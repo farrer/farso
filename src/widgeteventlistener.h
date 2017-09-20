@@ -18,39 +18,31 @@
   along with Farso.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _farso_event_h
-#define _farso_event_h
+#ifndef _farso_widget_event_listener_h
+#define _farso_widget_event_listener_h
 
 #include "farsoconfig.h"
+#include <kobold/list.h>
 #include "eventtype.h"
-#include "widget.h"
 
 namespace Farso
 {
+   class Widget;
 
-/*! A Farso event definition */
-class Event
-{
-   public:
-      /*! Constructor
-       * \param widget pointer to widget owner of the event
-       * \param event event type */
-      Event(Widget* widget, EventType event);
+   /*! Base class for listening for events on a single widget. */
+   class WidgetEventListener : public Kobold::ListElement
+   {
+      public:
+         /*! Constructor */
+         WidgetEventListener(){};
+         /*! Destructor */
+         virtual ~WidgetEventListener(){};
 
-      /*! Set event.
-       * \param widget pointer to widget owner of the event
-       * \param event event type */
-      void set(Widget* widget, EventType event);
-
-      /*! \return pointer to the widget owner of the event */
-      Widget* getWidget();
-      /*! \return event type */
-      EventType getType();
-
-   private:
-      Widget* widget;
-      EventType event;
-};
+         /*! Function called when an event happened on some owner widgets.
+          * \param eventType type of the happened event.
+          * \param widget pointer to the widget where the event happened. */
+         virtual void onEvent(const EventType& eventType, Widget* widget)=0;
+   };
 
 }
 

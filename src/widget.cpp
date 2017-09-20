@@ -112,9 +112,16 @@ Widget::Widget(WidgetType wType, Widget* wParent)
  ***********************************************************************/
 Widget::~Widget()
 {
+   /* Clean the listeners, but without deleting it, as their memory isn't 
+    * owned by us. */
+   while(listeners.getFirst())
+   {
+      listeners.removeWithoutDelete(listeners.getFirst());
+   }
+
+   /* Remove reference from its id, if defined */
    if(!this->id.empty())
    {
-      /* Remove reference from it */
       Controller::clearIdReference(this->id);
    }
 
@@ -613,5 +620,35 @@ Farso::Rect Widget::getBodyWithParentsApplied()
 
    return Rect(body.getX1(), body.getY1(),
                body.getX2(), body.getY2());
+}
+
+/***********************************************************************
+ *                           addEventListener                          *
+ ***********************************************************************/
+void Widget::addEventListener(WidgetEventListener* listener)
+{
+   listeners.insert(listener);
+}
+
+/***********************************************************************
+ *                         removeEventListener                         *
+ ***********************************************************************/
+void Widget::removeEventListener(WidgetEventListener* listener)
+{
+   listeners.removeWithoutDelete(listener);
+}
+
+/***********************************************************************
+ *                                onEvent                              *
+ ***********************************************************************/
+void Widget::onEvent(const EventType& eventType)
+{
+   WidgetEventListener* listener = static_cast<WidgetEventListener*>(
+         listeners.getFirst());
+   for(int i = 0; i < listeners.getTotal(); i++)
+   {
+      listener->onEvent(eventType, this);
+      listener = static_cast<WidgetEventListener*>(listener->getNext());
+   }
 }
 

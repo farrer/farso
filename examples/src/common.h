@@ -4,8 +4,11 @@
 namespace FarsoExample
 {
 
-   /*! The rendering-independent example class */
-   class Example
+   /*! The rendering-independent example class.
+    * \note Although it is defined as an WidgetEventListener, we are only
+    *       using it for the "exitButton". The use of listeners is fully
+    *       optional */
+   class Example : Farso::WidgetEventListener
    {
       public:
          /*! Constructor */
@@ -18,6 +21,10 @@ namespace FarsoExample
 
          /* \return if should quit the example */
          bool shouldQuit();
+
+         /*! From WidgetEventListener. 
+          * \note we are only listening for exitButton events */
+         void onEvent(const Farso::EventType& eventType, Farso::Widget* widget);
 
          /* Each frame step */
          void step(bool leftButtonPressed, bool rightButtonPressed,

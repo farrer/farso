@@ -44,6 +44,7 @@ void Example::init(Farso::RendererType rendererType, void* extraInfo)
    exitButton = new Farso::Button(Farso::Controller::getWidth() - 30, 0, 
          30, 30, "", NULL);
    exitButton->setMouseHint("Exit");
+   Farso::Controller::addEventListener(exitButton, this);
    new Farso::Picture(3, 4, "other/door.png", exitButton);
    createDialogWindow();
    createWindowWithStack();
@@ -357,6 +358,22 @@ void Example::createMenu()
 }
 
 /************************************************************************
+ *                               onEvent                                *
+ ************************************************************************/
+void Example::onEvent(const Farso::EventType& eventType, Farso::Widget* widget)
+{
+   /* The use of listeners is optional. We are using it here only on the 
+    * exit button, just to illustrate (and test) its implementation.
+    * One could check events by Farso::getEvent or by listeners. It's up to
+    * your tase/needs. */
+   if(eventType == Farso::EVENT_BUTTON_RELEASE)
+   {
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL, "We should exit..."); 
+      shouldExit = true;
+   }
+}
+
+/************************************************************************
  *                                  step                                *
  ************************************************************************/
 void Example::step(bool leftButtonPressed, bool rightButtonPressed,
@@ -374,12 +391,7 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
 
       if(event.getType() == Farso::EVENT_BUTTON_RELEASE)
       {
-         /* Check exit button */
-         if(event.getWidget() == exitButton)
-         {
-            shouldExit = true;
-         }
-         else if(event.getWidget() == treeViewInsertButton)
+         if(event.getWidget() == treeViewInsertButton)
          {
             /* Let's insert a new element on the tree */
             if(!treeView->getSelected())

@@ -44,6 +44,7 @@ src/controller.h
 src/cursor.h
 src/draw.h
 src/event.h
+src/eventtype.h
 src/fileselector.h
 src/font.h
 src/grid.h
@@ -65,6 +66,7 @@ src/treeview.h
 src/widget.h
 src/widgetjsonparser.h
 src/widgetrenderer.h
+src/widgeteventlistener.h
 src/window.h
 src/sdl/sdlsurface.h
 src/sdl/sdldraw.h

@@ -251,6 +251,13 @@ class Controller
             WidgetJsonParser* parser);
 #endif
 
+      /*! Remove an event listener from a widget, thread safelly */
+      static void removeEventListener(Widget* owner, 
+            WidgetEventListener* listener);
+      /*! Add an event listener to a widget, thread safelly */
+      static void addEventListener(Widget* owner, 
+            WidgetEventListener* listener);
+
    private:
       /*! No instances allowed */
       Controller(){};

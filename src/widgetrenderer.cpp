@@ -63,6 +63,11 @@ WidgetRenderer::~WidgetRenderer()
  ***********************************************************************/
 Surface* WidgetRenderer::getSurface()
 {
+   if(!surface)
+   {
+      createSurface();
+   }
+
    return surface;
 }
 

@@ -35,12 +35,15 @@ namespace Farso
 
 class ControllerRendererJunction;
 
-/*! The renderer interface. */
+/*! The renderer interface.
+ * \note the surface used should be created only by the createSurface method
+ * call. This is needed for the surface creation always be at the 'renderer' 
+ * thread (ie: the creation of a texture will require, for some renderers,
+ * that the graphical thread is used). */
 class WidgetRenderer
 {
    public:
       /*! Constructor.
-       * \note children constructor must create the surface it will use.
        * \param width -> width of the drawable surface 
        * \param width -> height of the drawable surface
        * \param junction -> pointer to juntion to use. */
@@ -103,6 +106,10 @@ class WidgetRenderer
       virtual void setRenderQueueSubGroup(int renderQueueId) = 0;
 
    protected:
+
+      /*! Create the surface to use.
+       * \note this function will only be called once. */
+      virtual void createSurface() = 0;
 
       /*! Do any needed action to set renderer position to x, y (absolute
        * screen coordinates */

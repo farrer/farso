@@ -79,6 +79,8 @@ class OgreWidgetRenderer : public WidgetRenderer
       void setRenderQueueSubGroup(int renderQueueId);
 
    protected:
+      /*! Create the surface to use. */
+      void createSurface();
 
       /*! Do any needed action to set renderer position to x, y (absolute
        * screen coordinates */

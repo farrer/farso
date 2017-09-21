@@ -42,6 +42,7 @@ class OpenGLWidgetRenderer: public WidgetRenderer
 
    protected:
       
+      void createSurface();
       void doSetPosition(float x, float y);
       void doHide();
       void doShow();

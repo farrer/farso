@@ -44,9 +44,12 @@ void Cursor::init(int size)
    cursors = new Kobold::List();
 
    renderer = Controller::createNewWidgetRenderer(size, size);
+   /* Make sure we initialize the surface to use. */
+   renderer->getSurface();
 
    tipRenderer = Controller::createNewWidgetRenderer(CURSOR_TIP_MAX_WIDTH, 
          CURSOR_TIP_MAX_HEIGHT);
+   tipRenderer->getSurface();
    tipRenderer->hide();
 
    /* Make sure the cursor will always render above all widgets */

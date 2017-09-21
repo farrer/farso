@@ -38,19 +38,8 @@ OpenGLWidgetRenderer::OpenGLWidgetRenderer(int width, int height,
       ControllerRendererJunction* junction)
                      :WidgetRenderer(width, height, junction)
 {
-   Draw* draw = Controller::getDraw();
    posX = 0;
    posY = 0;
-
-   /* Define real dimensions */
-   this->realWidth = draw->smallestPowerOfTwo(width);
-   this->realHeight = draw->smallestPowerOfTwo(height);
-
-   /* Create our surface */
-   this->surface = new OpenGLSurface(name, realWidth, realHeight);
-
-   /* Generate our texture */
-   glGenTextures(1, &texture);
 
    /* Calculate its max coordinate, as size may not equal (as powerOfTwo) */
    propX = (float) (width) / (float) this->realWidth;
@@ -58,16 +47,26 @@ OpenGLWidgetRenderer::OpenGLWidgetRenderer(int width, int height,
 }
 
 /************************************************************************
+ *                            createSurface                             *
+ ************************************************************************/
+void OpenGLWidgetRenderer::createSurface()
+{
+   /* Create our surface */
+   this->surface = new OpenGLSurface(name, realWidth, realHeight);
+
+   /* Generate our texture */
+   glGenTextures(1, &texture);
+}
+
+/************************************************************************
  *                       ~OpenGLWidgetRenderer                          *
  ************************************************************************/
 OpenGLWidgetRenderer::~OpenGLWidgetRenderer()
 {
-   /* Delete our generated texture */
-   glDeleteTextures(1, &texture);
-
    if(surface != NULL)
    {
       delete surface;
+      glDeleteTextures(1, &texture);
    }
 }
 

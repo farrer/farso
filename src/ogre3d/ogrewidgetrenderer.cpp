@@ -56,15 +56,82 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
             ControllerRendererJunction* junction) 
                    :WidgetRenderer(width, height, junction)
 {
-   Farso::Draw* draw = Farso::Controller::getDraw();
-
-   /* Define real dimensions */
-   this->realWidth = draw->smallestPowerOfTwo(width);
-   this->realHeight = draw->smallestPowerOfTwo(height);
-
    /* Set junction to use */
    this->ogreJunction = (OgreJunction*) junction;
+#if FARSO_USE_OGRE_OVERLAY == 1
+   container = NULL;
+#else
+   renderable = NULL;
+   movable = NULL;
+   sceneNode = NULL;
+#endif
 
+#if OGRE_VERSION_MAJOR == 1 || \
+    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+   texState = NULL;
+#else
+   datablock = NULL;
+#endif
+
+}
+
+/***********************************************************************
+ *                            ~OgreWidgetRenderer                          *
+ ***********************************************************************/
+OgreWidgetRenderer::~OgreWidgetRenderer()
+{
+#if FARSO_USE_OGRE_OVERLAY == 1
+   /* Clear the container of the overlay */
+   OgreJunction* ogreJunction = (OgreJunction*) junction;
+   ogreJunction->getOverlay()->remove2D(container);
+   #if OGRE_VERSION_MAJOR == 1 || \
+       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+   Ogre::OverlayManager::getSingletonPtr()->destroyOverlayElement(container);
+   #else
+   Ogre::v1::OverlayManager::getSingletonPtr()->destroyOverlayElement(
+         container);
+   #endif
+#else
+   if(sceneNode)
+   {
+      sceneNode->detachObject(movable);
+      movable->detachOgreWidgetRenderable(renderable);
+      OgreJunction* ogreJunction = (OgreJunction*) junction;
+      ogreJunction->getSceneManager()->destroySceneNode(sceneNode);
+      ogreJunction->getSceneManager()->destroyMovableObject(movable);
+      delete renderable;
+   }
+#endif
+
+#if OGRE_VERSION_MAJOR == 1 || \
+    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+   /* Remove Shaders from material */
+   Ogre::RTShader::ShaderGenerator::getSingleton().
+      removeAllShaderBasedTechniques(material->getName(), material->getGroup());
+
+   /* Free the material used */
+   Ogre::MaterialManager::getSingleton().remove(material->getName(), 
+         material->getGroup());
+#endif
+
+   /* Free the surface and its texture */
+   if(surface)
+   {
+      delete surface;
+#if OGRE_VERSION_MAJOR > 1
+      Ogre::TextureManager::getSingleton().remove(texture->getName()); 
+#else
+      Ogre::TextureManager::getSingleton().remove(texture->getName(), 
+            texture->getGroup());
+#endif
+   }
+}
+
+/***********************************************************************
+ *                              createSurface                          *
+ ***********************************************************************/
+void OgreWidgetRenderer::createSurface()
+{
    /* Create the drawable surface and map its contents to a PixelBox to 
     * make easer the update-to-texture proccess */
    OgreSurface* ogreSurface = new OgreSurface(name, realWidth, realHeight);
@@ -116,6 +183,13 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
    container->setHeight(((float)realHeight) / 
          Controller::getHeight());
 
+   if(!isVisible())
+   {
+      container->hide();
+   }
+   container->setPosition(x / Controller::getWidth(),
+         y / Controller::getHeight());
+
 #if OGRE_VERSION_MAJOR == 1 || \
     (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
    container->setMaterialName(material->getName());
@@ -147,52 +221,11 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
    sceneNode = sceneManager->getRootSceneNode()->createChildSceneNode();
    sceneNode->attachObject(movable);
    sceneNode->setPosition(0.0f, 0.0f, 0.0f);
-#endif
-}
-
-/***********************************************************************
- *                            ~OgreWidgetRenderer                          *
- ***********************************************************************/
-OgreWidgetRenderer::~OgreWidgetRenderer()
-{
-#if FARSO_USE_OGRE_OVERLAY == 1
-   /* Clear the container of the overlay */
-   OgreJunction* ogreJunction = (OgreJunction*) junction;
-   ogreJunction->getOverlay()->remove2D(container);
-   #if OGRE_VERSION_MAJOR == 1 || \
-       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
-   Ogre::OverlayManager::getSingletonPtr()->destroyOverlayElement(container);
-   #else
-   Ogre::v1::OverlayManager::getSingletonPtr()->destroyOverlayElement(
-         container);
-   #endif
-#else
-   sceneNode->detachObject(movable);
-   movable->detachOgreWidgetRenderable(renderable);
-   OgreJunction* ogreJunction = (OgreJunction*) junction;
-   ogreJunction->getSceneManager()->destroySceneNode(sceneNode);
-   ogreJunction->getSceneManager()->destroyMovableObject(movable);
-   delete renderable;
-#endif
-
-#if OGRE_VERSION_MAJOR == 1 || \
-    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
-   /* Remove Shaders from material */
-   Ogre::RTShader::ShaderGenerator::getSingleton().
-      removeAllShaderBasedTechniques(material->getName(), material->getGroup());
-
-   /* Free the material used */
-   Ogre::MaterialManager::getSingleton().remove(material->getName(), 
-         material->getGroup());
-#endif
-
-   /* Free the surface and its texture */
-   delete surface;
-#if OGRE_VERSION_MAJOR > 1
-   Ogre::TextureManager::getSingleton().remove(texture->getName()); 
-#else
-   Ogre::TextureManager::getSingleton().remove(texture->getName(), 
-         texture->getGroup());
+   if(!isVisible())
+   {
+      sceneNode->setVisible(false);
+   }
+   renderable->setPosition(targetX.getValue(), targetY.getValue());
 #endif
 }
 
@@ -202,13 +235,21 @@ OgreWidgetRenderer::~OgreWidgetRenderer()
 void OgreWidgetRenderer::setRenderQueueSubGroup(int renderQueueId)
 {
 #if FARSO_USE_OGRE_OVERLAY == 1
+   if(container)
+   {
    #if OGRE_VERSION_MAJOR > 1
-   container->setRenderQueueSubGroup(static_cast<Ogre::uint8>(renderQueueId));
+      container->setRenderQueueSubGroup(
+            static_cast<Ogre::uint8>(renderQueueId));
    #else
-   container->_notifyZOrder(renderQueueId);
+      container->_notifyZOrder(renderQueueId);
    #endif
+   }
 #else
-   renderable->setRenderQueueSubGroup(static_cast<Ogre::uint8>(renderQueueId));
+   if(renderable)
+   {
+      renderable->setRenderQueueSubGroup(
+            static_cast<Ogre::uint8>(renderQueueId));
+   }
 #endif
 }
 
@@ -293,10 +334,16 @@ void OgreWidgetRenderer::defineTexture()
 void OgreWidgetRenderer::doSetPosition(Ogre::Real x, Ogre::Real y)
 {
 #if FARSO_USE_OGRE_OVERLAY == 1
-   container->setPosition(x / Controller::getWidth(),
-         y / Controller::getHeight());
+   if(container)
+   {
+      container->setPosition(x / Controller::getWidth(),
+            y / Controller::getHeight());
+   }
 #else
-   renderable->setPosition(x, y);
+   if(renderable)
+   {
+      renderable->setPosition(x, y);
+   }
 #endif
 }
  
@@ -306,9 +353,15 @@ void OgreWidgetRenderer::doSetPosition(Ogre::Real x, Ogre::Real y)
 void OgreWidgetRenderer::doShow()
 {
 #if FARSO_USE_OGRE_OVERLAY == 1
-   container->show();
+   if(container)
+   {
+      container->show();
+   }
 #else
-   sceneNode->setVisible(true);
+   if(sceneNode)
+   {
+      sceneNode->setVisible(true);
+   }
 #endif
 }
 
@@ -318,9 +371,15 @@ void OgreWidgetRenderer::doShow()
 void OgreWidgetRenderer::doHide()
 {
 #if FARSO_USE_OGRE_OVERLAY == 1
-   container->hide();
+   if(container)
+   {
+      container->hide();
+   }
 #else
-   sceneNode->setVisible(false);
+   if(sceneNode)
+   {
+      sceneNode->setVisible(false);
+   }
 #endif
 }
 

@@ -239,16 +239,21 @@ class Controller
 #if FARSO_HAS_RAPIDJSON == 1
       /*! Insert widgets from a JSON string.
        * \param jsonStr JSON string with the widgets to insert.
+       * \param listener pointer to the event listener to use for the 
+       *        loaded widgets or NULL, for none.
        * \return true if all defined widgets were inserted, false otherwise */
-      static const bool insertFromJson(const Kobold::String& jsonStr);
+      static const bool insertFromJson(const Kobold::String& jsonStr, 
+            WidgetEventListener* listener=NULL);
      
       /*! Insert widgets from a JSON string using an specific JSON parser.
        * \note This is used when loading extended widgets.
        * \param jsonStr JSON string with the widgets to insert
        * \param parser pointer to the parser to use
+       * \param listener pointer to the event listener to use for the 
+       *        loaded widgets or NULL, for none.
        * \return true if all defined widgets were inserted. */
       static const bool insertFromJson(const Kobold::String& jsonStr, 
-            WidgetJsonParser* parser);
+            WidgetJsonParser* parser, WidgetEventListener* listener=NULL);
 #endif
 
       /*! Remove an event listener from a widget, thread safelly */

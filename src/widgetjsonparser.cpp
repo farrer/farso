@@ -43,7 +43,8 @@ WidgetJsonParser::~WidgetJsonParser()
 /***********************************************************************
  *                             loadFromJson                            *
  ***********************************************************************/
-bool WidgetJsonParser::loadFromJson(const Kobold::String& jsonStr)
+bool WidgetJsonParser::loadFromJson(const Kobold::String& jsonStr, 
+               WidgetEventListener* listener)
 {
    bool res = true;
    rapidjson::Document doc;
@@ -59,7 +60,7 @@ bool WidgetJsonParser::loadFromJson(const Kobold::String& jsonStr)
    rapidjson::Value::ConstMemberIterator itor = doc.FindMember("widget");
    while((itor != doc.MemberEnd()) && (res))
    {
-      res |= parseJsonWidget(itor->value, NULL);
+      res |= parseJsonWidget(itor->value, NULL, listener);
       ++itor;
    }
 
@@ -816,7 +817,7 @@ Widget* WidgetJsonParser::parseSpin(const rapidjson::Value& value,
  *                            parseStackTab                            *
  ***********************************************************************/
 Widget* WidgetJsonParser::parseStackTab(const rapidjson::Value& value,
-      Widget* parent)
+      Widget* parent, WidgetEventListener* listener)
 {
    /* Create the stack */
    if(parent == NULL)
@@ -838,7 +839,7 @@ Widget* WidgetJsonParser::parseStackTab(const rapidjson::Value& value,
          Container* contTab = stackTab->insertTab(tabName);
 
          /* Parse and set its children */
-         if(!parseChildren(it->value[tab], contTab))
+         if(!parseChildren(it->value[tab], contTab, listener))
          {
             return NULL;
          }
@@ -946,14 +947,14 @@ Widget* WidgetJsonParser::parseTextEntry(const rapidjson::Value& value,
  *                            parseChildren                            *
  ***********************************************************************/
 bool WidgetJsonParser::parseChildren(const rapidjson::Value& value, 
-      Widget* parent)
+      Widget* parent, WidgetEventListener* listener)
 {
    rapidjson::Value::ConstMemberIterator it = value.FindMember("children");
    if(it != value.MemberEnd() && it->value.IsArray())
    {
       for(size_t child = 0; child < it->value.Size(); child++)
       {
-         if(!parseJsonWidget(it->value[child], parent))
+         if(!parseJsonWidget(it->value[child], parent, listener))
          {
             /* Error parsing a child. Abort. */
             return false;
@@ -968,7 +969,8 @@ bool WidgetJsonParser::parseChildren(const rapidjson::Value& value,
  *                         parseExtendedWidget                         *
  ***********************************************************************/
 Widget* WidgetJsonParser::parseExtendedWidget(const Kobold::String& type, 
-      const rapidjson::Value& value, Widget* parent)
+      const rapidjson::Value& value, Widget* parent, 
+      WidgetEventListener* listener)
 {
    return NULL;
 }
@@ -977,7 +979,7 @@ Widget* WidgetJsonParser::parseExtendedWidget(const Kobold::String& type,
  *                           parseJsonWidget                           *
  ***********************************************************************/
 bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value, 
-      Widget* parent)
+      Widget* parent, WidgetEventListener* listener)
 {
    if(value.IsObject())
    {
@@ -991,6 +993,7 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       available = parseBoolean(value, "available", true);
       pos = parseVector2(value, "position");
       size = parseVector2(value, "size");
+      bool useListener = parseBoolean(value, "listener", false);
       Ogre::Vector2 prevPos = pos;
 
       /* Create widget based on its type */
@@ -1057,7 +1060,7 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       }
       else if(type == "stackTab")
       {
-         created = parseStackTab(value, parent);
+         created = parseStackTab(value, parent, listener);
       }
       else if(type == "textEntry")
       {
@@ -1073,7 +1076,7 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       }
       else
       {
-         created = parseExtendedWidget(type, value, parent);
+         created = parseExtendedWidget(type, value, parent, listener);
       }
 
       if(!created)
@@ -1083,9 +1086,14 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       created->setId(id);
 
       /* Parse and add its children widgets. */
-      if(!parseChildren(value, created))
+      if(!parseChildren(value, created, listener))
       {
          return false;
+      }
+
+      if((listener != NULL) && (useListener))
+      {
+         Controller::addEventListener(created, listener);
       }
 
       /* Open the window, if just created one */

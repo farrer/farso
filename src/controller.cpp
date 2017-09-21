@@ -807,15 +807,16 @@ int Controller::getTotalRootWidgets()
 /***********************************************************************
  *                           insertFromJson                            *
  ***********************************************************************/
-const bool Controller::insertFromJson(const Kobold::String& jsonStr)
+const bool Controller::insertFromJson(const Kobold::String& jsonStr,
+            WidgetEventListener* listener)
 {
    WidgetJsonParser parser;
-   return insertFromJson(jsonStr, &parser);
+   return insertFromJson(jsonStr, &parser, listener);
 }
 const bool Controller::insertFromJson(const Kobold::String& jsonStr, 
-      WidgetJsonParser* parser)
+      WidgetJsonParser* parser, WidgetEventListener* listener)
 {
-   return parser->loadFromJson(jsonStr);
+   return parser->loadFromJson(jsonStr, listener);
 }
 #endif
 

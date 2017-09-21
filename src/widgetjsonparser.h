@@ -46,8 +46,12 @@ namespace Farso
 
          /*! Load widgets from a JSON string.
           * \param jsonStr string with JSON widgets
+          * \param listener pointer to the event listener to use for the loaded
+          *        widgets defined with json "listener=true", or NULL for no 
+          *        listener.
           * \return true if all widgets could be loaded */
-         bool loadFromJson(const Kobold::String& jsonStr);
+         bool loadFromJson(const Kobold::String& jsonStr, 
+               WidgetEventListener* listener);
 
       protected:
 
@@ -56,9 +60,12 @@ namespace Farso
           * \param name widget 'type' name.
           * \param value with the widget to create.
           * \param parent pointer to the potential parent widget.
+          * \param listener pointer to the event listener to use for the loaded
+          *        widgets, or NULL for no listener.
           * \return pointer to the widget created or NULL, if none. */
          virtual Widget* parseExtendedWidget(const Kobold::String& type, 
-               const rapidjson::Value& value, Widget* parent);
+               const rapidjson::Value& value, Widget* parent, 
+               WidgetEventListener* listener);
 
       private:
          /*! Internal font info for parse */
@@ -114,9 +121,10 @@ namespace Farso
 
          /*! Parse a widget from a json value.
           * \param value of the defined 'widget'
-          * \param parent pointer to a parent widget, if any. */
+          * \param parent pointer to a parent widget, if any.
+          * \param listener pointer to listener, if any. */
          bool parseJsonWidget(const rapidjson::Value& value, 
-               Widget* parent);
+               Widget* parent, WidgetEventListener* listener);
 
          Widget* parseWindow(const rapidjson::Value& value, Widget* parent);
          Widget* parseButton(const rapidjson::Value& value, Widget* parent);
@@ -139,14 +147,16 @@ namespace Farso
          Widget* parseScrollText(const rapidjson::Value& value,
                Widget* parent);
          Widget* parseSpin(const rapidjson::Value& value, Widget* parent);
-         Widget* parseStackTab(const rapidjson::Value& value, Widget* parent);
+         Widget* parseStackTab(const rapidjson::Value& value, Widget* parent,
+               WidgetEventListener* listener);
          Widget* parseTextEntry(const rapidjson::Value& value, Widget* parent);
          Widget* parseTextSelector(const rapidjson::Value& value,
                Widget* parent);
          Widget* parseTreeView(const rapidjson::Value& value, Widget* parent);
          bool parseTreeElement(const rapidjson::Value& value, 
                TreeView::TreeViewElement* parent);
-         bool parseChildren(const rapidjson::Value& value, Widget* parent);
+         bool parseChildren(const rapidjson::Value& value, Widget* parent,
+               WidgetEventListener* listener);
 
          /* Common Widget info */
          Kobold::String id;

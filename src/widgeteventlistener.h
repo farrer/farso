@@ -22,7 +22,6 @@
 #define _farso_widget_event_listener_h
 
 #include "farsoconfig.h"
-#include <kobold/list.h>
 #include "eventtype.h"
 
 namespace Farso
@@ -30,7 +29,7 @@ namespace Farso
    class Widget;
 
    /*! Base class for listening for events on a single widget. */
-   class WidgetEventListener : public Kobold::ListElement
+   class WidgetEventListener
    {
       public:
          /*! Constructor */

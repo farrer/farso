@@ -23,6 +23,7 @@
 
 #include <kobold/list.h>
 #include <kobold/kstring.h>
+#include <list>
 
 #include "widgetrenderer.h"
 #include "draw.h"
@@ -306,7 +307,7 @@ class Widget : public Kobold::ListElement, public Kobold::List
       Widget* parent;   /**< Parent Widget - if any */
       bool dirty;     /**< Flag if the had changed its draw state */
 
-      Kobold::List listeners; /**< List with all event listeners */
+      std::list<WidgetEventListener*> listeners; /**< List of event listeners */
 };
 
 }

@@ -112,12 +112,7 @@ Widget::Widget(WidgetType wType, Widget* wParent)
  ***********************************************************************/
 Widget::~Widget()
 {
-   /* Clean the listeners, but without deleting it, as their memory isn't 
-    * owned by us. */
-   while(listeners.getFirst())
-   {
-      listeners.removeWithoutDelete(listeners.getFirst());
-   }
+   listeners.clear();
 
    /* Remove reference from its id, if defined */
    if(!this->id.empty())
@@ -627,7 +622,7 @@ Farso::Rect Widget::getBodyWithParentsApplied()
  ***********************************************************************/
 void Widget::addEventListener(WidgetEventListener* listener)
 {
-   listeners.insert(listener);
+   listeners.push_back(listener);
 }
 
 /***********************************************************************
@@ -635,7 +630,7 @@ void Widget::addEventListener(WidgetEventListener* listener)
  ***********************************************************************/
 void Widget::removeEventListener(WidgetEventListener* listener)
 {
-   listeners.removeWithoutDelete(listener);
+   listeners.remove(listener);
 }
 
 /***********************************************************************
@@ -643,12 +638,10 @@ void Widget::removeEventListener(WidgetEventListener* listener)
  ***********************************************************************/
 void Widget::onEvent(const EventType& eventType)
 {
-   WidgetEventListener* listener = static_cast<WidgetEventListener*>(
-         listeners.getFirst());
-   for(int i = 0; i < listeners.getTotal(); i++)
+   for(std::list<WidgetEventListener*>::iterator it=listeners.begin(); 
+       it != listeners.end(); ++it) 
    {
-      listener->onEvent(eventType, this);
-      listener = static_cast<WidgetEventListener*>(listener->getNext());
+      (*it)->onEvent(eventType, this);
    }
 }
 

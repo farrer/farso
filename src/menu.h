@@ -51,13 +51,10 @@ class Menu : public Widget
       class MenuItem : public Kobold::ListElement
       {
          public:
-            /*! Constructor */
-            MenuItem(Kobold::String caption, Kobold::String rightText, 
+            /*! Constructor for normal items. */
+            MenuItem(Kobold::String id, Kobold::String caption, 
+                  Kobold::String rightText, Kobold::String icon, 
                   Widget* owner);
-
-            /*! Constructor, with icon. */
-            MenuItem(Kobold::String caption, Kobold::String rightText,
-                  Kobold::String icon, Widget* owner);
 
             /*! Constructor for separators */
             MenuItem();
@@ -69,16 +66,16 @@ class Menu : public Widget
             void setPosition(int x, int y, int width);
 
             /*! \return current item X position */
-            int getX();
+            const int getX() const;
 
             /*! \return current item X position */
-            int getY();
+            const int getY() const;
 
             /*! \return the needed height for current item */
-            int getNeededHeight();
+            const int getNeededHeight() const;
 
             /*! \return the needed width for current item */
-            int getNeededWidth();
+            const int getNeededWidth() const;
 
             /*! Disable the item (but still visible) */
             void disable();
@@ -86,10 +83,10 @@ class Menu : public Widget
             void enable();
 
             /*! \return if item is enabled or disabled */
-            bool isEnabled();
+            const bool isEnabled() const;
 
             /*! \return if item is of special separator type */
-            bool isSeparator();
+            const bool isSeparator() const;
 
             /*! Hide current menu item */
             void hide();
@@ -103,7 +100,10 @@ class Menu : public Widget
             void setCaption(Kobold::String str);
 
             /*! \return if item is visible or not */
-            bool isVisible();
+            const bool isVisible() const;
+
+            /*! \return id */
+            const Kobold::String& getId() const;
 
          private:
             /* Calculate item needed size */
@@ -118,6 +118,7 @@ class Menu : public Widget
             Label* label;  /**< item's label */
             Label* rightLabel; /**< item's right text label */
             Picture* icon; /**< item's icon */
+            Kobold::String id; /**< Identifier */
 
             Widget* owner; /**< pointer to the owner (a grid). */
 
@@ -136,17 +137,11 @@ class Menu : public Widget
        * \note should be called between beginCreate() endCreate() calls.
        * \param text item's caption 
        * \param rightText item's right aligned text (usually used for
-       *        displaying shortcut alias). */
-      MenuItem* insertItem(Kobold::String text, Kobold::String rightText="");
-
-      /*! Insert a new menu item, with icon.
-       * \note should be called between beginCreate() endCreate() calls.
-       * \param text item's caption 
-       * \param rightText item's right aligned text (usually used for
        *        displaying shortcut alias).
-       * \param icon path to icon's image. */
-      MenuItem* insertItem(Kobold::String text, Kobold::String rightText, 
-            Kobold::String icon);
+       * \param icon path to icon's image. 
+       * \param id optional string identifier. */
+      MenuItem* insertItem(Kobold::String text, Kobold::String rightText="", 
+            Kobold::String icon="", Kobold::String id="");
 
       /*! Insert a separator item. A separator is just a decorative
        * item that couldn't be selected */

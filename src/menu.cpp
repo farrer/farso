@@ -29,46 +29,24 @@ using namespace Farso;
 /***********************************************************************
  *                                MenuItem                             *
  ***********************************************************************/
-Menu::MenuItem::MenuItem(Kobold::String caption, Kobold::String rightText,
-      Widget* owner)
+Menu::MenuItem::MenuItem(Kobold::String id, Kobold::String caption, 
+      Kobold::String rightText, Kobold::String icon, Widget* owner)
 {
+   this->id = id;
    this->enabled = true;
    this->visible = true;
    this->separator = false;
    this->owner = owner;
-   this->icon = NULL;
    this->pX = 0;
    this->pY = 0;
-
-   calculateNeededSize(caption, rightText, NULL);
-
-   /* Create the needed labels */
-   this->label = new Label(0, 0, width, height, caption, owner);
-   if(!rightText.empty())
+   if(icon.empty())
    {
-      this->rightLabel = new Label(0, 0, width, height, rightText, owner);
-      this->rightLabel->setFontAlignment(Font::TEXT_RIGHT);
-      this->rightLabel->disable();
+      this->icon = NULL;
    }
    else
    {
-      this->rightLabel = NULL;
+      this->icon = new Picture(0, 0, icon, owner);
    }
-}
-
-/***********************************************************************
- *                                MenuItem                             *
- ***********************************************************************/
-Menu::MenuItem::MenuItem(Kobold::String caption, Kobold::String rightText,
-      Kobold::String icon, Widget* owner)
-{
-   this->enabled = true;
-   this->visible = true;
-   this->separator = false;
-   this->owner = owner;
-   this->pX = 0;
-   this->pY = 0;
-   this->icon = new Picture(0, 0, icon, owner);
    calculateNeededSize(caption, rightText, this->icon);
 
    this->label = new Label(0, 0, width, height, caption, owner);
@@ -89,6 +67,7 @@ Menu::MenuItem::MenuItem(Kobold::String caption, Kobold::String rightText,
  ***********************************************************************/
 Menu::MenuItem::MenuItem()
 {
+   this->id = "";
    this->pX = 0;
    this->pY = 0;
    this->enabled = false;
@@ -200,7 +179,7 @@ void Menu::MenuItem::setPosition(int x, int y, int width)
 /***********************************************************************
  *                         getNeededHeight                             *
  ***********************************************************************/
-int Menu::MenuItem::getNeededHeight()
+const int Menu::MenuItem::getNeededHeight() const
 {
    return height;
 }
@@ -208,7 +187,7 @@ int Menu::MenuItem::getNeededHeight()
 /***********************************************************************
  *                                 getX                                *
  ***********************************************************************/
-int Menu::MenuItem::getX()
+const int Menu::MenuItem::getX() const
 {
    return pX;
 }
@@ -216,7 +195,7 @@ int Menu::MenuItem::getX()
 /***********************************************************************
  *                                 getX                                *
  ***********************************************************************/
-int Menu::MenuItem::getY()
+const int Menu::MenuItem::getY() const
 {
    return pY;
 }
@@ -224,7 +203,7 @@ int Menu::MenuItem::getY()
 /***********************************************************************
  *                         getNeededWidth                              *
  ***********************************************************************/
-int Menu::MenuItem::getNeededWidth()
+const int Menu::MenuItem::getNeededWidth() const
 {
    return width;
 }
@@ -272,7 +251,7 @@ void Menu::MenuItem::enable()
 /***********************************************************************
  *                            isEnabled                                *
  ***********************************************************************/
-bool Menu::MenuItem::isEnabled()
+const bool Menu::MenuItem::isEnabled() const
 {
    return enabled;
 }
@@ -280,9 +259,17 @@ bool Menu::MenuItem::isEnabled()
 /***********************************************************************
  *                           isSeparator                               *
  ***********************************************************************/
-bool Menu::MenuItem::isSeparator()
+const bool Menu::MenuItem::isSeparator() const
 {
    return separator;
+}
+
+/***********************************************************************
+ *                             getId                                   *
+ ***********************************************************************/
+const Kobold::String& Menu::MenuItem::getId() const
+{
+   return id;
 }
 
 /***********************************************************************
@@ -324,7 +311,7 @@ void Menu::MenuItem::show()
 /***********************************************************************
  *                             isVisible                               *
  ***********************************************************************/
-bool Menu::MenuItem::isVisible()
+const bool Menu::MenuItem::isVisible() const
 {
    return visible;
 }
@@ -369,33 +356,8 @@ void Menu::beginCreate()
 /***********************************************************************
  *                           insertItem                                *
  ***********************************************************************/
-Menu::MenuItem* Menu::insertItem(Kobold::String text, Kobold::String rightText)
-{
-   if(!creating)
-   {
-      Kobold::Log::add(
-            "Warning: won't insert menu items while not creating it!");
-      return NULL;
-   }
-
-   /* Create and insert item */
-   MenuItem* item = new MenuItem(text, rightText, grid);
-   items.insertAtEnd(item);
-
-   /* Check current menu width */
-   if(item->getNeededWidth() > curWidth)
-   {
-      curWidth = item->getNeededWidth();
-   }
-
-   return item;
-}
-
-/***********************************************************************
- *                           insertItem                                *
- ***********************************************************************/
 Menu::MenuItem* Menu::insertItem(Kobold::String text, Kobold::String rightText,
-      Kobold::String icon)
+      Kobold::String icon, Kobold::String id)
 {
    if(!creating)
    {
@@ -405,7 +367,7 @@ Menu::MenuItem* Menu::insertItem(Kobold::String text, Kobold::String rightText,
    }
    
    /* Create and insert item */
-   MenuItem* item = new MenuItem(text, rightText, icon, grid);
+   MenuItem* item = new MenuItem(id, text, rightText, icon, grid);
    items.insertAtEnd(item);
 
    /* Check current menu width */

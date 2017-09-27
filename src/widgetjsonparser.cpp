@@ -598,19 +598,13 @@ Widget* WidgetJsonParser::parseMenu(const rapidjson::Value& value,
          Kobold::String text = parseString(it->value[item], "caption");
          Kobold::String right = parseString(it->value[item], "right");
          Kobold::String icon = parseString(it->value[item], "icon");
+         Kobold::String itemId = parseString(value, "id");
 
          bool separator = parseBoolean(it->value[item], "separator", false);
 
          if(!text.empty())
          {
-            if(icon.empty())
-            {
-               menu->insertItem(text, right);
-            }
-            else
-            {
-               menu->insertItem(text, right, icon);
-            }
+            menu->insertItem(text, right, icon, id);
          }
 
          if(separator)

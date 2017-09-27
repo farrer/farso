@@ -604,7 +604,7 @@ Widget* WidgetJsonParser::parseMenu(const rapidjson::Value& value,
 
          if(!text.empty())
          {
-            menu->insertItem(text, right, icon, id);
+            menu->insertItem(text, right, icon, itemId);
          }
 
          if(separator)

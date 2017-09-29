@@ -46,7 +46,8 @@ Widget::Widget(WidgetType wType, int x, int y, int w, int h, Widget* wParent)
         parentContainer(NULL),
         renderer(NULL),
         parent(wParent),
-        dirty(true)
+        dirty(true),
+        skinElementType(Skin::SKIN_TYPE_UNKNOWN)
 {
    assert((width > 0) && (height > 0));
 
@@ -87,7 +88,8 @@ Widget::Widget(WidgetType wType, Widget* wParent)
         parentContainer(NULL),
         renderer(NULL),
         parent(wParent),
-        dirty(true)
+        dirty(true),
+        skinElementType(Skin::SKIN_TYPE_UNKNOWN)
 {
    if(parent)
    {
@@ -155,6 +157,14 @@ void Widget::setCaption(const Kobold::String text)
       setDirty();
       caption = text;
    }
+}
+
+/***********************************************************************
+ *                           setSkinElement                            *
+ ***********************************************************************/
+void Widget::setSkinElement(int skinElement)
+{
+   skinElementType = skinElement;
 }
 
 /***********************************************************************
@@ -315,8 +325,28 @@ void Widget::draw(bool force)
    /* Draw it */
    if(wasDirty || force)
    {
-      doDraw((parent ? parent->getBodyWithParentsApplied()
-                     : Rect(0, 0, width-1, height-1)));
+      Rect pBody = (parent ? parent->getBodyWithParentsApplied()
+                           : Rect(0, 0, width-1, height-1));
+      if(skinElementType == Skin::SKIN_TYPE_UNKNOWN)
+      {
+         /* Usual render */
+         doDraw(pBody);
+      }
+      else
+      {
+         /* Override render */
+         Farso::Skin* skin = Farso::Controller::getSkin();
+         if(skin)
+         {
+            int x1 = pBody.getX1() + getX();
+            int y1 = pBody.getY1() + getY();
+            int x2 = x1 + getWidth() - 1;
+            int y2 = y1 + getHeight() - 1;
+
+            skin->drawElement(getWidgetRenderer()->getSurface(), 
+                  skinElementType, x1, y1, x2, y2);
+         }
+      }
    }
    dirty = false;
 

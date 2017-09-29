@@ -30,6 +30,7 @@
 #include "rect.h"
 #include "farsoconfig.h"
 #include "widgeteventlistener.h"
+#include "skin.h"
 
 namespace Farso
 {
@@ -238,6 +239,11 @@ class Widget : public Kobold::ListElement, public Kobold::List
        * have their coordinates relative to this body */
       virtual Rect getBody() = 0;
 
+      /*! Override the widget draw with an specific skin element.
+       * \note only useful when using a skin
+       * \param skinElement element to use instead of the default draw. */
+      void setSkinElement(int skinElement);
+
       /*! Add an event listener to this widget.
        * \param listener pointer to the event listener. */
       void addEventListener(WidgetEventListener* listener);
@@ -306,6 +312,8 @@ class Widget : public Kobold::ListElement, public Kobold::List
       WidgetRenderer* renderer; /**< Internal renderer, if without parents. */
       Widget* parent;   /**< Parent Widget - if any */
       bool dirty;     /**< Flag if the had changed its draw state */
+
+      int skinElementType; /**< Override the way to draw the element */
 
       std::list<WidgetEventListener*> listeners; /**< List of event listeners */
 };

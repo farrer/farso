@@ -135,8 +135,8 @@ void Window::doDraw(Rect pBody)
 
    int x1 = getX();
    int y1 = getY();
-   int x2 = getX() + getWidth() - 1;
-   int y2 = getY() + getHeight() - 1;
+   int x2 = x1 + getWidth() - 1;
+   int y2 = y1 + getHeight() - 1;
 
    /* Redefine body, for dynamic skin changes */
    defineBody();

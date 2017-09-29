@@ -987,6 +987,7 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       available = parseBoolean(value, "available", true);
       pos = parseVector2(value, "position");
       size = parseVector2(value, "size");
+      int skinElement = parseInt(value, "skin", Skin::SKIN_TYPE_UNKNOWN);
       bool useListener = parseBoolean(value, "listener", false);
       Ogre::Vector2 prevPos = pos;
 
@@ -1102,6 +1103,12 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       if(!available)
       {
          created->disable();
+      }
+
+      /* Override skin, if desired */
+      if(skinElement == Skin::SKIN_TYPE_UNKNOWN)
+      {
+         created->setSkinElement(skinElement);
       }
 
       /* Set its hint */

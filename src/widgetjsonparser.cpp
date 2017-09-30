@@ -986,7 +986,21 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       mouseHint = parseString(value, "mouseHint");
       available = parseBoolean(value, "available", true);
       pos = parseVector2(value, "position");
+      if(pos.x == 0.0f && pos.y == 0.0f)
+      {
+         /* Try to parse as relative position */
+         pos = parseVector2(value, "relPosition");
+         pos.x *= Controller::getWidth();
+         pos.y *= Controller::getHeight();
+      }
       size = parseVector2(value, "size");
+      if(size.x == 0.0f && size.y == 0.0f)
+      {
+         /* Try to parse as relative size */
+         size = parseVector2(value, "relSize");
+         size.x *= Controller::getWidth();
+         size.y *= Controller::getHeight();
+      }
       int skinElement = parseInt(value, "skin", Skin::SKIN_TYPE_UNKNOWN);
       bool useListener = parseBoolean(value, "listener", false);
       Ogre::Vector2 prevPos = pos;

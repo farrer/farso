@@ -847,7 +847,7 @@ bool Skin::load(const Kobold::String& filename)
 /***********************************************************************
  *                            getWidgetType                            *
  ***********************************************************************/
-int Skin::getElementType(Kobold::String typeName)
+int Skin::getElementType(const Kobold::String& typeName)
 {
    if(typeName == "window")
    {

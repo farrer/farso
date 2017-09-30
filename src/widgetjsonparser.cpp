@@ -1001,7 +1001,7 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
          size.x *= Controller::getWidth();
          size.y *= Controller::getHeight();
       }
-      int skinElement = parseInt(value, "skin", Skin::SKIN_TYPE_UNKNOWN);
+      Kobold::String skinElement = parseString(value, "skin");
       bool useListener = parseBoolean(value, "listener", false);
       Ogre::Vector2 prevPos = pos;
 
@@ -1120,9 +1120,10 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       }
 
       /* Override skin, if desired */
-      if(skinElement == Skin::SKIN_TYPE_UNKNOWN)
+      if((!skinElement.empty()) && (Controller::getSkin() != NULL))
       {
-         created->setSkinElement(skinElement);
+         created->setSkinElement(
+               Controller::getSkin()->getElementType(skinElement));
       }
 
       /* Set its hint */

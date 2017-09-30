@@ -290,6 +290,11 @@ class Skin
       const void getDefaultFontInfo(Kobold::String& fontFilename, int& fontSize,
             Farso::Color& fontColor) const;
 
+      /*! \return SkinElementType constant based on its name.
+       * For example, "window" will return ELEMENT_TYPE_WINDOW and
+       * so on. */
+      int getElementType(const Kobold::String& typeName);
+
    protected:
 
       /*! \return total distinct skin elements supported. */
@@ -301,11 +306,6 @@ class Skin
        * TOTAL_BASIC_SKIN_ELEMENT_TYPES && < getTotalElements )
        * or UNKNOW_ELEMENT when typeName isn't defined. */
       virtual int getExtendedElementType(Kobold::String typeName);
-
-      /*! \return SkinElementType constant based on its name.
-       * For example, "window" will return ELEMENT_TYPE_WINDOW and
-       * so on. */
-      int getElementType(Kobold::String typeName);
 
    private:
 

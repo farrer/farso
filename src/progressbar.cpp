@@ -31,6 +31,7 @@ ProgressBar::ProgressBar(int x, int y, int width, int height, Widget* parent)
 {
    curValue = 0;
    maxValue = 100;
+   fillSkinElement = Skin::SKIN_TYPE_PROGRESS_BAR_FILL;
    body.set(getX(), getY(), getX() + width - 1, getY() + height -1);
 }
 
@@ -67,11 +68,20 @@ void ProgressBar::setValue(int val)
 }
 
 /***********************************************************************
- *                               setColor                              *
+ *                             setFillColor                            *
  ***********************************************************************/
-void ProgressBar::setColor(Color color)
+void ProgressBar::setFillColor(const Color& color)
 {
    this->color = color;
+   setDirty();
+}
+
+/***********************************************************************
+ *                           setFillElement                            *
+ ***********************************************************************/
+void ProgressBar::setFillElement(int fillElement)
+{
+   this->fillSkinElement = fillElement;
    setDirty();
 }
 
@@ -118,7 +128,7 @@ void ProgressBar::doDraw(Rect pBody)
             coloredWidth = minSize.getWidth();
          }
 
-         skin->drawElement(surface, Skin::SKIN_TYPE_PROGRESS_BAR_FILL, 
+         skin->drawElement(surface, fillSkinElement, 
                x1, y1, x1 + coloredWidth, y2);
       }
    }

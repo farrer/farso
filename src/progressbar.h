@@ -39,8 +39,14 @@ class ProgressBar : public Widget
       void setValue(int val);
 
       /*! Set color of the filled rectangle.
-       * \note only usefull when not using skins */
-      void setColor(Color color);
+       * \note only usefull when not using skins. If using, 
+       *       use #setFillElement. */
+      void setFillColor(const Color& color);
+
+      /*! Change the Skill element used to fill the progress bar.
+       * \note only usefull when using skins. If not, use #setFillColor.
+       * \param fillElement SkinElement integer identifier to be used. */
+      void setFillElement(int fillElement);
 
       Rect getBody();
 
@@ -56,6 +62,7 @@ class ProgressBar : public Widget
       int curValue; /**< Current value */
       Color color;  /**< Color of the current value filled rectangle */
       Rect body; /**< Current body */
+      int fillSkinElement; /**< SkinElement used to fill */
 };
 
 }

@@ -654,10 +654,15 @@ Widget* WidgetJsonParser::parseProgressBar(const rapidjson::Value& value,
 {
    int maxValue = parseInt(value, "maxValue", 100);
    int val = parseInt(value, "value", 0);
+   Kobold::String fillElement = parseString(value, "fillElement");
 
    ProgressBar* pb = new ProgressBar(pos.x, pos.y, size.x, size.y, parent);
    pb->setValue(val);
    pb->setMaxValue(maxValue);
+   if(!fillElement.empty())
+   {
+      pb->setFillElement(Controller::getSkin()->getElementType(fillElement));
+   }
 
    return pb;
 }

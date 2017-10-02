@@ -48,6 +48,11 @@ ProgressBar::~ProgressBar()
 void ProgressBar::setMaxValue(int max)
 {
    maxValue = max;
+   if(maxValue == 0)
+   {
+      /* Should never be 0 */
+      maxValue = 1;
+   }
    setDirty();
 }
 

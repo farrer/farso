@@ -27,7 +27,7 @@ using namespace Farso;
 /************************************************************************
  *                              Constructor                             *
  ************************************************************************/
-Picture::Picture(int x, int y, Kobold::String filename, Widget* parent)
+Picture::Picture(int x, int y, const Kobold::String& filename, Widget* parent)
         :Widget(WIDGET_TYPE_PICTURE, parent) 
 {
    ownImage = true;
@@ -80,6 +80,27 @@ void Picture::setImage(Farso::Surface* picture)
 
    image = picture;
    ownImage = false;
+
+   setDirty();
+}
+
+/************************************************************************
+ *                             setImage                                 *
+ ************************************************************************/
+void Picture::setImage(const Kobold::String& filename)
+{
+   if((ownImage) && (image != NULL))
+   {
+      delete image;
+   }
+
+   /* Load the image */
+   image = Controller::loadImageToSurface(
+         Controller::getRealFilename(filename));
+   ownImage = true;
+
+   assert(image->getWidth() <= getWidth());
+   assert(image->getHeight() <= getHeight());
 
    setDirty();
 }

@@ -41,7 +41,7 @@ class Picture : public Widget
        * \param y top coordinate
        * \param filename image's file name. 
        * \param parent pointer to parent's, if any. */
-      Picture(int x, int y, Kobold::String filename, Widget* parent);
+      Picture(int x, int y, const Kobold::String& filename, Widget* parent);
       /*! Constructor, without image (to be changed and populated later 
        * \param x left coordinate
        * \param y top coordinate
@@ -52,10 +52,19 @@ class Picture : public Widget
 
       /*! Change Picture's image to another one.
        * \param picture pointer to a surface to be displayed at this Picture.
+       * \note size must be the lesser or equal to the first loaded image or 
+       *       the one defined by the constructor.
        * \note the Surface's memory controll is caller's responsability (ie:
        * all Surfaces passed to the Picture via setImage won't be freed at
        * Picture's destructor like the default loaded one). */
       void setImage(Farso::Surface* picture);
+
+      /*! Change picture's image to the one defined by filename.
+       * \param filename path to the image's file.
+       * \note size must be the lesser or equal to the first loaded image or 
+       *       the one defined by the constructor.
+       * \note the loaded image will be freed by us. */
+      void setImage(const Kobold::String& filename);
 
       /*! \return picture body - the rectangle defining its area */
       Rect getBody();

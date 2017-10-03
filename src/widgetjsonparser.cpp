@@ -988,8 +988,8 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       /* Parse common widget values */
       id = parseString(value, "id");
       caption = parseString(value, "caption");
-      mouseHint = parseString(value, "mouseHint");
-      available = parseBoolean(value, "available", true);
+      Kobold::String mouseHint = parseString(value, "mouseHint");
+      bool available = parseBoolean(value, "available", true);
       pos = parseVector2(value, "position");
       if(pos.x == 0.0f && pos.y == 0.0f)
       {
@@ -1099,25 +1099,6 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       }
       created->setId(id);
 
-      /* Parse and add its children widgets. */
-      if(!parseChildren(value, created, listener))
-      {
-         return false;
-      }
-
-      if((listener != NULL) && (useListener))
-      {
-         Controller::addEventListener(created, listener);
-      }
-
-      /* Open the window, if just created one */
-      if(created->getType() == Widget::WIDGET_TYPE_WINDOW)
-      {
-         Window* window = static_cast<Window*>(created);
-         window->setPosition(prevPos.x, prevPos.y);
-         window->open();
-      }
-
       /* Disable the widget, if desired */
       if(!available)
       {
@@ -1135,6 +1116,25 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       if(!mouseHint.empty())
       {
          created->setMouseHint(mouseHint);
+      }
+
+      /* Parse and add its children widgets. */
+      if(!parseChildren(value, created, listener))
+      {
+         return false;
+      }
+
+      if((listener != NULL) && (useListener))
+      {
+         Controller::addEventListener(created, listener);
+      }
+
+      /* Open the window, if just created one */
+      if(created->getType() == Widget::WIDGET_TYPE_WINDOW)
+      {
+         Window* window = static_cast<Window*>(created);
+         window->setPosition(prevPos.x, prevPos.y);
+         window->open();
       }
    }
 

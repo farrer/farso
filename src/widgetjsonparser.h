@@ -161,8 +161,6 @@ namespace Farso
          /* Common Widget info */
          Kobold::String id;
          Kobold::String caption;
-         Kobold::String mouseHint;
-         bool available;
          Ogre::Vector2 pos;
          Ogre::Vector2 size;
 

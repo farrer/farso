@@ -98,6 +98,15 @@ void ScrollText::clear()
 }
 
 /***********************************************************************
+ *                           hideScrollBar                             *
+ ***********************************************************************/
+void ScrollText::hideScrollBar()
+{
+   scrollBar->hide();
+   scrollBar->setSize(0, 0);
+}
+
+/***********************************************************************
  *                            createLine                               *
  ***********************************************************************/
 ScrollText::TextLine* ScrollText::createLine(Kobold::String fontName,

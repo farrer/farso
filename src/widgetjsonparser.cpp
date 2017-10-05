@@ -703,6 +703,7 @@ Widget* WidgetJsonParser::parseScrollText(const rapidjson::Value& value,
    FontInfo font = parseFontInfo(value, "font", Font::TEXT_LEFT);
    bool definedColor = false;
    Color fontColor = parseColor(value, "fontColor", definedColor);
+   bool useScrollBar = parseBoolean(value, "scrollBar", true);
 
    ScrollText* scroll;
    if((!font.filename.empty()) && (font.size > 0) && (definedColor))
@@ -721,6 +722,11 @@ Widget* WidgetJsonParser::parseScrollText(const rapidjson::Value& value,
          return NULL;
       }
       scroll = new ScrollText(pos.x, pos.y, size.x, size.y, parent);
+   }
+
+   if(!useScrollBar)
+   {
+      scroll->hideScrollBar();
    }
 
    /* Parse its texts */

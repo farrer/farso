@@ -47,6 +47,11 @@ class ScrollText : public Widget
       /*! Clear current text. */
       void clear();
 
+      /*! Hide the scroll bar and do not use it.
+       * \note It won't affect existing text andshould be called on an empty
+       *       ScrollText to it use the new full size */
+      void hideScrollBar();
+
       /*! Reset the entire text of the ScrollText. It's equivalent to call
        * clear() and addText(text)
        * \param text new text of the ScrollText. */

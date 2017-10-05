@@ -40,10 +40,9 @@ OpenGLWidgetRenderer::OpenGLWidgetRenderer(int width, int height,
 {
    posX = 0;
    posY = 0;
-
-   /* Calculate its max coordinate, as size may not equal (as powerOfTwo) */
-   propX = (float) (width) / (float) this->realWidth;
-   propY = (float) (height) / (float) this->realHeight;
+   propX = 0.0f;
+   propY = 0.0f;
+   glGenTextures(1, &texture);
 }
 
 /************************************************************************
@@ -54,8 +53,9 @@ void OpenGLWidgetRenderer::createSurface()
    /* Create our surface */
    this->surface = new OpenGLSurface(name, realWidth, realHeight);
 
-   /* Generate our texture */
-   glGenTextures(1, &texture);
+   /* Calculate its max coordinate, as size may not equal (as powerOfTwo) */
+   propX = (float) (width) / (float) this->realWidth;
+   propY = (float) (height) / (float) this->realHeight;
 }
 
 /************************************************************************
@@ -63,10 +63,10 @@ void OpenGLWidgetRenderer::createSurface()
  ************************************************************************/
 OpenGLWidgetRenderer::~OpenGLWidgetRenderer()
 {
-   if(surface != NULL)
+   glDeleteTextures(1, &texture);
+   if(surface)
    {
-      delete surface;
-      glDeleteTextures(1, &texture);
+      deleteSurface();
    }
 }
 

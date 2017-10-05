@@ -70,6 +70,13 @@ class WidgetRenderer
       /*! \return absolute Y position on screen where the widget is rendered.*/
       int getPositionY();
 
+      /*! Reset the size of the widget renderer.
+       * \note if the new size is greater than the previous one, will
+       *       recreate the used surface, which could be expensive. Thus,
+       *       either avoid call it often, or, at first, create it with
+       *       the maximum size. */
+      void setSize(int width, int height);
+
       /*! \return verify if the widget texture is animating (true)
        *           or currently static (false). */
       bool needUpdate();
@@ -107,9 +114,12 @@ class WidgetRenderer
 
    protected:
 
-      /*! Create the surface to use.
-       * \note this function will only be called once. */
+      /*! Create the surface (and its related structures) to use. */
       virtual void createSurface() = 0;
+
+      /*! Delete the surface (and its size-related structures).
+       * \note this function could be called on setSize. */
+      virtual void deleteSurface();
 
       /*! Do any needed action to set renderer position to x, y (absolute
        * screen coordinates */

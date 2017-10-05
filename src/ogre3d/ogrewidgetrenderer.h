@@ -81,6 +81,8 @@ class OgreWidgetRenderer : public WidgetRenderer
    protected:
       /*! Create the surface to use. */
       void createSurface();
+      /*! Delete the surface (on greater resize). */
+      void deleteSurface();
 
       /*! Do any needed action to set renderer position to x, y (absolute
        * screen coordinates */

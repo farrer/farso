@@ -80,51 +80,7 @@ OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
  ***********************************************************************/
 OgreWidgetRenderer::~OgreWidgetRenderer()
 {
-#if FARSO_USE_OGRE_OVERLAY == 1
-   /* Clear the container of the overlay */
-   OgreJunction* ogreJunction = (OgreJunction*) junction;
-   ogreJunction->getOverlay()->remove2D(container);
-   #if OGRE_VERSION_MAJOR == 1 || \
-       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
-   Ogre::OverlayManager::getSingletonPtr()->destroyOverlayElement(container);
-   #else
-   Ogre::v1::OverlayManager::getSingletonPtr()->destroyOverlayElement(
-         container);
-   #endif
-#else
-   if(sceneNode)
-   {
-      sceneNode->detachObject(movable);
-      movable->detachOgreWidgetRenderable(renderable);
-      OgreJunction* ogreJunction = (OgreJunction*) junction;
-      ogreJunction->getSceneManager()->destroySceneNode(sceneNode);
-      ogreJunction->getSceneManager()->destroyMovableObject(movable);
-      delete renderable;
-   }
-#endif
-
-#if OGRE_VERSION_MAJOR == 1 || \
-    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
-   /* Remove Shaders from material */
-   Ogre::RTShader::ShaderGenerator::getSingleton().
-      removeAllShaderBasedTechniques(material->getName(), material->getGroup());
-
-   /* Free the material used */
-   Ogre::MaterialManager::getSingleton().remove(material->getName(), 
-         material->getGroup());
-#endif
-
-   /* Free the surface and its texture */
-   if(surface)
-   {
-      delete surface;
-#if OGRE_VERSION_MAJOR > 1
-      Ogre::TextureManager::getSingleton().remove(texture->getName()); 
-#else
-      Ogre::TextureManager::getSingleton().remove(texture->getName(), 
-            texture->getGroup());
-#endif
-   }
+   deleteSurface();
 }
 
 /***********************************************************************
@@ -227,6 +183,59 @@ void OgreWidgetRenderer::createSurface()
    }
    renderable->setPosition(targetX.getValue(), targetY.getValue());
 #endif
+}
+
+/***********************************************************************
+ *                             deleteSurface                           *
+ ***********************************************************************/
+void OgreWidgetRenderer::deleteSurface()
+{
+#if FARSO_USE_OGRE_OVERLAY == 1
+   /* Clear the container of the overlay */
+   OgreJunction* ogreJunction = (OgreJunction*) junction;
+   ogreJunction->getOverlay()->remove2D(container);
+   #if OGRE_VERSION_MAJOR == 1 || \
+       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+   Ogre::OverlayManager::getSingletonPtr()->destroyOverlayElement(container);
+   #else
+   Ogre::v1::OverlayManager::getSingletonPtr()->destroyOverlayElement(
+         container);
+   #endif
+#else
+   if(sceneNode)
+   {
+      sceneNode->detachObject(movable);
+      movable->detachOgreWidgetRenderable(renderable);
+      OgreJunction* ogreJunction = (OgreJunction*) junction;
+      ogreJunction->getSceneManager()->destroySceneNode(sceneNode);
+      ogreJunction->getSceneManager()->destroyMovableObject(movable);
+      delete renderable;
+   }
+#endif
+
+#if OGRE_VERSION_MAJOR == 1 || \
+    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+   /* Remove Shaders from material */
+   Ogre::RTShader::ShaderGenerator::getSingleton().
+      removeAllShaderBasedTechniques(material->getName(), material->getGroup());
+
+   /* Free the material used */
+   Ogre::MaterialManager::getSingleton().remove(material->getName(), 
+         material->getGroup());
+#endif
+
+   /* Free the surface and its texture */
+   if(surface)
+   {
+      delete surface;
+      surface = NULL;
+#if OGRE_VERSION_MAJOR > 1
+      Ogre::TextureManager::getSingleton().remove(texture->getName()); 
+#else
+      Ogre::TextureManager::getSingleton().remove(texture->getName(), 
+            texture->getGroup());
+#endif
+   }
 }
 
 /***********************************************************************

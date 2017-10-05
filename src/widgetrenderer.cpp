@@ -21,6 +21,7 @@
 #include "widgetrenderer.h"
 #include "controller.h"
 #include <math.h>
+#include <assert.h>
 
 using namespace Farso;
 
@@ -56,6 +57,19 @@ WidgetRenderer::WidgetRenderer(int width, int height,
  ***********************************************************************/
 WidgetRenderer::~WidgetRenderer()
 {
+   if(surface)
+   {
+      delete surface;
+   }
+}
+
+/***********************************************************************
+ *                             deleteSurface                           *
+ ***********************************************************************/
+void WidgetRenderer::deleteSurface()
+{
+   delete surface;
+   surface = NULL;
 }
 
 /***********************************************************************
@@ -105,6 +119,37 @@ void WidgetRenderer::setTargetPosition(float x, float y,  int steps)
    updating = true;
    targetX.setTarget(x, steps);
    targetY.setTarget(y, steps);
+}
+
+/***********************************************************************
+ *                               setSize                               *
+ ***********************************************************************/
+void WidgetRenderer::setSize(int width, int height)
+{
+   assert(width > 0);
+   assert(height > 0);
+
+   /* Let's check if we need to recreate the surface */
+   if((width > realWidth) || (height > realHeight))
+   {
+      Farso::Draw* draw = Farso::Controller::getDraw();
+
+      /* Must recreate the surface */
+      deleteSurface();
+      surface = NULL;
+
+      /* Reset the needed size */
+      this->width = width;
+      this->height = height;
+      this->realWidth = draw->smallestPowerOfTwo(width);
+      this->realHeight = draw->smallestPowerOfTwo(height);
+   }
+   else
+   {
+      /* Just use its current real size and reset the used ones */
+      this->width = width;
+      this->height = height;
+   }
 }
 
 /***********************************************************************

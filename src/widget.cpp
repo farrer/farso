@@ -232,13 +232,17 @@ void Widget::setSize(int width, int height)
       this->height = height;
       if(parent == NULL)
       {
-         /* Must recreate its renderer */
          if(this->renderer != NULL)
          {
-            delete this->renderer;
+            /* Just update renderer size (recreating its surface if needed) */
+            this->renderer->setSize(width, height);
+            setDirty();
          }
-         this->renderer = Controller::createNewWidgetRenderer(width, height);
-         //FIXME: must reset renderer pointer to all of its children.
+         else
+         {
+            /* As no renderer yet, should create one. */
+            this->renderer = Controller::createNewWidgetRenderer(width, height);
+         }
       }
       else
       {

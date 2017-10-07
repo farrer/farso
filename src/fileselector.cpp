@@ -55,7 +55,7 @@ using namespace Farso;
 /***********************************************************************
  *                             Constructor                             *
  ***********************************************************************/
-FileSelector::FileSelector(bool load, Kobold::String dir, bool nav, 
+FileSelector::FileSelector(bool load, const Kobold::String& dir, bool nav, 
       Widget* parent)
              :Widget(Widget::WIDGET_TYPE_FILE_SELECTOR, parent)
 {
@@ -130,7 +130,7 @@ FileSelector::~FileSelector()
 /***********************************************************************
  *                             isLoadType                              *
  ***********************************************************************/
-bool FileSelector::isLoadType()
+const bool FileSelector::isLoadType() const
 {
    return loading;
 }
@@ -175,7 +175,7 @@ void FileSelector::createLabelsAndGridElements()
 /***********************************************************************
  *                               getBody                               *
  ***********************************************************************/
-Rect FileSelector::getBody()
+const Rect& FileSelector::getBody()
 {
    return body;
 }
@@ -191,7 +191,7 @@ void FileSelector::setDirty()
 /***********************************************************************
  *                              setFilter                              *
  ***********************************************************************/
-void FileSelector::setFilter(Kobold::String newFilter)
+void FileSelector::setFilter(const Kobold::String& newFilter)
 {
    filter = newFilter;
    textFilter->setCaption(filter);
@@ -202,7 +202,7 @@ void FileSelector::setFilter(Kobold::String newFilter)
 /***********************************************************************
  *                             changeCurDir                            *
  ***********************************************************************/
-void FileSelector::changeCurDir(Kobold::String newDir)
+void FileSelector::changeCurDir(const Kobold::String& newDir)
 {
    int j, total;
 
@@ -412,7 +412,7 @@ void FileSelector::setLabels()
 /***********************************************************************
  *                             passFilter                              *
  ***********************************************************************/
-bool FileSelector::passFilter(Kobold::String s)
+const bool FileSelector::passFilter(const Kobold::String& s) const
 {
    Kobold::String aux = s;
 
@@ -432,7 +432,7 @@ bool FileSelector::passFilter(Kobold::String s)
 /***********************************************************************
  *                             getFileName                             *
  ***********************************************************************/
-Kobold::String FileSelector::getFilename()
+Kobold::String FileSelector::getFilename() const
 {
    /* Get the current directory */
    Kobold::String fileName = curDir;
@@ -467,7 +467,7 @@ Kobold::String FileSelector::getFilename()
 /***********************************************************************
  *                             setFileName                             *
  ***********************************************************************/
-void FileSelector::setFilename(Kobold::String fileName)
+void FileSelector::setFilename(const Kobold::String& fileName)
 {
    Kobold::String newDir, file;
 
@@ -495,7 +495,7 @@ void FileSelector::setFilename(Kobold::String fileName)
 /***********************************************************************
  *                                draw                                 *
  ***********************************************************************/
-void FileSelector::doDraw(Rect pBody)
+void FileSelector::doDraw(const Rect& pBody)
 {
    Rect parentBody = getParent()->getBody();
    if((parentBody.getWidth() != body.getWidth()) ||

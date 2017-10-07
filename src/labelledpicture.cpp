@@ -71,7 +71,7 @@ LabelledPicture::~LabelledPicture()
 /************************************************************************
  *                               getBody                                *
  ************************************************************************/
-Farso::Rect LabelledPicture::getBody()
+const Farso::Rect& LabelledPicture::getBody()
 {
    return body;
 }
@@ -79,7 +79,7 @@ Farso::Rect LabelledPicture::getBody()
 /************************************************************************
  *                              setCaption                              *
  ************************************************************************/
-void LabelledPicture::setCaption(Kobold::String text)
+void LabelledPicture::setCaption(const Kobold::String& text)
 {
    Widget::setCaption(text);
    label->setCaption(text);
@@ -96,7 +96,7 @@ void LabelledPicture::setFontSize(int size)
 /************************************************************************
  *                               setFont                                *
  ************************************************************************/
-void LabelledPicture::setFont(Kobold::String fontName)
+void LabelledPicture::setFont(const Kobold::String& fontName)
 {
    label->setFont(fontName);
 }
@@ -104,7 +104,7 @@ void LabelledPicture::setFont(Kobold::String fontName)
 /************************************************************************
  *                             setFontColor                             *
  ************************************************************************/
-void LabelledPicture::setFontColor(Farso::Color color)
+void LabelledPicture::setFontColor(const Farso::Color& color)
 {
    label->setFontColor(color);
 }
@@ -112,7 +112,7 @@ void LabelledPicture::setFontColor(Farso::Color color)
 /************************************************************************
  *                          setFontAlignment                            *
  ************************************************************************/
-void LabelledPicture::setFontAlignment(Farso::Font::Alignment align)
+void LabelledPicture::setFontAlignment(const Farso::Font::Alignment& align)
 {
    label->setFontAlignment(align);
 }
@@ -152,7 +152,7 @@ void LabelledPicture::disableBorderWhenClicked()
 /************************************************************************
  *                               doDraw                                 *
  ************************************************************************/
-void LabelledPicture::doDraw(Rect pBody)
+void LabelledPicture::doDraw(const Rect& pBody)
 {
    if(pressStarted && drawBorder)
    {

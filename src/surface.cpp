@@ -28,7 +28,7 @@ using namespace Farso;
 /******************************************************************
  *                           constructor                          *
  ******************************************************************/
-Surface::Surface(Kobold::String name, int width, int height)
+Surface::Surface(const Kobold::String& name, int width, int height)
 {
    this->locked = false;
    this->ownedTexture = true;
@@ -40,7 +40,7 @@ Surface::Surface(Kobold::String name, int width, int height)
 /******************************************************************
  *                           constructor                          *
  ******************************************************************/
-Surface::Surface(Kobold::String filename, Kobold::String group)
+Surface::Surface(const Kobold::String& filename, const Kobold::String& group)
 {
    this->locked = false;
    this->ownedTexture = false;

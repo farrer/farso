@@ -54,7 +54,7 @@ TextEntry::~TextEntry()
 /***********************************************************************
  *                             setCaption                              *
  ***********************************************************************/
-void TextEntry::setCaption(Kobold::String text)
+void TextEntry::setCaption(const Kobold::String& text)
 {
    if(getCaption() != text)
    {
@@ -66,7 +66,7 @@ void TextEntry::setCaption(Kobold::String text)
 /***********************************************************************
  *                          getStringLength                            *
  ***********************************************************************/
-int TextEntry::getStringLength(Kobold::String s)
+int TextEntry::getStringLength(const Kobold::String& s)
 {
    const char* asChar = s.c_str();
    int i = 0;
@@ -86,7 +86,7 @@ int TextEntry::getStringLength(Kobold::String s)
 /***********************************************************************
  *                       getNextCharacterInit                          *
  ***********************************************************************/
-int TextEntry::getNextCharacterInit(Kobold::String str, int cur)
+int TextEntry::getNextCharacterInit(const Kobold::String& str, int cur)
 {
    cur += 1;
    const char* asChar = str.c_str();
@@ -107,7 +107,7 @@ int TextEntry::getNextCharacterInit(Kobold::String str, int cur)
 /***********************************************************************
  *                     getPreviousCharacterInit                        *
  ***********************************************************************/
-int TextEntry::getPreviousCharacterInit(Kobold::String str, int cur)
+int TextEntry::getPreviousCharacterInit(const Kobold::String& str, int cur)
 {
    cur -= 1;
    const char* asChar = str.c_str();
@@ -128,7 +128,7 @@ int TextEntry::getPreviousCharacterInit(Kobold::String str, int cur)
 /***********************************************************************
  *                          appendToCursor                             *
  ***********************************************************************/
-void TextEntry::appendToCursor(Kobold::String textToAppend)
+void TextEntry::appendToCursor(const Kobold::String& textToAppend)
 {
    Kobold::String text = getCaption();
    text.insert(cursorIndex, textToAppend);
@@ -235,7 +235,7 @@ void TextEntry::doneWithEditing()
 /***********************************************************************
  *                              getBody                                *
  ***********************************************************************/
-Rect TextEntry::getBody()
+const Rect& TextEntry::getBody()
 {
    return body;
 }
@@ -243,7 +243,7 @@ Rect TextEntry::getBody()
 /***********************************************************************
  *                                doDraw                               *
  ***********************************************************************/
-void TextEntry::doDraw(Rect pBody)
+void TextEntry::doDraw(const Rect& pBody)
 {
    Skin* skin = Controller::getSkin();
    Draw* draw = Controller::getDraw();

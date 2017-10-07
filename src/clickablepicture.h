@@ -44,7 +44,7 @@ class ClickablePicture : public Widget
       ~ClickablePicture();
 
       /*! \return current body */
-      Farso::Rect getBody();
+      const Farso::Rect& getBody();
 
       /*! Enable the draw of a border when the image is clicked 
        * \note default is disabled. */
@@ -57,7 +57,7 @@ class ClickablePicture : public Widget
 
    protected:
       
-      void doDraw(Rect pBody);
+      void doDraw(const Farso::Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();

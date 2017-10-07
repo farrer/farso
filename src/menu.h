@@ -52,8 +52,8 @@ class Menu : public Widget
       {
          public:
             /*! Constructor for normal items. */
-            MenuItem(Kobold::String id, Kobold::String caption, 
-                  Kobold::String rightText, Kobold::String icon, 
+            MenuItem(const Kobold::String& id, const Kobold::String& caption, 
+                  const Kobold::String& rightText, const Kobold::String& icon, 
                   Widget* owner);
 
             /*! Constructor for separators */
@@ -97,7 +97,7 @@ class Menu : public Widget
              * \note this won't change menu width, so be carefull to it be
              * enough to contain the new string, otherwise it will be
              * truncated. */
-            void setCaption(Kobold::String str);
+            void setCaption(const Kobold::String& str);
 
             /*! \return if item is visible or not */
             const bool isVisible() const;
@@ -107,8 +107,8 @@ class Menu : public Widget
 
          private:
             /* Calculate item needed size */
-            void calculateNeededSize(Kobold::String str, 
-                  Kobold::String rightText, Farso::Picture* pic);
+            void calculateNeededSize(const Kobold::String& str, 
+                  const Kobold::String& rightText, Farso::Picture* pic);
 
             bool enabled; /**< if enabled or disabled */
             bool visible; /**< if visible or hidden */
@@ -140,8 +140,9 @@ class Menu : public Widget
        *        displaying shortcut alias).
        * \param icon path to icon's image. 
        * \param id optional string identifier. */
-      MenuItem* insertItem(Kobold::String text, Kobold::String rightText="", 
-            Kobold::String icon="", Kobold::String id="");
+      MenuItem* insertItem(const Kobold::String& text, 
+            const Kobold::String& rightText="", 
+            const Kobold::String& icon="", const Kobold::String& id="");
 
       /*! Insert a separator item. A separator is just a decorative
        * item that couldn't be selected */
@@ -168,7 +169,7 @@ class Menu : public Widget
 
       /*! \note should not be called for Menu */
       void setSize(int width, int height);
-      Rect getBody();
+      const Rect& getBody();
 
    protected:
 
@@ -179,7 +180,7 @@ class Menu : public Widget
       MenuItem* getItem(int rX, int rY);
 
       /* From Widget */
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();

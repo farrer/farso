@@ -57,7 +57,7 @@ class Container : public Widget
       /*! Create a container within full parent's body 
        * \param type container's type
        * \param parent container's parent (mandatory) */
-      Container(ContainerType type, Widget* parent);
+      Container(const ContainerType& type, Widget* parent);
       /*! Create a container at an specific distance from parent's body bounds.
        * \note The container's will be defined as the rectangle defined by:
        *       pBody.x1 + rect.x1, pBody.y1 + rect.y1, 
@@ -65,10 +65,10 @@ class Container : public Widget
        * \param rect rectangle with distances to each parentBody bound.
        * \param parent container's parent (mandatory). 
        * \param type container's type. */
-      Container(ContainerType type, Rect rect, Widget* parent);
+      Container(const ContainerType& type, const Rect& rect, Widget* parent);
       /*! Create a container at an specific position on parent's body,
        * \note parent is optional here. */
-      Container(ContainerType type, int x, int y, int width, int height, 
+      Container(const ContainerType& type, int x, int y, int width, int height, 
             Widget* parent);
 
       /*! Destructor */
@@ -90,13 +90,13 @@ class Container : public Widget
 
       void setDirty();
 
-      Rect getBody();
+      const Rect& getBody();
 
       /*! \return current container type */
-      ContainerType getContainerType();
+      const ContainerType& getContainerType() const;
 
    protected:
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();

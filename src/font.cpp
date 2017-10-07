@@ -70,7 +70,7 @@ void FontManager::finish()
 /***********************************************************************
  *                          setDefaultFont                             *
  ***********************************************************************/
-Font* FontManager::setDefaultFont(Kobold::String filename)
+Font* FontManager::setDefaultFont(const Kobold::String& filename)
 {
    assert(filename != "");
 
@@ -87,7 +87,7 @@ Font* FontManager::getDefaultFont()
    assert(defaultFont != "");
    return getFont(defaultFont);
 }
-Kobold::String FontManager::getDefaultFontFilename()
+const Kobold::String& FontManager::getDefaultFontFilename()
 {
    return defaultFont;
 }
@@ -95,7 +95,7 @@ Kobold::String FontManager::getDefaultFontFilename()
 /***********************************************************************
  *                              getFont                                *
  ***********************************************************************/
-Font* FontManager::getFont(Kobold::String filename)
+Font* FontManager::getFont(const Kobold::String& filename)
 {
    std::map<Kobold::String, Font*>::iterator it = fonts.find(filename);
 
@@ -290,7 +290,7 @@ void Font::CachedGlyph::load(FT_Bitmap slotBitmap, Uint16 c, int outline,
 /***********************************************************************
  *                             Constructor                             *
  ***********************************************************************/
-Font::Font(Kobold::String filename, FT_Library* lib)
+Font::Font(const Kobold::String& filename, FT_Library* lib)
 {
    this->filename = filename;
    this->data = NULL;
@@ -467,7 +467,7 @@ void Font::setSize(int pt)
 /***********************************************************************
  *                              getSize                                *
  ***********************************************************************/
-int Font::getSize()
+const int Font::getSize() const
 {
    return curTextSize;
 }
@@ -475,7 +475,7 @@ int Font::getSize()
 /***********************************************************************
  *                           setAlignment                              *
  ***********************************************************************/
-void Font::setAlignment(Font::Alignment align)
+void Font::setAlignment(const Font::Alignment& align)
 {
    curAlign = align;
 }
@@ -483,7 +483,7 @@ void Font::setAlignment(Font::Alignment align)
 /***********************************************************************
  *                           getAlignment                              *
  ***********************************************************************/
-Font::Alignment Font::getAlignment()
+const Font::Alignment& Font::getAlignment() const
 {
    return curAlign;
 }
@@ -491,7 +491,8 @@ Font::Alignment Font::getAlignment()
 /***********************************************************************
  *                            getHeight                                *
  ***********************************************************************/
-int Font::getHeight(int areaWidth, Kobold::String text, bool breakOnSpace)
+int Font::getHeight(int areaWidth, const Kobold::String& text, 
+      bool breakOnSpace)
 {
    if(curFace == NULL)
    {
@@ -535,7 +536,7 @@ int Font::getHeight(int areaWidth, Kobold::String text, bool breakOnSpace)
 /***********************************************************************
  *                        getDefaultHeight                             *
  ***********************************************************************/
-int Font::getDefaultHeight()
+const int Font::getDefaultHeight() const
 {
    if(curFace == NULL)
    {
@@ -547,7 +548,7 @@ int Font::getDefaultHeight()
 /***********************************************************************
  *                             getWidth                                *
  ***********************************************************************/
-int Font::getWidth(Kobold::String text, int outline)
+int Font::getWidth(const Kobold::String& text, int outline)
 {
    int curSize = 0;
    const Uint8* utf8 = (Uint8*) text.c_str();
@@ -572,7 +573,7 @@ int Font::getWidth(Kobold::String text, int outline)
 /***********************************************************************
  *                          getWhileWidth                              *
  ***********************************************************************/
-int Font::getWhileFits(Kobold::String text, Kobold::String& fit,
+int Font::getWhileFits(const Kobold::String& text, Kobold::String& fit,
       Kobold::String& wontFit, int width, bool& brokeOnSpace)
 {
    int curSize = 0;
@@ -632,7 +633,8 @@ int Font::getWhileFits(Kobold::String text, Kobold::String& fit,
 /***********************************************************************
  *                                write                                *
  ***********************************************************************/
-int Font::write(Surface* surface, int x, int y, Rect area, Kobold::String text)
+int Font::write(Surface* surface, int x, int y, const Rect& area, 
+      const Kobold::String& text)
 {
    return write(surface, x, y, area, (Uint8*) text.c_str(), 0);
 }
@@ -640,7 +642,8 @@ int Font::write(Surface* surface, int x, int y, Rect area, Kobold::String text)
 /***********************************************************************
  *                                write                                *
  ***********************************************************************/
-int Font::write(Surface* surface, Rect area, Kobold::String text, int outline)
+int Font::write(Surface* surface, const Rect& area, const Kobold::String& text,
+      int outline)
 {
    if(curFace == NULL)
    {
@@ -657,8 +660,8 @@ int Font::write(Surface* surface, Rect area, Kobold::String text, int outline)
 /***********************************************************************
  *                               write                                 *
  ***********************************************************************/
-int Font::write(Surface* surface, Rect area, Kobold::String text, 
-                Color outlineColor, int outline)
+int Font::write(Surface* surface, const Rect& area, const Kobold::String& text, 
+      const Color& outlineColor, int outline)
 {
    Draw* draw = Farso::Controller::getDraw();
    Color curColor = draw->getActiveColor();
@@ -675,11 +678,12 @@ int Font::write(Surface* surface, Rect area, Kobold::String text,
 /***********************************************************************
  *                        writeBreakingOnSpaces                        *
  ***********************************************************************/
-int Font::writeBreakingOnSpaces(Surface* surface, Rect area, 
-      Kobold::String text, Color outlineColor, int outline)
+int Font::writeBreakingOnSpaces(Surface* surface, const Rect& area, 
+      const Kobold::String& text, const Color& outlineColor, int outline)
 {
    Kobold::String wontFit = text;
    Kobold::String fit;
+   Kobold::String curText = text;
 
    /* Get current width to break things */
    int width = area.getWidth() - (2 * FONT_HORIZONTAL_DELTA);
@@ -693,8 +697,8 @@ int Font::writeBreakingOnSpaces(Surface* surface, Rect area,
    /* Let's write it */
    while((!wontFit.empty()) && (curY <= area.getY2()))
    {
-      text = wontFit;
-      getWhileFits(text, fit, wontFit, width, brokeOnSpace);
+      curText = wontFit;
+      getWhileFits(curText, fit, wontFit, width, brokeOnSpace);
 
       if(fit.empty())
       {
@@ -724,7 +728,7 @@ int Font::writeBreakingOnSpaces(Surface* surface, Rect area,
 /***********************************************************************
  *                           willGlyphFits                             *
  ***********************************************************************/
-bool Font::willGlyphFits(int x, int y, Rect area, CachedGlyph* glyph)
+bool Font::willGlyphFits(int x, int y, const Rect& area, CachedGlyph* glyph)
 {
    return ((y - glyph->getBitmapTop() >= area.getY1()) &&
            (x + glyph->getBitmapLeft() >= area.getX1()) &&
@@ -737,8 +741,8 @@ bool Font::willGlyphFits(int x, int y, Rect area, CachedGlyph* glyph)
 /***********************************************************************
  *                                write                                *
  ***********************************************************************/
-int Font::write(Surface* surface, int x, int y, Rect area, const Uint8* utf8,
-                int outline)
+int Font::write(Surface* surface, int x, int y, const Rect& area, 
+      const Uint8* utf8, int outline)
 {
    /* make sure surface is valid */
    assert(surface != NULL);
@@ -844,8 +848,8 @@ void Font::flushLine(Surface* surface, int x, int y, Uint16* chars,
 /***********************************************************************
  *                          centeredOrRightWrite                       *
  ***********************************************************************/
-int Font::centeredOrRightWrite(Surface* surface, int x, int y, Rect area, 
-      const Uint8* utf8, int outline)
+int Font::centeredOrRightWrite(Surface* surface, int x, int y, 
+      const Rect& area, const Uint8* utf8, int outline)
 {
    int renderedChars = 0;
    size_t texlen = strlen((char*) utf8);

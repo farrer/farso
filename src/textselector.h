@@ -45,7 +45,7 @@ class TextSelector : public Widget
 
       /*! Add an option that can be selected by the user 
        * \param text current text of the option */
-      void addOption(Kobold::String text, int index = -1);
+      void addOption(const Kobold::String& text, int index = -1);
 
       /*! \return index of the selected option, if any.
        * If no option was selected, will return a value < 0.
@@ -54,7 +54,7 @@ class TextSelector : public Widget
        *       [0, max-1]. */
       int getSelectedOption();
       
-      Rect getBody();
+      const Rect& getBody();
 
       /*! Unselect any selected option */
       void unselect();
@@ -73,7 +73,7 @@ class TextSelector : public Widget
       void clearOptions();
 
    protected:
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();
@@ -90,7 +90,8 @@ class TextSelector : public Widget
       {
          public:
             TextOption(int x, int y, int width, int height, 
-                       Kobold::String caption, int index, Widget* parent);
+                       const Kobold::String& caption, int index, 
+                       Widget* parent);
             ~TextOption();
 
             Label* label; /**< Current label */

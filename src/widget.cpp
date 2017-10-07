@@ -132,7 +132,7 @@ Widget::~Widget()
 /***********************************************************************
  *                                setId                                *
  ***********************************************************************/
-void Widget::setId(const Kobold::String id)
+void Widget::setId(const Kobold::String& id)
 {
    if(!this->id.empty())
    {
@@ -150,7 +150,7 @@ void Widget::setId(const Kobold::String id)
 /***********************************************************************
  *                              setCaption                             *
  ***********************************************************************/
-void Widget::setCaption(const Kobold::String text)
+void Widget::setCaption(const Kobold::String& text)
 {
    if(caption != text)
    {
@@ -429,7 +429,7 @@ void Widget::setDirtyWithParent()
 /***********************************************************************
  *                            setMouseHint                             *
  ***********************************************************************/
-void Widget::setMouseHint(const Kobold::String txt)
+void Widget::setMouseHint(const Kobold::String& txt)
 {
    mouseHint = txt;
 }

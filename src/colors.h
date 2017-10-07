@@ -52,10 +52,10 @@ class Color
 
       /*! Define the color by a string with its integer components
        * defined, separed by commas: "red,green,blue,alpha" */
-      void set(Kobold::String value);
+      void set(const Kobold::String& value);
 
       /*! Check if two colors are the same */
-      bool operator==(Color& color);
+      const bool operator==(const Color& color);
 };
 
 /*! The GUI Colors Definition */

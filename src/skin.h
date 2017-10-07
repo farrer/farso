@@ -147,9 +147,9 @@ class Skin
             /* \return font alignment to use */
             const Font::Alignment& getFontAlignment() const;
             /*! Set font color to use for element's text */
-            void setFontColor(Farso::Color color);
+            void setFontColor(const Farso::Color& color);
             /*! Set font color to use for element's text */
-            void setFontColor(Kobold::String colorStr);
+            void setFontColor(const Kobold::String& colorStr);
             /*! \return font color */
             const Farso::Color& getFontColor() const;
 
@@ -166,14 +166,14 @@ class Skin
             /*! Same as #draw, but writing caption at text area, if defined */
             void draw(Surface* dest, Surface* src, 
                   int wx1, int wy1, int wx2, int wy2, 
-                  Rect bounds, Kobold::String caption);
+                  const Rect& bounds, const Kobold::String& caption);
             /*! Same as #draw, but writing caption with an specific font */
             void draw(Surface* dest, Surface* src, 
                   int wx1, int wy1, int wx2, int wy2, 
-                  Rect bounds, Kobold::String caption,
-                  Kobold::String fontName, int fontSize, 
-                  Font::Alignment align, Color fontColor,
-                  Color outlineColor, int outlineWidth);
+                  const Rect& bounds, const Kobold::String& caption,
+                  const Kobold::String& fontName, int fontSize, 
+                  const Font::Alignment& align, const Color& fontColor,
+                  const Color& outlineColor, int outlineWidth);
             /*! \return if this SkinElement is defined or not. */
             const bool isDefined() const;
 
@@ -268,17 +268,18 @@ class Skin
        * \param bounds Pre-calculated element bounds for current widget.
        * \param caption to write. */
       void drawElement(Surface* dest, int type, 
-            int wx1, int wy1, int wx2, int wy2, Rect bounds, 
-            Kobold::String caption);
+            int wx1, int wy1, int wx2, int wy2, const Rect& bounds, 
+            const Kobold::String& caption);
       /*! Same as #drawElement, but writing caption at element's text area, 
        * if defined, with an specific font .
        * \param bounds Pre-calculated element bounds for current widget.
        * \param caption to write. */
       void drawElement(Surface* dest, int type, 
-            int wx1, int wy1, int wx2, int wy2, Rect bounds, 
-            Kobold::String caption, Kobold::String fontName, 
-            int fontSize, Font::Alignment align, Color fontColor,
-            Color outlineColor = Color(0, 0, 0, 255), int outlineWidth = 0);
+            int wx1, int wy1, int wx2, int wy2, const Rect& bounds, 
+            const Kobold::String& caption, const Kobold::String& fontName, 
+            int fontSize, const Font::Alignment& align, const Color& fontColor,
+            const Color& outlineColor = Colors::black, 
+            int outlineWidth = 0);
 
       /*! \return if the Element type is defined or not on this skin. */
       const bool isElementDefined(int type) const;
@@ -305,7 +306,7 @@ class Skin
        * \return extended element type constant ( >= 
        * TOTAL_BASIC_SKIN_ELEMENT_TYPES && < getTotalElements )
        * or UNKNOW_ELEMENT when typeName isn't defined. */
-      virtual int getExtendedElementType(Kobold::String typeName);
+      virtual int getExtendedElementType(const Kobold::String& typeName);
 
    private:
 

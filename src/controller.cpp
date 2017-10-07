@@ -46,9 +46,9 @@ using namespace Farso;
 /***********************************************************************
  *                                 init                                *
  ***********************************************************************/
-void Controller::init(RendererType rendererType,
+void Controller::init(const RendererType& rendererType,
       int screenWidth, int screenHeight, int maxCursorSize,
-      Kobold::String baseDir, void* extraInfo)
+      const Kobold::String& baseDir, void* extraInfo)
 {
    mutex.lock();
    if(!inited)
@@ -173,7 +173,7 @@ int Controller::getHeight()
 /***********************************************************************
  *                              setCursor                              *
  ***********************************************************************/
-void Controller::setCursor(Kobold::String filename)
+void Controller::setCursor(const Kobold::String& filename)
 {
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
@@ -186,7 +186,7 @@ void Controller::setCursor(Kobold::String filename)
 /***********************************************************************
  *                           getRealFilename                           *
  ***********************************************************************/
-Kobold::String Controller::getRealFilename(Kobold::String filename)
+Kobold::String Controller::getRealFilename(const Kobold::String& filename)
 {
    if(rendererType == RENDERER_TYPE_OPENGL)
    {
@@ -199,8 +199,8 @@ Kobold::String Controller::getRealFilename(Kobold::String filename)
 /***********************************************************************
  *                           createNewJunction                         *
  ***********************************************************************/
-ControllerRendererJunction* Controller::createNewJunction(Kobold::String name,
-      void* extraInfo)
+ControllerRendererJunction* Controller::createNewJunction(
+      const Kobold::String& name, void* extraInfo)
 {
    switch(rendererType)
    {
@@ -273,7 +273,7 @@ Kobold::String Controller::getDefaultGroupName()
 /***********************************************************************
  *                        loadImageToSurface                           *
  ***********************************************************************/
-Surface* Controller::loadImageToSurface(Kobold::String filename)
+Surface* Controller::loadImageToSurface(const Kobold::String& filename)
 {
    switch(rendererType)
    {
@@ -315,7 +315,7 @@ void Controller::setSkin(Skin* skin)
 /***********************************************************************
  *                              loadSkin                               *
  ***********************************************************************/
-bool Controller::loadSkin(Kobold::String filename)
+bool Controller::loadSkin(const Kobold::String& filename)
 {
    mutex.lock();
    if(skin != NULL)
@@ -786,7 +786,7 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
 /***********************************************************************
  *                        getRendererType                              *
  ***********************************************************************/
-RendererType Controller::getRendererType()
+const RendererType& Controller::getRendererType()
 {
    return rendererType;
 }

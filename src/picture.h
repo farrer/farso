@@ -67,14 +67,14 @@ class Picture : public Widget
       void setImage(const Kobold::String& filename);
 
       /*! \return picture body - the rectangle defining its area */
-      Rect getBody();
+      const Rect& getBody();
 
       /*! Mark the picture as dirty (usually called by one of its children) */
       void setDirty();
 
    protected:
       /*! Do the picture draw on parent's renderer surface */
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       /*! Treat picture events */
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed,
                   int mouseX, int mouseY, int mrX, int mrY);

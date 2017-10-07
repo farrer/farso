@@ -27,7 +27,7 @@ using namespace Farso;
 /***********************************************************************
  *                            Constructor                              *
  ***********************************************************************/
-Window::Window(int width, int height, Kobold::String title)
+Window::Window(int width, int height, const Kobold::String& title)
       : Widget(Widget::WIDGET_TYPE_WINDOW, 0, 0, width, height, NULL)
 {
    setCaption(title);
@@ -79,7 +79,7 @@ Window::~Window()
 /***********************************************************************
  *                               getBody                               *
  ***********************************************************************/
-Farso::Rect Window::getBody()
+const Farso::Rect& Window::getBody()
 {
    return body;
 }
@@ -127,7 +127,7 @@ void Window::defineBody()
 /***********************************************************************
  *                               doDraw                                *
  ***********************************************************************/
-void Window::doDraw(Rect pBody)
+void Window::doDraw(const Rect& pBody)
 {
    /* Note: as window never has parents, pBody should be ignored here. */
    Farso::Skin* skin = Farso::Controller::getSkin();

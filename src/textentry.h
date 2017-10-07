@@ -49,7 +49,7 @@ class TextEntry : public Kobold::KeyboardTextEditor, public Widget
       ~TextEntry();
 
       /* Functions from KeyboardTextEditor */
-      void appendToCursor(Kobold::String textToAppend);
+      void appendToCursor(const Kobold::String& textToAppend);
       void deleteCharacterFromCursor(bool after);
       void sendCursorToInit();
       void sendCursorToEnd();
@@ -57,13 +57,13 @@ class TextEntry : public Kobold::KeyboardTextEditor, public Widget
       void doneWithEditing();
 
       /* Function from Widget */
-      Rect getBody();
-      void setCaption(Kobold::String text);
+      const Rect& getBody();
+      void setCaption(const Kobold::String& text);
 
    protected:
 
       /* Functions from Widget */
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat(); 
@@ -74,11 +74,11 @@ class TextEntry : public Kobold::KeyboardTextEditor, public Widget
       Font* getFont();
 
       /*! Get index of next character start (utf8) */
-      int getNextCharacterInit(Kobold::String str, int cur);
+      int getNextCharacterInit(const Kobold::String& str, int cur);
       /*! Get index one previous character start (utf8) */
-      int getPreviousCharacterInit(Kobold::String str, int cur);
+      int getPreviousCharacterInit(const Kobold::String& str, int cur);
       /*! Get the number of characters of the text (utf8) */
-      int getStringLength(Kobold::String s);
+      int getStringLength(const Kobold::String& s);
 
       /*! Calculate cursor position, based on relative mouse position */
       void calculateCursorPosition(int mrX, int mrY);

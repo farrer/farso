@@ -38,8 +38,9 @@ using namespace Farso;
  *                             Constructor                             *
  ***********************************************************************/
 TreeView::TreeViewElement::TreeViewElement(TreeView* owner, 
-      TreeView::TreeViewElement* parent, Kobold::String caption, void* data)
-         :children(Kobold::LIST_TYPE_ADD_AT_END)
+      TreeView::TreeViewElement* parent, const Kobold::String& caption, 
+      void* data)
+   :children(Kobold::LIST_TYPE_ADD_AT_END)
 {
    this->owner = owner;
    this->parent = parent;
@@ -68,7 +69,7 @@ TreeView::TreeViewElement::~TreeViewElement()
  *                              addChild                               *
  ***********************************************************************/
 TreeView::TreeViewElement* TreeView::TreeViewElement::addChild(
-      Kobold::String caption, void* data)
+      const Kobold::String& caption, void* data)
 {
    TreeViewElement* child = new TreeViewElement(owner, this, caption, data);
 
@@ -403,7 +404,7 @@ void TreeView::setDirty()
 /***********************************************************************
  *                              getBody                                *
  ***********************************************************************/
-Rect TreeView::getBody()
+const Rect& TreeView::getBody()
 {
    return body;
 }
@@ -411,8 +412,8 @@ Rect TreeView::getBody()
 /***********************************************************************
  *                           addRootElement                            *
  ***********************************************************************/
-TreeView::TreeViewElement* TreeView::addRootElement(Kobold::String caption, 
-      void* data)
+TreeView::TreeViewElement* TreeView::addRootElement(
+      const Kobold::String& caption, void* data)
 {
    TreeViewElement* root = new TreeViewElement(this, NULL, caption, data);
 
@@ -543,7 +544,7 @@ TreeView::TreeViewElement* TreeView::getNodeByData(void* data)
 /***********************************************************************
  *                              doDraw                                 *
  ***********************************************************************/
-void TreeView::doDraw(Rect pBody)
+void TreeView::doDraw(const Rect& pBody)
 {
    int totalVisibleElements = getTotalVisibleElements();
 

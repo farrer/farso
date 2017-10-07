@@ -278,7 +278,7 @@ const Font::Alignment& Skin::SkinElement::getFontAlignment() const
 /***********************************************************************
  *                           setFontColor                              *
  ***********************************************************************/
-void Skin::SkinElement::setFontColor(Farso::Color color)
+void Skin::SkinElement::setFontColor(const Farso::Color& color)
 {
    this->fontColor = color;
 }
@@ -286,7 +286,7 @@ void Skin::SkinElement::setFontColor(Farso::Color color)
 /***********************************************************************
  *                           setFontColor                              *
  ***********************************************************************/
-void Skin::SkinElement::setFontColor(Kobold::String colorStr)
+void Skin::SkinElement::setFontColor(const Kobold::String& colorStr)
 {
    this->fontColor.set(colorStr);
 }
@@ -645,7 +645,8 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
  *                                draw                                 *
  ***********************************************************************/
 void Skin::SkinElement::draw(Surface* dest, Surface* src, 
-      int wx1, int wy1, int wx2, int wy2, Rect bounds, Kobold::String caption)
+      int wx1, int wy1, int wx2, int wy2, const Rect& bounds, 
+      const Kobold::String& caption)
 {
    draw(dest, src, wx1, wy1, wx2, wy2, bounds, caption, fontName, 
          fontSize, fontAlign, fontColor, fontColor, 0);
@@ -655,9 +656,10 @@ void Skin::SkinElement::draw(Surface* dest, Surface* src,
  *                                draw                                 *
  ***********************************************************************/
 void Skin::SkinElement::draw(Surface* dest, Surface* src, 
-      int wx1, int wy1, int wx2, int wy2, Rect bounds, Kobold::String caption,
-      Kobold::String fontName, int fontSize, Font::Alignment align, 
-      Color fontColor, Color outlineColor, int outlineWidth)
+      int wx1, int wy1, int wx2, int wy2, const Rect& bounds, 
+      const Kobold::String& caption, const Kobold::String& fontName, 
+      int fontSize, const Font::Alignment& align, 
+      const Color& fontColor, const Color& outlineColor, int outlineWidth)
 {
    /* Do the normal draw */
    draw(dest, src, wx1, wy1, wx2, wy2);
@@ -1027,7 +1029,7 @@ int Skin::getTotalElements()
 /***********************************************************************
  *                        getExtendedElementType                       *
  ***********************************************************************/
-int Skin::getExtendedElementType(Kobold::String typeName)
+int Skin::getExtendedElementType(const Kobold::String& typeName)
 {
    return SKIN_TYPE_UNKNOWN;
 }
@@ -1053,7 +1055,8 @@ void Skin::drawElement(Surface* dest, int type,
  *                             drawElement                             *
  ***********************************************************************/
 void Skin::drawElement(Surface* dest, int type, 
-      int wx1, int wy1, int wx2, int wy2, Rect bounds, Kobold::String caption)
+      int wx1, int wy1, int wx2, int wy2, const Rect& bounds, 
+      const Kobold::String& caption)
 {
    getInnerSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2, bounds, 
          caption);
@@ -1063,9 +1066,10 @@ void Skin::drawElement(Surface* dest, int type,
  *                             drawElement                             *
  ***********************************************************************/
 void Skin::drawElement(Surface* dest, int type, int wx1, int wy1, 
-      int wx2, int wy2, Rect bounds, Kobold::String caption, 
-      Kobold::String fontName, int fontSize, Font::Alignment align,
-      Color fontColor, Color outlineColor, int outlineWidth)
+      int wx2, int wy2, const Rect& bounds, const Kobold::String& caption, 
+      const Kobold::String& fontName, int fontSize, 
+      const Font::Alignment& align, const Color& fontColor, 
+      const Color& outlineColor, int outlineWidth)
 {
    getInnerSkinElement(type).draw(dest, surface, wx1, wy1, wx2, wy2, bounds,
          caption, fontName, fontSize, align, fontColor, outlineColor,

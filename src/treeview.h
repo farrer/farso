@@ -49,12 +49,13 @@ class TreeView: public Widget
              * \param parent pointer to its parent
              * \param data some related data to keep */
             TreeViewElement(TreeView* owner, TreeViewElement* parent, 
-                  Kobold::String caption, void* data);
+                  const Kobold::String& caption, void* data);
             /*! Destructor */
             ~TreeViewElement();
             
             /*! Add a child element */
-            TreeViewElement* addChild(Kobold::String caption, void* data=NULL);
+            TreeViewElement* addChild(const Kobold::String& caption, 
+                  void* data=NULL);
 
             /*! \return the related element's data */
             void* getData() const { return data; };
@@ -115,7 +116,7 @@ class TreeView: public Widget
             TreeViewElement* getParent() { return parent; };
 
             /*! \return element's caption */
-            const Kobold::String getCaption() const { return caption; };
+            const Kobold::String& getCaption() const { return caption; };
 
             /*! \return element's level */
             const int getLevel() const { return level; };
@@ -151,7 +152,8 @@ class TreeView: public Widget
        * \param caption its text to be displayed
        * \param data some related data of the element
        * \return pointer to the created element. */
-      TreeViewElement* addRootElement(Kobold::String caption, void* data=NULL);
+      TreeViewElement* addRootElement(const Kobold::String& caption, 
+            void* data=NULL);
 
       /*! Remove a root element from the TreeView
        * \note will also remove its children.
@@ -184,13 +186,13 @@ class TreeView: public Widget
       void unselect();
 
       /* From Widget */
-      Rect getBody();
+      const Rect& getBody();
       void setDirty();
 
    protected:
 
       /* From Widget */
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();

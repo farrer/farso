@@ -102,9 +102,9 @@ class Controller
        *               resource group). 
        * \param any extra information needed for renderer. For OpenGL, just 
        *        pass NULL, for Ogre3D, the pointer to the sceneManager used. */
-      static void init(RendererType rendererType, 
+      static void init(const RendererType& rendererType, 
             int screenWidth, int screenHeight, int maxCursorSize, 
-            Kobold::String baseDir, void* extraInfo);
+            const Kobold::String& baseDir, void* extraInfo);
       /*! Finish with the farso controller (usually called at exit). */
       static void finish();
 
@@ -116,14 +116,14 @@ class Controller
 
       /*! Set cursor image to use, when mouse cursor is defined
        * \param filename cursor image's filename */
-      static void setCursor(Kobold::String filename);
+      static void setCursor(const Kobold::String& filename);
 
       /*! Load a skin to be the current default one.
        * \param filename skin definition file to load. 
        * \note no need to call unloadSkin first, as it will be automatically
        *       unloaded here.
        * \return if load was successfull. */
-      static bool loadSkin(Kobold::String filename);
+      static bool loadSkin(const Kobold::String& filename);
 
       /*! Set the current skin to an already loaded one.
        * \note this function is usually called to set to a derived Skin class
@@ -205,16 +205,16 @@ class Controller
        * \return pointer to the created surface.
        * \note The caller is responsible to delete the surface when no 
        * more needed. */
-      static Surface* loadImageToSurface(Kobold::String filename);
+      static Surface* loadImageToSurface(const Kobold::String& filename);
       
       /*! \return default group name for the current using renderer */
       static Kobold::String getDefaultGroupName();
 
       /*! \return current renderer type */
-      static RendererType getRendererType();
+      static const RendererType& getRendererType();
 
       /*! \return real filename for fonts, skins and cursors files */
-      static Kobold::String getRealFilename(Kobold::String filename);
+      static Kobold::String getRealFilename(const Kobold::String& filename);
 
       /*! \return total number of root (ie: without parents) widgets. */
       static int getTotalRootWidgets();
@@ -281,8 +281,8 @@ class Controller
        *  \param extraInfo needed exra info for renderer. See @init for what 
        *         to pass here.
        *  \return junction created (or NULL if error) */
-      static ControllerRendererJunction* createNewJunction(Kobold::String name,
-            void* extraInfo);
+      static ControllerRendererJunction* createNewJunction(
+            const Kobold::String& name, void* extraInfo);
 
       /*! Verify events for specific widget */
       static bool verifyEvents(Widget* widget, 

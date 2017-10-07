@@ -28,8 +28,8 @@ using namespace Farso;
 /******************************************************************
  *                           Constructor                          *
  ******************************************************************/
-Label::Label(int x, int y, int width, int height, Kobold::String caption, 
-             Widget* parent)
+Label::Label(int x, int y, int width, int height, 
+      const Kobold::String& caption, Widget* parent)
       : Widget(Widget::WIDGET_TYPE_LABEL, x, y, width, height, parent)
 {
    this->setCaption(caption);
@@ -80,7 +80,7 @@ void Label::disableBorder()
 /******************************************************************
  *                             setSkinType                        *
  ******************************************************************/
-void Label::setSkinType(Skin::SkinElementType type)
+void Label::setSkinType(const Skin::SkinElementType& type)
 {
    this->skinType = type;
    this->definedSkin = true;
@@ -89,7 +89,7 @@ void Label::setSkinType(Skin::SkinElementType type)
 /******************************************************************
  *                              setFont                           *
  ******************************************************************/
-void Label::setFont(Kobold::String fontName)
+void Label::setFont(const Kobold::String& fontName)
 {
    this->fontName = fontName;
 }
@@ -106,7 +106,7 @@ void Label::setFontSize(int size)
 /******************************************************************
  *                           setFontColor                         *
  ******************************************************************/
-void Label::setFontColor(Farso::Color color)
+void Label::setFontColor(const Farso::Color& color)
 {
    this->fontColor = color;
    this->definedColor = true;
@@ -115,7 +115,7 @@ void Label::setFontColor(Farso::Color color)
 /******************************************************************
  *                        setFontAlignment                        *
  ******************************************************************/
-void Label::setFontAlignment(Farso::Font::Alignment align)
+void Label::setFontAlignment(const Farso::Font::Alignment& align)
 {
    this->fontAlign = align;
 }
@@ -123,7 +123,7 @@ void Label::setFontAlignment(Farso::Font::Alignment align)
 /******************************************************************
  *                       setFontOutline                           *
  ******************************************************************/
-void Label::setFontOutline(int outline, Farso::Color color)
+void Label::setFontOutline(int outline, const Farso::Color& color)
 {
    this->outline = outline;
    this->outlineColor = color;
@@ -160,7 +160,7 @@ Font* Label::getFont()
 /******************************************************************
  *                            getFontSize                         *
  ******************************************************************/
-int Label::getFontSize()
+const int Label::getFontSize() const
 {
    if(fontSize != -1)
    {
@@ -192,7 +192,7 @@ void Label::enableBreakLineOnSpace()
 /******************************************************************
  *                              doDraw                            *
  ******************************************************************/
-void Label::doDraw(Rect pBody)
+void Label::doDraw(const Rect& pBody)
 {
    Farso::Skin* skin = Farso::Controller::getSkin();
    Farso::Surface* surface = getWidgetRenderer()->getSurface();
@@ -361,7 +361,7 @@ void Label::doAfterChildTreat()
 /******************************************************************
  *                             getBody                            *
  ******************************************************************/
-Farso::Rect Label::getBody()
+const Farso::Rect& Label::getBody()
 {
    return body;
 }

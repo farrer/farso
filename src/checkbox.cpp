@@ -26,8 +26,8 @@ using namespace Farso;
 /******************************************************************
  *                           Constructor                          *
  ******************************************************************/
-CheckBox::CheckBox(int x, int y, int width, Kobold::String label, bool checked, 
-                   Widget* parent)
+CheckBox::CheckBox(int x, int y, int width, const Kobold::String& label, 
+      bool checked, Widget* parent)
          :Widget(Widget::WIDGET_TYPE_CHECK_BOX, x, y, width, 20, parent)
 {
    this->setCaption(label);
@@ -134,7 +134,7 @@ void CheckBox::enable()
 /******************************************************************
  *                               doDraw                           *
  ******************************************************************/
-void CheckBox::doDraw(Rect pBody)
+void CheckBox::doDraw(const Rect& pBody)
 {
    Farso::Skin* skin = Farso::Controller::getSkin();
    Farso::Surface* surface = getWidgetRenderer()->getSurface();
@@ -284,7 +284,7 @@ void CheckBox::toggle()
 /******************************************************************
  *                            getBody                             *
  ******************************************************************/
-Farso::Rect CheckBox::getBody()
+const Farso::Rect& CheckBox::getBody()
 {
    return body;
 }

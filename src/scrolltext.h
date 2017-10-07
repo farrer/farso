@@ -39,8 +39,8 @@ class ScrollText : public Widget
       ScrollText(int x, int y, int width, int height, Widget* parent);
       /*! Constructor with default font definition */
       ScrollText(int x, int y, int width, int height,
-                 Kobold::String defaultFont, int defaultFontSize,
-                 Color defaultColor, Widget* parent);
+                 const Kobold::String& defaultFont, int defaultFontSize,
+                 const Color& defaultColor, Widget* parent);
       /*! Destructor */
       ~ScrollText();
 
@@ -55,36 +55,36 @@ class ScrollText : public Widget
       /*! Reset the entire text of the ScrollText. It's equivalent to call
        * clear() and addText(text)
        * \param text new text of the ScrollText. */
-      void setText(Kobold::String text);
+      void setText(const Kobold::String& text);
 
       /*! Add text to the current text, with default font, default color 
        * and left alignment. 
        * \param text text to add*/
-      void addText(Kobold::String text);
+      void addText(const Kobold::String& text);
      
       /*! Add text to current text, specifying a font */
-      void addText(Kobold::String text,  Kobold::String font, int size, 
-            Font::Alignment align);
+      void addText(const Kobold::String& text,  const Kobold::String& font, 
+            int size, const Font::Alignment& align);
 
       /*! Add text to the current text, specifying a font and its color */
-      void addText(Kobold::String text,  Kobold::String font, int size, 
-            Font::Alignment align, Color color);
+      void addText(const Kobold::String& text,  const Kobold::String& font, 
+            int size, const Font::Alignment& align, const Color& color);
       
       /*! Add a left aligned text to the current text specifying its color */
-      void addText(Kobold::String text, Color color);
+      void addText(const Kobold::String& text, const Color& color);
 
       /*! Add a line break to the current text */
       void addLineBreak();
       
       /* Implementation from Widget */
-      Rect getBody();
+      const Rect& getBody();
 
       /*! Set the scroll text dirty */
       void setDirty();
 
    protected:
       /* Implementations from Widget */
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat(); 
@@ -99,24 +99,24 @@ class ScrollText : public Widget
       {
          public:
             /*! Constructor */
-            TextSentence(Kobold::String fontName, int fontSize, 
-                         Color color);
+            TextSentence(const Kobold::String& fontName, int fontSize, 
+                         const Color& color);
             /*! Destructor */
             ~TextSentence();
 
             /*! Check if the following arguments are compatible with
              * the current sentence or if will needed to create another 
              * sentence. */
-            bool isCompatible(Kobold::String fontName, int fontSize, 
-                  Color color);
+            bool isCompatible(const Kobold::String& fontName, int fontSize, 
+                  const Color& color);
 
             /*! Add text to the current sentence */
-            void addText(Kobold::String text, int width, int height);
+            void addText(const Kobold::String& text, int width, int height);
 
             /*! \return current sentence width */
-            int getWidth();
+            const int getWidth() const;
             /*! \return current sentence height */
-            int getHeight();
+            const int getHeight() const;
 
             /*! Draw current sentence at x,y position on surface */
             void draw(int x, int y, Rect area, Farso::Surface* surface); 
@@ -142,12 +142,12 @@ class ScrollText : public Widget
             ~TextLine();
 
             /*! Set line alignment */
-            void setAlignment(Font::Alignment alignment);
+            void setAlignment(const Font::Alignment& alignment);
 
             /*! \return if alignment is compatible with curret font's one.
              * If line is empty, all alignments are compatible, but you
              * must setAlignment before add text */
-            bool isCompatible(Font::Alignment alignment);
+            const bool isCompatible(const Font::Alignment& alignment) const;
             
             /*! \return if this line is an empty one */
             bool isEmptyLine();
@@ -156,12 +156,12 @@ class ScrollText : public Widget
             void add(int width, int height);
 
             /*! \return current line width */
-            int getWidth();
+            const int getWidth() const;
             /*! \return current line height */
-            int getHeight();
+            const int getHeight() const;
 
             /*! Draw current line at x,y position on surface */
-            void draw(int x, int y, Rect area, Farso::Surface* surface); 
+            void draw(int x, int y, const Rect& area, Farso::Surface* surface); 
 
          private: 
             Font::Alignment alignment; /**< Alignment to use for line */
@@ -170,12 +170,12 @@ class ScrollText : public Widget
       };
 
       /*! Get - or create - a text sentence to write to */
-      TextSentence* getSentence(Kobold::String fontName, int fontSize, 
-            Font::Alignment alignment, Color color);
+      TextSentence* getSentence(const Kobold::String& fontName, int fontSize, 
+            const Font::Alignment& alignment, const Color& color);
 
       /*! Append a new text line, with one new empty sentence */
-      TextLine* createLine(Kobold::String fontName, int fontSize,
-            Font::Alignment alignment, Color color);
+      TextLine* createLine(const Kobold::String& fontName, int fontSize,
+            const Font::Alignment& alignment, const Color& color);
 
       Farso::ScrollBar* scrollBar; /**< The scroller */
       Rect body; /**< Body */

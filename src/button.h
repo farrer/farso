@@ -43,8 +43,8 @@ class Button: public Widget
        * \param width button width
        * \param height button height
        * \param parent pointer to button's parent (if any). */
-      Button(int x, int y, int width, int height, Kobold::String caption, 
-            Widget* parent);
+      Button(int x, int y, int width, int height, 
+            const Kobold::String& caption, Widget* parent);
       /*! Destructor */
       ~Button();
 
@@ -59,7 +59,7 @@ class Button: public Widget
       /*! Set the font to be used on menu.
        * \param fontName filename of the font to be used
        * \param fontSize size of the font to use. */
-      void setFont(Kobold::String fontName, int fontSize);
+      void setFont(const Kobold::String& fontName, int fontSize);
 
       /*! Override skin types for current button.
        * \note This is only effective when actually using a skin. */
@@ -78,12 +78,12 @@ class Button: public Widget
        * \note usually used only at Menu's close call */
       void release();
       
-      Rect getBody();
+      const Rect& getBody();
       void setDirty();
 
    protected:
       /*! Draw the button */
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       /*! Button treat events */
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);

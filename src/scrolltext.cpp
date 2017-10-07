@@ -46,8 +46,8 @@ ScrollText::ScrollText(int x, int y, int width, int height, Widget* parent)
  *                               ScrollText                            *
  ***********************************************************************/
 ScrollText::ScrollText(int x, int y, int width, int height,
-                       Kobold::String defaultFont, int defaultFontSize,
-                       Color defaultColor, Widget* parent)
+                       const Kobold::String& defaultFont, int defaultFontSize,
+                       const Color& defaultColor, Widget* parent)
           :Widget(Widget::WIDGET_TYPE_SCROLL_TEXT, x, y, width, height, parent),
            lines(Kobold::LIST_TYPE_ADD_AT_END)
 {
@@ -109,8 +109,8 @@ void ScrollText::hideScrollBar()
 /***********************************************************************
  *                            createLine                               *
  ***********************************************************************/
-ScrollText::TextLine* ScrollText::createLine(Kobold::String fontName,
-      int fontSize, Font::Alignment alignment, Color color)
+ScrollText::TextLine* ScrollText::createLine(const Kobold::String& fontName,
+      int fontSize, const Font::Alignment& alignment, const Color& color)
 {
    TextLine* line = new TextLine(this->defaultFontHeight);
    line->setAlignment(alignment);
@@ -131,8 +131,9 @@ ScrollText::TextLine* ScrollText::createLine(Kobold::String fontName,
 /***********************************************************************
  *                            getSentence                              *
  ***********************************************************************/
-ScrollText::TextSentence* ScrollText::getSentence(Kobold::String fontName, 
-      int fontSize, Font::Alignment alignment, Color color)
+ScrollText::TextSentence* ScrollText::getSentence(
+      const Kobold::String& fontName, int fontSize, 
+      const Font::Alignment& alignment, const Color& color)
 {
    if(lines.getTotal() == 0)
    {
@@ -175,7 +176,7 @@ ScrollText::TextSentence* ScrollText::getSentence(Kobold::String fontName,
 /***********************************************************************
  *                                 setText                             *
  ***********************************************************************/
-void ScrollText::setText(Kobold::String text)
+void ScrollText::setText(const Kobold::String& text)
 {
    clear();
    addText(text);
@@ -184,7 +185,7 @@ void ScrollText::setText(Kobold::String text)
 /***********************************************************************
  *                                 addText                             *
  ***********************************************************************/
-void ScrollText::addText(Kobold::String text)
+void ScrollText::addText(const Kobold::String& text)
 {
    addText(text, defaultFont, defaultFontSize, Font::TEXT_LEFT, defaultColor);
 }
@@ -192,8 +193,8 @@ void ScrollText::addText(Kobold::String text)
 /***********************************************************************
  *                                 addText                             *
  ***********************************************************************/
-void ScrollText::addText(Kobold::String text, Kobold::String font, int size, 
-      Font::Alignment align)
+void ScrollText::addText(const Kobold::String& text, 
+      const Kobold::String& font, int size, const Font::Alignment& align)
 {
    addText(text, font, size, align, defaultColor);
 }
@@ -201,8 +202,9 @@ void ScrollText::addText(Kobold::String text, Kobold::String font, int size,
 /***********************************************************************
  *                                 addText                             *
  ***********************************************************************/
-void ScrollText::addText(Kobold::String text, Kobold::String font, int size, 
-      Font::Alignment align, Color color)
+void ScrollText::addText(const Kobold::String& text, 
+      const Kobold::String& font, int size, 
+      const Font::Alignment& align, const Color& color)
 {
    /* Get sentence and line */
    TextSentence* sentence = getSentence(font, size, align, color);
@@ -216,6 +218,7 @@ void ScrollText::addText(Kobold::String text, Kobold::String font, int size,
    Kobold::String fit;
    Kobold::String wontFit = text;
    Kobold::String last;
+   Kobold::String curText = text;
    bool brokeOnSpace = false;
 
    int baseWidth = getWidth() - 2 - scrollBar->getWidth() - 
@@ -227,8 +230,8 @@ void ScrollText::addText(Kobold::String text, Kobold::String font, int size,
    while(!wontFit.empty())
    {
       last = wontFit;
-      text = wontFit;
-      fitWidth = f->getWhileFits(text, fit, wontFit, availableWidth, 
+      curText = wontFit;
+      fitWidth = f->getWhileFits(curText, fit, wontFit, availableWidth, 
             brokeOnSpace);
 
       if(!fit.empty() && (wontFit.empty() || brokeOnSpace))
@@ -243,7 +246,7 @@ void ScrollText::addText(Kobold::String text, Kobold::String font, int size,
          /* Line was created but nothing fits yet: will never fits! */
          Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL, 
                "WARN: text '%s' will never fit ScrollText area at size '%d'",
-               text.c_str(), size);
+               curText.c_str(), size);
          return;
       }
       else if(!wontFit.empty() && !brokeOnSpace)
@@ -268,7 +271,7 @@ void ScrollText::addText(Kobold::String text, Kobold::String font, int size,
 /***********************************************************************
  *                                 addText                             *
  ***********************************************************************/
-void ScrollText::addText(Kobold::String text, Color color)
+void ScrollText::addText(const Kobold::String& text, const Color& color)
 {
    addText(text, defaultFont, defaultFontSize, Font::TEXT_LEFT, color);
 }
@@ -292,7 +295,7 @@ void ScrollText::addLineBreak()
 /***********************************************************************
  *                                getBody                              *
  ***********************************************************************/
-Farso::Rect ScrollText::getBody()
+const Farso::Rect& ScrollText::getBody()
 {
    return body;
 }
@@ -300,7 +303,7 @@ Farso::Rect ScrollText::getBody()
 /***********************************************************************
  *                               doDraw                                *
  ***********************************************************************/
-void ScrollText::doDraw(Rect pBody)
+void ScrollText::doDraw(const Rect& pBody)
 {
    Skin* skin = Controller::getSkin();
    Farso::Surface* surface = getWidgetRenderer()->getSurface();
@@ -417,8 +420,8 @@ void ScrollText::doAfterChildTreat()
 /***********************************************************************
  *                             TextSentence                            *
  ***********************************************************************/
-ScrollText::TextSentence::TextSentence(Kobold::String fontName, int fontSize, 
-      Color color)
+ScrollText::TextSentence::TextSentence(const Kobold::String& fontName, 
+      int fontSize, const Color& color)
 {
    this->fontName = fontName;
    this->fontSize = fontSize;
@@ -442,8 +445,8 @@ ScrollText::TextSentence::~TextSentence()
 /***********************************************************************
  *                             isCompatible                            *
  ***********************************************************************/
-bool ScrollText::TextSentence::isCompatible(Kobold::String fontName, 
-      int fontSize, Color color)
+bool ScrollText::TextSentence::isCompatible(const Kobold::String& fontName, 
+      int fontSize, const Color& color)
 {
    return (this->fontName == fontName) && (this->fontSize == fontSize) &&
           (this->color == color);
@@ -453,7 +456,7 @@ bool ScrollText::TextSentence::isCompatible(Kobold::String fontName,
 /***********************************************************************
  *                               addText                               *
  ***********************************************************************/
-void ScrollText::TextSentence::addText(Kobold::String text, int width, 
+void ScrollText::TextSentence::addText(const Kobold::String& text, int width, 
       int height)
 {
    this->text += text;
@@ -467,7 +470,7 @@ void ScrollText::TextSentence::addText(Kobold::String text, int width,
 /***********************************************************************
  *                              getWidth                               *
  ***********************************************************************/
-int ScrollText::TextSentence::getWidth()
+const int ScrollText::TextSentence::getWidth() const 
 {
    return width;
 }
@@ -475,7 +478,7 @@ int ScrollText::TextSentence::getWidth()
 /***********************************************************************
  *                               getHeight                             *
  ***********************************************************************/
-int ScrollText::TextSentence::getHeight()
+const int ScrollText::TextSentence::getHeight() const
 {
    return height;
 }
@@ -537,7 +540,7 @@ void ScrollText::TextLine::add(int width, int height)
 /***********************************************************************
  *                              getWidth                               *
  ***********************************************************************/
-int ScrollText::TextLine::getWidth()
+const int ScrollText::TextLine::getWidth() const
 {
    return width;
 }
@@ -545,7 +548,7 @@ int ScrollText::TextLine::getWidth()
 /***********************************************************************
  *                               getHeight                             *
  ***********************************************************************/
-int ScrollText::TextLine::getHeight()
+const int ScrollText::TextLine::getHeight() const
 {
    return height;
 }
@@ -553,7 +556,7 @@ int ScrollText::TextLine::getHeight()
 /***********************************************************************
  *                             setAlignment                            *
  ***********************************************************************/
-void ScrollText::TextLine::setAlignment(Font::Alignment alignment)
+void ScrollText::TextLine::setAlignment(const Font::Alignment& alignment)
 {
    this->alignment = alignment;
 }
@@ -561,7 +564,8 @@ void ScrollText::TextLine::setAlignment(Font::Alignment alignment)
 /***********************************************************************
  *                           isCompatible                              *
  ***********************************************************************/
-bool ScrollText::TextLine::isCompatible(Font::Alignment alignment)
+const bool ScrollText::TextLine::isCompatible(
+      const Font::Alignment& alignment) const
 {
    if(getTotal() == 0)
    {
@@ -575,7 +579,7 @@ bool ScrollText::TextLine::isCompatible(Font::Alignment alignment)
 /***********************************************************************
  *                                render                               *
  ***********************************************************************/
-void ScrollText::TextLine::draw(int x, int y, Rect area, 
+void ScrollText::TextLine::draw(int x, int y, const Rect& area, 
       Farso::Surface* surface)
 {
    TextSentence* sentence = (TextSentence*) getFirst();

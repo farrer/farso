@@ -56,35 +56,35 @@ class FileSelector: public Widget
        * \param nav if will show directories to navigate or not 
        * \param parent pointer to parent. Mandatory. The File Selector will
        *        use full parent's body coordinates. */
-      FileSelector(bool load, Kobold::String dir, bool nav, Widget* parent);
+      FileSelector(bool load, const Kobold::String& dir, bool nav, 
+                   Widget* parent);
 
       /*! Destructor */
       ~FileSelector();
 
-      /*! Get the current selected filename
-       * \param -> complete selected filename path (if one) */
-      Kobold::String getFilename();
+      /*! Get the current selected filename */
+      Kobold::String getFilename() const;
  
       /*! Set the current file and dir to the one defined by filename
        * \param filename -> full filename to set new file and dir. */
-      void setFilename(Kobold::String filename);
+      void setFilename(const Kobold::String& filename);
 
       /*! Set the current filter
        * \param newFilter -> new filter to set */
-      void setFilter(Kobold::String newFilter);
+      void setFilter(const Kobold::String& newFilter);
       
       /* From Widget */
-      Rect getBody();
+      const Rect& getBody();
       void setDirty();
 
       /*! Check if selector if of 'load' type 
        * \return true if load type, false if save */
-      bool isLoadType();
+      const bool isLoadType() const;
 
    protected:
 
       /* From Widget */
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();
@@ -92,7 +92,7 @@ class FileSelector: public Widget
    private:
       /*! Change the current displayed dir
        * \param newDir -> dir to change the display to */
-      void changeCurDir(Kobold::String newDir);
+      void changeCurDir(const Kobold::String& newDir);
 
       /*! Set labels to current visible files */
       void setLabels();
@@ -100,7 +100,7 @@ class FileSelector: public Widget
       /*! Verify if the string pass the current filter
        * \param s -> string to verify
        * \return -> true if passed*/
-      bool passFilter(Kobold::String s);
+      const bool passFilter(const Kobold::String& s) const;
       
       /*! \return number of lines available to display files and dirs */
       int calculateNumLines();

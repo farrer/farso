@@ -45,15 +45,15 @@ class StackTab : public Widget
        * selector button).
        * \param name name of the group that will be displayed at its selector.
        * \return container relative to the group */
-      Container* insertTab(Kobold::String name);
+      Container* insertTab(const Kobold::String& name);
       
-      Rect getBody();
+      const Rect& getBody();
 
       void setDirty();
 
    protected:
 
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();

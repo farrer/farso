@@ -52,7 +52,7 @@ class Cursor
 
       /*! Set the current mouse Cursor to an image
        * \param filename -> name of the image to load */
-      static void set(Kobold::String filename);
+      static void set(const Kobold::String& filename);
 
       /*! Update the Cursor position and state 
        * \note: should be called after SDL_PumEvents or similar. */
@@ -60,7 +60,7 @@ class Cursor
 
       /*! Update current mouse by events. Usually used in conjunction
        * with #update */
-      static void updateByEvent(SDL_Event event);
+      static void updateByEvent(const SDL_Event& event);
 
       /*! \return current cursor X coordinate on screen */
       static int getX();
@@ -91,10 +91,10 @@ class Cursor
        *       the last set to it. (so, to clean the tip, just no more call
        *       to set it).
        * \note if you want immediate clean up, just call setTextualTip(""); */
-      static void setTextualTip(Kobold::String tip);
+      static void setTextualTip(const Kobold::String& tip);
 
       /*! \return current textual tip */
-      static Kobold::String getTextualTip();
+      static const Kobold::String& getTextualTip();
 
       /*! Check if tip expired, if defined. */
       static void checkTipExpiration();
@@ -104,7 +104,7 @@ class Cursor
        * \param size font's size
        * \note This font will be used on next setTextualTip with a
        *       different string than the current one. */
-      static void setTipFont(Kobold::String fontFilename, int size);
+      static void setTipFont(const Kobold::String& fontFilename, int size);
 
       /*! \return current height to render textual tip */
       static int getTipHeight();
@@ -132,7 +132,7 @@ class Cursor
          public:
             /*! Constructor 
              * \param filename filename of the image to load */
-            CursorImage(Kobold::String filename);
+            CursorImage(const Kobold::String& filename);
             /*! Destructor */
             ~CursorImage();
 
@@ -140,7 +140,7 @@ class Cursor
             Surface* getImage();
 
             /*! \return image's filename string */
-            Kobold::String getFilename();
+            const Kobold::String& getFilename() const;
 
          private:
             Surface* image;          /**< The loaded image */
@@ -149,7 +149,7 @@ class Cursor
 
       /*! \return already loaded cursor image or just loaded 
        * if not yet loaded */
-      static CursorImage* getCursorImage(Kobold::String filename);
+      static CursorImage* getCursorImage(const Kobold::String& filename);
 
       static Kobold::List* cursors; /**< Loaded cursors images */
       static Farso::WidgetRenderer* renderer; /**< The renderer used */

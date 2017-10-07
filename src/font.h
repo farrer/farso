@@ -57,7 +57,7 @@ class Font
       /*! Font constructor
        * \param lib freetype2 library used.
        * \param filename font's filename to load. */
-      Font(Kobold::String filename, FT_Library* lib);
+      Font(const Kobold::String& filename, FT_Library* lib);
       /*! Font destructor */
       ~Font();
 
@@ -66,13 +66,13 @@ class Font
       void setSize(int pt);
  
       /*! \return current text size (in points) used */
-      int getSize();
+      const int getSize() const;
 
       /*! Set current text alignment to use */
-      void setAlignment(Alignment align);
+      void setAlignment(const Alignment& align);
 
       /*! \return current alignment in use */
-      Alignment getAlignment();
+      const Alignment& getAlignment() const;
 
       /*! Write a textual UTF8* string on the surface, starting at x,y 
        * position, limiting it to the area defined by the rectangle.
@@ -88,24 +88,25 @@ class Font
        * \param y Y coordinate to start the write.
        * \param area rectangle area to fit the characters to.
        * \return number of characters written with success. */
-      int write(Surface* surface, int x, int y, Rect area, Kobold::String text);
-      int write(Surface* surface, Rect area, Kobold::String text, 
+      int write(Surface* surface, int x, int y, const Rect& area, 
+            const Kobold::String& text);
+      int write(Surface* surface, const Rect& area, const Kobold::String& text, 
             int outline = 0);
       
-      int write(Surface* surface, Rect area, Kobold::String text, 
-                Color outlineColor, int outline);
+      int write(Surface* surface, const Rect& area, const Kobold::String& text, 
+                const Color& outlineColor, int outline);
 
       /*! Write, trying to break only on spaces (avoiding breaking inner a 
        * word, when possible. */
-      int writeBreakingOnSpaces(Surface* surface, Rect area, 
-            Kobold::String text, Color outlineColor, int outline);
+      int writeBreakingOnSpaces(Surface* surface, const Rect& area, 
+            const Kobold::String& text, const Color& outlineColor, int outline);
 
       /*! Get the width, in pixels, to write the text with current font
        * at its current size.
        * \param text to get width to write.
        * \param outline if will use an outine border, its width.
        * \return width in pixels. */
-      int getWidth(Kobold::String text, int outline=0);
+      int getWidth(const Kobold::String& text, int outline=0);
 
       /*! Get part (or the whole) string that fits an width, breaking
        * the string, if possible, on last space (ie: on words).
@@ -117,7 +118,7 @@ class Font
        *        a space to fit. (false means either not broke, if the whole
        *        string fits or broke between valid characters).
        * \return width of 'fit' */
-      int getWhileFits(Kobold::String text, Kobold::String& fit,
+      int getWhileFits(const Kobold::String& text, Kobold::String& fit,
                        Kobold::String& wontFit, int width, bool& brokeOnSpace);
 
       /*! Get the needed height, in pixels, to write the text with current
@@ -126,11 +127,11 @@ class Font
        * \param text text to get needed height
        * \param breakOnSpace if try to break font on space.
        * \return needed height in pixels. */
-      int getHeight(int areaWidth, Kobold::String text, 
+      int getHeight(int areaWidth, const Kobold::String& text, 
             bool breakOnSpace);
       
       /*! Get default height for a line at current font size */
-      int getDefaultHeight();
+      const int getDefaultHeight() const;
 
    private:
 
@@ -147,11 +148,11 @@ class Font
             void load(FT_Bitmap slotBitmap, Uint16 c, int outline,
                   int left, int top, int advanceX);
 
-            Uint16 getChar() { return character; };
-            int getAdvanceX() { return advanceX; };
-            int getBitmapTop() { return bitmapTop; };
-            int getBitmapLeft() { return bitmapLeft; };
-            int getOutline() { return outline; };
+            const Uint16 getChar() const { return character; };
+            const int getAdvanceX() const { return advanceX; };
+            const int getBitmapTop() const { return bitmapTop; };
+            const int getBitmapLeft() const { return bitmapLeft; };
+            const int getOutline() const { return outline; };
             FT_Bitmap* getBitmap() { return &bitmap; };
 
          private:
@@ -176,8 +177,8 @@ class Font
             ~FaceInfo();
             /*! \return pointer to the respective face */
             FT_Face* getFace() { return face; };
-            int getIncY() { return incY; };
-            int getFontHeight() { return fontHeight; };
+            const int getIncY() const { return incY; };
+            const int getFontHeight() const { return fontHeight; };
             /*! Get a glyph bitmap, using cache */
             CachedGlyph* getGlyph(Uint16 c, int outline, 
                   FT_Library* freeTypeLib);
@@ -206,12 +207,12 @@ class Font
        * \note this function is based on SDL_TTF code. */
       Uint16 getchUTF8(const Uint8** src, size_t *srclen);
 
-      int write(Surface* surface, int x, int y, Rect area, const Uint8* utf8,
-                int outline);
+      int write(Surface* surface, int x, int y, const Rect& area, 
+            const Uint8* utf8, int outline);
 
       /*! Write the text centered or at right.  */
-      int centeredOrRightWrite(Surface* surface, int x, int y, Rect area, 
-            const Uint8* utf8, int outline);
+      int centeredOrRightWrite(Surface* surface, int x, int y, 
+            const Rect& area, const Uint8* utf8, int outline);
 
       /*! Flush glyphs of a line to the surface.
        * \note: must check if fits before call. */
@@ -219,7 +220,7 @@ class Font
             int lastIndex, int areaWidth, int textWidth, int outline);
 
       /*! Check if the glyph will fits inside the area at current position */
-      bool willGlyphFits(int x, int y, Rect area, CachedGlyph* glyph);
+      bool willGlyphFits(int x, int y, const Rect& area, CachedGlyph* glyph);
 
       std::map<int, FaceInfo*> faces; /**< Map of font faces for each size */
       Kobold::String filename; /**< Filename of the font used */
@@ -245,18 +246,18 @@ class FontManager
       /*! Retrieve or create a font defined by filename file.
        * \param filename name of the file with the font definition.
        * \return Font pointer relative to this filename. */
-      static Font* getFont(Kobold::String filename);
+      static Font* getFont(const Kobold::String& filename);
 
       /*! Set the default font to use.
        * \param filename filename of the font to be default's one.
        * \return pointer to the font (or NULL if something wrong).
        * \note: It's mandatory to call this function when not using a skin. */
-      static Font* setDefaultFont(Kobold::String filename);
+      static Font* setDefaultFont(const Kobold::String& filename);
 
       /*! \return pointer to the default font to use. */
       static Font* getDefaultFont();
       /*! \return filename of the default font to use. */
-      static Kobold::String getDefaultFontFilename();
+      static const Kobold::String& getDefaultFontFilename();
 
       /*! Unload all current loaded fonts. Usefull when the system is
        * low in memory to de-alloc some no more used bytes.

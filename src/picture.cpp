@@ -108,7 +108,7 @@ void Picture::setImage(const Kobold::String& filename)
 /************************************************************************
  *                                doDraw                                *
  ************************************************************************/
-void Picture::doDraw(Rect pBody)
+void Picture::doDraw(const Rect& pBody)
 {
    Draw* draw = Farso::Controller::getDraw();
    image->lock();
@@ -139,7 +139,7 @@ void Picture::doAfterChildTreat()
 /************************************************************************
  *                                getBody                               *
  ************************************************************************/
-Farso::Rect Picture::getBody()
+const Farso::Rect& Picture::getBody()
 {
    return body;
 }

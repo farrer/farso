@@ -40,35 +40,35 @@ class Label: public Widget
        * \param height label's height
        * \param caption text caption to be at label.
        * \param parent pointer to parent, if any. */
-      Label(int x, int y, int width, int height, Kobold::String caption, 
+      Label(int x, int y, int width, int height, const Kobold::String& caption, 
             Widget* parent);
       /*! Destructor */
       ~Label();
 
       /*! Override skin font for current label.
        * \note This is only effective when actually using a skin. */
-      void setSkinType(Skin::SkinElementType type); 
+      void setSkinType(const Skin::SkinElementType& type); 
 
       /*! Set a font to use, instead of the default's one.
        * \param fontName font's filename */
-      void setFont(Kobold::String fontName);
+      void setFont(const Kobold::String& fontName);
       /*! Set size of the font to use, instead of default.
        * \param size font's size. */
       void setFontSize(int size);
       /*! Set color of the text, instead of default.
        * \param color color to use for text. */
-      void setFontColor(Farso::Color color);
+      void setFontColor(const Farso::Color& color);
       /*! Set font alignment of the text, instead of the default TEXT_LEFT */
-      void setFontAlignment(Farso::Font::Alignment align);
+      void setFontAlignment(const Farso::Font::Alignment& align);
       /*! Set font outline value and color 
        * \param outline outline width
        * \param color outline color. */
-      void setFontOutline(int outline, Farso::Color color);
+      void setFontOutline(int outline, const Farso::Color& color);
 
       /*! \return pointer to the used font of this element */
       Font* getFont();
       /*! \return font size to use */
-      int getFontSize();
+      const int getFontSize() const;
 
       /*! Enable the use of borders */
       void enableBorder();
@@ -82,12 +82,12 @@ class Label: public Widget
       void enableBreakLineOnSpace();
 
       /* From widget */
-      Farso::Rect getBody();
+      const Farso::Rect& getBody();
       void setDirty();
 
    protected:
       
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();

@@ -52,7 +52,7 @@ void Color::set(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 /***************************************************************
  *                             set                             *
  ***************************************************************/
-void Color::set(Kobold::String value)
+void Color::set(const Kobold::String& value)
 {
    int r,g,b,a;
    sscanf(value.c_str(), "%d,%d,%d,%d", &r, &g, &b, &a);
@@ -62,7 +62,7 @@ void Color::set(Kobold::String value)
 /***************************************************************
  *                             ==                              *
  ***************************************************************/
-bool Color::operator==(Color& color)
+const bool Color::operator==(const Color& color)
 {
    return red == color.red && blue == color.blue && green == color.green &&
           alpha == color.alpha;

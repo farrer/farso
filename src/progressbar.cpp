@@ -93,7 +93,7 @@ void ProgressBar::setFillElement(int fillElement)
 /***********************************************************************
  *                               getBody                               *
  ***********************************************************************/
-Farso::Rect ProgressBar::getBody()
+const Farso::Rect& ProgressBar::getBody()
 {
    return body;
 }
@@ -101,7 +101,7 @@ Farso::Rect ProgressBar::getBody()
 /***********************************************************************
  *                                doDraw                               *
  ***********************************************************************/
-void ProgressBar::doDraw(Rect pBody)
+void ProgressBar::doDraw(const Rect& pBody)
 {
    Farso::Draw* draw = Controller::getDraw();
    Farso::Skin* skin = Controller::getSkin();

@@ -30,8 +30,8 @@ using namespace Farso;
  *                                GridElement                          *
  ***********************************************************************/
 Grid::GridElement::GridElement(int x, int y, int width, int height, 
-                               Kobold::String mouseHint, int index)
-                  :Kobold::ListElement()
+      const Kobold::String& mouseHint, int index)
+   :Kobold::ListElement()
 {
    this->mouseHint = mouseHint;
    this->index = index;
@@ -82,7 +82,7 @@ void Grid::GridElement::disable()
 /***********************************************************************
  *                                  Grid                               *
  ***********************************************************************/
-Grid::Grid(GridType gridType, Widget* parent)
+Grid::Grid(const GridType& gridType, Widget* parent)
      :Widget(Widget::WIDGET_TYPE_GRID, parent),
       elements(Kobold::LIST_TYPE_ADD_AT_END)
 {
@@ -150,7 +150,7 @@ void Grid::disableBorder()
  *                               addElement                            *
  ***********************************************************************/
 Grid::GridElement* Grid::addElement(int x, int y, int width, int height, 
-      Kobold::String mouseHint)
+      const Kobold::String& mouseHint)
 {
    GridElement* el = new GridElement(x, y, width, height, mouseHint, curIndex);
    elements.insert(el);
@@ -163,7 +163,7 @@ Grid::GridElement* Grid::addElement(int x, int y, int width, int height,
 /***********************************************************************
  *                                 getBody                             *
  ***********************************************************************/
-Farso::Rect Grid::getBody()
+const Farso::Rect& Grid::getBody()
 {
    return body;
 }
@@ -195,7 +195,7 @@ void Grid::setDirty()
 /***********************************************************************
  *                                  doDraw                             *
  ***********************************************************************/
-void Grid::doDraw(Rect pBody)
+void Grid::doDraw(const Rect& pBody)
 {
    Rect curParentBody = getParent()->getBody();
 

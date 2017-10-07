@@ -218,7 +218,7 @@ void ScrollBar::setCurrent(int current)
 /************************************************************************
  *                               getBody                                *
  ************************************************************************/
-Farso::Rect ScrollBar::getBody()
+const Farso::Rect& ScrollBar::getBody()
 {
    return body;
 }
@@ -226,7 +226,7 @@ Farso::Rect ScrollBar::getBody()
 /************************************************************************
  *                              doDraw                                  *
  ************************************************************************/
-void ScrollBar::doDraw(Rect pBody)
+void ScrollBar::doDraw(const Rect& pBody)
 {
    if(getParent() != NULL)
    {

@@ -178,7 +178,7 @@ float Spin::getFloatValue()
 /***********************************************************************
  *                                getBody                              *
  ***********************************************************************/
-Farso::Rect Spin::getBody()
+const Farso::Rect& Spin::getBody()
 {
    return body;
 }
@@ -216,7 +216,7 @@ void Spin::setDirty()
 /***********************************************************************
  *                                 doDraw                              *
  ***********************************************************************/
-void Spin::doDraw(Rect pBody)
+void Spin::doDraw(const Rect& pBody)
 {
    this->body.set(getX(), getY(), getX() + getWidth() - 1, getY() +
          getHeight() - 1);

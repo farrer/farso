@@ -26,8 +26,8 @@ using namespace Farso;
 /******************************************************************
  *                           constructor                          *
  ******************************************************************/
-Button::Button(int x, int y, int width, int height, Kobold::String caption, 
-      Widget* parent)
+Button::Button(int x, int y, int width, int height, 
+      const Kobold::String& caption, Widget* parent)
       :Widget(Widget::WIDGET_TYPE_BUTTON, x, y, width, height, parent)
 {
    this->menu = NULL;
@@ -102,7 +102,7 @@ void Button::setSkinTypes(Skin::SkinElementType enabledType,
 /******************************************************************
  *                             setFont                            *
  ******************************************************************/
-void Button::setFont(Kobold::String fontName, int fontSize)
+void Button::setFont(const Kobold::String& fontName, int fontSize)
 {
    this->fontName = fontName;
    this->fontSize = fontSize;
@@ -235,7 +235,7 @@ void Button::doAfterChildTreat()
 /******************************************************************
  *                              getBody                           *
  ******************************************************************/
-Farso::Rect Button::getBody()
+const Farso::Rect& Button::getBody()
 {
    return body;
 }
@@ -243,7 +243,7 @@ Farso::Rect Button::getBody()
 /******************************************************************
  *                              doDraw                            *
  ******************************************************************/
-void Button::doDraw(Rect pBody)
+void Button::doDraw(const Rect& pBody)
 {
    Farso::Skin* skin = Farso::Controller::getSkin();
    Farso::Surface* surface = getWidgetRenderer()->getSurface();

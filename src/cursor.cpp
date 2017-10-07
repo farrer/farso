@@ -117,7 +117,7 @@ void Cursor::show()
 /************************************************************************
  *                                 set                                  *
  ************************************************************************/
-void Cursor::set(Kobold::String filename)
+void Cursor::set(const Kobold::String& filename)
 {
    current = getCursorImage(filename);
    Surface* imageSurface = current->getImage();
@@ -160,7 +160,7 @@ void Cursor::update()
 /************************************************************************
  *                           updateByEvent                              *
  ************************************************************************/
-void Cursor::updateByEvent(SDL_Event event)
+void Cursor::updateByEvent(const SDL_Event& event)
 {
    Kobold::Mouse::updateByEvent(event);
 }
@@ -263,7 +263,7 @@ void Cursor::unloadUnusedCursors()
 /************************************************************************
  *                            setTextualTip                             *
  ************************************************************************/
-void Cursor::setTextualTip(Kobold::String tip)
+void Cursor::setTextualTip(const Kobold::String& tip)
 {
    tipTimer.reset();
 
@@ -381,7 +381,7 @@ void Cursor::setTextualTip(Kobold::String tip)
 /************************************************************************
  *                            setTextualTip                             *
  ************************************************************************/
-Kobold::String Cursor::getTextualTip()
+const Kobold::String& Cursor::getTextualTip()
 {
    return textualTip;
 }
@@ -389,7 +389,7 @@ Kobold::String Cursor::getTextualTip()
 /************************************************************************
  *                             setTipFont                               *
  ************************************************************************/
-void Cursor::setTipFont(Kobold::String fontFilename, int size)
+void Cursor::setTipFont(const Kobold::String& fontFilename, int size)
 {
    definedTipFont = true;
    tipFontSize = size;
@@ -444,7 +444,7 @@ Farso::WidgetRenderer* Cursor::getTipRenderer()
 /************************************************************************
  *                            getCursorImage                            *
  ************************************************************************/
-Cursor::CursorImage* Cursor::getCursorImage(Kobold::String filename)
+Cursor::CursorImage* Cursor::getCursorImage(const Kobold::String& filename)
 {
    CursorImage* cur = (CursorImage*) cursors->getFirst();
    for(int i = 0; i < cursors->getTotal(); i++)
@@ -482,7 +482,7 @@ Cursor::CursorImage* Cursor::current = NULL;
 /************************************************************************
  *                             CursorImage                              *
  ************************************************************************/
-Cursor::CursorImage::CursorImage(Kobold::String filename)
+Cursor::CursorImage::CursorImage(const Kobold::String& filename)
 {
    this->image = Controller::loadImageToSurface(filename);
    this->filename = filename;
@@ -510,7 +510,7 @@ Surface* Cursor::CursorImage::getImage()
 /************************************************************************
  *                             getFilename                              *
  ************************************************************************/
-Kobold::String Cursor::CursorImage::getFilename()
+const Kobold::String& Cursor::CursorImage::getFilename() const
 {
    return filename;
 }

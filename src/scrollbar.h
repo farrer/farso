@@ -65,12 +65,12 @@ class ScrollBar : public Widget
        * \param current the index [0, total - 1] */
       void setCurrent(int current);
       
-      Rect getBody();
+      const Rect& getBody();
       void setSize(int width, int height);
 
    protected:
 
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
                    int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();

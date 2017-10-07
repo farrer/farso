@@ -29,8 +29,9 @@ using namespace Farso;
 /***********************************************************************
  *                                MenuItem                             *
  ***********************************************************************/
-Menu::MenuItem::MenuItem(Kobold::String id, Kobold::String caption, 
-      Kobold::String rightText, Kobold::String icon, Widget* owner)
+Menu::MenuItem::MenuItem(const Kobold::String& id, 
+      const Kobold::String& caption, const Kobold::String& rightText, 
+      const Kobold::String& icon, Widget* owner)
 {
    this->id = id;
    this->enabled = true;
@@ -83,7 +84,7 @@ Menu::MenuItem::MenuItem()
 /***********************************************************************
  *                                setText                              *
  ***********************************************************************/
-void Menu::MenuItem::setCaption(Kobold::String str)
+void Menu::MenuItem::setCaption(const Kobold::String& str)
 {
    if(this->label)
    {
@@ -109,8 +110,8 @@ Menu::MenuItem::~MenuItem()
 /***********************************************************************
  *                       calculateNeededSize                           *
  ***********************************************************************/
-void Menu::MenuItem::calculateNeededSize(Kobold::String str,
-      Kobold::String rightText, Farso::Picture* pic)
+void Menu::MenuItem::calculateNeededSize(const Kobold::String& str,
+      const Kobold::String& rightText, Farso::Picture* pic)
 {
    Skin* skin = Controller::getSkin();
    Font* font;
@@ -356,8 +357,9 @@ void Menu::beginCreate()
 /***********************************************************************
  *                           insertItem                                *
  ***********************************************************************/
-Menu::MenuItem* Menu::insertItem(Kobold::String text, Kobold::String rightText,
-      Kobold::String icon, Kobold::String id)
+Menu::MenuItem* Menu::insertItem(const Kobold::String& text, 
+      const Kobold::String& rightText, const Kobold::String& icon, 
+      const Kobold::String& id)
 {
    if(!creating)
    {
@@ -586,7 +588,7 @@ void Menu::setSize(int width, int height)
 /***********************************************************************
  *                             getBody                                 *
  ***********************************************************************/
-Farso::Rect Menu::getBody()
+const Farso::Rect& Menu::getBody()
 {
    return body;
 }
@@ -594,7 +596,7 @@ Farso::Rect Menu::getBody()
 /***********************************************************************
  *                             doDraw                                  *
  ***********************************************************************/
-void Menu::doDraw(Rect pBody)
+void Menu::doDraw(const Rect& pBody)
 {
    /* Note: We could ignore pBody, as Menu will never have a parent. */
    Skin* skin = Controller::getSkin();

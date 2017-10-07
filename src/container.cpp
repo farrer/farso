@@ -29,9 +29,8 @@ using namespace Farso;
 /***********************************************************************
  *                             Constructor                             *
  ***********************************************************************/
-Container::Container(ContainerType type, Widget* parent)
-          :Widget(WIDGET_TYPE_CONTAINER, parent),
-           distance(0, 0, 0, 0)
+Container::Container(const ContainerType& type, Widget* parent)
+   :Widget(WIDGET_TYPE_CONTAINER, parent), distance(0, 0, 0, 0)
 {
    assert(parent != NULL);
    contType = type;
@@ -44,8 +43,9 @@ Container::Container(ContainerType type, Widget* parent)
 /***********************************************************************
  *                             Constructor                             *
  ***********************************************************************/
-Container::Container(ContainerType type, Rect rect, Widget* parent)
-          :Widget(WIDGET_TYPE_CONTAINER, parent),
+Container::Container(const ContainerType& type, const Rect& rect, 
+      Widget* parent)
+   :Widget(WIDGET_TYPE_CONTAINER, parent),
            distance(rect)
 {
    assert(parent != NULL);
@@ -64,9 +64,9 @@ Container::Container(ContainerType type, Rect rect, Widget* parent)
 /***********************************************************************
  *                             Constructor                             *
  ***********************************************************************/
-Container::Container(ContainerType type, int x, int y, 
+Container::Container(const ContainerType& type, int x, int y, 
       int width, int height, Widget* parent)
-          :Widget(WIDGET_TYPE_CONTAINER, x, y, width, height, parent)
+   :Widget(WIDGET_TYPE_CONTAINER, x, y, width, height, parent)
 {
    contType = type;
    filled = false;
@@ -137,7 +137,7 @@ int Container::getChildY(int y, int height)
 /***********************************************************************
  *                               getBody                               *
  ***********************************************************************/
-Farso::Rect Container::getBody()
+const Farso::Rect& Container::getBody()
 {
    return body;
 }
@@ -145,7 +145,7 @@ Farso::Rect Container::getBody()
 /***********************************************************************
  *                          getContainerType                           *
  ***********************************************************************/
-Container::ContainerType Container::getContainerType()
+const Container::ContainerType& Container::getContainerType() const
 {
    return contType;
 }
@@ -153,7 +153,7 @@ Container::ContainerType Container::getContainerType()
 /***********************************************************************
  *                               doDraw                                *
  ***********************************************************************/
-void Container::doDraw(Rect pBody)
+void Container::doDraw(const Rect& pBody)
 {
    if((dynamicSize) && (getParent() != NULL))
    {

@@ -38,8 +38,8 @@ class CheckBox : public Widget
        * \param label string with checkbox's label
        * \param checked if start checked or not
        * \param parent pointer to parent, if any */
-      CheckBox(int x, int y, int width, Kobold::String label, bool checked, 
-            Widget* parent);
+      CheckBox(int x, int y, int width, const Kobold::String& label, 
+            bool checked, Widget* parent);
       /*! Destructor */
       ~CheckBox();
 
@@ -53,7 +53,7 @@ class CheckBox : public Widget
       bool isChecked();
       
       /*! \return checkbox body (in this case, its full area) */
-      Rect getBody();
+      const Rect& getBody();
 
       /*! Enable the checkbox */
       void enable();
@@ -62,7 +62,7 @@ class CheckBox : public Widget
 
    protected:
       /*! Draw the checkbox on parent's body */
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       /*! Check for clicks on itself */
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed,
             int mouseX, int mouseY, int mrX, int mrY);

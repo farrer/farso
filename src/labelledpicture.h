@@ -49,23 +49,23 @@ class LabelledPicture : public Widget
       ~LabelledPicture();
 
       /*! \return current body */
-      Farso::Rect getBody();
+      const Farso::Rect& getBody();
 
       /*! Reset LabelledPicture caption.
        * \param text new caption to the label of LabelledPicture */
-      void setCaption(Kobold::String text);
+      void setCaption(const Kobold::String& text);
 
       /*! Change the default font size.
        * \param size size to use for the label's font. */
       void setFontSize(int size);
       /*! Set a font to use, instead of the default's one.
        * \param fontName font's filename */
-      void setFont(Kobold::String fontName);
+      void setFont(const Kobold::String& fontName);
       /*! Set color of the text, instead of default.
        * \param color color to use for text. */
-      void setFontColor(Farso::Color color);
+      void setFontColor(const Farso::Color& color);
       /*! Set font alignment of the text, instead of the default TEXT_LEFT */
-      void setFontAlignment(Farso::Font::Alignment align);
+      void setFontAlignment(const Farso::Font::Alignment& align);
 
       /*! Set as dirty */
       void setDirty();
@@ -79,7 +79,7 @@ class LabelledPicture : public Widget
 
    protected:
       
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();

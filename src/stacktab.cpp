@@ -50,7 +50,7 @@ StackTab::~StackTab()
 /************************************************************************
  *                           insertTab                                  *
  ************************************************************************/
-Container* StackTab::insertTab(Kobold::String name)
+Container* StackTab::insertTab(const Kobold::String& name)
 {
    /* Create the tab, its container and add it to the list */
    Tab* tab = new Tab();
@@ -77,7 +77,7 @@ Container* StackTab::insertTab(Kobold::String name)
 /************************************************************************
  *                             getBody                                  *
  ************************************************************************/
-Farso::Rect StackTab::getBody()
+const Farso::Rect& StackTab::getBody()
 {
    return body;
 }
@@ -95,7 +95,7 @@ void StackTab::setDirty()
 /************************************************************************
  *                                doDraw                                *
  ************************************************************************/
-void StackTab::doDraw(Rect pBody)
+void StackTab::doDraw(const Rect& pBody)
 {
    Skin* skin = Controller::getSkin();
    Draw* draw = Controller::getDraw();

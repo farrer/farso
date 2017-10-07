@@ -49,7 +49,7 @@ class Grid : public Widget
          public:
             /*! Constructor */
             GridElement(int x, int y, int width, int height, 
-                  Kobold::String mouseHint, int index);
+                  const Kobold::String& mouseHint, int index);
             /*! Destructor */
             ~GridElement();
 
@@ -60,10 +60,10 @@ class Grid : public Widget
             bool isInner(int x, int y);
 
             /*! \return element's relative area */
-            const Rect getArea() { return area; };
+            const Rect& getArea() { return area; };
 
             /*! \return text to be displayed on mouse over */
-            const Kobold::String getMouseHint() { return mouseHint; };
+            const Kobold::String& getMouseHint() { return mouseHint; };
 
             /*! \return element's index (defined as an incremented integer 
              * from initial 0, for each added element). */
@@ -88,7 +88,7 @@ class Grid : public Widget
        * \param gridType current type
        * \param parent grid's parent. Mandatory, as the grid will use 
        *               full parent's body. */ 
-      Grid(GridType gridType, Widget* parent);
+      Grid(const GridType& gridType, Widget* parent);
       /*! Destructor */
       ~Grid();
 
@@ -104,7 +104,7 @@ class Grid : public Widget
        * \param mouseHint text to be displayed on mouse over element
        * \return pointert to the created grid element */  
       GridElement* addElement(int x, int y, int width, int height,
-            Kobold::String mouseHint="");
+            const Kobold::String& mouseHint="");
 
       /*! \return pointer to GridElement actally active (under cursor) */
       GridElement* getCurrent();
@@ -120,13 +120,13 @@ class Grid : public Widget
       void disableBorder();
 
       /* Functions from Widget */
-      Rect getBody();
+      const Rect& getBody();
       void setDirty();
 
    protected:
       
       /* Functions from Widget */
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();

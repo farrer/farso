@@ -48,11 +48,11 @@ class ProgressBar : public Widget
        * \param fillElement SkinElement integer identifier to be used. */
       void setFillElement(int fillElement);
 
-      Rect getBody();
+      const Rect& getBody();
 
    protected:
 
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed,
                   int mouseX, int mouseY, int mrX, int mrY);
       void doAfterChildTreat();

@@ -82,14 +82,14 @@ namespace Farso
          float getFloatValue();
 
          /*! \return current body */
-         Rect getBody();
+         const Rect& getBody();
          void enable();
          void disable();
          void setDirty();
 
       protected:
 
-         void doDraw(Rect pBody);
+         void doDraw(const Rect& pBody);
          bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
                int mouseX, int mouseY, int mrX, int mrY);
          void doAfterChildTreat();

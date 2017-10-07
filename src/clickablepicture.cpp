@@ -52,7 +52,7 @@ ClickablePicture::~ClickablePicture()
 /************************************************************************
  *                               getBody                                *
  ************************************************************************/
-Farso::Rect ClickablePicture::getBody()
+const Farso::Rect& ClickablePicture::getBody()
 {
    return body;
 }
@@ -94,7 +94,7 @@ void ClickablePicture::setDirty()
 /************************************************************************
  *                               doDraw                                 *
  ************************************************************************/
-void ClickablePicture::doDraw(Rect pBody)
+void ClickablePicture::doDraw(const Farso::Rect& pBody)
 {
    if(pressStarted && useBorder)
    {

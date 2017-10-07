@@ -92,7 +92,7 @@ class Widget : public Kobold::ListElement, public Kobold::List
        *       reference to them. Usually used when inserting widgets with
        *       a JSON file instead of the programatic method.
        * \param id string which defines the widget ID. */
-      void setId(const Kobold::String id);
+      void setId(const Kobold::String& id);
 
       /*! \return Widget's id. Could be undefined (empty) */
       const Kobold::String& getId() const { return id; };
@@ -127,7 +127,7 @@ class Widget : public Kobold::ListElement, public Kobold::List
       const Kobold::String& getCaption() const { return caption; };
 
       /*! Define widget's caption */
-      virtual void setCaption(const Kobold::String text);
+      virtual void setCaption(const Kobold::String& text);
 
       /*! Gets the X coordinate
        * \return x coordinate */
@@ -201,7 +201,7 @@ class Widget : public Kobold::ListElement, public Kobold::List
       void setDirtyWithParent();
 
       /*! Set Text to display when mouse is over the widget */
-      void setMouseHint(const Kobold::String txt);
+      void setMouseHint(const Kobold::String& txt);
       /*! Get current text to disaply when mouse is over */
       const Kobold::String& getMouseHint() const { return mouseHint; };
    
@@ -237,7 +237,7 @@ class Widget : public Kobold::ListElement, public Kobold::List
 
       /*! \return rectangle defining the widget's body. All its children
        * have their coordinates relative to this body */
-      virtual Rect getBody() = 0;
+      virtual const Rect& getBody() = 0;
 
       /*! Override the widget draw with an specific skin element.
        * \note only useful when using a skin
@@ -257,7 +257,7 @@ class Widget : public Kobold::ListElement, public Kobold::List
 
       /*! Especific widget implementation of draw function.
        * \param pBody rectangle defining parent's body, if one is found. */
-      virtual void doDraw(Rect pBody)=0;
+      virtual void doDraw(const Rect& pBody)=0;
 
       /*! Treat mouse (or finger) action on the widget.
        * \param leftButtonPressed state of the left mouse button (or similar,

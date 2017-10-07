@@ -39,7 +39,7 @@ class Window : public Widget
        * \param width desired window width
        * \param height desired window height
        * \param title -> window title. */ 
-      Window(int width, int height, Kobold::String title);
+      Window(int width, int height, const Kobold::String& title);
 
       /*! Destructor */
       ~Window();
@@ -86,12 +86,12 @@ class Window : public Widget
       /*! Unset the external pointer. */
       void clearExternPointer();
       
-      Rect getBody();
+      const Rect& getBody();
 
    protected:
 
       /*! Draw the window to target renderer */
-      void doDraw(Rect pBody);
+      void doDraw(const Rect& pBody);
       /*! Treat window events. */
       bool doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY);

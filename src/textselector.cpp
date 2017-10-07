@@ -28,7 +28,7 @@ using namespace Farso;
  *                             Constructor                             *
  ***********************************************************************/
 TextSelector::TextOption::TextOption(int x, int y, int width, int height,
-      Kobold::String caption, int index, Widget* parent)
+      const Kobold::String& caption, int index, Widget* parent)
 {
    this->label = new Label(x, y, width, height, caption, parent);
    this->label->setSkinType(Skin::SKIN_TYPE_TEXT_OPTION);
@@ -71,7 +71,7 @@ TextSelector::~TextSelector()
 /***********************************************************************
  *                              addOption                              *
  ***********************************************************************/
-void TextSelector::addOption(Kobold::String text, int index)
+void TextSelector::addOption(const Kobold::String& text, int index)
 {
    Kobold::String prefix = Kobold::StringUtil::toString(
          options.getTotal() + 1) + "- ";
@@ -158,7 +158,7 @@ void TextSelector::forceSelection(int option)
 /***********************************************************************
  *                               doDraw                                *
  ***********************************************************************/
-void TextSelector::doDraw(Rect pBody)
+void TextSelector::doDraw(const Rect& pBody)
 {
    body.set(0, 0, getParent()->getBody().getWidth() - 1, 
          getParent()->getBody().getHeight() - 1);
@@ -303,7 +303,7 @@ void TextSelector::setSelectedStyle(Label* label)
 /***********************************************************************
  *                                getBody                              *
  ***********************************************************************/
-Farso::Rect TextSelector::getBody()
+const Farso::Rect& TextSelector::getBody()
 {
    return body;
 }

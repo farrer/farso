@@ -463,7 +463,7 @@ bool Controller::addWidget(Widget* widget)
 
    mutex.lock();
    bool res = widgets->insert(widget);
-   if(widget->getWidgetRenderer() != NULL)
+   if((widget->getWidgetRenderer() != NULL) && (widget->getParent() == NULL))
    {
       bringFront(widget);
    }

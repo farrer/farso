@@ -158,6 +158,16 @@ void OgreWidgetRenderer::createSurface()
    container->setMaterialName(name);
 #endif
 
+   /* Note:  the Overlay::add2d will reassign all the internal zorder (which
+    * isn't what we expected). A workaround to not let the mouse behind is
+    * to force cursor Z order again after this call.*/
+   ogreJunction->getOverlay()->setZOrder(0);
+   if(Cursor::getRenderer())
+   {
+      Cursor::getRenderer()->setRenderQueueSubGroup(650);
+   }
+
+
 #else
    Ogre::SceneManager* sceneManager = ogreJunction->getSceneManager();
 

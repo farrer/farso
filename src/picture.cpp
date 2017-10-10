@@ -110,14 +110,17 @@ void Picture::setImage(const Kobold::String& filename)
  ************************************************************************/
 void Picture::doDraw(const Rect& pBody)
 {
-   Draw* draw = Farso::Controller::getDraw();
-   image->lock();
-   draw->doStampFill(getWidgetRenderer()->getSurface(), 
-         pBody.getX1() + getX(), pBody.getY1() + getY(), 
-         pBody.getX1() + getX() + getWidth() - 1, 
-         pBody.getY1() + getY() + getHeight() - 1,
-         image, 0, 0, image->getWidth() - 1, image->getHeight() -1);
-   image->unlock();
+   if(image != NULL)
+   {
+      Draw* draw = Farso::Controller::getDraw();
+      image->lock();
+      draw->doStampFill(getWidgetRenderer()->getSurface(), 
+            pBody.getX1() + getX(), pBody.getY1() + getY(), 
+            pBody.getX1() + getX() + getWidth() - 1, 
+            pBody.getY1() + getY() + getHeight() - 1,
+            image, 0, 0, image->getWidth() - 1, image->getHeight() -1);
+      image->unlock();
+   }
 }
 
 /************************************************************************

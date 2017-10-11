@@ -84,6 +84,7 @@ void TextSelector::addOption(const Kobold::String& text, int index)
     * on the fly). */
    options.insert(new TextOption(0, 0, getWidth(), getHeight(), 
             prefix + text, index, this));
+   setDirty();
 }
 
 /***********************************************************************

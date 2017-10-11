@@ -49,9 +49,13 @@ namespace Farso
           * \param listener pointer to the event listener to use for the loaded
           *        widgets defined with json "listener=true", or NULL for no 
           *        listener.
+          * \param openWindows if open all windows and set their positions.
+          *        If you plan to reset the position to one not defined by the
+          *        JSON, you should pass false here, and call to setPosition
+          *        and open the window latter.
           * \return true if all widgets could be loaded */
          bool loadFromJson(const Kobold::String& jsonStr, 
-               WidgetEventListener* listener);
+               WidgetEventListener* listener, bool openWindows);
 
       protected:
 
@@ -65,7 +69,7 @@ namespace Farso
           * \return pointer to the widget created or NULL, if none. */
          virtual Widget* parseExtendedWidget(const Kobold::String& type, 
                const rapidjson::Value& value, Widget* parent, 
-               WidgetEventListener* listener);
+               WidgetEventListener* listener, bool openWindows);
 
       private:
          /*! Internal font info for parse */
@@ -124,7 +128,7 @@ namespace Farso
           * \param parent pointer to a parent widget, if any.
           * \param listener pointer to listener, if any. */
          bool parseJsonWidget(const rapidjson::Value& value, 
-               Widget* parent, WidgetEventListener* listener);
+               Widget* parent, WidgetEventListener* listener, bool openWindows);
 
          Widget* parseWindow(const rapidjson::Value& value, Widget* parent);
          Widget* parseButton(const rapidjson::Value& value, Widget* parent);

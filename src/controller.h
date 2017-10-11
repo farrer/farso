@@ -241,9 +241,13 @@ class Controller
        * \param jsonStr JSON string with the widgets to insert.
        * \param listener pointer to the event listener to use for the 
        *        loaded widgets or NULL, for none.
+       * \param openWindows if open all windows and set their positions.
+       *        If you plan to reset the position to one not defined by the
+       *        JSON, you should pass false here, and call to setPosition
+       *        and open the window latter.
        * \return true if all defined widgets were inserted, false otherwise */
       static const bool insertFromJson(const Kobold::String& jsonStr, 
-            WidgetEventListener* listener=NULL);
+            WidgetEventListener* listener=NULL, bool loadWindows=true);
      
       /*! Insert widgets from a JSON string using an specific JSON parser.
        * \note This is used when loading extended widgets.
@@ -251,9 +255,14 @@ class Controller
        * \param parser pointer to the parser to use
        * \param listener pointer to the event listener to use for the 
        *        loaded widgets or NULL, for none.
+       * \param openWindows if open all windows and set their positions.
+       *        If you plan to reset the position to one not defined by the
+       *        JSON, you should pass false here, and call to setPosition
+       *        and open the window latter.
        * \return true if all defined widgets were inserted. */
       static const bool insertFromJson(const Kobold::String& jsonStr, 
-            WidgetJsonParser* parser, WidgetEventListener* listener=NULL);
+            WidgetJsonParser* parser, WidgetEventListener* listener=NULL,
+            bool loadWindows=true);
 #endif
 
       /*! Remove an event listener from a widget, thread safelly */

@@ -44,7 +44,7 @@ WidgetJsonParser::~WidgetJsonParser()
  *                             loadFromJson                            *
  ***********************************************************************/
 bool WidgetJsonParser::loadFromJson(const Kobold::String& jsonStr, 
-               WidgetEventListener* listener)
+               WidgetEventListener* listener, bool openWindows)
 {
    bool res = true;
    rapidjson::Document doc;
@@ -60,7 +60,7 @@ bool WidgetJsonParser::loadFromJson(const Kobold::String& jsonStr,
    rapidjson::Value::ConstMemberIterator itor = doc.FindMember("widget");
    while((itor != doc.MemberEnd()) && (res))
    {
-      res |= parseJsonWidget(itor->value, NULL, listener);
+      res |= parseJsonWidget(itor->value, NULL, listener, openWindows);
       ++itor;
    }
 
@@ -959,7 +959,7 @@ bool WidgetJsonParser::parseChildren(const rapidjson::Value& value,
    {
       for(size_t child = 0; child < it->value.Size(); child++)
       {
-         if(!parseJsonWidget(it->value[child], parent, listener))
+         if(!parseJsonWidget(it->value[child], parent, listener, false))
          {
             /* Error parsing a child. Abort. */
             return false;
@@ -975,7 +975,7 @@ bool WidgetJsonParser::parseChildren(const rapidjson::Value& value,
  ***********************************************************************/
 Widget* WidgetJsonParser::parseExtendedWidget(const Kobold::String& type, 
       const rapidjson::Value& value, Widget* parent, 
-      WidgetEventListener* listener)
+      WidgetEventListener* listener, bool openWindows)
 {
    return NULL;
 }
@@ -984,7 +984,7 @@ Widget* WidgetJsonParser::parseExtendedWidget(const Kobold::String& type,
  *                           parseJsonWidget                           *
  ***********************************************************************/
 bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value, 
-      Widget* parent, WidgetEventListener* listener)
+      Widget* parent, WidgetEventListener* listener, bool openWindows)
 {
    if(value.IsObject())
    {
@@ -1096,7 +1096,8 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       }
       else
       {
-         created = parseExtendedWidget(type, value, parent, listener);
+         created = parseExtendedWidget(type, value, parent, listener, 
+               openWindows);
       }
 
       if(!created)
@@ -1136,7 +1137,7 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       }
 
       /* Open the window, if just created one */
-      if(created->getType() == Widget::WIDGET_TYPE_WINDOW)
+      if((openWindows) && (created->getType() == Widget::WIDGET_TYPE_WINDOW))
       {
          Window* window = static_cast<Window*>(created);
          window->setPosition(prevPos.x, prevPos.y);

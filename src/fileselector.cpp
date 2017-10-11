@@ -580,7 +580,7 @@ void FileSelector::doAfterChildTreat()
 {
    Event event = Controller::getLastEvent();
 
-   if(event.getType() == EVENT_BUTTON_RELEASE)
+   if(event.getType() == EVENT_BUTTON_RELEASED)
    {
       if( (event.getWidget() == acceptButton) &&
           ( ((loading) && (textCurFile->getCaption() != "")) ||

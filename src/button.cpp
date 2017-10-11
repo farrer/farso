@@ -208,7 +208,7 @@ bool Button::doTreat(bool leftButtonPressed, bool rightButtonPressed,
          }
          else
          {
-            Controller::setEvent(this, EVENT_BUTTON_RELEASE);
+            Controller::setEvent(this, EVENT_BUTTON_RELEASED);
          }
       }
       else

@@ -59,8 +59,8 @@ enum EventType
    EVENT_BUTTON_NOT_PRESSING,
    /*! When the button press is cancelled (ie: released outside it) */
    EVENT_BUTTON_PRESS_CANCELLED,
-   /*! When the buttonis released (sucessfully completing its press) */
-   EVENT_BUTTON_RELEASE,
+   /*! When the button is released (sucessfully completing its press) */
+   EVENT_BUTTON_RELEASED,
    /*! When label is clicked (just after button/finger up) */
    EVENT_LABEL_CLICKED,
    /*! When actively pressing the checkbox, but still without toggling it. */

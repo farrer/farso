@@ -450,7 +450,7 @@ void Window::doAfterChildTreat()
        * reaction to it. */
       Controller::setEvent(this, EVENT_WINDOW_CLICKED);
    }
-   else if((ev.getType() == EVENT_BUTTON_RELEASE) && 
+   else if((ev.getType() == EVENT_BUTTON_RELEASED) && 
            (ev.getWidget() == closeButton))
    {
       Controller::markToRemoveWidget(this);

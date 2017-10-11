@@ -831,7 +831,7 @@ void TreeView::doAfterChildTreat()
    Event event = Controller::getLastEvent();
 
    /* Check collapse/expand button presses */
-   if(event.getType() == EVENT_BUTTON_RELEASE)
+   if(event.getType() == EVENT_BUTTON_RELEASED)
    {
       for(unsigned int i = 0; i < buttons.size(); i++)
       {

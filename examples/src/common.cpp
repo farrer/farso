@@ -366,7 +366,7 @@ void Example::onEvent(const Farso::EventType& eventType, Farso::Widget* widget)
     * exit button, just to illustrate (and test) its implementation.
     * One could check events by Farso::getEvent or by listeners. It's up to
     * your tase/needs. */
-   if(eventType == Farso::EVENT_BUTTON_RELEASE)
+   if(eventType == Farso::EVENT_BUTTON_RELEASED)
    {
       Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL, "We should exit..."); 
       shouldExit = true;
@@ -389,7 +389,7 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
       Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL, "Event got: %d", 
             event.getType());
 
-      if(event.getType() == Farso::EVENT_BUTTON_RELEASE)
+      if(event.getType() == Farso::EVENT_BUTTON_RELEASED)
       {
          if(event.getWidget() == treeViewInsertButton)
          {

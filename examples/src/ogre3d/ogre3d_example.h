@@ -2,6 +2,7 @@
 #ifndef _farso_ogre3d_example_h
 #define _farso_ogre3d_example_h
 
+#include "farsoconfig.h"
 #include "../common.h"
 #include "../size.h"
 #include <goblin/baseapp.h>
@@ -39,6 +40,9 @@ class Ogre3dExample : public Goblin::BaseApp
       };
       
       /* virtual functions from Goblin */
+#if FARSO_USE_OGRE_OVERLAY == 0
+      const bool getUseOverlay() const { return false; };
+#endif
       bool doCycleInit(int callCount, bool& shouldAbort);
       void getDataDirectories(Ogre::String** dataDirectories,
             Ogre::String** dataGroups, int& total);

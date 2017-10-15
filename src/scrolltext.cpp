@@ -345,13 +345,65 @@ void ScrollText::doDraw(const Rect& pBody)
       return;
    }
 
+   if(scrollBar->isVisible())
+   {
+      drawWithFirstAsReference(pX, pY, pX2, pY2, drawArea);
+   }
+   else
+   {
+      drawWithLastAsReference(pX, pY, pX2, pY2, drawArea);
+   }
+
+}
+
+/***********************************************************************
+ *                      drawWithLastAsReference                       *
+ ***********************************************************************/
+void ScrollText::drawWithLastAsReference(int pX, int pY, int pX2, int pY2,
+            const Rect& drawArea)
+{
+   /* Define which will be the first line to be renderer (by checking from
+    * last line up while fits). */
+   /* Render each displayed line, starting at first displayed one */
+   TextLine* line = static_cast<TextLine*>(lines.getLast());
+
+   /* Apply current height to draw position */
+   int maxHeight = getHeight();
+   int curHeight = 0;
+   do
+   {
+      /* Line is visible. Set as the current first one */
+      firstDisplayedLine = line;
+
+      /* Apply line height to total 'rendered' */
+      curHeight += line->getHeight();
+
+      /* Let's draw next line */
+      line = static_cast<TextLine*>(line->getPrevious());
+
+   } while( (line != lines.getLast()) && 
+            (curHeight + line->getHeight() <= maxHeight) );
+
+   /* Finally, as defined our first displayed line, let's draw it the
+    * usual 'first' as reference way. */
+   drawWithFirstAsReference(pX, pY, pX2, pY2, drawArea);
+}
+
+/***********************************************************************
+ *                      drawWithFirstAsReference                       *
+ ***********************************************************************/
+void ScrollText::drawWithFirstAsReference(int pX, int pY, int pX2, int pY2,
+            const Rect& drawArea)
+{
    /* Render each displayed line, starting at first displayed one */
    TextLine* line = firstDisplayedLine;
+   Farso::Surface* surface = getWidgetRenderer()->getSurface();
 
    /* Apply current height to draw position */
    pY += line->getHeight();
    pX += FONT_HORIZONTAL_DELTA;
-   
+
+   int maxHeight = getHeight();
    int curHeight = 0;
    int disp = 0;
    do
@@ -371,7 +423,7 @@ void ScrollText::doDraw(const Rect& pBody)
       /* Let's draw next line */
       line = (TextLine*) line->getNext();
    } while( (line != lines.getFirst()) && 
-            (curHeight + line->getHeight() <= getHeight()) );
+            (curHeight + line->getHeight() <= maxHeight) );
 
    /* Define totals */
    scrollBar->setTotals(disp, lines.getTotal());

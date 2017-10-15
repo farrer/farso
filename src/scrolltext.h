@@ -47,8 +47,9 @@ class ScrollText : public Widget
       /*! Clear current text. */
       void clear();
 
-      /*! Hide the scroll bar and do not use it.
-       * \note It won't affect existing text andshould be called on an empty
+      /*! Hide the scroll bar and do not use it, keeping the last line 
+       * always visible.
+       * \note It won't affect existing text and should be called on an empty
        *       ScrollText to it use the new full size */
       void hideScrollBar();
 
@@ -176,6 +177,13 @@ class ScrollText : public Widget
       /*! Append a new text line, with one new empty sentence */
       TextLine* createLine(const Kobold::String& fontName, int fontSize,
             const Font::Alignment& alignment, const Color& color);
+
+      /*! Draw the scroll text, using first displayed line as reference */
+      void drawWithFirstAsReference(int pX, int pY, int pX2, int pY2, 
+            const Rect& drawArea);
+      /*! Draw the scroll text, using the last available line as reference */
+      void drawWithLastAsReference(int pX, int pY, int pX2, int pY2, 
+            const Rect& drawArea);
 
       Farso::ScrollBar* scrollBar; /**< The scroller */
       Rect body; /**< Body */

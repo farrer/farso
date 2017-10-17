@@ -402,6 +402,10 @@ bool ScrollBar::doTreat(bool leftButtonPressed, bool rightButtonPressed,
                return true;
             }
          }
+
+         /* Tried to change, but not possible. It is an event too. */
+         Controller::setEvent(this, EVENT_SCROLLBAR_UNCHANGED);
+         return true;
       }
    }
 

@@ -211,7 +211,12 @@ void ScrollBar::setCurrent(int current)
    if(initial != current)
    {
       initial = current;
+      if(initial > maxInitial)
+      {
+         initial = maxInitial;
+      }
       setDirty();
+      definePositionAndSize();
    }
 }
 

@@ -185,6 +185,9 @@ class ScrollText : public Widget
       void drawWithLastAsReference(int pX, int pY, int pX2, int pY2, 
             const Rect& drawArea);
 
+      /*! Define which line should init by current scrollBar position */
+      void defineNewInitialByScrollBar();
+
       Farso::ScrollBar* scrollBar; /**< The scroller */
       Rect body; /**< Body */
 

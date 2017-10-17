@@ -305,6 +305,55 @@ bool ScrollBar::doTreat(bool leftButtonPressed, bool rightButtonPressed,
 
       return true;
    }
+   else
+   {
+      if(leftButtonPressed)
+      {
+         if((isInner(mrX, mrY)) && (!upButton->isInner(mrX, mrY)) &&
+            (!downButton->isInner(mrX, mrY)) && 
+            (!scrollButton->isInner(mrX, mrY)))
+         {
+            /* Set what axis to verify */
+            int val, scrollMin, scrollMax;
+            if(scrollType == TYPE_VERTICAL)
+            {
+               val = mrY;
+               scrollMin = scrollButton->getYWithoutTransform();
+               scrollMax = scrollMin + scrollButton->getHeight();
+            }
+            else
+            {
+               val = mrX;
+               scrollMin = scrollButton->getXWithoutTransform();
+               scrollMax = scrollMin + scrollButton->getWidth();
+            }
+
+            /* Pressed inner the scroll bar (and not at any of its buttons) */
+            if(val > scrollMax)
+            {
+               /* After scroll button, must go down (if can) */
+               if(initial + maxDisplayed < total)
+               {
+                  initial++;
+                  definePositionAndSize();
+                  Controller::setEvent(this, EVENT_SCROLLBAR_CHANGED);
+                  return true;
+               }
+            }
+            else if(val < scrollMin)
+            {
+               /* Before, must go up (if can) */
+               if(initial > 0)
+               {
+                  initial--;
+                  definePositionAndSize();
+                  Controller::setEvent(this, EVENT_SCROLLBAR_CHANGED);
+                  return true;
+               }
+            }
+         }
+      }
+   }
 
    return false;
 }

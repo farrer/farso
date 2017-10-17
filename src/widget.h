@@ -141,6 +141,12 @@ class Widget : public Kobold::ListElement, public Kobold::List
        * \return y coordinate */
       const int getY() const;
 
+      /*! \return x coordinate without any container transformation */
+      const int getXWithoutTransform() const { return x; };
+      /*! \return y coordinate without any container transformation */
+      const int getYWithoutTransform() const { return y; };
+
+
       /*! Gets the height
        * \return height */
       const int getHeight() const { return height; };
@@ -286,11 +292,6 @@ class Widget : public Kobold::ListElement, public Kobold::List
 
       /*! Define the nearest container parent if exists. */
       void defineParentContainer();
-
-      /*! \return x coordinate without any container transformation */
-      const int getXWithoutTransform() const { return x; };
-      /*! \return y coordinate without any container transformation */
-      const int getYWithoutTransform() const { return y; };
 
    private:
       

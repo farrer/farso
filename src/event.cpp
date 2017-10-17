@@ -49,7 +49,7 @@ Widget* Event::getWidget()
 /***********************************************************************
  *                              getType                                *
  ***********************************************************************/
-EventType Event::getType()
+const EventType& Event::getType() const
 {
    return event;
 }

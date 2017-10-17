@@ -45,7 +45,7 @@ class Event
       /*! \return pointer to the widget owner of the event */
       Widget* getWidget();
       /*! \return event type */
-      EventType getType();
+      const EventType& getType() const;
 
    private:
       Widget* widget;

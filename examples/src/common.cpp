@@ -126,10 +126,13 @@ void Example::createWindowWithStack()
 
    /* Add first option to the stack tab and add some children widgets to it */
    Farso::Container* tabCont = tab->insertTab("Option 1");
+
+   Farso::Container* scrollCont = new Farso::Container(
+         Farso::Container::TYPE_TOP_LEFT, 0, 0, 150, 160, tabCont);
    (new Farso::ScrollBar(Farso::ScrollBar::TYPE_VERTICAL, 0, 0, 150, 
-                         tabCont))->setTotals(10, 100);
+                         scrollCont))->setTotals(10, 100);
    (new Farso::ScrollBar(Farso::ScrollBar::TYPE_HORIZONTAL, 0, 160, 150, 
-                         tabCont))->setTotals(10, 5);
+                         scrollCont))->setTotals(10, 5);
    
    Farso::ScrollText* scrollText = new Farso::ScrollText(160, 10, 130, 160, 
          "fonts/LiberationSans-Regular.ttf", 10, 

@@ -514,6 +514,24 @@ bool Widget::isInner(int x, int y)
 }
 
 /***********************************************************************
+ *                           isInnerAbsolute                           *
+ ***********************************************************************/
+bool Widget::isInnerAbsolute(int x, int y)
+{
+   /* Calculate x / y as relative to parent coordinate */
+   Rect body;
+   if(getParent() != NULL)
+   {
+      body = getParent()->getBodyWithParentsApplied();
+   }
+   int rX = x - getWidgetRenderer()->getPositionX() - body.getX1();
+   int rY = y - getWidgetRenderer()->getPositionY() - body.getY1();
+
+   /* Check it the usual way */
+   return isInner(rX, rY);
+}
+
+/***********************************************************************
  *                              addChild                               *
  ***********************************************************************/
 void Widget::addChild(Widget* child)

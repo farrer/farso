@@ -238,6 +238,10 @@ class Widget : public Kobold::ListElement, public Kobold::List
        * is inside this widget. */
       bool isInner(int x, int y);
 
+      /*! Check if the absolute (screen) coordinate point (x,y) is
+       * inside the widget. */
+      bool isInnerAbsolute(int x, int y);
+
       /*! \return rectangle with body with parent's coordinate applyed */
       Rect getBodyWithParentsApplied();
 

@@ -435,47 +435,6 @@ void ScrollText::drawWithFirstAsReference(int pX, int pY, int pX2, int pY2,
 bool ScrollText::doTreat(bool leftButtonPressed, bool rightButtonPressed, 
       int mouseX, int mouseY, int mrX, int mrY)
 {
-   int relWheel = Cursor::getRelativeWheel();
-   if((isInner(mrX, mrY)) && (relWheel != 0))
-   {
-      /* Note that the usual behaviour is for mouse wheel being inverted 
-       * on text scroll. When negative scroll down, and positive, scroll up */
-      if(relWheel < 0)
-      {
-         if(scrollBar->getCurrent() < lines.getTotal()-1)
-         {
-            if(scrollBar->getCurrent() - relWheel < lines.getTotal())
-            {
-               scrollBar->setCurrent(scrollBar->getCurrent() - relWheel);
-            }
-            else
-            {
-               scrollBar->setCurrent(lines.getTotal() - 1);
-            }
-            Controller::setEvent(scrollBar, EVENT_SCROLLBAR_CHANGED);
-            defineNewInitialByScrollBar();
-            return true;
-         }
-      }
-      else
-      {
-         if(scrollBar->getCurrent() > 0)
-         {
-            if(scrollBar->getCurrent() - relWheel > 0)
-            {
-               scrollBar->setCurrent(scrollBar->getCurrent() - relWheel);
-            }
-            else
-            {
-               scrollBar->setCurrent(0);
-            }
-            Controller::setEvent(scrollBar, EVENT_SCROLLBAR_CHANGED);
-            defineNewInitialByScrollBar();
-            return true;
-         }
-      }
-   }
-   
    return false;
 }
 

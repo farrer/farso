@@ -358,6 +358,51 @@ bool ScrollBar::doTreat(bool leftButtonPressed, bool rightButtonPressed,
             }
          }
       }
+      else if((getParent() != NULL) && 
+              ((getParent()->getType() == WIDGET_TYPE_CONTAINER) ||
+               (getParent()->getType() == WIDGET_TYPE_SCROLL_TEXT)) &&
+              (Cursor::getRelativeWheel() != 0) &&
+              (getParent()->isInnerAbsolute(mouseX, mouseY)))
+      {
+         /* Moved the mouse wheel inside our parent (container or text) */
+         int relWheel = Cursor::getRelativeWheel();
+
+         /* Note that the usual behaviour is for mouse wheel being inverted
+          * when scrolling. When negative, should scroll down, and when 
+          * positive, scroll up */
+         if(relWheel < 0)
+         {
+            if(initial < maxInitial)
+            {
+               if(initial - relWheel <= maxInitial)
+               {
+                  setCurrent(initial - relWheel);
+               }
+               else
+               {
+                  setCurrent(maxInitial);
+               }
+               Controller::setEvent(this, EVENT_SCROLLBAR_CHANGED);
+               return true;
+            }
+         }
+         else
+         {
+            if(initial > 0)
+            {
+               if(initial - relWheel > 0)
+               {
+                  setCurrent(initial - relWheel);
+               }
+               else
+               {
+                  setCurrent(0);
+               }
+               Controller::setEvent(this, EVENT_SCROLLBAR_CHANGED);
+               return true;
+            }
+         }
+      }
    }
 
    return false;

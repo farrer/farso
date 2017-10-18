@@ -183,6 +183,8 @@ void CheckBox::doDraw(const Rect& pBody)
          draw->doLine(surface, rx1+10, ry1+5, rx1+1, ry1+14);
          draw->doLine(surface, rx1+12, ry1+5, rx1+3, ry1+14);
       }
+      label->setPosition(15, 0);
+      label->setSize(getWidth() - 15, 20);
    }
 }
 

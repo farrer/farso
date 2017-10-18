@@ -1,8 +1,8 @@
 # Farso - A GUI toolkit
 
 ## About
-Farso is a graphical user interface written in C++ with OpenGL and Ogre3D 
- (both 1.10 and 2.1) renderers.
+Farso is a graphical user interface written in C++ with OpenGL, Ogre3D
+ (both 1.10 and 2.1) and SDL renderers.
 
 Farso have the following widgets:  
 
@@ -48,6 +48,13 @@ hosted here.
 
 ### Optional
  * Rapidjson [http://rapidjson.org]
+
+### SDL Renderer
+
+ * Kobold [https://github.com/farrer/kobold]
+ * SDL2 [https://libsdl.org/download-2.0.php]
+ * SDL\_image 2.x [https://www.libsdl.org/projects/SDL\_image/]
+ * FreeType 2.x [https://www.freetype.org/]
 
 ### OpenGL Renderer
 

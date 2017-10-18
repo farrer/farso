@@ -37,6 +37,12 @@
    #include "opengl/openglwidgetrenderer.h"
 #endif
 
+#include "sdl/sdldraw.h"
+#include "sdl/sdljunction.h"
+#include "sdl/sdlsurface.h"
+#include "sdl/sdlwidgetrenderer.h"
+
+
 #include <kobold/log.h>
 
 #include <assert.h>
@@ -64,6 +70,9 @@ void Controller::init(const RendererType& rendererType,
                                                extraInfo);
       switch(rendererType)
       {
+         case RENDERER_TYPE_SDL:
+            Controller::draw = new SDLDraw();
+         break;
          case RENDERER_TYPE_OPENGL:
 #if FARSO_HAS_OPENGL == 1
             Controller::draw = new OpenGLDraw();
@@ -188,7 +197,7 @@ void Controller::setCursor(const Kobold::String& filename)
  ***********************************************************************/
 Kobold::String Controller::getRealFilename(const Kobold::String& filename)
 {
-   if(rendererType == RENDERER_TYPE_OPENGL)
+   if(rendererType != RENDERER_TYPE_OGRE3D)
    {
       return baseDir + filename;
    }
@@ -204,6 +213,8 @@ ControllerRendererJunction* Controller::createNewJunction(
 {
    switch(rendererType)
    {
+      case RENDERER_TYPE_SDL:
+         return new SDLJunction(static_cast<SDL_Renderer*>(extraInfo));
       case RENDERER_TYPE_OPENGL:
 #if FARSO_HAS_OPENGL == 1
          return new OpenGLJunction();
@@ -234,6 +245,8 @@ WidgetRenderer* Controller::createNewWidgetRenderer(int width, int height)
 {
    switch(rendererType)
    {
+      case RENDERER_TYPE_SDL:
+         return new SDLWidgetRenderer(width, height, junction);
       case RENDERER_TYPE_OPENGL:
 #if FARSO_HAS_OPENGL == 1
          return new OpenGLWidgetRenderer(width, height, junction);
@@ -263,7 +276,7 @@ Kobold::String Controller::getDefaultGroupName()
 #endif
       break;
       case RENDERER_TYPE_OPENGL:
-      default:
+      case RENDERER_TYPE_SDL:
          return ""; 
    }
 
@@ -277,6 +290,8 @@ Surface* Controller::loadImageToSurface(const Kobold::String& filename)
 {
    switch(rendererType)
    {
+      case RENDERER_TYPE_SDL:
+         return new SDLSurface(filename, getDefaultGroupName());
       case RENDERER_TYPE_OPENGL:
 #if FARSO_HAS_OPENGL == 1
          return new OpenGLSurface(filename, getDefaultGroupName()); 
@@ -874,7 +889,7 @@ bool Controller::inited = false;
 Window* Controller::activeWindow = NULL;
 Menu* Controller::activeMenu = NULL;
 Event Controller::event(NULL, EVENT_NONE);
-RendererType Controller::rendererType = RENDERER_TYPE_OPENGL; 
+RendererType Controller::rendererType = RENDERER_TYPE_SDL; 
 int Controller::width = 0;
 int Controller::height = 0;
 Kobold::String Controller::baseDir;

@@ -79,6 +79,7 @@ class ControllerRendererJunction
 
 enum RendererType
 {
+   RENDERER_TYPE_SDL,
    RENDERER_TYPE_OPENGL,
    RENDERER_TYPE_OGRE3D
 };
@@ -101,7 +102,8 @@ class Controller
        *               manager (thus make sure that baseDir is at a defined
        *               resource group). 
        * \param any extra information needed for renderer. For OpenGL, just 
-       *        pass NULL, for Ogre3D, the pointer to the sceneManager used. */
+       *        pass NULL, for Ogre3D, the pointer to the sceneManager,
+       *        for SDL, the pointer to SDL_Renderer. */
       static void init(const RendererType& rendererType, 
             int screenWidth, int screenHeight, int maxCursorSize, 
             const Kobold::String& baseDir, void* extraInfo);

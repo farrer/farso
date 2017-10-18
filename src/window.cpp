@@ -106,6 +106,8 @@ void Window::defineBody()
                Farso::Skin::SKIN_TYPE_WINDOW_INACTIVE_TITLE_BAR).getBounds(
                   getWidth(), getHeight());
       }
+      assert(titleBar.getWidth() <= getWidth());
+      assert(titleBar.getHeight() <= getHeight());
 
       /* Define Body: just bellow titleBar, and within borders. */
       Rect insideBorder = skin->getSkinElement(

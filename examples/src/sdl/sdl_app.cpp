@@ -39,8 +39,6 @@ SDLApp::SDLApp()
       SDL_Quit();
       exit(-2);
    }
-   printf("window: %p, renderer: %p\n", window, renderer);
-
 }
 
 /************************************************************************

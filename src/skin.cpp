@@ -355,7 +355,7 @@ const void Skin::SkinElement::defBoundValue(int& bx1, int& by1,
    if(useDeltaX2)
    {
       /* Direct use delta x2 */
-      int val = width - delta.getX2();
+      int val = width - 1 - delta.getX2();
       if(val > bx2)
       {
          bx2 = val;
@@ -364,7 +364,7 @@ const void Skin::SkinElement::defBoundValue(int& bx1, int& by1,
    else if(useDeltaX1)
    {
       /* Calculate from X1 */
-      int val = delta.getX1() + rect.getWidth();
+      int val = delta.getX1() + rect.getWidth() - 1;
       if(val > bx2)
       {
          bx2 = val;
@@ -373,7 +373,7 @@ const void Skin::SkinElement::defBoundValue(int& bx1, int& by1,
    if(useDeltaY2)
    {
       /* Direct use delta y2 */
-      int val = height - delta.getY2();
+      int val = height - 1 - delta.getY2();
       if(val > by2)
       {
          by2 = val;
@@ -382,7 +382,7 @@ const void Skin::SkinElement::defBoundValue(int& bx1, int& by1,
    else if(useDeltaY1)
    {
       /* Calculate from Y1 */
-      int val = delta.getY1() + rect.getHeight();
+      int val = delta.getY1() + rect.getHeight() - 1;
       if(val > by2)
       {
          by2 = val;

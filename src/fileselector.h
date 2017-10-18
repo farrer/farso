@@ -72,6 +72,11 @@ class FileSelector: public Widget
       /*! Set the current filter
        * \param newFilter -> new filter to set */
       void setFilter(const Kobold::String& newFilter);
+
+      /*! Set if can go up the root dir (the one defined at the constructor)
+       * or not.
+       * \param val if can go up the root dir or not (default enabled). */
+      void setGoUpRoot(bool val);
       
       /* From Widget */
       const Rect& getBody();
@@ -122,10 +127,12 @@ class FileSelector: public Widget
       Grid* grid;                 /**< Grid for selecting displayed files */
 
       bool navDirs;            /**< True if will diplay (and navigate) dirs */
+      bool goUpRoot;           /**< if could try to go up the root */
       bool loading;            /**< If selector is a loading one, 
                                     or a saving one */
       
       Kobold::String curDir;   /**< Current Opened directory */
+      Kobold::String rootDir;  /**< The root dir defined */
 
       Kobold::String filter;   /**< Files Filter */
 

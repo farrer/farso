@@ -64,6 +64,14 @@ FileSelector::FileSelector(bool load, const Kobold::String& dir, bool nav,
    filter = "";
    loading = load;
    navDirs = nav;
+   goUpRoot = true;
+
+   /* Make sure curDir have trail '/' before set rootDir */
+   if(curDir[curDir.length()-1] != FILE_SEL_SLASH)
+   {
+      curDir += FILE_SEL_SLASH;
+   }
+   rootDir = curDir;
 
    /* Set dimensions */
    assert(parent != NULL);
@@ -323,7 +331,8 @@ void FileSelector::changeCurDir(const Kobold::String& newDir)
          str.erase(0,1);
 
          /* Insert at list, if directory navigations is defined */
-         if(navDirs)
+         if((navDirs) && ((goUpRoot) || (curDir != rootDir) || 
+                  ((str != ".") && (str != ".."))))
          {
             lastDir = j;
             files.push_back(str);
@@ -462,6 +471,22 @@ Kobold::String FileSelector::getFilename() const
    }
 
    return fileName;
+}
+
+/***********************************************************************
+ *                             setGoUpRoot                             *
+ ***********************************************************************/
+void FileSelector::setGoUpRoot(bool val)
+{
+   if(val != goUpRoot)
+   {
+      goUpRoot = val;
+      if(rootDir == curDir)
+      {
+         /* Update the displayed. */
+         changeCurDir(curDir);
+      }
+   }
 }
 
 /***********************************************************************
@@ -635,7 +660,8 @@ void FileSelector::doAfterChildTreat()
                else
                {
                   /* Try to remove the last directory, if any */
-                  size_t pos = newDir.find_last_of(FILE_SEL_SLASH);
+                  size_t pos = curDir.find_last_of(FILE_SEL_SLASH, 
+                        curDir.length() - 2);
                   if(pos != Kobold::String::npos)
                   {
                      newDir = curDir;

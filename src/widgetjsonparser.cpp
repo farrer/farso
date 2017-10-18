@@ -414,6 +414,7 @@ Widget* WidgetJsonParser::parseFileSelector(const rapidjson::Value& value,
    bool load = parseBoolean(value, "load", true);
    Kobold::String dir = parseString(value, "directory");
    bool showDirs = parseBoolean(value, "showDirectories", true);
+   bool goUpRoot = parseBoolean(value, "goUpRoot", true);
    Kobold::String filter = parseString(value, "filter");
 
    FileSelector* fileSel = new FileSelector(load, dir, showDirs, parent);
@@ -421,6 +422,7 @@ Widget* WidgetJsonParser::parseFileSelector(const rapidjson::Value& value,
    {
       fileSel->setFilter(filter);
    }
+   fileSel->setGoUpRoot(goUpRoot);
 
    return fileSel;
 }

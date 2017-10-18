@@ -71,10 +71,6 @@ class CheckBox : public Widget
       /*! Toggle check/unchecked, based on current state, raising an event */
       void toggle();
 
-      /*! Set label position, according to parent container 
-       * \param labelX X variation for label to checkbox's pos */
-      void setLabelPosition(int labelX);
-
    private:
       Rect body;         /**< Body of check box. */
       bool checked;      /**< If actually checked or not */

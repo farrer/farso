@@ -33,20 +33,10 @@ CheckBox::CheckBox(int x, int y, int width, const Kobold::String& label,
    this->setCaption(label);
    this->checked = checked;
    this->pressStarted = false;
-   this->body.set(getX() + 20, getY(), getX() + width - 1, getY() + 22);
+   this->body.set(getX(), getY(), 
+         getX() + getWidth() - 1, getY() + getHeight() -1);
 
-   /* Note: let's make the label a child of the same parent (instead of
-    * a child of the checkBox. It's just to avoid rerendering the label
-    * on check box togle states (as the toggle will only affect the
-    * the box draw, not the label). The afterTreatChild call will
-    * be than uneffective, but here will check the whole check box area
-    * (which includes the label), creating events, and the checkbox is 
-    * always before the label on parent's children list, so, once the click
-    * is got here, it won't check the label's one after.
-    * The downside is that we must assure to set label's position 
-    * always right of the 'box', which is not so trivial due to containers. */
-   this->label = new Label(0, 0, width, 20, label, parent);
-   setLabelPosition(15);
+   this->label = new Label(15, 0, width - 15, 20, label, this);
 }
 
 /******************************************************************
@@ -56,29 +46,6 @@ CheckBox::~CheckBox()
 {
    /* No need to delete label, as it will be deleted on
     * checkbox's children list destructor. */
-}
-
-/******************************************************************
- *                         setLabelPosition                       *
- ******************************************************************/
-void CheckBox::setLabelPosition(int labelX)
-{
-   Container* pCont = (Container*) getParentContainer();
-
-   if((pCont == NULL) || 
-      (pCont->getContainerType() == Container::TYPE_TOP_LEFT) ||
-      (pCont->getContainerType() == Container::TYPE_BOTTOM_LEFT))
-   {
-      /* left oriented */
-      label->setPosition(labelX + getXWithoutTransform(), 
-            getYWithoutTransform());
-   }
-   else 
-   {
-      /* Centered oriented or right oriented*/
-      label->setPosition(getXWithoutTransform() - labelX, 
-            getYWithoutTransform());
-   }
 }
 
 /******************************************************************
@@ -139,11 +106,12 @@ void CheckBox::doDraw(const Rect& pBody)
    Farso::Skin* skin = Farso::Controller::getSkin();
    Farso::Surface* surface = getWidgetRenderer()->getSurface();
 
+   body.set(getX(), getY(), getX() + getWidth() - 1, getY() + getHeight() -1);
+
    int rx1 = pBody.getX1() + getX();
    int ry1 = pBody.getY1() + getY();
    int rx2 = pBody.getX1() + getX() + getWidth() - 1;
    int ry2 = pBody.getY1() + getY() + getHeight() - 1;
-   int labelX;
 
    if(skin != NULL)
    {
@@ -174,8 +142,9 @@ void CheckBox::doDraw(const Rect& pBody)
       }
       /* Draw the checkbox */
       skin->drawElement(surface, skType, rx1, ry1, rx2, ry2);
-      Rect bounds = skin->getSkinElement(skType).getBounds(0,0);
-      labelX = bounds.getX2() + 2;
+      Rect bounds = skin->getSkinElement(skType).getBounds(1,1);
+      label->setPosition(bounds.getX2() + 1, 0);
+      label->setSize(getWidth() - bounds.getX2() - 2, 20);
    }
    else
    {
@@ -214,11 +183,7 @@ void CheckBox::doDraw(const Rect& pBody)
          draw->doLine(surface, rx1+10, ry1+5, rx1+1, ry1+14);
          draw->doLine(surface, rx1+12, ry1+5, rx1+3, ry1+14);
       }
-      labelX = 15;
    }
-
-   /* Redefine label position, due to potential on-the-fly skin change. */
-   setLabelPosition(labelX);
 }
 
 /******************************************************************

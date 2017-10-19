@@ -97,9 +97,9 @@ void Draw::setPixel(Surface* surface, int x, int y, float bright)
 }
 
 /******************************************************************
- *                              round                             *
+ *                              __round                             *
  ******************************************************************/
-inline int round(const float a)
+inline int __round(const float a)
 {
    /* Used to the line draw function */
    return (int)(a+0.5);
@@ -130,12 +130,12 @@ void Draw::doLine(Surface* surface, int x1, int y1, int x2, int y2)
    xInc = (float) (dx) / (float) (steps);
    yInc = (float) (dy) / (float) (steps);
 
-   setPixel(surface, round(x), round(y));
+   setPixel(surface, __round(x), __round(y));
    for(k = 0; k < steps; k++)
    {
       x += xInc;
       y += yInc;
-      setPixel(surface, round(x), round(y));
+      setPixel(surface, __round(x), __round(y));
    }
 }
 
@@ -169,7 +169,7 @@ void Draw::doAntiAliasedLine(Surface* surface, int x1, int y1, int x2, int y2)
          y2 = tmp;
       }
       float gradient = dy / dx;
-      float xend = round((float) x1);
+      float xend = __round((float) x1);
       float yend = y1 + gradient*(xend - x1);
       float xgap = rfpart(x1 + 0.5f);
       int xpxl1 = xend;
@@ -178,7 +178,7 @@ void Draw::doAntiAliasedLine(Surface* surface, int x1, int y1, int x2, int y2)
       setPixel(surface, xpxl1, ypxl1+1, fpart(yend)*xgap);
       float intery = yend + gradient;
 
-      xend = round((float)x2);
+      xend = __round((float)x2);
       yend = y2 + gradient*(xend - x2);
       xgap = fpart(x2 + 0.5f);
       int xpxl2 = xend;
@@ -206,7 +206,7 @@ void Draw::doAntiAliasedLine(Surface* surface, int x1, int y1, int x2, int y2)
          y2 = tmp;
       }
       float gradient = dx / dy;
-      float yend = round((float) y1);
+      float yend = __round((float) y1);
       float xend = x1 + gradient * (yend - y1);
       float ygap = rfpart(y1 + 0.5f);
       int ypxl1 = yend;
@@ -215,7 +215,7 @@ void Draw::doAntiAliasedLine(Surface* surface, int x1, int y1, int x2, int y2)
       setPixel(surface, xpxl1, ypxl1+1, fpart(xend)*ygap);
       float interx = xend + gradient;
 
-      yend = round((float)y2);
+      yend = __round((float)y2);
       xend = x2 + gradient*(yend - y2);
       ygap = fpart(y2+0.5);
       int ypxl2 = yend;

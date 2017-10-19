@@ -59,6 +59,9 @@ class CheckBox : public Widget
       void enable();
       /*! Disable the checkbox */
       void disable();
+      
+      /*! Set the checkbox dirty */
+      void setDirty();
 
    protected:
       /*! Draw the checkbox on parent's body */

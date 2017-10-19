@@ -256,4 +256,11 @@ const Farso::Rect& CheckBox::getBody()
    return body;
 }
 
+/******************************************************************
+ *                            setDirty                            *
+ ******************************************************************/
+void CheckBox::setDirty()
+{
+   setDirtyWithParent();
+}
 

@@ -217,7 +217,7 @@ if(${FARSO_HAS_OGRE_EXAMPLE})
                         ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARY}
                         ${FARSO_OGRE_LIBRARIES} 
                         ${FREETYPE_LIBRARIES}
-                        ${OPENGL_LIBRARY}
+                        ${OPENGL_LIBRARIES}
                         ${SDL2_IMAGE_LIBRARY}
                         ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
                         ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY}
@@ -255,7 +255,7 @@ if(${OPENGL_FOUND})
                     ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARY}
                     ${FARSO_OGRE_LIBRARIES} 
                     ${FREETYPE_LIBRARIES}
-                    ${OPENGL_LIBRARY}
+                    ${OPENGL_LIBRARIES}
                     ${SDL2_IMAGE_LIBRARY}
                     ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
                     ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY}
@@ -268,7 +268,7 @@ if(${OPENGL_FOUND})
                        ${KOBOLD_LIBRARY}
                        ${FARSO_OGRE_LIBRARIES}
                        ${FREETYPE_LIBRARIES}
-                       ${OPENGL_LIBRARY}
+                       ${OPENGL_LIBRARIES}
                        ${SDL2_IMAGE_LIBRARY}
                        ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
                        m ${LIBINTL_LIBRARIES} pthread)
@@ -277,7 +277,7 @@ if(${OPENGL_FOUND})
          set(LIBRARIES farso
                        ${KOBOLD_LIBRARY}
                        ${FREETYPE_LIBRARIES}
-                       ${OPENGL_LIBRARY}
+                       ${OPENGL_LIBRARIES}
                        ${SDL2_IMAGE_LIBRARY}
                        ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
                        m ${LIBINTL_LIBRARIES} pthread)
@@ -324,7 +324,7 @@ if(${FARSO_HAS_OGRE_EXAMPLE})
                  ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARY}
                  ${FARSO_OGRE_LIBRARIES} 
                  ${FREETYPE_LIBRARIES}
-                 ${OPENGL_LIBRARY}
+                 ${OPENGL_LIBRARIES}
                  ${SDL2_IMAGE_LIBRARY}
                  ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
                  ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY}
@@ -337,7 +337,7 @@ else(${FARSO_HAS_OGRE_EXAMPLE})
                     ${KOBOLD_LIBRARY}
                     ${FARSO_OGRE_LIBRARIES}
                     ${FREETYPE_LIBRARIES}
-                    ${OPENGL_LIBRARY}
+                    ${OPENGL_LIBRARIES}
                     ${SDL2_IMAGE_LIBRARY}
                     ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
                     m ${LIBINTL_LIBRARIES} pthread)
@@ -346,7 +346,7 @@ else(${FARSO_HAS_OGRE_EXAMPLE})
       set(LIBRARIES farso
                     ${KOBOLD_LIBRARY}
                     ${FREETYPE_LIBRARIES}
-                    ${OPENGL_LIBRARY}
+                    ${OPENGL_LIBRARIES}
                     ${SDL2_IMAGE_LIBRARY}
                     ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
                     m ${LIBINTL_LIBRARIES} pthread)

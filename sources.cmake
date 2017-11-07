@@ -344,9 +344,9 @@ else(${FARSO_HAS_OGRE_EXAMPLE})
    else(${FARSO_HAS_OGRE})
      # must link only with OpenGL dependencies
       set(LIBRARIES farso
-                    ${OPENGL_LIBRARIES}
                     ${KOBOLD_LIBRARY}
                     ${FREETYPE_LIBRARIES}
+                    ${OPENGL_LIBRARIES}
                     ${SDL2_IMAGE_LIBRARY}
                     ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
                     m ${LIBINTL_LIBRARIES} pthread)

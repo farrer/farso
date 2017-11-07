@@ -111,7 +111,7 @@ else(${OGG_FOUND})
 endif(${OGG_FOUND})
 
 # Find optional Ogre3d and dependencies
-FIND_PACKAGE(OGRE)
+#FIND_PACKAGE(OGRE)
 if(${OGRE_FOUND})
    set(FARSO_HAS_OGRE 1)
    if(${FARSO_USE_OGRE_OVERLAY})

@@ -346,9 +346,9 @@ else(${FARSO_HAS_OGRE_EXAMPLE})
       set(LIBRARIES farso
                     ${KOBOLD_LIBRARY}
                     ${FREETYPE_LIBRARIES}
-                    ${OPENGL_LIBRARIES}
                     ${SDL2_IMAGE_LIBRARY}
                     ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
+                    ${OPENGL_LIBRARIES}
                     m ${LIBINTL_LIBRARIES} pthread)
    endif(${FARSO_HAS_OGRE})
 endif(${FARSO_HAS_OGRE_EXAMPLE})

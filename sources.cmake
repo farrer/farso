@@ -344,16 +344,16 @@ else(${FARSO_HAS_OGRE_EXAMPLE})
    else(${FARSO_HAS_OGRE})
      # must link only with OpenGL dependencies
       set(LIBRARIES farso
+                    ${OPENGL_LIBRARIES}
                     ${KOBOLD_LIBRARY}
                     ${FREETYPE_LIBRARIES}
                     ${SDL2_IMAGE_LIBRARY}
                     ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
-                    ${OPENGL_LIBRARIES}
                     m ${LIBINTL_LIBRARIES} pthread)
    endif(${FARSO_HAS_OGRE})
 endif(${FARSO_HAS_OGRE_EXAMPLE})
 
-
+message(${LIBRARIES})
 target_link_libraries(farso_sdl_example ${LIBRARIES})
 
 if(${FARSO_HAS_RAPIDJSON})

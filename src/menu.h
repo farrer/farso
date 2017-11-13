@@ -33,17 +33,18 @@ namespace Farso
 {
 
 /*! Menu widget implementation.
- * \note The menu will never have a parent widget.
  * \note The menu is created with .beginCreate() .insertItem() [.insertItem()]
  *       .endCreate() calls.
  * \note After created the menu itens are immutable (ie: could not be added or 
- *       removed). But they can be hidden or disabled anytime. */
+ *       removed). But they can be hidden or disabled anytime.
+ * \note Menu will use its own WidgetRenderer, so it can be outside parent's */
 class Menu : public Widget
 {
    public:
       /*! Menu constructor
-       * \param minWidth minimum width for menu (0 for no minimum size). */
-      Menu(int minWidth = 0);
+       * \param minWidth minimum width for menu (0 for no minimum size).
+       * \param parent Pointer to menu's parent. */
+      Menu(int minWidth = 0, Widget* parent = NULL);
       /*! Menu destructor */
       ~Menu();
 
@@ -98,6 +99,8 @@ class Menu : public Widget
              * enough to contain the new string, otherwise it will be
              * truncated. */
             void setCaption(const Kobold::String& str);
+            /*! \return item's text */
+            const Kobold::String getCaption() const;
 
             /*! \return if item is visible or not */
             const bool isVisible() const;
@@ -164,12 +167,10 @@ class Menu : public Widget
        * current event state) item */
       MenuItem* getCurrentItem();
 
-
       /* From Widget */
-
+      const Rect& getBody();
       /*! \note should not be called for Menu */
       void setSize(int width, int height);
-      const Rect& getBody();
 
    protected:
 
@@ -201,6 +202,7 @@ class Menu : public Widget
 
       Widget* caller; /**< Pointer to the current Widget that opened the menu,
                            if any */
+      WidgetRenderer* menuRenderer; /**< The renderer used for menu */
 };
 
 }

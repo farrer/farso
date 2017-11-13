@@ -62,9 +62,9 @@ Window::~Window()
    {
       active = false;
       /* Tell controller, if it already not know. */
-      if(Controller::getActiveWindow() == this)
+      if(Controller::getActiveWidget() == this)
       {
-         Controller::setActiveWindow(NULL);
+         Controller::setActiveWidget(NULL);
       }
    }
 
@@ -244,9 +244,9 @@ void Window::activate()
       active = true;
       setDirty();
       /* Tell controller, if needed */
-      if(Controller::getActiveWindow() != this)
+      if(Controller::getActiveWidget() != this)
       {
-         Controller::setActiveWindow(this);
+         Controller::setActiveWidget(this);
       }
    }
 }
@@ -261,9 +261,9 @@ void Window::inactivate()
       active = false;
       setDirty();
       /* Tell controller, if it already not know. */
-      if(Controller::getActiveWindow() == this)
+      if(Controller::getActiveWidget() == this)
       {
-         Controller::setActiveWindow(NULL);
+         Controller::setActiveWidget(NULL);
       }
    }
 }

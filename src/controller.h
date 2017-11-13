@@ -27,6 +27,7 @@
 #include "checkbox.h"
 #include "clickablepicture.h"
 #include "container.h"
+#include "combobox.h"
 #include "cursor.h"
 #include "draw.h"
 #include "event.h"
@@ -172,20 +173,18 @@ class Controller
       static bool verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
             int mouseX, int mouseY);
 
-      /*! Set the window as the current active on (with focus), also
+      /*! Set a widget to be the current active on (with focus), also
        * setting the current active one as inactive.
-       * \param window pointer to the window to set as the active one */
-      static void setActiveWindow(Window* window);
+       * \note widget must own its renderer to be set as active. Otherwise,
+       *       the call will be ineffective.
+       * \param widget pointer to the widget to set as the active one */
+      static void setActiveWidget(Widget* widget);
 
       /*! \return pointer to the current active window (or NULL if none). */
-      static Window* getActiveWindow();
+      static Widget* getActiveWidget();
 
       /*! The the event got at last verifyEvents call */
       static const Event getLastEvent();
-
-      /*! Set a recently opened menu to be the active one 
-       * \param menu pointer to the menu. */
-      static void setActiveMenu(Menu* menu);
 
       /*! Set an event happened. Only valid if called by the widget when
        * treating events (otherwise will be cleaned on next 
@@ -197,10 +196,14 @@ class Controller
       /*! Create a new WidgetRenderer based on current renderer type.
        * \param width desired width for widget renderer
        * \param height desired height for widget renderer
-       * \param junction pointer to junction to use or NULL to use the
-       *        current controller's one.
-       * \note The caller is responsible to delete it when no more needed */
-      static WidgetRenderer* createNewWidgetRenderer(int width, int height);
+       * \param insertAtList if will insert at the controller's list or not.
+       *        If true, when no more used, should be discarded with a call to
+       *        removeWidgetRenderer. If false, should be manually deleted. */
+      static WidgetRenderer* createNewWidgetRenderer(int width, int height,
+            bool insertAtList=true);
+      /*! Remove (and free its memory) a WidgetRenderer 
+       * \param renderer pointer to the renderer to remove and free. */
+      static void removeWidgetRenderer(WidgetRenderer* renderer);
 
       /*! Load an image from file to a new surface.
        * \param filename name of the image's file to load
@@ -315,9 +318,9 @@ class Controller
                                       'first-level' widgets to be removed */
       static Kobold::List* widgets; /**< List with current 'first-level' 
                                      (ie: without a parent) widgets. */
+      static Kobold::List* renderers; /**< List of active WidgetRenderers */
       static bool inited; /**< Inited flag.*/
-      static Window* activeWindow; /**< Current active window */
-      static Menu* activeMenu; /**< Current active menu */
+      static Widget* activeWidget; /**< Current active widget */
       static Event event; /**< Last event. */
       static RendererType rendererType; /**< Current controller renderer type*/
 

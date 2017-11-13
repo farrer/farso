@@ -45,7 +45,9 @@ Widget::Widget(WidgetType wType, int x, int y, int w, int h, Widget* wParent)
         mouseHint(""),
         parentContainer(NULL),
         renderer(NULL),
+        ownRenderer(wParent == NULL),
         parent(wParent),
+        root(NULL),
         dirty(true),
         skinElementType(Skin::SKIN_TYPE_UNKNOWN)
 {
@@ -87,6 +89,7 @@ Widget::Widget(WidgetType wType, Widget* wParent)
         mouseHint(""),
         parentContainer(NULL),
         renderer(NULL),
+        ownRenderer(wParent == NULL),
         parent(wParent),
         dirty(true),
         skinElementType(Skin::SKIN_TYPE_UNKNOWN)
@@ -122,11 +125,30 @@ Widget::~Widget()
       Controller::clearIdReference(this->id);
    }
 
-   if((renderer != NULL) && (parent == NULL))
+   if((ownRenderer) && (renderer != NULL))
    {
-      /* Renderer allocation belongs to us. Let's free it. */
-      delete renderer;
+      /* Renderer allocation belong to us. Let's free it. */
+      Controller::removeWidgetRenderer(renderer);
    }
+}
+
+/***********************************************************************
+ *                        overrideWidgetRenderer                       *
+ ***********************************************************************/
+void Widget::overrideWidgetRenderer(WidgetRenderer* renderer, bool ownRenderer)
+{
+   assert(parent != NULL);
+   this->renderer = renderer;
+   this->ownRenderer = ownRenderer;
+
+   /* Propagate children */
+   Widget* child = (Widget*) getFirst();
+   for(int i = 0; i < getTotal(); i++)
+   {
+      child->overrideWidgetRenderer(this->renderer, false);
+      child = (Widget*) child->getNext();
+   }
+
 }
 
 /***********************************************************************
@@ -172,7 +194,7 @@ void Widget::setSkinElement(int skinElement)
  ***********************************************************************/
 void Widget::setPosition(int x, int y)
 {
-   if(parent == NULL)
+   if(ownRenderer)
    {
       renderer->setPosition(x, y);
    }
@@ -230,7 +252,7 @@ void Widget::setSize(int width, int height)
    {
       this->width = width;
       this->height = height;
-      if(parent == NULL)
+      if(ownRenderer)
       {
          if(this->renderer != NULL)
          {
@@ -325,6 +347,20 @@ void Widget::enable()
 void Widget::draw(bool force)
 {
    bool wasDirty = dirty;
+   Surface* surface = getWidgetRenderer()->getSurface();
+
+   if(ownRenderer)
+   {
+      surface->lock();
+      /* Only need to clear the surface if is itself dirty.
+       * In case the children is dirty and will need to affect the
+       * parent's (changind its area, for example), the child is responsable
+       * for marking parent as dirty to it to work as expected. */
+      if(isSelfDirty())
+      {
+         surface->clear();
+      }
+   }
 
    /* Draw it */
    if(wasDirty || force)
@@ -347,8 +383,7 @@ void Widget::draw(bool force)
             int x2 = x1 + getWidth() - 1;
             int y2 = y1 + getHeight() - 1;
 
-            skin->drawElement(getWidgetRenderer()->getSurface(), 
-                  skinElementType, x1, y1, x2, y2);
+            skin->drawElement(surface, skinElementType, x1, y1, x2, y2);
          }
       }
    }
@@ -365,10 +400,11 @@ void Widget::draw(bool force)
       child = (Widget*) child->getNext();
    }
 
-   /* Reupload its texture, if it's a 'root' widget */
-   if(parent == NULL)
+   /* Reupload its texture, if owned it */
+   if(ownRenderer)
    {
-      getWidgetRenderer()->uploadSurface();
+      renderer->uploadSurface();
+      surface->unlock();
    }
 }
 
@@ -446,11 +482,11 @@ void Widget::hide()
 
       /* Note that when hidden, there's no need to redraw itself.
        * But we must tell our parent. */
-      if(getParent() != NULL)
+      if((!ownRenderer) && (getParent() != NULL))
       {
          getParent()->setDirty();
       }
-      else
+      else if(renderer)
       {
          renderer->hide();
       }
@@ -467,7 +503,7 @@ void Widget::show()
       visible = true;
       available = true;
 
-      if(parent == NULL)
+      if(ownRenderer && renderer)
       {
          renderer->show();
       }
@@ -479,7 +515,7 @@ void Widget::show()
  ***********************************************************************/
 const bool Widget::isVisible() const
 {
-   if(parent == NULL)
+   if(ownRenderer)
    {
       return renderer->isVisible();
    }
@@ -622,7 +658,8 @@ bool Widget::treat(bool leftButtonPressed, bool rightButtonPressed,
    mrY = mouseY - getWidgetRenderer()->getPositionY() - body.getY1();
 
    if((type == WIDGET_TYPE_WINDOW) && 
-      (Controller::getActiveWindow() != this))
+      ((Controller::getActiveWidget() == NULL) || 
+       (Controller::getActiveWidget()->getRoot() != this)))
    {
       /* We'll never check children events on not active
        * windows (as the only event to happen on it will be activation). */
@@ -655,7 +692,7 @@ Farso::Rect Widget::getBodyWithParentsApplied()
 {
    Rect body = getBody();
    
-   if(parent != NULL)
+   if((parent != NULL) && (!ownRenderer))
    {
       Rect parentBody = parent->getBodyWithParentsApplied();
 
@@ -695,5 +732,29 @@ void Widget::onEvent(const EventType& eventType)
    {
       (*it)->onEvent(eventType, this);
    }
+}
+
+/***********************************************************************
+ *                                getRoot                              *
+ ***********************************************************************/
+Widget* Widget::getRoot()
+{
+   if(root != NULL)
+   {
+      /* Already defined which is our root. */
+      return root;
+   }
+
+   /* Must define our root */
+   if(parent != NULL)
+   {
+      root = parent->getRoot();
+   }
+   else
+   {
+      root = this;
+   }
+
+   return root;
 }
 

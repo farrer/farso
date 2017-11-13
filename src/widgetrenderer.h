@@ -23,6 +23,7 @@
 
 #include <kobold/kstring.h>
 #include <kobold/target.h>
+#include <kobold/list.h>
 
 #include "farsoconfig.h"
 #include "surface.h"
@@ -40,7 +41,7 @@ class ControllerRendererJunction;
  * call. This is needed for the surface creation always be at the 'renderer' 
  * thread (ie: the creation of a texture will require, for some renderers,
  * that the graphical thread is used). */
-class WidgetRenderer
+class WidgetRenderer : public Kobold::ListElement
 {
    public:
       /*! Constructor.

@@ -64,7 +64,8 @@ class Widget : public Kobold::ListElement, public Kobold::List
          WIDGET_TYPE_LABELLED_PICTURE,
          WIDGET_TYPE_CLICKABLE_PICTURE,
          WIDGET_TYPE_SPIN,
-         WIDGET_TYPE_TREE_VIEW
+         WIDGET_TYPE_TREE_VIEW,
+         WIDGET_TYPE_COMBO_BOX
       };
 
       /*! Constructor
@@ -233,6 +234,9 @@ class Widget : public Kobold::ListElement, public Kobold::List
 
       /*! \return the WidgetRenderer to use. */
       WidgetRenderer* getWidgetRenderer();
+      /*! \return if the renderer it use is one of its own (true) or if it's
+       * the one of its parent (false). */
+      const bool haveOwnRenderer() const { return ownRenderer; };
 
       /*! Check if the relative to parent's coordinate point (x,y)
        * is inside this widget. */
@@ -297,6 +301,14 @@ class Widget : public Kobold::ListElement, public Kobold::List
       /*! Define the nearest container parent if exists. */
       void defineParentContainer();
 
+      /*! Override the widget renderer used.
+       * \note should not be called on root widgets */
+      void overrideWidgetRenderer(WidgetRenderer* renderer, bool ownRenderer);
+
+      /*! \return the Root widget of the current widget.
+       * \note could be the same widget if it's a root one. */
+      Widget* getRoot();
+
    private:
       
       WidgetType type;     /**< Widget Type */ 
@@ -315,7 +327,10 @@ class Widget : public Kobold::ListElement, public Kobold::List
       Widget* parentContainer; /**< Container parent to this widget */
 
       WidgetRenderer* renderer; /**< Internal renderer, if without parents. */
+      bool ownRenderer; /**< If the renderer was created for this widget and
+                             its memmory is our responsibility */
       Widget* parent;   /**< Parent Widget - if any */
+      Widget* root; /**< Root widget of this one */
       bool dirty;     /**< Flag if the had changed its draw state */
 
       int skinElementType; /**< Override the way to draw the element */

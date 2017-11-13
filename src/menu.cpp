@@ -101,6 +101,19 @@ void Menu::MenuItem::setCaption(const Kobold::String& str)
 }
 
 /***********************************************************************
+ *                             getCaption                              *
+ ***********************************************************************/
+const Kobold::String Menu::MenuItem::getCaption() const
+{
+   if(this->label)
+   {
+      return this->label->getCaption();
+   }
+
+   return "";
+}
+
+/***********************************************************************
  *                               ~MenuItem                             *
  ***********************************************************************/
 Menu::MenuItem::~MenuItem()
@@ -320,8 +333,8 @@ const bool Menu::MenuItem::isVisible() const
 /***********************************************************************
  *                                Menu                                 *
  ***********************************************************************/
-Menu::Menu(int minWidth)
-     :Widget(Widget::WIDGET_TYPE_MENU, NULL)
+Menu::Menu(int minWidth, Widget* parent)
+     :Widget(Widget::WIDGET_TYPE_MENU, parent)
 {
    this->current = NULL;
    this->creating = false;
@@ -331,6 +344,7 @@ Menu::Menu(int minWidth)
    this->curWidth = 0;
    this->curHeight = 0;
    this->minWidth = minWidth;
+   this->menuRenderer = NULL;
 }
 
 /***********************************************************************
@@ -345,7 +359,8 @@ Menu::~Menu()
  ***********************************************************************/
 void Menu::beginCreate()
 {
-   if(getWidgetRenderer() != NULL)
+   if((getParent() && menuRenderer != NULL) || 
+      (getParent() == NULL && getWidgetRenderer() != NULL))
    {
       Kobold::Log::add(
             "Warning: calling beginCreate to an already created menu!");
@@ -437,8 +452,14 @@ void Menu::endCreate()
       width = minWidth;
    }
 
-   /* define menu size (creating its renderer) */
+   /* define menu size (creating its renderer, if no parent) */
    Widget::setSize(width, height);
+   if(getParent())
+   {
+      this->menuRenderer = Controller::createNewWidgetRenderer(width, height);
+      overrideWidgetRenderer(menuRenderer, true);
+   }
+   assert(getWidgetRenderer() != NULL);
 
    /* Set body */
    body.set(0, 0, width - 1, height - 1);
@@ -504,7 +525,7 @@ void Menu::open(int x, int y, Widget* caller)
       setDirty();
    }
 
-   Controller::setActiveMenu(this);
+   Controller::setActiveWidget(this);
 }
 
 /***********************************************************************
@@ -513,11 +534,19 @@ void Menu::open(int x, int y, Widget* caller)
 void Menu::close()
 {
    hide();
-   Controller::setActiveMenu(NULL);
    if((caller != NULL) && (caller->getType() == Widget::WIDGET_TYPE_BUTTON))
    {
       Button* callerButton = static_cast<Button*>(caller);
       callerButton->release();
+   }
+
+   if(this->getRoot() != this)
+   {
+      Controller::setActiveWidget(this->getRoot());
+   }
+   else
+   {
+      Controller::setActiveWidget(NULL);
    }
 }
 

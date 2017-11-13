@@ -43,12 +43,15 @@ void Cursor::init(int size)
 
    cursors = new Kobold::List();
 
-   renderer = Controller::createNewWidgetRenderer(size, size);
+   /* Note: Cursor and Tip renderers aren't inserted at the Controller's
+    * list, so they can always be over other widgets. */
+
+   renderer = Controller::createNewWidgetRenderer(size, size, false);
    /* Make sure we initialize the surface to use. */
    renderer->getSurface();
 
    tipRenderer = Controller::createNewWidgetRenderer(CURSOR_TIP_MAX_WIDTH, 
-         CURSOR_TIP_MAX_HEIGHT);
+         CURSOR_TIP_MAX_HEIGHT, false);
    tipRenderer->getSurface();
    tipRenderer->hide();
 

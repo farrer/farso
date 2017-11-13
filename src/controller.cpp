@@ -90,8 +90,9 @@ void Controller::init(const RendererType& rendererType,
       }
 
       skin = NULL;
-      activeWindow = NULL;
+      activeWidget = NULL;
       event.set(NULL, EVENT_NONE);
+      renderers = new Kobold::List();
       widgets = new Kobold::List();
       toRemoveWidgets = new Kobold::List();
       inited = true;
@@ -153,6 +154,16 @@ void Controller::finish()
    {
       delete junction;
       junction = NULL;
+   }
+   if(renderers)
+   {
+      /* All renderers should be freed before (specially at 
+       * widget's destructor). If not, although nothing will leak as
+       * the delete here will free them, its good to be aware of it
+       * when debuging. */
+      assert(renderers->getTotal() == 0);
+      delete renderers;
+      renderers = NULL;
    }
    FontManager::finish();
 
@@ -241,26 +252,46 @@ ControllerRendererJunction* Controller::createNewJunction(
 /***********************************************************************
  *                       createNewWidgetRenderer                       *
  ***********************************************************************/
-WidgetRenderer* Controller::createNewWidgetRenderer(int width, int height)
+WidgetRenderer* Controller::createNewWidgetRenderer(int width, int height,
+      bool insertAtList)
 {
+   WidgetRenderer* renderer = NULL;
+
    switch(rendererType)
    {
       case RENDERER_TYPE_SDL:
-         return new SDLWidgetRenderer(width, height, junction);
+         renderer = new SDLWidgetRenderer(width, height, junction);
+      break;
       case RENDERER_TYPE_OPENGL:
 #if FARSO_HAS_OPENGL == 1
-         return new OpenGLWidgetRenderer(width, height, junction);
+         renderer = new OpenGLWidgetRenderer(width, height, junction);
 #endif
-         break;
+      break;
       case RENDERER_TYPE_OGRE3D:
 #if FARSO_HAS_OGRE == 1
-         return new OgreWidgetRenderer(width, height, junction);
+         renderer = new OgreWidgetRenderer(width, height, junction);
 #else
       break;
 #endif
    }
 
-   return NULL;
+   if((renderer) && (insertAtList))
+   {
+      renderers->insertAtBegin(renderer);
+   }
+
+   return renderer;
+}
+
+/***********************************************************************
+ *                       removeNewWidgetRenderer                       *
+ ***********************************************************************/
+void Controller::removeWidgetRenderer(WidgetRenderer* renderer)
+{
+   if(renderers)
+   {
+      renderers->remove(renderer);
+   }
 }
 
 /***********************************************************************
@@ -488,49 +519,48 @@ bool Controller::addWidget(Widget* widget)
 }
 
 /***********************************************************************
- *                         getActiveWindow                             *
+ *                         getActiveWidget                             *
  ***********************************************************************/
-Window* Controller::getActiveWindow()
+Widget* Controller::getActiveWidget()
 {
    mutex.lock();
-   Window* res = activeWindow;
+   Widget* res = activeWidget;
    mutex.unlock();
+
    return res;
 }
 
 /***********************************************************************
- *                         setActiveWindow                             *
+ *                         setActiveWidget                             *
  ***********************************************************************/
-void Controller::setActiveWindow(Window* window)
+void Controller::setActiveWidget(Widget* widget)
 {
    mutex.lock();
-   if(window != activeWindow)
+   if(widget != activeWidget)
    {
-      Window* lastActive = activeWindow;
-      activeWindow = window;
+      Widget* lastActive = activeWidget;
+      activeWidget = widget;
 
-      if((window != NULL) && (!window->isActive()))
+      if((widget != NULL) && (widget->getType() == Widget::WIDGET_TYPE_WINDOW))
       {
-         window->activate();
+         Window* window = static_cast<Window*>(widget);
+         if(!window->isActive())
+         {
+            window->activate();
+         }
       }
-      if((lastActive != NULL) && (lastActive->isActive()) &&
-            (window != lastActive))
+      if(((lastActive != NULL) && 
+          (lastActive->getType() == Widget::WIDGET_TYPE_WINDOW)) &&
+          ((widget == NULL) || (widget->getParent() == NULL) ||
+           (widget->getType() == Widget::WIDGET_TYPE_WINDOW)))
       {
-         lastActive->inactivate();
+         Window* lastWindow = static_cast<Window*>(lastActive);
+         if(lastWindow->isActive())
+         {
+            lastWindow->inactivate();
+         }
       }
    }
-   forceBringToFrontCall = true;
-   mutex.unlock();
-}
-
-/***********************************************************************
- *                         setActiveMenu                               *
- ***********************************************************************/
-void Controller::setActiveMenu(Menu* menu)
-{
-   assert(menu == NULL || activeMenu == NULL);
-   mutex.lock();
-   activeMenu = menu;
    forceBringToFrontCall = true;
    mutex.unlock();
 }
@@ -541,27 +571,35 @@ void Controller::setActiveMenu(Menu* menu)
 void Controller::bringFront(Widget* widget)
 {
    assert(widget != NULL);
-   assert(widget->getParent() == NULL);
 
    forceBringToFrontCall = false;
 
-   /* Bring the widget to list's front, if not yet */
-   if(widget != widgets->getFirst())
+   /* Bring the widget to list's front, if not yet (to treat first) */
+   if((widget->getParent() == NULL) && (widget != widgets->getFirst()))
    {
       widgets->removeWithoutDelete(widget);
       widgets->insertAtBegin(widget);
    }
+   
+   /* Must bring its own renderer to the front */
+   if((widget->haveOwnRenderer()) && 
+         (widget->getWidgetRenderer() != renderers->getFirst()))
+   {
+      renderers->removeWithoutDelete(widget->getWidgetRenderer());
+      renderers->insertAtBegin(widget->getWidgetRenderer());
+   }
 
    if(!junction->shouldManualRender())
    {
-      /* Must reset all widgets sub group renderer.
+      /* Must reset all WidgetRenderers sub group.
        * Note: Starting at LAST-1, as mouse cursor should be at last */
-      int curSubId = FARSO_WIDGET_RENDERER_LAST_SUB_GROUP -1;
+      int curSubId = FARSO_WIDGET_RENDERER_LAST_SUB_GROUP - 1;
 
-      Widget* w = static_cast<Widget*>(widgets->getFirst());
-      for(int i = 0; i < widgets->getTotal(); i++)
+      WidgetRenderer* renderer = static_cast<WidgetRenderer*>(
+            renderers->getFirst());
+      for(int i = 0; i < renderers->getTotal(); i++)
       {
-         w->getWidgetRenderer()->setRenderQueueSubGroup(curSubId);
+         renderer->setRenderQueueSubGroup(curSubId);
 
          /* Go to next level, if available */
          if(curSubId > FARSO_WIDGET_RENDERER_FIRST_SUB_GROUP)
@@ -569,7 +607,7 @@ void Controller::bringFront(Widget* widget)
             curSubId--;
          }
 
-         w = static_cast<Widget*>(w->getNext());
+         renderer = static_cast<WidgetRenderer*>(renderer->getNext());
       }
    }
 }
@@ -609,22 +647,11 @@ bool Controller::verifyEvents(Widget* widget,
    /* redraw the widget (and its children, if needed) */
    if((widget->isDirty()) && (widget->isVisible()))
    {
-      Surface* surface = widget->getWidgetRenderer()->getSurface();
       if(skin != NULL)
       {
          skin->getSurface()->lock();
       }
-      surface->lock();
-      /* Only need to clear the surface if is itself dirty.
-       * In case the children is dirty and will need to affect the
-       * parent's (changind its area, for example), the child is responsable
-       * for marking parent as dirty to it to work as expected. */
-      if(widget->isSelfDirty())
-      {
-         surface->clear();
-      }
       widget->draw();
-      surface->unlock();
       if(skin != NULL)
       {
          skin->getSurface()->unlock();
@@ -669,49 +696,25 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    /* If removed and have widgets, must bring it to front */
    if((removed) && (widgets->getTotal() > 0))
    {
-      bringFront((activeWindow) ? activeWindow 
+      bringFront((activeWidget) ? activeWidget
                    : static_cast<Widget*>(widgets->getFirst()));
    }
 
-   Window* curActive = activeWindow;
-
-   if(activeMenu)
+   if((activeWidget) && (forceBringToFrontCall))
    {
-      /* When a menu is active, must make sure we have it at front of
-       * all other 'root' widgets (even of windows). */
-      if( (forceBringToFrontCall) || (activeMenu != widgets->getFirst()) )
-      {
-         bringFront(activeMenu);
-      }
-   }
-   else
-   {
-      /* Must always treat active window events before others. */
-      if(curActive)
-      {
-         /* Make sure the active window is first
-          * Note: doing here, instead of inside setActiveWindow because
-          * that function could be called while looping through the list,
-          * which could mess things up on the list. */
-         if( (forceBringToFrontCall) || (curActive != widgets->getFirst()) )
-         {
-            bringFront(curActive);
-         }
-
-         gotEvent |= verifyEvents(curActive, leftButtonPressed, 
-               rightButtonPressed, mouseX, mouseY, !gotEvent);
-      }
+      /* Make sure the active root widget is first
+       * Note: doing here, instead of inside setActiveWidget because
+       * that function could be called while looping through the list,
+       * which could mess things up on the list. */
+      bringFront(activeWidget);
    }
 
    /* Check all other widgets */
-   Widget* w = (Widget*) widgets->getFirst();
+   Widget* w = static_cast<Widget*>(widgets->getFirst());
    for(int i = 0; i < widgets->getTotal(); i++)
    {
-      if((w != curActive))
-      {
-         gotEvent |= verifyEvents(w, leftButtonPressed, rightButtonPressed, 
-               mouseX, mouseY, !gotEvent);
-      }
+      gotEvent |= verifyEvents(w, leftButtonPressed, rightButtonPressed, 
+            mouseX, mouseY, !gotEvent);
 
       /* Verify if mouse is over any widget (note: stop checking after
        * got that is over a widget) */
@@ -722,21 +725,22 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
          mouseOverWidget = w->isInner(relMouseX, relMouseY);
       }
 
-      w = (Widget*) w->getNext();
+      w = static_cast<Widget*>(w->getNext());
    }
 
    if(junction->shouldManualRender())
    {
       /* Most render widgets from back to front */
-      w = (Widget*) widgets->getLast();
-      for(int i = 0; i < widgets->getTotal(); i++)
+      WidgetRenderer* renderer = static_cast<WidgetRenderer*>(
+            renderers->getLast());
+      for(int i = 0; i < renderers->getTotal(); i++)
       {
-         if(w->isVisible())
+         if(renderer->isVisible())
          {
-            w->getWidgetRenderer()->render();
+            renderer->render();
          }
 
-         w = (Widget*) w->getPrevious();
+         renderer = static_cast<WidgetRenderer*>(renderer->getPrevious());
       }
    }
    
@@ -750,7 +754,10 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    {
       cursorRenderer->setPosition(Farso::Cursor::getX(),
                                   Farso::Cursor::getY());
-      cursorRenderer->render();
+      if(junction->shouldManualRender())
+      {
+         cursorRenderer->render();
+      }
    }
 
    /* Check if current tip, if any, expired */
@@ -785,7 +792,10 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
          cursorRenderer->show();
       }
       
-      cursorRenderer->render();
+      if(junction->shouldManualRender())
+      {
+         cursorRenderer->render();
+      }
    }
 
 #endif
@@ -883,11 +893,11 @@ Widget* Controller::getWidgetById(const Kobold::String& id)
 Skin* Controller::skin = NULL;
 Draw* Controller::draw = NULL;
 ControllerRendererJunction* Controller::junction = NULL;
+Kobold::List* Controller::renderers = NULL;
 Kobold::List* Controller::widgets = NULL;
 Kobold::List* Controller::toRemoveWidgets = NULL;
 bool Controller::inited = false;
-Window* Controller::activeWindow = NULL;
-Menu* Controller::activeMenu = NULL;
+Widget* Controller::activeWidget = NULL;
 Event Controller::event(NULL, EVENT_NONE);
 RendererType Controller::rendererType = RENDERER_TYPE_SDL; 
 int Controller::width = 0;

@@ -91,6 +91,7 @@ Widget::Widget(WidgetType wType, Widget* wParent)
         renderer(NULL),
         ownRenderer(wParent == NULL),
         parent(wParent),
+        root(NULL),
         dirty(true),
         skinElementType(Skin::SKIN_TYPE_UNKNOWN)
 {
@@ -517,7 +518,7 @@ const bool Widget::isVisible() const
 {
    if(ownRenderer)
    {
-      return renderer->isVisible();
+      return (renderer) ? renderer->isVisible() : false;
    }
    return visible;
 }

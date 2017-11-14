@@ -267,6 +267,10 @@ class Widget : public Kobold::ListElement, public Kobold::List
       /*! Tell our listeners that an event happened on this widget */
       void onEvent(const EventType& eventType);
 
+      /*! \return the Root widget of the current widget.
+       * \note could be the same widget if it's a root one. */
+      Widget* getRoot();
+
    protected:
 
       /*! Especific widget implementation of draw function.
@@ -304,10 +308,6 @@ class Widget : public Kobold::ListElement, public Kobold::List
       /*! Override the widget renderer used.
        * \note should not be called on root widgets */
       void overrideWidgetRenderer(WidgetRenderer* renderer, bool ownRenderer);
-
-      /*! \return the Root widget of the current widget.
-       * \note could be the same widget if it's a root one. */
-      Widget* getRoot();
 
    private:
       

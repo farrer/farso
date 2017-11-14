@@ -709,12 +709,23 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       bringFront(activeWidget);
    }
 
+   /* Check active widget root first, if any. */
+   Widget* activeRoot = (activeWidget) ? activeWidget->getRoot() : NULL;
+   if(activeRoot)
+   {
+      gotEvent |= verifyEvents(activeRoot, leftButtonPressed,
+            rightButtonPressed, mouseX, mouseY, !gotEvent);
+   }
+
    /* Check all other widgets */
    Widget* w = static_cast<Widget*>(widgets->getFirst());
    for(int i = 0; i < widgets->getTotal(); i++)
    {
-      gotEvent |= verifyEvents(w, leftButtonPressed, rightButtonPressed, 
-            mouseX, mouseY, !gotEvent);
+      if(w != activeRoot)
+      {
+         gotEvent |= verifyEvents(w, leftButtonPressed, rightButtonPressed, 
+               mouseX, mouseY, !gotEvent);
+      }
 
       /* Verify if mouse is over any widget (note: stop checking after
        * got that is over a widget) */

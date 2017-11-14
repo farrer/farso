@@ -123,7 +123,9 @@ enum EventType
    /*! When collapsed a TreeViewElement */
    EVENT_TREEVIEW_COLLAPSED,
    /*! When selected a TreeViewElement */
-   EVENT_TREEVIEW_SELECTED
+   EVENT_TREEVIEW_SELECTED,
+   /*! When selected an option on a ComboBox */
+   EVENT_COMBOBOX_SELECTED
 };
 
 }

@@ -192,7 +192,6 @@ void OgreWidgetRenderer::createSurface()
       sceneNode->setVisible(false);
    }
    setPosition(targetX.getValue(), targetY.getValue());
-   //renderable->setPosition(targetX.getValue(), targetY.getValue());
 #endif
 }
 

@@ -688,6 +688,8 @@ void Menu::doDraw(const Rect& pBody)
 bool Menu::doTreat(bool leftButtonPressed, bool rightButtonPressed, 
             int mouseX, int mouseY, int mrX, int mrY)
 {
+   mrX = mouseX - getWidgetRenderer()->getPositionX();
+   mrY = mouseY - getWidgetRenderer()->getPositionY();
    if(leftButtonPressed)
    {
       if(!pressStarted)

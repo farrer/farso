@@ -191,7 +191,8 @@ void OgreWidgetRenderer::createSurface()
    {
       sceneNode->setVisible(false);
    }
-   renderable->setPosition(targetX.getValue(), targetY.getValue());
+   setPosition(targetX.getValue(), targetY.getValue());
+   //renderable->setPosition(targetX.getValue(), targetY.getValue());
 #endif
 }
 
@@ -368,9 +369,16 @@ void OgreWidgetRenderer::doSetPosition(Ogre::Real x, Ogre::Real y)
             y / Controller::getHeight());
    }
 #else
-   if(renderable)
+   if(sceneNode)
    {
-      renderable->setPosition(x, y);
+      /* Redefine the coordinates to -1,1 space. */
+      float x1 = -1.0f + 
+         (x / static_cast<float>(Controller::getWidth()) * 2.0f);
+      float y1 = 1.0f - 
+         (y / static_cast<float>(Controller::getHeight()) * 2.0f);
+
+      /* Set our node */
+      sceneNode->setPosition(x1, y1, 0.0f);
    }
 #endif
 }

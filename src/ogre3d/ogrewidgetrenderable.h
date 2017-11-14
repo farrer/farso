@@ -50,7 +50,7 @@ class OgreWidgetRenderable : public Ogre::Renderable
       void getWorldTransforms(Ogre::Matrix4* xform) const;
 
       /** @copydoc Renderable::getUseIdentityWorldMatrix */
-      bool getUseIdentityWorldMatrix(void) const { return true; };
+      bool getUseIdentityProjection(void) const { return true; };
 
       /** @copydoc Renderable::getLights */
       const Ogre::LightList& getLights(void) const
@@ -66,9 +66,6 @@ class OgreWidgetRenderable : public Ogre::Renderable
       /** @copydoc Renderable::getCastsShadows */
       bool getCastsShadows(void) const;
 
-      /*! Set new position */
-      void setPosition(int x, int y);
-
    protected:
 
       /*! Create the VertexArrayObject to render the widget */
@@ -81,8 +78,6 @@ class OgreWidgetRenderable : public Ogre::Renderable
       Kobold::String name;  /**< Current renderable name */
       int width;            /**< Current width */
       int height;           /**< Current height */
-      int x;        /**< Current X coordinate */
-      int y;        /**< Current Y coordinate */
       Ogre::VaoManager* vaoManager; /**< VAO manager used */
       Ogre::VertexArrayObject* vao; /**< The single VAO of this renderable */
       float* vertices; /**< The SIMD array of vertices */

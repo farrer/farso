@@ -41,8 +41,6 @@ OgreWidgetRenderable::OgreWidgetRenderable(Kobold::String name,
                          int width, int height)
                      :Ogre::Renderable()
 {
-   this->x = 0;
-   this->y = 0;
    this->width = width;
    this->height = height;
    this->name = name;
@@ -184,46 +182,14 @@ void OgreWidgetRenderable::createVAO()
 void OgreWidgetRenderable::calculateCoordinates(float& x1, float& y1, 
       float& x2, float& y2)
 {
-   /* Define our coordinates at Ogre's -1,1 range. Note the signals, due to 
-    * Farso's top-left coordinates are at 0, 0 (and fo from top-left to 
-    * bottom-right).  */
-   x1 = -1.0f + (x / static_cast<float>(Controller::getWidth()) * 2.0f);
-   y1 = 1.0f - (y / static_cast<float>(Controller::getHeight()) * 2.0f);
-   x2 = x1 + (width / static_cast<float>(Controller::getWidth()) * 2.0f);
-   y2 = y1 - (height / static_cast<float>(Controller::getHeight()) * 2.0f);
-}
-
-/************************************************************************
- *                             setPosition                              *
- ************************************************************************/
-void OgreWidgetRenderable::setPosition(int x, int y)
-{
-   if((this->x != x) || (this->y != y))
-   {
-      this->x = x;
-      this->y = y;
-
-      float x1 = 0.0f, y1 = 0.0f, x2 = 0.0f, y2 = 0.0f;
-      calculateCoordinates(x1, y1, x2, y2);
-
-      float* verts = reinterpret_cast<float*>(
-            vertexBuffer->map( 0, vertexBuffer->getNumElements()));
-
-      /* Define our vertices (with UVs)  */
-      verts[0] = x2; verts[1] = y2; verts[2] = 0.0f; 
-      verts[3] = 1.0f; verts[4] = 1.0f;
-
-      verts[5] = x2; verts[6] = y1; verts[7] = 0.0f; 
-      verts[8] = 1.0f; verts[9] =  0.0f;
-
-      verts[10] = x1; verts[11] = y1; verts[12] = 0.0f;
-      verts[13] = 0.0f; verts[14] = 0.0f;
-
-      verts[15] = x1; verts[16] = y2; verts[17] = 0.0f;
-      verts[18] = 0.0f; verts[19] = 1.0f;
-
-      vertexBuffer->unmap(Ogre::UO_KEEP_PERSISTENT);
-   }
+   /* Define vertices at Ogre's -1,1 range. Note the signals, due to 
+    * Farso's top-left coordinates are at 0,0 (and for from top-left to 
+    * bottom-right). Also, note the 2.0f multiplier, as -1 to 1 is a 2 
+    * units space. */
+   x1 = 0.0f;
+   y1 = 0.0f;
+   x2 = (width / static_cast<float>(Controller::getWidth()) * 2.0f);
+   y2 = - (height / static_cast<float>(Controller::getHeight()) * 2.0f);
 }
 
 /************************************************************************

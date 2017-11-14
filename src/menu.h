@@ -165,7 +165,7 @@ class Menu : public Widget
 
       /*! \return pointer to current on-selection (or selected, depending on
        * current event state) item */
-      MenuItem* getCurrentItem();
+      const MenuItem* getCurrentItem();
 
       /* From Widget */
       const Rect& getBody();

@@ -3,6 +3,7 @@ src/button.cpp
 src/checkbox.cpp
 src/clickablepicture.cpp
 src/colors.cpp
+src/combobox.cpp
 src/container.cpp
 src/controller.cpp
 src/cursor.cpp
@@ -41,6 +42,7 @@ src/button.h
 src/checkbox.h
 src/clickablepicture.h
 src/colors.h
+src/combobox.h
 src/container.h
 src/controller.h
 src/cursor.h
@@ -353,7 +355,6 @@ else(${FARSO_HAS_OGRE_EXAMPLE})
    endif(${FARSO_HAS_OGRE})
 endif(${FARSO_HAS_OGRE_EXAMPLE})
 
-message(${LIBRARIES})
 target_link_libraries(farso_sdl_example ${LIBRARIES})
 
 if(${FARSO_HAS_RAPIDJSON})

@@ -241,7 +241,7 @@ void Example::createOtherWindow()
  ************************************************************************/
 void Example::createWindowToTestContainers()
 {
-   Farso::Window* window = new Farso::Window(400, 500, "Containers test");
+   Farso::Window* window = new Farso::Window(400, 530, "Containers test");
    window->open();
    window->setPosition(10, 10);
    
@@ -308,6 +308,11 @@ void Example::addAllWidgetsToContainer(Farso::Container* cont)
          360, cont);
    spin->setValue(20);
    spin->setRange(-50, 50);
+   std::vector<Kobold::String> opts;
+   opts.push_back("Option 1");
+   opts.push_back("Option 2");
+   opts.push_back("Another Option");
+   new Farso::ComboBox(0, 380, 100, 21, opts, cont);
 }
 
 /************************************************************************
@@ -358,6 +363,7 @@ void Example::createMenu()
    menu->insertSeparator();
    menu->insertItem("Another gitem ");
    menu->endCreate();
+   menu->setCaption("ME!");
 }
 
 /************************************************************************

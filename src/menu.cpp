@@ -600,7 +600,7 @@ Menu::MenuItem* Menu::getItem(int rX, int rY)
 /***********************************************************************
  *                          getCurrentItem                             *
  ***********************************************************************/
-Menu::MenuItem* Menu::getCurrentItem()
+const Menu::MenuItem* Menu::getCurrentItem()
 {
    return current;
 }

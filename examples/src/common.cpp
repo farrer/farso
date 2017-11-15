@@ -478,22 +478,27 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
    else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_C))
    {
       changeSkin("");
+      skinCombo->setCaption("");
    }
    else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_M))
    {
       changeSkin("skins/moderna.skin");
+      skinCombo->setCaption("Moderna");
    }
    else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_W))
    {
       changeSkin("skins/wyrmheart.skin");
+      skinCombo->setCaption("Wyrmheart");
    }
    else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_S))
    {
       changeSkin("skins/scifi.skin");
+      skinCombo->setCaption("Sci-fi");
    }
    else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_K))
    {
       changeSkin("skins/clean.skin");
+      skinCombo->setCaption("Clean");
    }
 
 #endif

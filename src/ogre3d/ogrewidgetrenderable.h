@@ -49,9 +49,6 @@ class OgreWidgetRenderable : public Ogre::Renderable
       /** @copydoc Renderable::getWorldTransforms */
       void getWorldTransforms(Ogre::Matrix4* xform) const;
 
-      /** @copydoc Renderable::getUseIdentityWorldMatrix */
-      bool getUseIdentityProjection(void) const { return true; };
-
       /** @copydoc Renderable::getLights */
       const Ogre::LightList& getLights(void) const
       {

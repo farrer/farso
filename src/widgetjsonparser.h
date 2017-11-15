@@ -135,6 +135,7 @@ namespace Farso
          Widget* parseCheckBox(const rapidjson::Value& value, Widget* parent);
          Widget* parseClickablePicture(const rapidjson::Value& value,
                Widget* parent);
+         Widget* parseComboBox(const rapidjson::Value& value, Widget* parent);
          Widget* parseContainer(const rapidjson::Value& value, Widget* parent);
          Widget* parseFileSelector(const rapidjson::Value& value,
                Widget* parent);

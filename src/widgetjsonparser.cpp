@@ -345,6 +345,35 @@ Widget* WidgetJsonParser::parseClickablePicture(const rapidjson::Value& value,
 }
 
 /***********************************************************************
+ *                           parseComboBox                             *
+ ***********************************************************************/
+Widget* WidgetJsonParser::parseComboBox(const rapidjson::Value& value, 
+      Widget* parent) 
+{
+   /* Parse and set its items */
+   std::vector<Kobold::String> items;
+   rapidjson::Value::ConstMemberIterator it = value.FindMember("items");
+   if(it != value.MemberEnd() && it->value.IsArray())
+   {
+      for(size_t item = 0; item < it->value.Size(); item++)
+      {
+         if(it->value[item].IsString())
+         {
+            items.push_back(it->value[item].GetString());
+         }
+      }
+   }
+
+   /* Create it */
+   ComboBox* cb = new ComboBox(pos.x, pos.y, size.x, size.y, items, parent);
+   if(!caption.empty())
+   {
+      cb->setCaption(caption);
+   }
+   return cb;
+}
+
+/***********************************************************************
  *                           parseContainer                            *
  ***********************************************************************/
 Widget* WidgetJsonParser::parseContainer(const rapidjson::Value& value,
@@ -1035,6 +1064,10 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       else if(type == "clickablePicture")
       {
          created = parseClickablePicture(value, parent);
+      }
+      else if(type == "comboBox")
+      {
+         created = parseComboBox(value, parent);
       }
       else if(type == "container")
       {

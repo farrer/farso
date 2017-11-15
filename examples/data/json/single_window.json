@@ -117,8 +117,15 @@
                         [
                            {
                               "type" : "progressBar",
-                              "size" : [100, 21],
+                              "size" : [90, 21],
                               "value" : 30
+                           },
+                           {
+                              "type" : "comboBox",
+                              "position" : [91, 0],
+                              "size" : [80, 21],
+                              "items" : ["Option 1", "Option 2"],
+                              "caption" : "Option 1"
                            }
                         ]
                      }

@@ -408,6 +408,18 @@ Widget* WidgetJsonParser::parseContainer(const rapidjson::Value& value,
    {
       contType = Container::TYPE_BOTTOM_CENTERED;
    }
+   else if(typeStr == "centeredLeft")
+   {
+      contType = Container::TYPE_CENTERED_LEFT;
+   }
+   else if(typeStr == "centeredRight")
+   {
+      contType = Container::TYPE_CENTERED_RIGHT;
+   }
+   else if(typeStr == "centered")
+   {
+      contType = Container::TYPE_CENTERED;
+   }
 
    /* Create and define it */
    Container* container;

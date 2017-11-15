@@ -100,12 +100,15 @@ const int Container::getChildX(int x, int width) const
    {
       case TYPE_TOP_LEFT:
       case TYPE_BOTTOM_LEFT:
+      case TYPE_CENTERED_LEFT:
          return x;
       case TYPE_TOP_RIGHT:
       case TYPE_BOTTOM_RIGHT:
+      case TYPE_CENTERED_RIGHT:
          return getWidth() - width - x;
       case TYPE_TOP_CENTERED:
       case TYPE_BOTTOM_CENTERED:
+      case TYPE_CENTERED:
          return ((getWidth() - width) / 2) - x;
    }
 
@@ -128,6 +131,11 @@ int Container::getChildY(int y, int height)
       case TYPE_BOTTOM_LEFT:
       case TYPE_BOTTOM_RIGHT:
          return getHeight() - height - y;
+      break;
+      case TYPE_CENTERED_RIGHT:
+      case TYPE_CENTERED_LEFT:
+      case TYPE_CENTERED:
+         return ((getHeight() - height) / 2) - y;
       break;
    }
 

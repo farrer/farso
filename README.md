@@ -35,15 +35,14 @@ Farso is DNT's GUI, being this version the active of DNT's Ogre3d port.
 
 ## Some History
 
-Farso is by far the oldest Free/Libre project of mime, starting as a DOS
-multitasker GUI back in the late 90s (code from this old dummy
-learning-how-to-programming pascal era is at
-[https://sourceforge.net/projects/farso]). Back in 2005 it got its first major
-rewrite to C++ and was used on the former DNT project (code at src/gui folder
-of [https://sourceforge.net/projects/dnt/]). When rewriting DNT to Ogre3d
-instead of the old/buggy in-house OpenGL renderer, Farso got its last major
-rewrite, with lots of improvements and code clean-up / refactoring, which is
-hosted here.
+Farso is by far my oldest Free/Libre project, starting as a DOS multitasker GUI
+back in the late 90s (code from this old dummy learning-how-to-programming
+pascal era is at [https://sourceforge.net/projects/farso]). Back in 2005 it got
+its first major rewrite to C++ and was used on the former DNT project (code at
+src/gui folder of [https://sourceforge.net/projects/dnt/]). When rewriting DNT
+to Ogre3d instead of the old/buggy in-house OpenGL renderer, Farso got its last
+major rewrite, with lots of improvements and code clean-up / refactoring, which
+is hosted here.
 
 ## Dependencies
 

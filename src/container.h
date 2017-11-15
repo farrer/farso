@@ -51,7 +51,19 @@ class Container : public Widget
          TYPE_BOTTOM_RIGHT,
          /*! Direct children will be bottom-centered oriented: Child x will be
           * the negative distance to containers center and y to bottom. */
-         TYPE_BOTTOM_CENTERED
+         TYPE_BOTTOM_CENTERED,
+         /*! Direct children will be centered-left oriented: Child x will be
+          * the distance to container's left and y the negative distance to its
+          * center */
+         TYPE_CENTERED_LEFT,
+          /*! Direct children will be centered-left oriented: Child x will be
+          * the distance to container's right and y the negative distance to
+          * its center */
+         TYPE_CENTERED_RIGHT,
+         /*! Direct children will be fully centered oriented: Child x will be
+          * the negative distance to container's width center and y the
+          * negative distance to its height center */
+         TYPE_CENTERED
       };
 
       /*! Create a container within full parent's body 

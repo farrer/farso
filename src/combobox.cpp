@@ -46,7 +46,8 @@ ComboBox::ComboBox(int x, int y, int width, int height,
 
    this->button = new Button(0, 0, width, height, "", this);
    this->button->setMenu(this->menu);
-   Label* downLabel = new Label(width-20, 2, 20, height-4, "", button); 
+   Container* cont = new Container(Container::TYPE_CENTERED_RIGHT, button);
+   downLabel = new Label(0, 0, 20, height-4, "", cont); 
    downLabel->setSkinType(Skin::SKIN_TYPE_CAPTION_DOWN);
 }
 
@@ -96,6 +97,19 @@ void ComboBox::doDraw(const Rect& pBody)
 {
    this->body.set(getX(), getY(), 
          getX() + getWidth() - 1, getY() + getHeight() - 1);
+
+   /* Check if we need to change the size of our down label 
+    * (probably due to skin changes) */
+   Skin* skin = Controller::getSkin();
+   if(skin)
+   {
+      Rect min = skin->getSkinElement(
+            Skin::SKIN_TYPE_CAPTION_DOWN).getMinSize();
+      if(downLabel->getHeight() != min.getHeight())
+      {
+         downLabel->setSize(downLabel->getWidth(), min.getHeight());
+      }
+   }
 }
 
 /************************************************************************

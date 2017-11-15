@@ -77,6 +77,7 @@ namespace Farso
       private:
          Rect body; /**< Its body */
          Button* button; /**< Button with combo text. Used to open the menu */
+         Label* downLabel; /**< The label of arrow down */
          Menu* menu; /**< The selection options */
          const Menu::MenuItem* selected; /**< Pointer to the selected option */
    };

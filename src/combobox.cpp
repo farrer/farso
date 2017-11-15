@@ -46,8 +46,8 @@ ComboBox::ComboBox(int x, int y, int width, int height,
 
    this->button = new Button(0, 0, width, height, "", this);
    this->button->setMenu(this->menu);
-   Container* cont = new Container(Container::TYPE_CENTERED_RIGHT, button);
-   downLabel = new Label(0, 0, 20, height-4, "", cont); 
+   Container* cont = new Container(Container::TYPE_CENTERED_LEFT, button);
+   downLabel = new Label(width-20, 0, 20, height-4, "", cont); 
    downLabel->setSkinType(Skin::SKIN_TYPE_CAPTION_DOWN);
 }
 

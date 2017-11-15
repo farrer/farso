@@ -11,6 +11,7 @@ using namespace FarsoExample;
 Example::Example()
 {
    exitButton = NULL;
+   skinCombo = NULL;
    shouldExit = false;
 }
 
@@ -39,13 +40,29 @@ void Example::init(Farso::RendererType rendererType, void* extraInfo)
    /* Set our cursor */
    Farso::Controller::setCursor("cursor/sel.png");
 
-   /* Let's create our windows. Obviously, widgets could be created
-    * any time, and not just on init. */
+   /* Load a skin (instead of using the default 'ugly' non-skin) */
+   Farso::Controller::loadSkin("skins/clean.skin");
+
+   /* Create our exit button */
    exitButton = new Farso::Button(Farso::Controller::getWidth() - 30, 0, 
          30, 30, "", NULL);
    exitButton->setMouseHint("Exit");
    Farso::Controller::addEventListener(exitButton, this);
    new Farso::Picture(3, 4, "other/door.png", exitButton);
+
+   /* And a combo for skin selection/change */
+   std::vector<Kobold::String> skins;
+   skins.push_back("Clean");
+   skins.push_back("Moderna");
+   skins.push_back("Sci-fi");
+   skins.push_back("Wyrmheart");
+   skinCombo = new Farso::ComboBox(Farso::Controller::getWidth() - 130, 0, 
+         100, 21, skins, NULL); 
+   skinCombo->setCaption("Clean");
+   skinCombo->setMouseHint("Select Skin");
+
+   /* Let's create our windows. Obviously, widgets could be created
+    * any time, and not just on init. */
    createDialogWindow();
    createWindowWithStack();
    createOtherWindow();
@@ -311,7 +328,7 @@ void Example::addAllWidgetsToContainer(Farso::Container* cont)
    std::vector<Kobold::String> opts;
    opts.push_back("Option 1");
    opts.push_back("Option 2");
-   opts.push_back("Another Option");
+   opts.push_back("Another One");
    new Farso::ComboBox(0, 380, 100, 21, opts, cont);
 }
 
@@ -422,6 +439,37 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
             }
          }
       }
+      else if(event.getType() == Farso::EVENT_COMBOBOX_SELECTED)
+      {
+         if(event.getWidget() == skinCombo)
+         {
+            if(skinCombo->getSelected() != NULL)
+            {
+               /* Change to the selected skin */
+               if(skinCombo->getSelected()->getCaption() == "Clean")
+               {
+                  changeSkin("skins/clean.skin");
+               }
+               else if(skinCombo->getSelected()->getCaption() == "Moderna")
+               {
+                  changeSkin("skins/moderna.skin");
+               }
+               else if(skinCombo->getSelected()->getCaption() == "Sci-fi")
+               {
+                  changeSkin("skins/scifi.skin");
+               }
+               else if(skinCombo->getSelected()->getCaption() == "Wyrmheart")
+               {
+                  changeSkin("skins/wyrmheart.skin");
+               }
+            }
+            else
+            {
+               /* No skin selected */
+               changeSkin("");
+            }
+         }
+      }
    }
 
    /* Let's treat some dynamic skin change via keys C, M and W. */
@@ -429,49 +477,50 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
     KOBOLD_PLATFROM != KOBOLD_PLATFORM_IOS
    else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_C))
    {
+      changeSkin("");
+   }
+   else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_M))
+   {
+      changeSkin("skins/moderna.skin");
+   }
+   else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_W))
+   {
+      changeSkin("skins/wyrmheart.skin");
+   }
+   else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_S))
+   {
+      changeSkin("skins/scifi.skin");
+   }
+   else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_K))
+   {
+      changeSkin("skins/clean.skin");
+   }
+
+#endif
+}
+
+/************************************************************************
+ *                              changeSkin                              *
+ ************************************************************************/
+void Example::changeSkin(const Kobold::String& skin)
+{
+   if(!skin.empty())
+   {
+      /* Change to the desired skin, if not already using it */
+      if((Farso::Controller::getSkin() == NULL) ||
+         (Farso::Controller::getSkin()->getFilename() != skin))
+      {
+         Farso::Controller::loadSkin(skin);
+      }
+   }
+   else
+   {
+      /* Selected to not use a skin */
       if(Farso::Controller::getSkin() != NULL)
       {
          Farso::Controller::unloadSkin();
       }
    }
-   else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_M))
-   {
-      if((Farso::Controller::getSkin() == NULL) ||
-         (Farso::Controller::getSkin()->getFilename() != "skins/moderna.skin"))
-      {
-         Farso::Controller::loadSkin("skins/moderna.skin");
-      }
-   }
-   else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_W))
-   {
-      if((Farso::Controller::getSkin() == NULL) ||
-            (Farso::Controller::getSkin()->getFilename() !=
-             "skins/wyrmheart.skin"))
-      {
-         Farso::Controller::loadSkin("skins/wyrmheart.skin");
-      }
-   }
-   else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_S))
-   {
-      if((Farso::Controller::getSkin() == NULL) ||
-            (Farso::Controller::getSkin()->getFilename() !=
-             "skins/scifi.skin"))
-      {
-         Farso::Controller::loadSkin("skins/scifi.skin");
-      }
-   }
-   else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_K))
-   {
-      if((Farso::Controller::getSkin() == NULL) ||
-            (Farso::Controller::getSkin()->getFilename() !=
-             "skins/clean.skin"))
-      {
-         Farso::Controller::loadSkin("skins/clean.skin");
-      }
-   }
-
-#endif
-
 }
 
 

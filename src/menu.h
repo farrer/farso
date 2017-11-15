@@ -163,6 +163,9 @@ class Menu : public Widget
       /*! \return pointer to MenuItem of index */
       MenuItem* getItem(int index);
 
+      /*! \return pointer to MenuItem with specific caption */
+      MenuItem* getItem(const Kobold::String& caption);
+
       /*! \return pointer to current on-selection (or selected, depending on
        * current event state) item */
       const MenuItem* getCurrentItem();

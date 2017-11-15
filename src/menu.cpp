@@ -577,7 +577,7 @@ Menu::MenuItem* Menu::getItem(int rX, int rY)
 {
    int height = 1;
    
-   MenuItem* item = (MenuItem*) items.getFirst();
+   MenuItem* item = static_cast<MenuItem*>(items.getFirst());
    for(int i = 0; i < items.getTotal(); i++)
    {
       if(item->isVisible())
@@ -591,7 +591,26 @@ Menu::MenuItem* Menu::getItem(int rX, int rY)
          height += item->getNeededHeight();
       }
 
-      item = (MenuItem*) item->getNext();
+      item = static_cast<MenuItem*>(item->getNext());
+   }
+
+   return NULL;
+}
+
+/***********************************************************************
+ *                              getItem                                *
+ ***********************************************************************/
+Menu::MenuItem* Menu::getItem(const Kobold::String& caption)
+{
+   MenuItem* item = static_cast<MenuItem*>(items.getFirst());
+   for(int i = 0; i < items.getTotal(); i++)
+   {
+      if(item->getCaption() == caption)
+      {
+         return item;
+      }
+
+      item = static_cast<MenuItem*>(item->getNext());
    }
 
    return NULL;

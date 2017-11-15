@@ -47,7 +47,8 @@ namespace Farso
          ~ComboBox();
          
          /*! Set selected option caption 
-          * \note it won't check if the option actually exists */
+          * \text text of the option
+          * \note if no option with 'text' found, will clear the selection. */
          void setCaption(const Kobold::String& text);
 
          /*! Set current size */
@@ -67,7 +68,11 @@ namespace Farso
          void doAfterChildTreat();
 
          /*! \return selected combo item, if any */
-         const Menu::MenuItem* getSelected() { return selected; };
+         const Menu::MenuItem* getSelected() const { return selected; };
+
+      protected:
+         /*! \return MenuItem of 'text' caption */
+         const Menu::MenuItem* getSelection(const Kobold::String& text);
 
       private:
          Rect body; /**< Its body */

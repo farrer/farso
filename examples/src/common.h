@@ -52,6 +52,9 @@ namespace FarsoExample
          /*! Create a window to test the TreeView widget */
          void createTreeViewWindow();
 
+         /*! Change current skin */
+         void changeSkin(const Kobold::String& skin);
+
       private:
          Farso::Menu* menu; /**< A menu to be used */
          Farso::Button* exitButton; /**< Button to exit example */
@@ -61,6 +64,7 @@ namespace FarsoExample
                                                on the tree view */
          Farso::Button* treeViewInsertButton; /**< Button to insert */
          Farso::Button* treeViewRemoveButton; /**< Button to remove */
+         Farso::ComboBox* skinCombo; /**< Combo for skin change */
 
          bool shouldExit; /**< Exit flag */
    };

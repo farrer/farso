@@ -62,7 +62,23 @@ ComboBox::~ComboBox()
  ************************************************************************/
 void ComboBox::setCaption(const Kobold::String& text)
 {
-   button->setCaption(text);
+   selected = getSelection(text);
+   if(selected)
+   {
+      button->setCaption(text);
+   }
+   else
+   {
+      button->setCaption("");
+   }
+}
+
+/************************************************************************
+ *                              getSelection                            *
+ ************************************************************************/
+const Menu::MenuItem* ComboBox::getSelection(const Kobold::String& text)
+{
+   return menu->getItem(text);
 }
 
 /************************************************************************
@@ -107,10 +123,12 @@ void ComboBox::doAfterChildTreat()
       {
          /* The default empty selection */
          selected = NULL;
+         button->setCaption("");
       }
-
-      /* Set our text and set the event */
-      setCaption(selected->getCaption());
+      else
+      {
+         button->setCaption(selected->getCaption());
+      }
       Controller::setEvent(this, EVENT_COMBOBOX_SELECTED);
    }
 }

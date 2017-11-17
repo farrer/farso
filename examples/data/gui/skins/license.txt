@@ -1,3 +1,10 @@
+arkana skin
+ \
+  Adapted by DNTeam from:
+  author: moOshiE and Arkana-FTS (http://arkana-fts.org)
+  license: CC-By-SA 3.0
+  source: https://opengameart.org/content/arkana-fts-gui
+
 clean skin
  \
   author: farrer (DNTeam)

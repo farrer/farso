@@ -23,6 +23,7 @@
 #include "font.h"
 
 #include <kobold/log.h>
+#include <assert.h>
 
 using namespace Farso;
 

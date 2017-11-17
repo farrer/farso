@@ -19,6 +19,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules")
 option(FARSO_STATIC "Static build" FALSE)
 option(FARSO_DEBUG "Enable debug symbols" FALSE)
 option(FARSO_USE_OGRE_OVERLAY "Use overlays as Farso Ogre3D renderer" FALSE)
+option(FARSO_BUILD_SDL_EXAMPLES "Build Farso SDL examples" TRUE)
 
 # Let's assume, until found otherwise, that we can compile the 
 # Ogre3D example.
@@ -209,6 +210,13 @@ if(${FARSO_HAS_EXAMPLE})
    else(${FARSO_HAS_OGRE_EXAMPLE})
       message("      Ogre3d example: disabled")
    endif(${FARSO_HAS_OGRE_EXAMPLE})
+
+   if(${FARSO_BUILD_SDL_EXAMPLES})
+      message("      SDL example: enabled")
+   else(${FARSO_BUILD_SDL_EXAMPLES})
+      message("      SDL example: disabled")
+   endif(${FARSO_BUILD_SDL_EXAMPLES})
+
    message("      OpenGL example: enabled")
 else(${FARSO_HAS_EXAMPLE})
    message("   Build examples: no")

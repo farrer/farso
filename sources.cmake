@@ -302,23 +302,25 @@ if(${OPENGL_FOUND})
 endif(${OPENGL_FOUND})
    
 
-add_executable(farso_sdl_example WIN32 
-               ${FARSO_COMMON_EXAMPLE_SOURCES}
-               ${FARSO_SDL_COMMON_SOURCES}
-               ${FARSO_SDL_EXAMPLE_SOURCES}
-               ${FARSO_COMMON_EXAMPLE_HEADERS}
-               ${FARSO_SDL_COMMON_HEADERS}
-               ${FARSO_SDL_EXAMPLE_HEADERS})
-
-if(${FARSO_HAS_RAPIDJSON})
-   add_executable(farso_sdl_jsonloader WIN32 
+if(${FARSO_BUILD_SDL_EXAMPLES})
+   add_executable(farso_sdl_example WIN32 
                   ${FARSO_COMMON_EXAMPLE_SOURCES}
                   ${FARSO_SDL_COMMON_SOURCES}
-                  ${FARSO_SDL_JSON_SOURCES}
+                  ${FARSO_SDL_EXAMPLE_SOURCES}
                   ${FARSO_COMMON_EXAMPLE_HEADERS}
                   ${FARSO_SDL_COMMON_HEADERS}
-                  ${FARSO_SDL_JSON_HEADERS})
-endif(${FARSO_HAS_RAPIDJSON})
+                  ${FARSO_SDL_EXAMPLE_HEADERS})
+
+   if(${FARSO_HAS_RAPIDJSON})
+      add_executable(farso_sdl_jsonloader WIN32 
+                     ${FARSO_COMMON_EXAMPLE_SOURCES}
+                     ${FARSO_SDL_COMMON_SOURCES}
+                     ${FARSO_SDL_JSON_SOURCES}
+                     ${FARSO_COMMON_EXAMPLE_HEADERS}
+                     ${FARSO_SDL_COMMON_HEADERS}
+                     ${FARSO_SDL_JSON_HEADERS})
+   endif(${FARSO_HAS_RAPIDJSON})
+endif(${FARSO_BUILD_SDL_EXAMPLES})
 
 if(${FARSO_HAS_OGRE_EXAMPLE})
    # Must link with all ogre example dependencies
@@ -355,16 +357,20 @@ else(${FARSO_HAS_OGRE_EXAMPLE})
    endif(${FARSO_HAS_OGRE})
 endif(${FARSO_HAS_OGRE_EXAMPLE})
 
-target_link_libraries(farso_sdl_example ${LIBRARIES})
 
-if(${FARSO_HAS_RAPIDJSON})
-   target_link_libraries(farso_sdl_jsonloader ${LIBRARIES})
-endif(${FARSO_HAS_RAPIDJSON})
+if(${FARSO_BUILD_SDL_EXAMPLES})
+
+   target_link_libraries(farso_sdl_example ${LIBRARIES})
+
+   if(${FARSO_HAS_RAPIDJSON})
+      target_link_libraries(farso_sdl_jsonloader ${LIBRARIES})
+   endif(${FARSO_HAS_RAPIDJSON})
   
-add_custom_command(TARGET farso_sdl_example PRE_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy_directory
-   ${CMAKE_SOURCE_DIR}/examples/data 
-   $<TARGET_FILE_DIR:farso_sdl_example>/data)
-set(FARSO_HAS_EXAMPLE 1)
+   add_custom_command(TARGET farso_sdl_example PRE_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_directory
+      ${CMAKE_SOURCE_DIR}/examples/data 
+      $<TARGET_FILE_DIR:farso_sdl_example>/data)
+   set(FARSO_HAS_EXAMPLE 1)
 
+endif(${FARSO_BUILD_SDL_EXAMPLES})
 

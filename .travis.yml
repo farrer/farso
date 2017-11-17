@@ -8,7 +8,7 @@ os:
 script:
    - mkdir build 
    - cd build 
-   - cmake ..
+   - cmake -DFARSO_BUILD_SDL_EXAMPLES=False ..
    - make
 before_install:
    #install newer cmake

@@ -52,6 +52,7 @@ void Example::init(Farso::RendererType rendererType, void* extraInfo)
 
    /* And a combo for skin selection/change */
    std::vector<Kobold::String> skins;
+   skins.push_back("Arkana");
    skins.push_back("Clean");
    skins.push_back("Moderna");
    skins.push_back("Sci-fi");
@@ -446,7 +447,11 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
             if(skinCombo->getSelected() != NULL)
             {
                /* Change to the selected skin */
-               if(skinCombo->getSelected()->getCaption() == "Clean")
+               if(skinCombo->getSelected()->getCaption() == "Arkana")
+               {
+                  changeSkin("skins/arkana.skin");
+               }
+               else if(skinCombo->getSelected()->getCaption() == "Clean")
                {
                   changeSkin("skins/clean.skin");
                }
@@ -499,6 +504,11 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
    {
       changeSkin("skins/clean.skin");
       skinCombo->setCaption("Clean");
+   }
+   else if(Kobold::Keyboard::isKeyPressed(Kobold::KOBOLD_KEY_A))
+   {
+      changeSkin("skins/arkana.skin");
+      skinCombo->setCaption("Arkana");
    }
 
 #endif

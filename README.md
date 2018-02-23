@@ -2,7 +2,7 @@
 
 ## About
 Farso is a graphical user interface written in C++ with OpenGL, Ogre3D
- (both 1.10 and 2.1) and SDL renderers.
+ (1.10+, 2.1 and 2.2) and SDL renderers.
 
 Farso have the following widgets:  
 
@@ -66,7 +66,7 @@ is hosted here.
 
 ### Ogre3d Renderer
 
- * Ogre3D 1.10 or 2.1 [http://www.ogre3d.org/]
+ * Ogre3D 1.10+ or 2.1 or 2.2 [http://www.ogre3d.org/]
  * Kobold [https://github.com/farrer/kobold]
  * SDL2 [https://libsdl.org/download-2.0.php]
  * FreeType 2.x [https://www.freetype.org/]

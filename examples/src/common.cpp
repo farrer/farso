@@ -28,7 +28,8 @@ Example::~Example()
 /************************************************************************
  *                                  init                                *
  ************************************************************************/
-void Example::init(Farso::RendererType rendererType, void* extraInfo)
+void Example::init(Farso::RendererType rendererType, 
+      Farso::RendererJunctionInfo* extraInfo)
 {
    /* Init Farso, with desired renderer */
    Farso::Controller::init(rendererType, FARSO_EXAMPLE_WINDOW_WIDTH, 

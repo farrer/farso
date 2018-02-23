@@ -85,12 +85,29 @@ static Ogre::String farso_ogre_glsl_fs_source(
 #endif
 
 /*************************************************************************
- *                            OgreJunction                               *
+ *                          OgreJunctionInfo                             *
  *************************************************************************/
-OgreJunction::OgreJunction(Kobold::String name, 
-      Ogre::SceneManager* sceneManager)
+OgreJunctionInfo::OgreJunctionInfo(Ogre::SceneManager* sceneManager,
+            Ogre::RenderSystem* renderSystem)
 {
    this->sceneManager = sceneManager;
+   this->renderSystem = renderSystem;
+}
+
+/*************************************************************************
+ *                         ~OgreJunctionInfo                             *
+ *************************************************************************/
+OgreJunctionInfo::~OgreJunctionInfo()
+{
+}
+
+/*************************************************************************
+ *                            OgreJunction                               *
+ *************************************************************************/
+OgreJunction::OgreJunction(Kobold::String name, OgreJunctionInfo* extraInfo)
+{
+   this->sceneManager = extraInfo->sceneManager;
+   this->renderSystem = extraInfo->renderSystem;
 
 #if FARSO_USE_OGRE_OVERLAY == 0
    /* Default renderer, with movable and renderable implementations */
@@ -170,6 +187,14 @@ OgreJunction::~OgreJunction()
 Ogre::SceneManager* OgreJunction::getSceneManager()
 {
    return sceneManager;
+}
+
+/*************************************************************************
+ *                          getRenderSystem                              *
+ *************************************************************************/
+Ogre::RenderSystem* OgreJunction::getRenderSystem()
+{
+   return renderSystem;
 }
 
 #if OGRE_VERSION_MAJOR == 1 || \

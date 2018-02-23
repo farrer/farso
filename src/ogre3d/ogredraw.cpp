@@ -25,7 +25,9 @@
 #include <kobold/log.h>
 
 #include <OGRE/OgreImage.h>
-#if OGRE_VERSION_MAJOR > 1
+#if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
+   #include <OGRE/OgreTextureBox.h>
+#else
    #include <OGRE/OgrePixelBox.h>
 #endif
 
@@ -51,12 +53,46 @@ OgreDraw::~OgreDraw()
 /******************************************************************
  *                        doOgreImageCopy                         *
  ******************************************************************/
-void OgreDraw::doOgreImageCopy(OgreSurface* target, Ogre::Image* image)
+
+/* Note: we are copying pixel by pixel the image. It's inneficient, but a
+ * simple way to support multiple Ogre::Image's formats.  Anyway, it's only
+ * done once per image, and at it's load time, so not much a big problem at
+ * all. */
+
+#if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
+void OgreDraw::doOgreImageCopy(OgreSurface* target, Ogre::Image2* image)
 {
-   /* Note: we are copying pixel by pixel the image. It's inneficient,
-    * but a simple way to support multiple Ogre::Image's formats.
-    * Anyway, it's only done once per image, and at it's load time, so
-    * not much a big problem at all. */
+   Ogre::TextureBox texBox = image->getData(0);
+
+   size_t width = target->getWidth();
+   size_t height = target->getHeight();
+   SDLSurface* sdlSurface = static_cast<SDLSurface*>(target);
+
+   assert(width == static_cast<size_t>(image->getWidth()));
+   assert(height == static_cast<size_t>(image->getHeight()));
+
+   const size_t bytesPerRow = texBox.bytesPerRow;
+   const size_t bytesPerPixel = texBox.bytesPerPixel;
+   Uint8 sr, sg, sb, sa;
+
+   for(size_t y = 0; y < height; y++)
+   {
+      for(size_t x = 0; x < width; x++)
+      {
+         /* Get pixel from source */
+         Ogre::uint8* pixel = reinterpret_cast<Ogre::uint8*>(texBox.data) +
+            y * bytesPerRow + x * bytesPerPixel;
+         getPixel(pixel, Ogre::PFG_RGBA8_UNORM_SRGB, sr, sg, sb, sa);
+
+         /* Set it on dest */
+         SDLDraw::setPixel(sdlSurface, x, y, sr, sg, sb, sa);
+      }
+   }
+
+}
+#else
+void OgreDraw::doOgreImageCopy(OgreSurface* target, Ogre::Image* image)
+{   
    Ogre::PixelFormat pixelFormat = image->getFormat();
    Ogre::PixelBox pixelBox = image->getPixelBox();
 
@@ -93,10 +129,38 @@ void OgreDraw::doOgreImageCopy(OgreSurface* target, Ogre::Image* image)
       pSrc += lineJump;
    }
 }
+#endif
 
 /******************************************************************
  *                            getPixel                            *
  ******************************************************************/
+
+#if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
+void OgreDraw::getPixel(Uint8* pixel, Ogre::PixelFormatGpu pixelFormat,
+      Uint8& red, Uint8& green, Uint8& blue, Uint8& alpha)
+{
+   if((pixelFormat == Ogre::PFG_RGBA8_UNORM_SRGB) ||
+      (pixelFormat == Ogre::PFG_RGBA8_UNORM))
+   {
+#if OGRE_ENDIAN == OGRE_ENDIAN_LITTLE
+      red = pixel[0];
+      green = pixel[1];
+      blue = pixel[2];
+      alpha = pixel[3];
+#else
+      red = pixel[3];
+      green = pixel[2];
+      blue = pixel[1];
+      alpha = pixel[0];
+#endif
+   }
+   else
+   {
+      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+            "Error: Unsupported getPixel format '%d'", pixelFormat);
+   }
+}
+#else
 void OgreDraw::getPixel(Uint8* pixel, Ogre::PixelFormat pixelFormat,
       Uint8& red, Uint8& green, Uint8& blue, Uint8& alpha)
 {
@@ -192,4 +256,5 @@ void OgreDraw::getPixel(Uint8* pixel, Ogre::PixelFormat pixelFormat,
             "Error: Unsupported getPixel format '%d'", pixelFormat);
    }
 }
+#endif
 

@@ -24,9 +24,9 @@ using namespace Farso;
 /***********************************************************************
  *                             SDLJunction                             *
  ***********************************************************************/
-SDLJunction::SDLJunction(SDL_Renderer* sdlRenderer)
+SDLJunction::SDLJunction(SDLJunctionInfo* info)
 {
-   renderer = sdlRenderer;
+   renderer = info->sdlRenderer;
 }
 
 /***********************************************************************

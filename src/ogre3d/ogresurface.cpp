@@ -23,7 +23,12 @@
 #include "../controller.h"
 
 #include <assert.h>
-#include <OGRE/OgreImage.h>
+
+#if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
+   #include <OGRE/OgreImage2.h>
+#else
+   #include <OGRE/OgreImage.h>
+#endif
 
 using namespace Farso;
 
@@ -50,7 +55,11 @@ OgreSurface::OgreSurface(Kobold::String filename, Kobold::String group)
 bool OgreSurface::load(Kobold::String filename, Kobold::String group)
 {
    /* Load Ogre::Image from disk */
+#if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
+   Ogre::Image2 ogreImage;
+#else
    Ogre::Image ogreImage;
+#endif
    ogreImage.load(filename, group);
    
    /* Set our dimensions (as not directly used to video card, no need to

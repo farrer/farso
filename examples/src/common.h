@@ -17,7 +17,8 @@ namespace FarsoExample
          ~Example();
 
          /*! Init the example code */
-         void init(Farso::RendererType rendererType, void* extraInfo);
+         void init(Farso::RendererType rendererType, 
+               Farso::RendererJunctionInfo* extraInfo);
 
          /* \return if should quit the example */
          bool shouldQuit();

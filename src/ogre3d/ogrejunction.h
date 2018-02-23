@@ -23,6 +23,8 @@
 
 #include "../controller.h"
 
+#include <OGRE/OgreRenderSystem.h>
+
 #if FARSO_USE_OGRE_OVERLAY == 1
    #include <OGRE/Overlay/OgreOverlay.h>
 #else
@@ -38,13 +40,23 @@ namespace Farso
 
 #define FARSO_DEFAULT_RENDER_QUEUE   240
 
+class OgreJunctionInfo : public RendererJunctionInfo {
+   public:
+      OgreJunctionInfo(Ogre::SceneManager* sceneManager,
+            Ogre::RenderSystem* renderSystem);
+      ~OgreJunctionInfo();
+     
+      Ogre::SceneManager* sceneManager;
+      Ogre::RenderSystem* renderSystem;
+};
+
 /*! The junction between controller and renderer for Ogre3d.
  * \note Farso will use render queue from 240 to 244 to render itself. */
 class OgreJunction : public ControllerRendererJunction
 {
    public:
       /*! Constructor */
-      OgreJunction(Kobold::String name, Ogre::SceneManager* sceneManager);
+      OgreJunction(Kobold::String name, OgreJunctionInfo* info);
       /*! Destructor */
       ~OgreJunction();
 
@@ -65,6 +77,8 @@ class OgreJunction : public ControllerRendererJunction
       
       /*! \return used scene manager */
       Ogre::SceneManager* getSceneManager();
+      /*! \return used render system */
+      Ogre::RenderSystem* getRenderSystem();
 
       void enter2dMode(){};
       void restore3dMode(){};
@@ -73,6 +87,7 @@ class OgreJunction : public ControllerRendererJunction
    private:
       
       Ogre::SceneManager* sceneManager; /**< SceneManager to use */
+      Ogre::RenderSystem* renderSystem; /**< RenderSystem to use */
 
 #if FARSO_USE_OGRE_OVERLAY == 0
       OgreWidgetMovableFactory* ogreWidgetMovableFactory;

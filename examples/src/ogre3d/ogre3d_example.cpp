@@ -1,5 +1,6 @@
 
 #include "ogre3d_example.h"
+#include "../../../src/ogre3d/ogrejunction.h"
 
 #include <kobold/platform.h>
 #include <kobold/log.h>
@@ -32,7 +33,8 @@ Ogre3dExample::~Ogre3dExample()
 bool Ogre3dExample::doCycleInit(int callCount, bool& shouldAbort)
 {
    example = new Example();
-   example->init(Farso::RENDERER_TYPE_OGRE3D, getSceneManager());
+   Farso::OgreJunctionInfo info(getSceneManager(), ogreRoot->getRenderSystem());
+   example->init(Farso::RENDERER_TYPE_OGRE3D, &info);
    return true;
 }
 

@@ -115,9 +115,13 @@ class OgreWidgetRenderer : public WidgetRenderer
       Ogre::SceneNode* sceneNode;       /**< Scene Node used for 2D object */
 #endif
 
+#if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
+      Ogre::TextureGpu* texture; /**< The texture used to render the widget */
+#else
       Ogre::TexturePtr texture; /**< The texture used to render widget */
       Ogre::PixelBox pixelBox; /**< A pixel box that will contains the 
                                     WidgetRenderer surface pixels */
+#endif
 
 #if OGRE_VERSION_MAJOR == 1 || \
     (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)

@@ -58,6 +58,16 @@
 namespace Farso
 {
 
+/*! Basic class to pass parameters to the junction creation. Each
+ * rendererer should define its own needs as a child of this one */
+class RendererJunctionInfo 
+{
+   public:
+      virtual ~RendererJunctionInfo(){};
+   protected:
+      RendererJunctionInfo(){};
+};
+
 /*! Interface to some junction data between the controller and each renderer
  * implementation. 
  * \note Will only have one instance. */
@@ -103,11 +113,13 @@ class Controller
        *               manager (thus make sure that baseDir is at a defined
        *               resource group). 
        * \param any extra information needed for renderer. For OpenGL, just 
-       *        pass NULL, for Ogre3D, the pointer to the sceneManager,
-       *        for SDL, the pointer to SDL_Renderer. */
+       *        pass NULL, for Ogre3D, the pointer to a 
+       *        OgreJunctionInfo, for SDL the pointer to a
+       *        SDLJunctionInfo. */
       static void init(const RendererType& rendererType, 
             int screenWidth, int screenHeight, int maxCursorSize, 
-            const Kobold::String& baseDir, void* extraInfo);
+            const Kobold::String& baseDir, 
+            RendererJunctionInfo* extraInfo);
       /*! Finish with the farso controller (usually called at exit). */
       static void finish();
 
@@ -296,7 +308,7 @@ class Controller
        *         to pass here.
        *  \return junction created (or NULL if error) */
       static ControllerRendererJunction* createNewJunction(
-            const Kobold::String& name, void* extraInfo);
+            const Kobold::String& name, RendererJunctionInfo* extraInfo);
 
       /*! Verify events for specific widget */
       static bool verifyEvents(Widget* widget, 

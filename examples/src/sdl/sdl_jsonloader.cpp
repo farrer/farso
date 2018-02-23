@@ -1,4 +1,5 @@
 #include "sdl_jsonloader.h"
+#include "../../../src/sdl/sdljunction.h"
 
 #if FARSO_HAS_RAPIDJSON == 1
 
@@ -30,8 +31,9 @@ SDLJsonLoader::~SDLJsonLoader()
  ************************************************************************/
 void SDLJsonLoader::init()
 {
+   Farso::SDLJunctionInfo info(renderer);
    jsonLoader = new JsonLoader();
-   jsonLoader->init(Farso::RENDERER_TYPE_SDL, renderer);
+   jsonLoader->init(Farso::RENDERER_TYPE_SDL, &info);
 }
 
 /************************************************************************

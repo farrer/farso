@@ -26,13 +26,26 @@
 
 namespace Farso
 {
+
+   class SDLJunctionInfo : public RendererJunctionInfo 
+   {
+      public:
+         /* Constructor.
+          * \param sdlRdr pointer to the SDL_Renderer farso should use */
+         SDLJunctionInfo(SDL_Renderer* sdlRdr) { this->sdlRenderer = sdlRdr; };
+         ~SDLJunctionInfo() {};
+
+         SDL_Renderer* sdlRenderer;
+   };
+
    /* Junction for SDL widget renderer usage */
    class SDLJunction : public ControllerRendererJunction
    {
       public:
          /*! Constructor 
-          * \param sdlRenderer pointer to the SDL_Renderer farso should use */
-         SDLJunction(SDL_Renderer* sdlRenderer);
+          * \param junction Pointer to the needed information needed by SDL
+          *        farso integration */
+         SDLJunction(SDLJunctionInfo* info);
          /*! Destructor */
          ~SDLJunction();
          

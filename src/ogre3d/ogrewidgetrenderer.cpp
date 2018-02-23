@@ -27,7 +27,16 @@
 #include <OGRE/OgreStringConverter.h>
 #include <OGRE/OgreDataStream.h>
 #include <OGRE/OgreMath.h>
-#include <OGRE/OgreTextureManager.h>
+
+#if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
+   #include <OGRE/OgreTextureGpu.h>
+   #include <OGRE/OgreTextureGpuManager.h>
+   #include <OGRE/OgreGpuResource.h>
+   #include <OGRE/OgrePixelFormatGpuUtils.h>
+   #include <OGRE/OgreStagingTexture.h>
+#else
+   #include <OGRE/OgreTextureManager.h>
+#endif
 
 #if OGRE_VERSION_MAJOR == 1 || \
     (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
@@ -88,19 +97,35 @@ OgreWidgetRenderer::~OgreWidgetRenderer()
  ***********************************************************************/
 void OgreWidgetRenderer::createSurface()
 {
-   /* Create the drawable surface and map its contents to a PixelBox to 
-    * make easer the update-to-texture proccess */
-   OgreSurface* ogreSurface = new OgreSurface(name, realWidth, realHeight);
-   this->surface = ogreSurface;
-   pixelBox = Ogre::PixelBox(realWidth, realHeight,
-         1, Ogre::PF_A8B8G8R8, ogreSurface->getSurface()->pixels);
+   /* Create the drawable surface */ 
+   this->surface = new OgreSurface(name, realWidth, realHeight);
 
    /* Create the ogre texture to render the widget */
+#if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
+   Ogre::TextureGpuManager* textureMgr = 
+      ogreJunction->getRenderSystem()->getTextureGpuManager();
+   
+   this->texture = textureMgr->createOrRetrieveTexture(name, name,
+         Ogre::GpuPageOutStrategy::Discard,
+         Ogre::TextureFlags::ManualTexture,
+         Ogre::TextureTypes::Type2D);
+
+   texture->setResolution(realWidth, realHeight);
+   texture->setNumMipmaps(1u);
+   texture->setPixelFormat(Ogre::PFG_RGBA8_UNORM_SRGB);
+
+#else 
    this->texture = Ogre::TextureManager::getSingleton().createManual(
          name, 
          Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
          Ogre::TEX_TYPE_2D, realWidth, realHeight, 0, Ogre::PF_A8R8G8B8,
          Ogre::TU_DYNAMIC_WRITE_ONLY);
+
+   /* Map the drawable surface contents to a PixelBox to make easer the 
+    *  update-to-texture proccess */
+   pixelBox = Ogre::PixelBox(realWidth, realHeight,
+         1, Ogre::PF_A8B8G8R8, surface->getSurface()->pixels);
+#endif
 
 #if OGRE_VERSION_MAJOR == 1 || \
     (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
@@ -248,11 +273,15 @@ void OgreWidgetRenderer::deleteSurface()
    {
       delete surface;
       surface = NULL;
-#if OGRE_VERSION_MAJOR > 1
-      Ogre::TextureManager::getSingleton().remove(texture->getName()); 
-#else
+#if OGRE_VERSION_MAJOR == 1
       Ogre::TextureManager::getSingleton().remove(texture->getName(), 
             texture->getGroup());
+#elif OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR <= 1
+      Ogre::TextureManager::getSingleton().remove(texture->getName()); 
+#else
+      Ogre::TextureGpuManager* textureMgr = 
+         ogreJunction->getRenderSystem()->getTextureGpuManager();
+      textureMgr->destroyTexture(texture);
 #endif
    }
 }
@@ -352,7 +381,11 @@ void OgreWidgetRenderer::defineTexture()
    datablock = static_cast<Ogre::HlmsUnlitDatablock*>(
          hlmsUnlit->createDatablock(name, name,
             macroBlock, blendBlock, Ogre::HlmsParamVec()));
-   datablock->setTexture(Ogre::PBSM_DIFFUSE, 0, texture);
+   #if (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2)
+      datablock->setTexture(0, texture);
+   #else
+      datablock->setTexture(Ogre::PBSM_DIFFUSE, 0, texture);
+   #endif
 #endif
 }
 
@@ -436,7 +469,54 @@ void OgreWidgetRenderer::uploadSurface()
    OgreSurface* ogreSurface = static_cast<OgreSurface*>(surface);
 
    ogreSurface->lock();
+#if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
+
+   /* As Ogre 2.2+ uses a parallell upload to GPU proccess, the work
+    * is a bit more complicated. */
+   Ogre::TextureGpuManager* textureManager = 
+      ogreJunction->getRenderSystem()->getTextureGpuManager();
+
+   /* Define our sizes */
+   const size_t bytesPerRow = texture->_getSysRamCopyBytesPerRow(0);
+
+   /* Tell texture we are going resident, if not already */
+   if(texture->getResidencyStatus() != Ogre::GpuResidency::Resident)
+   {
+      texture->_transitionTo(Ogre::GpuResidency::Resident, NULL);
+      texture->_setNextResidencyStatus(Ogre::GpuResidency::Resident);
+   }
+
+   Ogre::StagingTexture* stagingTexture = textureManager->getStagingTexture(
+         texture->getWidth(), texture->getHeight(), texture->getDepth(),
+         texture->getNumSlices(), texture->getPixelFormat());
+
+   /* Let's map it, for the whole texture */
+   stagingTexture->startMapRegion();
+   Ogre::TextureBox texBox = stagingTexture->mapRegion(texture->getWidth(), 
+         texture->getHeight(), texture->getDepth(), texture->getNumSlices(),
+         texture->getPixelFormat());
+
+   /* Copy the contents */
+   texBox.copyFrom(ogreSurface->getSurface()->pixels, 
+         texture->getWidth(), texture->getHeight(), bytesPerRow);
+
+   /* Done with map */
+   stagingTexture->stopMapRegion();
+
+   /* Now we should upload it. */
+   stagingTexture->upload(texBox, texture, 0, 0, true);
+
+   /* No more needed the staging texture */
+   textureManager->removeStagingTexture( stagingTexture );
+   stagingTexture = 0;
+
+   /* Notify data is ready to display */
+   texture->notifyDataIsReady();
+
+#else
+   /* Previously to 2.2, Ogre should just lock the rendering pipeline */
    texture->getBuffer()->blitFromMemory(pixelBox);
+#endif
    ogreSurface->unlock();
 }
 

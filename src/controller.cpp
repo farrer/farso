@@ -54,7 +54,7 @@ using namespace Farso;
  ***********************************************************************/
 void Controller::init(const RendererType& rendererType,
       int screenWidth, int screenHeight, int maxCursorSize,
-      const Kobold::String& baseDir, void* extraInfo)
+      const Kobold::String& baseDir, RendererJunctionInfo* extraInfo)
 {
    mutex.lock();
    if(!inited)
@@ -220,12 +220,12 @@ Kobold::String Controller::getRealFilename(const Kobold::String& filename)
  *                           createNewJunction                         *
  ***********************************************************************/
 ControllerRendererJunction* Controller::createNewJunction(
-      const Kobold::String& name, void* extraInfo)
+      const Kobold::String& name, RendererJunctionInfo* extraInfo)
 {
    switch(rendererType)
    {
       case RENDERER_TYPE_SDL:
-         return new SDLJunction(static_cast<SDL_Renderer*>(extraInfo));
+         return new SDLJunction(static_cast<SDLJunctionInfo*>(extraInfo));
       case RENDERER_TYPE_OPENGL:
 #if FARSO_HAS_OPENGL == 1
          return new OpenGLJunction();
@@ -236,9 +236,8 @@ ControllerRendererJunction* Controller::createNewJunction(
 #endif
       case RENDERER_TYPE_OGRE3D:
 #if FARSO_HAS_OGRE == 1
-         OgreJunction* ogreJunction = new OgreJunction(name, 
-               static_cast<Ogre::SceneManager*>(extraInfo));
-         return ogreJunction;
+         return new OgreJunction(name, 
+            static_cast<OgreJunctionInfo*>(extraInfo));
 #else
          Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
                "ERROR: Ogre3d isn't available!");

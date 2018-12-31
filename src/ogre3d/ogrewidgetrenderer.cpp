@@ -123,8 +123,10 @@ void OgreWidgetRenderer::createSurface()
 
    /* Map the drawable surface contents to a PixelBox to make easer the 
     *  update-to-texture proccess */
+   OgreSurface* ogreSurface = static_cast<OgreSurface*>(surface);
+
    pixelBox = Ogre::PixelBox(realWidth, realHeight,
-         1, Ogre::PF_A8B8G8R8, surface->getSurface()->pixels);
+         1, Ogre::PF_A8B8G8R8, ogreSurface->getSurface()->pixels);
 #endif
 
 #if OGRE_VERSION_MAJOR == 1 || \

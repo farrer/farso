@@ -341,7 +341,7 @@ bool Font::load()
          fileData = Ogre::ResourceGroupManager::getSingleton().openResource(
                filename);
       }
-      catch(Ogre::FileNotFoundException)
+      catch(const Ogre::FileNotFoundException&)
       {
          Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
                "ERROR: Couldn't open font file from resources: '%s'", 

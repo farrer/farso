@@ -1,4 +1,5 @@
 @insertpiece( SetCrossPlatformSettings )
+@insertpiece( SetCompatibilityLayer )
 
 layout(std140) uniform;
 #define FRAG_COLOR		0
@@ -23,10 +24,12 @@ layout(location = FRAG_COLOR, index = 0) out float outColour;
 @end
 @insertpiece( custom_ps_uniformDeclaration )
 // END UNIFORM DECLARATION
+@property( !hlms_shadowcaster || !hlms_shadow_uses_depth_texture || exponential_shadow_maps )
 in block
 {
 @insertpiece( VStoPS_block )
 } inPs;
+@end
 
 @property( !hlms_shadowcaster )
 @property( num_array_textures )uniform sampler2DArray	textureMapsArray[@value( num_array_textures )];@end
@@ -40,7 +43,7 @@ void main()
 {
 	@insertpiece( custom_ps_preExecution )
 @property( diffuse_map || alpha_test || diffuse )
-	uint materialId	= instance.worldMaterialIdx[inPs.drawId].x;
+	uint materialId	= worldMaterialIdx[inPs.drawId].x;
 	material = materialArray.m[materialId];
 @end
 	@insertpiece( custom_ps_posMaterialLoad )
@@ -67,7 +70,7 @@ void main()
 
 	@insertpiece( custom_ps_preLights )
 
-@property( alpha_test )
+@property( alpha_test && !alpha_test_shadow_caster_only )
 	if( material.alpha_test_threshold.x @insertpiece( alpha_test_cmp_func ) outColour.a )
 		discard;@end
 
@@ -75,7 +78,7 @@ void main()
 }
 
 @end @property( hlms_shadowcaster )
-	@property( hlms_render_depth_only )
+	@property( hlms_render_depth_only && !macOS)
 		@set( hlms_disable_stage, 1 )
 	@end
 

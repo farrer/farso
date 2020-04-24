@@ -36,6 +36,7 @@
    #include <OGRE/OgreStagingTexture.h>
 #else
    #include <OGRE/OgreTextureManager.h>
+   #include <OGRE/OgreHardwarePixelBuffer.h>
 #endif
 
 #if OGRE_VERSION_MAJOR == 1 || \
@@ -54,7 +55,7 @@
    #include <OGRE/Overlay/OgreOverlayManager.h>
 #endif
 
-#include <OGRE/OgreHardwarePixelBuffer.h>
+
 
 using namespace Farso;
 
@@ -504,7 +505,7 @@ void OgreWidgetRenderer::uploadSurface()
    stagingTexture->stopMapRegion();
 
    /* Now we should upload it. */
-   stagingTexture->upload(texBox, texture, 0, 0, true);
+   stagingTexture->upload(texBox, texture, 0, NULL, NULL, false);
 
    /* No more needed the staging texture */
    textureManager->removeStagingTexture( stagingTexture );

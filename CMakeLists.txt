@@ -1,7 +1,10 @@
 
 cmake_minimum_required(VERSION 2.8)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDEBUG=1 -D_DEBUG=1")
+
 # Define project and its current version
+project(farso)
 set(PACKAGE farso)
 
 set(VERSION_MAJOR 1)
@@ -126,6 +129,8 @@ if(${OGRE_FOUND})
    endif(${FARSO_USE_OGRE_OVERLAY})
 
    include_directories(${OGRE_INCLUDE_DIR})
+   include_directories(${OGRE_INCLUDE_DIR}/Depracated/)
+   include_directories(${OGRE_INCLUDE_DIR}/Hlms/Common/)
    
    # With Ogre3D, Goblin is mandatory only for example
    FIND_PACKAGE(Goblin)

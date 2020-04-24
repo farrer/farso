@@ -31,7 +31,13 @@
 
 #include "ogrejunction.h"
 
-#include <OGRE/OgrePixelFormat.h>
+
+
+#if (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2)
+   #include <OGRE/OgrePixelFormatGpu.h>
+#else
+   #include <OGRE/OgrePixelFormat.h>
+#endif
 
 #if FARSO_USE_OGRE_OVERLAY == 1
    #include <OGRE/Overlay/OgreOverlay.h>
@@ -49,7 +55,6 @@
    #include <OGRE/OgreMaterialManager.h>
    #include <OGRE/OgreMaterial.h>
 #else
-   #include <OGRE/OgrePixelBox.h>
    #include <OGRE/Hlms/Unlit/OgreHlmsUnlitDatablock.h>
 #endif
 

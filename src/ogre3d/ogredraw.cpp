@@ -24,7 +24,6 @@
 #include <kobold/platform.h>
 #include <kobold/log.h>
 
-#include <OGRE/OgreImage.h>
 #if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
    #include <OGRE/OgreTextureBox.h>
 #else
@@ -143,14 +142,14 @@ void OgreDraw::getPixel(Uint8* pixel, Ogre::PixelFormatGpu pixelFormat,
       (pixelFormat == Ogre::PFG_RGBA8_UNORM))
    {
 #if OGRE_ENDIAN == OGRE_ENDIAN_LITTLE
-      red = pixel[0];
+      red = pixel[2];
       green = pixel[1];
-      blue = pixel[2];
+      blue = pixel[0];
       alpha = pixel[3];
 #else
-      red = pixel[3];
+      red = pixel[1];
       green = pixel[2];
-      blue = pixel[1];
+      blue = pixel[3];
       alpha = pixel[0];
 #endif
    }

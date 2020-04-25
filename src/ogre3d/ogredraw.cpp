@@ -26,7 +26,7 @@
 
 #if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
    #include <OGRE/OgreTextureBox.h>
-#else
+#elif OGRE_VERSION_MAJOR == 2
    #include <OGRE/OgrePixelBox.h>
 #endif
 

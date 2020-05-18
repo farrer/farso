@@ -22,6 +22,7 @@
 
 #if FARSO_USE_OGRE_OVERLAY == 0
    #include <OGRE/OgreRoot.h>
+   #include <OGRE/OgreRenderQueue.h>
 #else
    #include <OGRE/Overlay/OgreOverlayManager.h>
 #endif

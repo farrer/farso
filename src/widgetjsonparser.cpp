@@ -129,19 +129,25 @@ Kobold::String WidgetJsonParser::parseString(const rapidjson::Value& value,
 }
 
 /***********************************************************************
- *                             parseVector2                            *
+ *                            parsePoint2d                             *
  ***********************************************************************/
-Ogre::Vector2 WidgetJsonParser::parseVector2(const rapidjson::Value& value,
-      const Kobold::String& name)
+WidgetJsonParser::Point2d WidgetJsonParser::parsePoint2d(
+      const rapidjson::Value& value, const Kobold::String& name)
 {
    rapidjson::Value::ConstMemberIterator it = value.FindMember(name.c_str());
    if(it != value.MemberEnd() && it->value.IsArray() && it->value.Size() == 2 &&
       it->value[0].IsNumber() && it->value[1].IsNumber())
    {
-      return Ogre::Vector2(it->value[0].GetFloat(), it->value[1].GetFloat());
+      Point2d point;
+      point.x = it->value[0].GetFloat();
+      point.y = it->value[1].GetFloat();
+      return point;
    }
 
-   return Ogre::Vector2(parseInt(value, name, 0.0f), 0.0f);
+   Point2d point;
+   point.x = parseInt(value, name, 0.0f);
+   point.y = 0.0f;
+   return point;
 }
 
 /***********************************************************************
@@ -511,8 +517,8 @@ Widget* WidgetJsonParser::parseGrid(const rapidjson::Value& value,
  ***********************************************************************/
 bool WidgetJsonParser::parseGridItem(const rapidjson::Value& value, Grid* grid)
 {
-   Ogre::Vector2 pos = parseVector2(value, "position");
-   Ogre::Vector2 size = parseVector2(value, "size");
+   Point2d pos = parsePoint2d(value, "position");
+   Point2d size = parsePoint2d(value, "size");
    Kobold::String hint = parseString(value, "mouseHint");
 
    if(size.x <= 0 || size.y <= 0)
@@ -840,7 +846,7 @@ Widget* WidgetJsonParser::parseSpin(const rapidjson::Value& value,
 
    bool accelerate = parseBoolean(value, "accelerate", true);
    float val = parseFloat(value, "value", 0.0f);
-   Ogre::Vector2 range = parseVector2(value, "range");
+   Point2d range = parsePoint2d(value, "range");
 
    if(valueType == Spin::VALUE_TYPE_INTEGER)
    {
@@ -1039,25 +1045,25 @@ bool WidgetJsonParser::parseJsonWidget(const rapidjson::Value& value,
       caption = parseString(value, "caption");
       Kobold::String mouseHint = parseString(value, "mouseHint");
       bool available = parseBoolean(value, "available", true);
-      pos = parseVector2(value, "position");
+      pos = parsePoint2d(value, "position");
       if(pos.x == 0.0f && pos.y == 0.0f)
       {
          /* Try to parse as relative position */
-         pos = parseVector2(value, "relPosition");
+         pos = parsePoint2d(value, "relPosition");
          pos.x *= Controller::getWidth();
          pos.y *= Controller::getHeight();
       }
-      size = parseVector2(value, "size");
+      size = parsePoint2d(value, "size");
       if(size.x == 0.0f && size.y == 0.0f)
       {
          /* Try to parse as relative size */
-         size = parseVector2(value, "relSize");
+         size = parsePoint2d(value, "relSize");
          size.x *= Controller::getWidth();
          size.y *= Controller::getHeight();
       }
       Kobold::String skinElement = parseString(value, "skin");
       bool useListener = parseBoolean(value, "listener", false);
-      Ogre::Vector2 prevPos = pos;
+      Point2d prevPos = pos;
 
       /* Create widget based on its type */
       Widget* created = NULL;

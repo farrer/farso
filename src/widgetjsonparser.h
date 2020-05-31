@@ -28,7 +28,6 @@
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
 #include <kobold/kstring.h>
-#include <OGRE/OgreVector2.h>
 #include "font.h"
 #include "widget.h"
 #include "grid.h"
@@ -80,6 +79,12 @@ namespace Farso
                int size;
                Font::Alignment alignment;
          };
+         /*! Internal two dimensinal point */
+         class Point2d {
+            public:
+               float x;
+               float y;
+         };
 
          /*! Parse font information of defined 'name' from rapidjson value.
           * \return parsed font information. */
@@ -106,10 +111,10 @@ namespace Farso
          Kobold::String parseString(const rapidjson::Value& value,
                const Kobold::String& name);
 
-         /*! Parse a Vector2 of the item defined by 'name' from 
+         /*! Parse a point of the item defined by 'name' from 
           * rapidjson value.
-          * \return parsed vector or default [0,0] */
-         Ogre::Vector2 parseVector2(const rapidjson::Value& value,
+          * \return parsed point or default [0,0] */
+         Point2d parsePoint2d(const rapidjson::Value& value,
                const Kobold::String& name);
 
          /*! Parse a rectangle for the item defined by 'name' from rapidjson
@@ -166,8 +171,8 @@ namespace Farso
          /* Common Widget info */
          Kobold::String id;
          Kobold::String caption;
-         Ogre::Vector2 pos;
-         Ogre::Vector2 size;
+         Point2d pos;
+         Point2d size;
 
    };
 

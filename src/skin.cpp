@@ -22,7 +22,11 @@
 #include "controller.h"
 #include "font.h"
 
+#if FARSO_HAS_OGRE == 1
+#include <kobold/ogre3d/ogredefparser.h>
+#else
 #include <kobold/defparser.h>
+#endif
 #include <kobold/log.h>
 #include <stdio.h>
 #include <assert.h>
@@ -744,7 +748,11 @@ Skin::SkinElement& Skin::getInnerSkinElement(int type) const
  ***********************************************************************/
 bool Skin::load(const Kobold::String& filename)
 {
+#if FARSO_HAS_OGRE == 1
+   Kobold::OgreDefParser def;
+#else
    Kobold::DefParser def;
+#endif
 
    /* Define elements vector and totals */
    total = getTotalElements();
@@ -753,9 +761,13 @@ bool Skin::load(const Kobold::String& filename)
       delete[] elements;
    }
    elements = new SkinElement[total];
-   
-   if(!def.load(Controller::getRealFilename(filename), 
-            (Controller::getRendererType() != RENDERER_TYPE_OGRE3D)))
+
+#if FARSO_HAS_OGRE == 1
+   if(!def.load(Controller::getRealFilename(filename),
+            (Controller::getRendererType() != RENDERER_TYPE_OGRE3D), false))
+#else
+   if(!def.load(Controller::getRealFilename(filename), false)
+#endif
    {
       Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
             "ERROR: Failed to load skin: '%s'", filename.c_str());

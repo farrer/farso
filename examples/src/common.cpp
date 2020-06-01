@@ -396,7 +396,7 @@ void Example::onEvent(const Farso::EventType& eventType, Farso::Widget* widget)
     * your tase/needs. */
    if(eventType == Farso::EVENT_BUTTON_RELEASED)
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL, "We should exit..."); 
+      Kobold::Log::add(Kobold::LOG_LEVEL_NORMAL, "We should exit..."); 
       shouldExit = true;
    }
 }
@@ -414,7 +414,7 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
       /* Got an event, we must treat it. For this example, just echo'ing
        * the event code to log */
       Farso::Event event = Farso::Controller::getLastEvent();
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL, "Event got: %d", 
+      Kobold::Log::add(Kobold::LOG_LEVEL_NORMAL, "Event got: %d", 
             event.getType());
 
       if(event.getType() == Farso::EVENT_BUTTON_RELEASED)

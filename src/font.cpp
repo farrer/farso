@@ -53,7 +53,7 @@ void FontManager::init()
    int error = FT_Init_FreeType(&freeTypeLib);
    if(error)
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             "ERROR: Couldn't init freetype2 context! Error code: %d", error);
    }
 }
@@ -343,7 +343,7 @@ bool Font::load()
       }
       catch(const Ogre::FileNotFoundException&)
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
                "ERROR: Couldn't open font file from resources: '%s'", 
                filename.c_str());
          return false;
@@ -351,7 +351,7 @@ bool Font::load()
       dataSize = fileData->size();
       if(dataSize == 0)
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
                "ERROR: Couldn't define filesize for font: '%s'", 
                filename.c_str());
          fileData->close();
@@ -373,7 +373,7 @@ bool Font::load()
             std::ifstream::binary);
       if(!file)
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
                "ERROR: Couldn't open font file from resources: '%s'", 
                filename.c_str());
          return false;
@@ -411,7 +411,7 @@ Font::FaceInfo* Font::getFace(int size)
       int error = FT_New_Memory_Face((*freeTypeLib), data, dataSize, 0, face);
       if(error)
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             (Kobold::String("ERROR: couldn't create face for '%s'.") + 
             Kobold::String(" Error code: %d. Datasize: %d")).c_str(), 
             filename.c_str(), error, dataSize);
@@ -423,7 +423,7 @@ Font::FaceInfo* Font::getFace(int size)
       error = FT_Set_Char_Size(*face, 0, size * 64, 96, 96);
       if(error)
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             "ERROR: couldn't define face char size for '%s' Size was: %d", 
             filename.c_str(), size);
          
@@ -522,7 +522,7 @@ int Font::getHeight(int areaWidth, const Kobold::String& text,
          if(fit.empty())
          {
             /* Text will never fits! */
-            Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL,
+            Kobold::Log::add(Kobold::LOG_LEVEL_NORMAL,
                "WARN: text '%s' will never fits desired area size '%d'",
                text.c_str(), areaWidth);
             break;
@@ -777,7 +777,7 @@ int Font::write(Surface* surface, int x, int y, const Rect& area,
       
       if(glyph == NULL)
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
                "Warn: couldn't find glyph %d on font %s", 
                c, filename.c_str()); 
          return 0;

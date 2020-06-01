@@ -239,7 +239,7 @@ void SDLDraw::doStampFill(Surface* target, int tx1, int ty1,
       /* Do the actual blit */
       if(SDL_BlitSurface(sourceSdl, &sourceRect, targetSdl, &targetRect) < 0)
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, SDL_GetError());
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, SDL_GetError());
       }
 
       /* Let's go ahead and see if still at targetRect */
@@ -275,7 +275,7 @@ void SDLDraw::doFreeTypeStamp(Surface* target, int x, int y,
          glyphBpp = 1;
       break;
       default:
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL, 
+         Kobold::Log::add(Kobold::LOG_LEVEL_NORMAL, 
                "WARN: unsupported glyph bitmap format: %d", bitmap->pixel_mode);
          return;
       break;

@@ -155,7 +155,7 @@ void OgreDraw::getPixel(Uint8* pixel, Ogre::PixelFormatGpu pixelFormat,
    }
    else
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             "Error: Unsupported getPixel format '%d'", pixelFormat);
    }
 }
@@ -251,7 +251,7 @@ void OgreDraw::getPixel(Uint8* pixel, Ogre::PixelFormat pixelFormat,
    }
    else
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             "Error: Unsupported getPixel format '%d'", pixelFormat);
    }
 }

@@ -308,7 +308,7 @@ void FileSelector::changeCurDir(const Kobold::String& newDir)
    }
    else
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, "Can't open dir '%s'",
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, "Can't open dir '%s'",
                        newDir.c_str());
    }
 

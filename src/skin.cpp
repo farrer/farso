@@ -147,7 +147,7 @@ void Skin::SkinElement::set(const Kobold::String& key,
    }
    else
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
             "ERROR: Unknown key '%s' at skin!", key.c_str());
    }
 }
@@ -757,7 +757,7 @@ bool Skin::load(const Kobold::String& filename)
    if(!def.load(Controller::getRealFilename(filename), 
             (Controller::getRendererType() != RENDERER_TYPE_OGRE3D)))
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
             "ERROR: Failed to load skin: '%s'", filename.c_str());
       return false;
    }
@@ -803,7 +803,7 @@ bool Skin::load(const Kobold::String& filename)
          if(cur < 0)
          {
             /* Invalid file. */
-            Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+            Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
                   "ERROR: Defined '%s' without element at skin: '%s'",
                   key.c_str(), filename.c_str());
             return false;
@@ -1010,7 +1010,7 @@ int Skin::getElementType(const Kobold::String& typeName)
    if(elementType == SKIN_TYPE_UNKNOWN)
    {
       /* Unknown widget. */
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
             "ERROR: Unknow widget name '%s' on skin definition file!",
             typeName.c_str());
    }

@@ -4,6 +4,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+#include <kobold/log.h>
 
 namespace FarsoExample
 {
@@ -31,6 +32,8 @@ class OpenGLApp
        SDL_Window* window;
        /*! Our OpenGL context */
        SDL_GLContext glcontext;
+       /*! Default log to use */
+       Kobold::DefaultLog log;
 };
 
 }

@@ -52,7 +52,7 @@ bool WidgetJsonParser::loadFromJson(const Kobold::String& jsonStr,
    if(doc.HasParseError())
    {
       rapidjson::ParseErrorCode err = doc.GetParseError();
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             "Error: tried to add widgets from an invalid JSON string (%d).",
             err);
       return false;
@@ -248,7 +248,7 @@ Widget* WidgetJsonParser::parseWindow(const rapidjson::Value& value,
    /* Check if no parent */
    if(parent != NULL)
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             "Error: A window should have no parent.");
       return NULL;
    }
@@ -285,7 +285,7 @@ Widget* WidgetJsonParser::parseButton(const rapidjson::Value& value,
       Widget* w = Controller::getWidgetById(menuId);
       if(w == NULL)
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
                "Warning: tried to define an unknown menu ('%s') to a button!",
                menuId.c_str());
       }
@@ -295,7 +295,7 @@ Widget* WidgetJsonParser::parseButton(const rapidjson::Value& value,
       }
       else
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
                "Warning: tried to define widget ('%s') or type (%d) as a menu!",
                menuId.c_str(), w->getType());
       }
@@ -343,7 +343,7 @@ Widget* WidgetJsonParser::parseClickablePicture(const rapidjson::Value& value,
    Kobold::String filename = parseString(value, "filename");
    if(filename.empty())
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             "Error: A clickable picture must have its image defined.");
       return NULL;
    }
@@ -523,7 +523,7 @@ bool WidgetJsonParser::parseGridItem(const rapidjson::Value& value, Grid* grid)
 
    if(size.x <= 0 || size.y <= 0)
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             "Error: GridItem should have defined size!");
       return false;
    }
@@ -592,7 +592,7 @@ Widget* WidgetJsonParser::parseLabelledPicture(const rapidjson::Value& value,
    Kobold::String filename = parseString(value, "filename");
    if(filename.empty())
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             "Error: A labelled picture must have its image defined.");
       return NULL;
    }
@@ -683,7 +683,7 @@ Widget* WidgetJsonParser::parsePicture(const rapidjson::Value& value,
       }
       else
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             "Error: A picture must define either its filename or its size.");
          return NULL;
       }
@@ -765,7 +765,7 @@ Widget* WidgetJsonParser::parseScrollText(const rapidjson::Value& value,
       /* Make sure we have a skin defined */
       if(Controller::getSkin() == NULL)
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
                "Error: ScrollText must have a default font and color "\
                "to be used without a skin.");
          return NULL;
@@ -876,7 +876,7 @@ Widget* WidgetJsonParser::parseStackTab(const rapidjson::Value& value,
    /* Create the stack */
    if(parent == NULL)
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
          "Error: StackTab must be inside a parent.");
       return NULL;
    }
@@ -910,7 +910,7 @@ Widget* WidgetJsonParser::parseTreeView(const rapidjson::Value& value,
 {
    if(!parent)
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
          "Error: TreeView must be inside a parent.");
       return NULL;
    }

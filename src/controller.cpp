@@ -105,7 +105,7 @@ void Controller::init(const RendererType& rendererType,
    }
    else
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             "WARN: Tried to double init Farso!");
    }
    mutex.unlock();
@@ -230,7 +230,7 @@ ControllerRendererJunction* Controller::createNewJunction(
 #if FARSO_HAS_OPENGL == 1
          return new OpenGLJunction();
 #else
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
                "ERROR: OpenGL isn't available!");
       break;
 #endif
@@ -239,7 +239,7 @@ ControllerRendererJunction* Controller::createNewJunction(
          return new OgreJunction(name, 
             static_cast<OgreJunctionInfo*>(extraInfo));
 #else
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
                "ERROR: Ogre3d isn't available!");
       break;
 #endif
@@ -501,7 +501,7 @@ bool Controller::addWidget(Widget* widget)
 
    if(widget->getParent() != NULL)
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
             "ERROR: couldn't add a child widget to Controller!");
       return false;
    }

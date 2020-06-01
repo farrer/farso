@@ -3,6 +3,7 @@
 #define _farso_sdl_app_h
 
 #include <SDL2/SDL.h>
+#include <kobold/log.h>
 
 namespace FarsoExample
 {
@@ -29,6 +30,7 @@ class SDLApp
        /*! The window used */
        SDL_Window* window;
        SDL_Renderer* renderer;
+       Kobold::DefaultLog log;
 };
 
 }

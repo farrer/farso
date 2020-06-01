@@ -216,7 +216,7 @@ if(${FARSO_HAS_OGRE_EXAMPLE})
                         ${FARSO_EXAMPLE_SOURCES} 
                         ${FARSO_COMMON_EXAMPLE_HEADERS})
    target_link_libraries(farso_ogre3d_example farso
-                        ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARY}
+                        ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARIES}
                         ${FARSO_OGRE_LIBRARIES} 
                         ${FREETYPE_LIBRARIES}
                         ${OPENGL_LIBRARIES}
@@ -254,7 +254,7 @@ if(${OPENGL_FOUND})
    if(${FARSO_HAS_OGRE_EXAMPLE})
       # Must link with all ogre example dependencies
       set(LIBRARIES farso
-                    ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARY}
+                    ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARIES}
                     ${FARSO_OGRE_LIBRARIES} 
                     ${FREETYPE_LIBRARIES}
                     ${OPENGL_LIBRARIES}
@@ -267,7 +267,7 @@ if(${OPENGL_FOUND})
       if(${FARSO_HAS_OGRE})
          # Must link with ogre3d dependencies
          set(LIBRARIES farso
-                       ${KOBOLD_LIBRARY}
+                       ${KOBOLD_LIBRARIES}
                        ${FARSO_OGRE_LIBRARIES}
                        ${FREETYPE_LIBRARIES}
                        ${OPENGL_LIBRARIES}
@@ -277,7 +277,7 @@ if(${OPENGL_FOUND})
       else(${FARSO_HAS_OGRE})
          # must link only with OpenGL dependencies
          set(LIBRARIES farso
-                       ${KOBOLD_LIBRARY}
+                       ${KOBOLD_LIBRARIES}
                        ${FREETYPE_LIBRARIES}
                        ${OPENGL_LIBRARIES}
                        ${SDL2_IMAGE_LIBRARY}
@@ -325,7 +325,7 @@ endif(${FARSO_BUILD_SDL_EXAMPLES})
 if(${FARSO_HAS_OGRE_EXAMPLE})
    # Must link with all ogre example dependencies
    set(LIBRARIES farso
-                 ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARY}
+                 ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARIES}
                  ${FARSO_OGRE_LIBRARIES} 
                  ${FREETYPE_LIBRARIES}
                  ${OPENGL_LIBRARIES}
@@ -338,7 +338,7 @@ else(${FARSO_HAS_OGRE_EXAMPLE})
    if(${FARSO_HAS_OGRE})
       # Must link with ogre3d dependencies
       set(LIBRARIES farso
-                    ${KOBOLD_LIBRARY}
+                    ${KOBOLD_LIBRARIES}
                     ${FARSO_OGRE_LIBRARIES}
                     ${FREETYPE_LIBRARIES}
                     ${OPENGL_LIBRARIES}
@@ -348,7 +348,7 @@ else(${FARSO_HAS_OGRE_EXAMPLE})
    else(${FARSO_HAS_OGRE})
      # must link only with OpenGL dependencies
       set(LIBRARIES farso
-                    ${KOBOLD_LIBRARY}
+                    ${KOBOLD_LIBRARIES}
                     ${FREETYPE_LIBRARIES}
                     ${OPENGL_LIBRARIES}
                     ${SDL2_IMAGE_LIBRARY}

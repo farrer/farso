@@ -20,12 +20,12 @@ SDLApp::SDLApp()
 {
    window = NULL;
    renderer = NULL;
-   Kobold::Log::init(false);
+   Kobold::Log::init(&log);
 
    /* Try to init SDL */
    if( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0)
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
             "ERROR: Couldn't init SDL");
       exit(-1);
    }
@@ -34,7 +34,7 @@ SDLApp::SDLApp()
    if(SDL_CreateWindowAndRenderer(FARSO_EXAMPLE_WINDOW_WIDTH, 
             FARSO_EXAMPLE_WINDOW_HEIGHT, 0, &window, &renderer) != 0)
    {
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
            "Couldn't create SDL Window and Renderer!");
       SDL_Quit();
       exit(-2);

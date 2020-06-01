@@ -630,7 +630,7 @@ const Menu::MenuItem* Menu::getCurrentItem()
  ***********************************************************************/
 void Menu::setSize(int width, int height)
 {
-   Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+   Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
          "Error: Menu::setSize should never be called!");
 }
 

@@ -244,7 +244,7 @@ void ScrollText::addText(const Kobold::String& text,
       else if(createdLine)
       {
          /* Line was created but nothing fits yet: will never fits! */
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_NORMAL, 
+         Kobold::Log::add(Kobold::LOG_LEVEL_NORMAL, 
                "WARN: text '%s' will never fit ScrollText area at size '%d'",
                curText.c_str(), size);
          return;

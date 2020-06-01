@@ -99,7 +99,7 @@ SDLSurface::SDLSurface(Kobold::String filename, Kobold::String group,
       surface = IMG_Load(filename.c_str());
       if(!surface)
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR, 
+         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
                "Can't open image: '%s'", filename.c_str());
       }
 
@@ -113,12 +113,12 @@ SDLSurface::SDLSurface(Kobold::String filename, Kobold::String group,
       if( ((surface->w) != draw->smallestPowerOfTwo(surface->w)) ||
             ((surface->h) != draw->smallestPowerOfTwo(surface->h)) )
       {
-         Kobold::Log::add(Kobold::Log::LOG_LEVEL_DEBUG, 
+         Kobold::Log::add(Kobold::LOG_LEVEL_DEBUG, 
                "Warning: loaded non-power of two image: '%s' (%d x %d)",
                filename.c_str(), surface->w, surface->h);
       }
 #else
-      Kobold::Log::add(Kobold::Log::LOG_LEVEL_ERROR,
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
         "Error: load SDL image from disk is only supported by Farso's OpenGL.");
 #endif
    }

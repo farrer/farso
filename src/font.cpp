@@ -23,12 +23,6 @@
 #include <math.h>
 #include <kobold/log.h>
 
-#if FARSO_HAS_OGRE == 1
-   #include <OGRE/OgreDataStream.h>
-   #include <OGRE/OgreResourceGroupManager.h>
-   #include <OGRE/OgreException.h>
-#endif
-
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
     #include "cursor.h"

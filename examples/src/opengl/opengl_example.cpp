@@ -29,8 +29,7 @@ OpenGLExample::~OpenGLExample()
 void OpenGLExample::init()
 {
    example = new Example();
-   example->init(Farso::RENDERER_TYPE_OPENGL, NULL);
-
+   example->init(&fontLoader, Farso::RENDERER_TYPE_OPENGL, NULL);
 }
 
 /************************************************************************

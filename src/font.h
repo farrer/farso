@@ -22,6 +22,7 @@
 #define _farso_font_h
 
 #include <kobold/kstring.h>
+#include <kobold/filereader.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -133,6 +134,16 @@ class Font
       /*! Get default height for a line at current font size */
       const int getDefaultHeight() const;
 
+      /*! Load the font data from file, using the name as a full path,
+       * and avoiding any resources managers.
+       * \return if load was successfull. */
+      bool load();
+
+      /*! Load the font data from file, using an specific file reader.
+       * \param fileReader to use.
+       * \return if load was successfull. */
+      bool load(Kobold::FileReader& fileReader);
+
    private:
 
       /*! Class used to cache a glyph */
@@ -198,10 +209,6 @@ class Font
        * \return pointer to FaceInfo for the desired font size */
       FaceInfo* getFace(int size);
 
-      /*! Load the font data from file 
-       * \return if load was successfull. */
-      bool load();
-
       /*! Gets a unicode value from a UTF-8 encoded string and advance 
        * the string.
        * \note this function is based on SDL_TTF code. */
@@ -233,13 +240,36 @@ class Font
       Alignment curAlign; /**< Alignment to use */
 };
 
+/*! Abstract class to control font loading */
+class FontLoader
+{
+   public:
+      virtual ~FontLoader() {};
+      /*! Load a font.
+       * \param f pointer to the font to load.
+       * \return loading result (successfull or not). */
+      virtual bool load(Font* f) = 0;
+};
+
+/*! Default font loader, loading direct from disk, and avoiding
+ * any resource managers */
+class DefaultFontLoader : public FontLoader
+{
+   public:
+      virtual ~DefaultFontLoader() {};
+      bool load(Font* f) override { return f->load(); };
+};
+
 /*! Farso's font manager: manages the creation and load of fonts, and also
  * defined the freetype context to use. */
 class FontManager
 {
    public:
-      /*! Init the font manager system */
-      static void init();
+      /*! Init the font manager system 
+       * \param fontLoader pointer to the loader to use. Its memory is 
+       * controlled by the caller, and should be valid until the call 
+       * to finish. */
+      static void init(FontLoader* fontLoader);
       /*! Finish with the font manager system */
       static void finish();
 
@@ -272,6 +302,7 @@ class FontManager
       static FT_Library freeTypeLib; /**< The FreeType context to use */
       static std::map<Kobold::String, Font*> fonts; /**< Current loaded fonts */
       static Kobold::String defaultFont; /**< Default font to use */
+      static FontLoader* fontLoader; /**< Font loader to use */
 };
 
 }

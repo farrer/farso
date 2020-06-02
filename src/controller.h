@@ -32,6 +32,7 @@
 #include "draw.h"
 #include "event.h"
 #include "fileselector.h"
+#include "font.h"
 #include "grid.h"
 #include "label.h"
 #include "labelledpicture.h"
@@ -103,6 +104,7 @@ class Controller
 {
    public:
       /*! Init the farso controller system to use.
+       * \param fontLoader pointer to FontLoader to use.
        * \param rendererType the renderer to use for Farso.
        * \param screenWidth current screen width
        * \param screenHeight current screen height 
@@ -116,7 +118,8 @@ class Controller
        *        pass NULL, for Ogre3D, the pointer to a 
        *        OgreJunctionInfo, for SDL the pointer to a
        *        SDLJunctionInfo. */
-      static void init(const RendererType& rendererType, 
+      static void init(FontLoader* fontLoader, 
+            const RendererType& rendererType, 
             int screenWidth, int screenHeight, int maxCursorSize, 
             const Kobold::String& baseDir, 
             RendererJunctionInfo* extraInfo);

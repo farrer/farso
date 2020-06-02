@@ -52,7 +52,7 @@ using namespace Farso;
 /***********************************************************************
  *                                 init                                *
  ***********************************************************************/
-void Controller::init(const RendererType& rendererType,
+void Controller::init(FontLoader* fontLoader, const RendererType& rendererType,
       int screenWidth, int screenHeight, int maxCursorSize,
       const Kobold::String& baseDir, RendererJunctionInfo* extraInfo)
 {
@@ -97,7 +97,7 @@ void Controller::init(const RendererType& rendererType,
       toRemoveWidgets = new Kobold::List();
       inited = true;
       Colors::init();
-      FontManager::init();
+      FontManager::init(fontLoader);
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
       Cursor::init(maxCursorSize);

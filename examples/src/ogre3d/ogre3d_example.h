@@ -3,6 +3,7 @@
 #define _farso_ogre3d_example_h
 
 #include "farsoconfig.h"
+#include "ogre3d/ogrefontloader.h"
 #include "../common.h"
 #include "../size.h"
 #include <goblin/baseapp.h>
@@ -55,6 +56,7 @@ class Ogre3dExample : public Goblin::BaseApp
 
    private:
       Example* example;
+      Farso::OgreFontLoader fontLoader;
 };
 
 

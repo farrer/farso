@@ -27,6 +27,7 @@ class OpenGLJsonLoader : public OpenGLApp
 
     private:
        JsonLoader* jsonLoader;
+       Farso::DefaultFontLoader fontLoader;
 };
 
 }

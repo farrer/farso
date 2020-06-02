@@ -34,7 +34,7 @@ bool Ogre3dExample::doCycleInit(int callCount, bool& shouldAbort)
 {
    example = new Example();
    Farso::OgreJunctionInfo info(getSceneManager(), ogreRoot->getRenderSystem());
-   example->init(Farso::RENDERER_TYPE_OGRE3D, &info);
+   example->init(&fontLoader, Farso::RENDERER_TYPE_OGRE3D, &info);
    return true;
 }
 

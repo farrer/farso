@@ -47,9 +47,10 @@ using namespace Farso;
 /***********************************************************************
  *                                 init                                *
  ***********************************************************************/
-void FontManager::init()
+void FontManager::init(FontLoader* fontLoader)
 {
-   defaultFont = "";
+   FontManager::defaultFont = "";
+   FontManager::fontLoader = fontLoader;
    int error = FT_Init_FreeType(&freeTypeLib);
    if(error)
    {
@@ -75,9 +76,13 @@ Font* FontManager::setDefaultFont(const Kobold::String& filename)
 {
    assert(filename != "");
 
-   defaultFont = filename;
+   Font* f = getFont(filename);
+   if(f != NULL)
+   {
+      defaultFont = filename;
+   }
 
-   return getFont(filename);
+   return f;
 }
 
 /***********************************************************************
@@ -104,8 +109,17 @@ Font* FontManager::getFont(const Kobold::String& filename)
    {
       /* Font not yet loaded, let's create it */
       Font* f = new Font(filename, &freeTypeLib);
-      fonts[filename] = f;
-      return f;
+      if(fontLoader->load(f)) 
+      {
+         fonts[filename] = f;
+         return f;
+      }
+      else 
+      {
+         /* Couldn't load font */
+         delete f;
+         return NULL;
+      }
    }
 
    return it->second;
@@ -131,6 +145,7 @@ void FontManager::unloadAllFonts()
 FT_Library FontManager::freeTypeLib;
 std::map<Kobold::String, Font*> FontManager::fonts;
 Kobold::String FontManager::defaultFont;
+FontLoader* FontManager::fontLoader = NULL;
 
 /***********************************************************************
  *                             Constructor                             *
@@ -300,8 +315,6 @@ Font::Font(const Kobold::String& filename, FT_Library* lib)
    this->curTextSize = 0;
    this->curFace = NULL;
    this->curAlign = TEXT_LEFT;
-
-   load();
 }
 
 /***********************************************************************
@@ -330,70 +343,40 @@ Font::~Font()
  ***********************************************************************/
 bool Font::load()
 {
-#if FARSO_HAS_OGRE == 1
-   if(Controller::getRendererType() == RENDERER_TYPE_OGRE3D)
+   Kobold::DiskFileReader fileReader;
+   return load(fileReader);
+}
+
+/***********************************************************************
+ *                                 load                                *
+ ***********************************************************************/
+bool Font::load(Kobold::FileReader& fileReader)
+{
+   /* try to open file */
+   if(!fileReader.open(Controller::getRealFilename(filename)))
    {
-      Ogre::DataStreamPtr fileData;
-
-      /* Open the file */
-      try
-      {
-         fileData = Ogre::ResourceGroupManager::getSingleton().openResource(
-               filename);
-      }
-      catch(const Ogre::FileNotFoundException&)
-      {
-         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
-               "ERROR: Couldn't open font file from resources: '%s'", 
-               filename.c_str());
-         return false;
-      }
-      dataSize = fileData->size();
-      if(dataSize == 0)
-      {
-         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
-               "ERROR: Couldn't define filesize for font: '%s'", 
-               filename.c_str());
-         fileData->close();
-         return false;
-      }
-
-      /* Alloc buffer and load to it */
-      data = new FT_Byte[dataSize];
-      fileData->read(data, dataSize);
-
-      /* Done */
-      fileData->close();
-
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
+            "ERROR: Couldn't open font file '%s'", filename.c_str());
+      return false;
    }
-   else
+
+   /* Get its size */
+   dataSize = fileReader.getSize();
+   if(dataSize == 0)
    {
-#endif
-      std::ifstream file(Controller::getRealFilename(filename).c_str(), 
-            std::ifstream::binary);
-      if(!file)
-      {
-         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
-               "ERROR: Couldn't open font file from resources: '%s'", 
-               filename.c_str());
-         return false;
-      }
-
-      /* Get file size */       
-      struct stat st;
-      stat(Controller::getRealFilename(filename).c_str(), &st);
-      dataSize = st.st_size;
-
-      /* Alloc buffer and load to it */
-      data = new FT_Byte[dataSize];
-      file.read((char*) &data[0], dataSize);
-
-      /* Done */
-      file.close();
-
-#if FARSO_HAS_OGRE == 1
+      Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
+            "ERROR: file with size 0: '%s'", filename.c_str());
+      fileReader.close();
+      return false;
    }
-#endif
+
+   /* Alloc buffer and load to it */
+   data = new FT_Byte[dataSize];
+   fileReader.read((char*) &data[0], dataSize);
+
+   /* Done */
+   fileReader.close();
+
    return true;
 }
 

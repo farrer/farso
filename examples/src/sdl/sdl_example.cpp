@@ -31,7 +31,7 @@ void SDLExample::init()
 {
    example = new Example();
    Farso::SDLJunctionInfo info(renderer);
-   example->init(Farso::RENDERER_TYPE_SDL, &info); 
+   example->init(&fontLoader, Farso::RENDERER_TYPE_SDL, &info); 
 }
 
 /************************************************************************

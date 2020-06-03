@@ -22,11 +22,7 @@
 #include "controller.h"
 #include "font.h"
 
-#if FARSO_HAS_OGRE == 1
-#include <kobold/ogre3d/ogredefparser.h>
-#else
 #include <kobold/defparser.h>
-#endif
 #include <kobold/log.h>
 #include <stdio.h>
 #include <assert.h>

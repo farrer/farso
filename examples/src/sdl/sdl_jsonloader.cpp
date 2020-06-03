@@ -33,7 +33,7 @@ void SDLJsonLoader::init()
 {
    Farso::SDLJunctionInfo info(renderer);
    jsonLoader = new JsonLoader();
-   jsonLoader->init(&fontLoader, Farso::RENDERER_TYPE_SDL, &info);
+   jsonLoader->init(&loader, Farso::RENDERER_TYPE_SDL, &info);
 }
 
 /************************************************************************

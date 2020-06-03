@@ -14,6 +14,7 @@ src/font.cpp
 src/grid.cpp
 src/label.cpp
 src/labelledpicture.cpp
+src/loader.cpp
 src/menu.cpp
 src/picture.cpp
 src/progressbar.cpp
@@ -54,6 +55,7 @@ src/font.h
 src/grid.h
 src/label.h
 src/labelledpicture.h
+src/loader.h
 src/menu.h
 src/picture.h
 src/progressbar.h
@@ -102,7 +104,7 @@ endif(${OPENGL_FOUND})
 
 set(FARSO_OGRE_SOURCES
 src/ogre3d/ogredraw.cpp
-src/ogre3d/ogrefontloader.cpp
+src/ogre3d/ogreloader.cpp
 src/ogre3d/ogrejunction.cpp
 src/ogre3d/ogresurface.cpp
 src/ogre3d/ogrewidgetmovable.cpp
@@ -112,7 +114,7 @@ src/ogre3d/ogrewidgetrenderer.cpp
 
 set(FARSO_OGRE_HEADERS
 src/ogre3d/ogredraw.h
-src/ogre3d/ogrefontloader.h
+src/ogre3d/ogreloader.h
 src/ogre3d/ogrejunction.h
 src/ogre3d/ogresurface.h
 src/ogre3d/ogrewidgetmovable.h

@@ -18,21 +18,25 @@
   along with Farso.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ogrefontloader.h"
-#include <kobold/ogre3d/ogrefilereader.h>
+#ifndef _farso_ogre_font_loader_h
+#define _farso_ogre_draw_loader_h
+
+#include "../loader.h"
 
 namespace Farso
 {
 
-/****************************************************************************
- *                                  Load                                    *
- ****************************************************************************/
-bool OgreFontLoader::load(Font* f)
+/*! Font loader via Ogre resource manager system */
+class OgreLoader : public Loader
 {
-   Kobold::OgreFileReader fileReader;
-   bool res = f->load(fileReader);
-   return res;
-}
+   public:
+      virtual ~OgreLoader() {};
+      bool loadFont(Font* f) override;
+      bool loadSkin(Skin* s, const Kobold::String& filename) override;
+};
 
 }
+
+#endif
+
 

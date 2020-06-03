@@ -25,7 +25,7 @@ class OpenGLExample : public OpenGLApp
     private:
        /*! The example itself */
        Example* example;
-       Farso::DefaultFontLoader fontLoader;
+       Farso::DefaultLoader loader;
 };
 
 }

@@ -748,12 +748,14 @@ Skin::SkinElement& Skin::getInnerSkinElement(int type) const
  ***********************************************************************/
 bool Skin::load(const Kobold::String& filename)
 {
-#if FARSO_HAS_OGRE == 1
-   Kobold::OgreDefParser def;
-#else
-   Kobold::DefParser def;
-#endif
+   return Controller::getLoader()->loadSkin(this, filename);
+}
 
+/***********************************************************************
+ *                                load                                 *
+ ***********************************************************************/
+bool Skin::load(const Kobold::String& filename, Kobold::DefParser& def)
+{
    /* Define elements vector and totals */
    total = getTotalElements();
    if(elements)
@@ -762,12 +764,7 @@ bool Skin::load(const Kobold::String& filename)
    }
    elements = new SkinElement[total];
 
-#if FARSO_HAS_OGRE == 1
-   if(!def.load(Controller::getRealFilename(filename),
-            (Controller::getRendererType() != RENDERER_TYPE_OGRE3D), false))
-#else
-   if(!def.load(Controller::getRealFilename(filename), false)
-#endif
+   if(!def.load(Controller::getRealFilename(filename), false))
    {
       Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
             "ERROR: Failed to load skin: '%s'", filename.c_str());

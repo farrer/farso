@@ -41,10 +41,9 @@ using namespace Farso;
 /***********************************************************************
  *                                 init                                *
  ***********************************************************************/
-void FontManager::init(FontLoader* fontLoader)
+void FontManager::init()
 {
    FontManager::defaultFont = "";
-   FontManager::fontLoader = fontLoader;
    int error = FT_Init_FreeType(&freeTypeLib);
    if(error)
    {
@@ -103,7 +102,7 @@ Font* FontManager::getFont(const Kobold::String& filename)
    {
       /* Font not yet loaded, let's create it */
       Font* f = new Font(filename, &freeTypeLib);
-      if(fontLoader->load(f)) 
+      if(f->load()) 
       {
          fonts[filename] = f;
          return f;
@@ -139,7 +138,6 @@ void FontManager::unloadAllFonts()
 FT_Library FontManager::freeTypeLib;
 std::map<Kobold::String, Font*> FontManager::fonts;
 Kobold::String FontManager::defaultFont;
-FontLoader* FontManager::fontLoader = NULL;
 
 /***********************************************************************
  *                             Constructor                             *
@@ -337,8 +335,7 @@ Font::~Font()
  ***********************************************************************/
 bool Font::load()
 {
-   Kobold::DiskFileReader fileReader;
-   return load(fileReader);
+   return Controller::getLoader()->loadFont(this);
 }
 
 /***********************************************************************

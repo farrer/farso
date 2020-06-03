@@ -27,7 +27,7 @@ class SDLJsonLoader : public SDLApp
 
     private:
        JsonLoader* jsonLoader;
-       Farso::DefaultFontLoader fontLoader;
+       Farso::DefaultLoader loader;
 };
 
 }

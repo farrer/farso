@@ -22,6 +22,7 @@
 #define _farso_skin_h
 
 #include <kobold/kstring.h>
+#include <kobold/defparser.h>
 
 #include "farsoconfig.h"
 #include "font.h"
@@ -240,10 +241,16 @@ class Skin
       /*! Destructor */
       virtual ~Skin();
 
-      /*! Load the skin definition file. 
+      /*! Load the skin definition file, using current Controller::loader.
        * \param filename skin defintion file.
        * \return if load was successfull */
       bool load(const Kobold::String& filename);
+
+      /*! Load the skin definition file, with specific DefParser. 
+       * \param filename skin defintion file.
+       * \param def DefParser implementation instance to use.
+       * \return if load was successfull */
+      bool load(const Kobold::String& filename, Kobold::DefParser& def);
 
       /*! Get SkinElement for a basic type. 
        * \return SkinElement definition for specific widget type */

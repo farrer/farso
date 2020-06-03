@@ -52,7 +52,7 @@ using namespace Farso;
 /***********************************************************************
  *                                 init                                *
  ***********************************************************************/
-void Controller::init(FontLoader* fontLoader, const RendererType& rendererType,
+void Controller::init(Loader* loader, const RendererType& rendererType,
       int screenWidth, int screenHeight, int maxCursorSize,
       const Kobold::String& baseDir, RendererJunctionInfo* extraInfo)
 {
@@ -64,6 +64,7 @@ void Controller::init(FontLoader* fontLoader, const RendererType& rendererType,
       Controller::width = screenWidth;
       Controller::height = screenHeight;
       Controller::baseDir = baseDir;
+      Controller::loader = loader;
 
       /* Create based on renderer type */
       Controller::junction = createNewJunction("farso_default_junction",
@@ -97,7 +98,7 @@ void Controller::init(FontLoader* fontLoader, const RendererType& rendererType,
       toRemoveWidgets = new Kobold::List();
       inited = true;
       Colors::init();
-      FontManager::init(fontLoader);
+      FontManager::init();
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
       Cursor::init(maxCursorSize);
@@ -428,6 +429,14 @@ Skin* Controller::getSkin()
    mutex.unlock();
 
    return res;
+}
+
+/***********************************************************************
+ *                             getLoader                               *
+ ***********************************************************************/
+Loader* Controller::getLoader()
+{
+   return loader;
 }
 
 /***********************************************************************
@@ -900,6 +909,7 @@ Widget* Controller::getWidgetById(const Kobold::String& id)
 /***********************************************************************
  *                               Static                                *
  ***********************************************************************/
+Loader* Controller::loader = NULL;
 Skin* Controller::skin = NULL;
 Draw* Controller::draw = NULL;
 ControllerRendererJunction* Controller::junction = NULL;

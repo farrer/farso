@@ -17,7 +17,7 @@ namespace FarsoExample
          ~JsonLoader();
 
          /*! Init the example code */
-         void init(Farso::FontLoader* fontLoader, 
+         void init(Farso::Loader* loader, 
                Farso::RendererType rendererType, 
                Farso::RendererJunctionInfo* extraInfo);
 

@@ -29,12 +29,12 @@ JsonLoader::~JsonLoader()
 /************************************************************************
  *                                  init                                *
  ************************************************************************/
-void JsonLoader::init(Farso::FontLoader* fontLoader,
+void JsonLoader::init(Farso::Loader* loader,
       Farso::RendererType rendererType, 
       Farso::RendererJunctionInfo* extraInfo)
 {
    /* Init Farso, with desired renderer */
-   Farso::Controller::init(fontLoader, rendererType, 
+   Farso::Controller::init(loader, rendererType, 
          FARSO_EXAMPLE_WINDOW_WIDTH, FARSO_EXAMPLE_WINDOW_HEIGHT, 
          32, "data/gui/", extraInfo);
 

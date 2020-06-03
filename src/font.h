@@ -33,6 +33,7 @@
 #include "rect.h"
 #include "surface.h"
 #include "colors.h"
+#include "loader.h"
 
 namespace Farso
 {
@@ -134,8 +135,7 @@ class Font
       /*! Get default height for a line at current font size */
       const int getDefaultHeight() const;
 
-      /*! Load the font data from file, using the name as a full path,
-       * and avoiding any resources managers.
+      /*! Load the font data from file, using the current Controller::loader.
        * \return if load was successfull. */
       bool load();
 
@@ -240,36 +240,13 @@ class Font
       Alignment curAlign; /**< Alignment to use */
 };
 
-/*! Abstract class to control font loading */
-class FontLoader
-{
-   public:
-      virtual ~FontLoader() {};
-      /*! Load a font.
-       * \param f pointer to the font to load.
-       * \return loading result (successfull or not). */
-      virtual bool load(Font* f) = 0;
-};
-
-/*! Default font loader, loading direct from disk, and avoiding
- * any resource managers */
-class DefaultFontLoader : public FontLoader
-{
-   public:
-      virtual ~DefaultFontLoader() {};
-      bool load(Font* f) override { return f->load(); };
-};
-
 /*! Farso's font manager: manages the creation and load of fonts, and also
  * defined the freetype context to use. */
 class FontManager
 {
    public:
-      /*! Init the font manager system 
-       * \param fontLoader pointer to the loader to use. Its memory is 
-       * controlled by the caller, and should be valid until the call 
-       * to finish. */
-      static void init(FontLoader* fontLoader);
+      /*! Init the font manager system */ 
+      static void init();
       /*! Finish with the font manager system */
       static void finish();
 
@@ -302,7 +279,6 @@ class FontManager
       static FT_Library freeTypeLib; /**< The FreeType context to use */
       static std::map<Kobold::String, Font*> fonts; /**< Current loaded fonts */
       static Kobold::String defaultFont; /**< Default font to use */
-      static FontLoader* fontLoader; /**< Font loader to use */
 };
 
 }

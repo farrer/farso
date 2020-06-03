@@ -104,7 +104,7 @@ class Controller
 {
    public:
       /*! Init the farso controller system to use.
-       * \param fontLoader pointer to FontLoader to use.
+       * \param loader pointer to the Loader to use.
        * \param rendererType the renderer to use for Farso.
        * \param screenWidth current screen width
        * \param screenHeight current screen height 
@@ -118,7 +118,7 @@ class Controller
        *        pass NULL, for Ogre3D, the pointer to a 
        *        OgreJunctionInfo, for SDL the pointer to a
        *        SDLJunctionInfo. */
-      static void init(FontLoader* fontLoader, 
+      static void init(Loader* loader, 
             const RendererType& rendererType, 
             int screenWidth, int screenHeight, int maxCursorSize, 
             const Kobold::String& baseDir, 
@@ -159,6 +159,9 @@ class Controller
 
       /*! \return pointer to current draw interface to use */
       static Draw* getDraw();
+
+      /*! \return pointer to the used loader */
+      static Loader* getLoader();
       
       /*! \return pointer to current overlay used */
       static ControllerRendererJunction* getJunction();
@@ -326,6 +329,7 @@ class Controller
        * \note widget must be a 'root' widget (without parents). */
       static void bringFront(Widget* widget);
 
+      static Loader* loader; /**< current loader */
       static Skin* skin; /**< Current skin used, if any (null for no skins). */
       static Draw* draw; /**< Current draw interface. */
       static ControllerRendererJunction* junction; 

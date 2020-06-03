@@ -31,7 +31,7 @@ OpenGLJsonLoader::~OpenGLJsonLoader()
 void OpenGLJsonLoader::init()
 {
    jsonLoader = new JsonLoader();
-   jsonLoader->init(&fontLoader, Farso::RENDERER_TYPE_OPENGL, NULL);
+   jsonLoader->init(&loader, Farso::RENDERER_TYPE_OPENGL, NULL);
 }
 
 /************************************************************************

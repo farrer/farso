@@ -172,9 +172,23 @@ include(sources.cmake)
 
 # Build the library with defined mode (static or shared)
 if(${FARSO_STATIC})
-   add_library(farso ${FARSO_FULL_SOURCES} ${FARSO_FULL_HEADERS})
+   add_library(farso ${FARSO_SOURCES} ${FARSO_HEADERS})
+   if(${FARSO_HAS_OPENGL})
+      add_library(farso-opengl ${FARSO_OPENGL_SOURCES} ${FARSO_OPENGL_HEADERS})
+   endif(${FARSO_HAS_OPENGL})
+   if(${FARSO_HAS_OGRE})
+      add_library(farso-ogre3d ${FARSO_OGRE_SOURCES} ${FARSO_OGRE_HEADERS})
+   endif(${FARSO_HAS_OGRE})
 else(${FARSO_STATIC})
-   add_library(farso SHARED ${FARSO_FULL_SOURCES} ${FARSO_FULL_HEADERS} )
+   add_library(farso SHARED ${FARSO_SOURCES} ${FARSO_HEADERS} )
+   if(${FARSO_HAS_OPENGL})
+      add_library(farso-opengl SHARED ${FARSO_OPENGL_SOURCES} 
+                                      ${FARSO_OPENGL_HEADERS})
+   endif(${FARSO_HAS_OPENGL})
+   if(${FARSO_HAS_OGRE})
+      add_library(farso-ogre3d SHARED ${FARSO_OGRE_SOURCES} 
+                                      ${FARSO_OGRE_HEADERS})
+   endif(${FARSO_HAS_OGRE})
 endif(${FARSO_STATIC})
 
 set_target_properties(farso PROPERTIES VERSION ${VERSION}

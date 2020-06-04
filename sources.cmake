@@ -221,7 +221,7 @@ if(${FARSO_HAS_OGRE_EXAMPLE})
    add_executable(farso_ogre3d_example WIN32 
                         ${FARSO_EXAMPLE_SOURCES} 
                         ${FARSO_COMMON_EXAMPLE_HEADERS})
-   target_link_libraries(farso_ogre3d_example farso
+   target_link_libraries(farso_ogre3d_example farso farso-ogre3d
                         ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARIES}
                         ${FARSO_OGRE_LIBRARIES} 
                         ${FREETYPE_LIBRARIES}
@@ -257,41 +257,14 @@ if(${OPENGL_FOUND})
                            ${FARSO_OPENGL_JSON_HEADERS})
    endif(${FARSO_HAS_RAPIDJSON})
 
-   if(${FARSO_HAS_OGRE_EXAMPLE})
-      # Must link with all ogre example dependencies
-      set(LIBRARIES farso
-                    ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARIES}
-                    ${FARSO_OGRE_LIBRARIES} 
-                    ${FREETYPE_LIBRARIES}
-                    ${OPENGL_LIBRARIES}
-                    ${SDL2_IMAGE_LIBRARY}
-                    ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
-                    ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY}
-                    ${OGG_LIBRARY} m
-                    ${LIBINTL_LIBRARIES} pthread)
-   else(${FARSO_HAS_OGRE_EXAMPLE})
-      if(${FARSO_HAS_OGRE})
-         # Must link with ogre3d dependencies
-         set(LIBRARIES farso
-                       ${KOBOLD_LIBRARIES}
-                       ${FARSO_OGRE_LIBRARIES}
-                       ${FREETYPE_LIBRARIES}
-                       ${OPENGL_LIBRARIES}
-                       ${SDL2_IMAGE_LIBRARY}
-                       ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
-                       m ${LIBINTL_LIBRARIES} pthread)
-      else(${FARSO_HAS_OGRE})
-         # must link only with OpenGL dependencies
-         set(LIBRARIES farso
-                       ${KOBOLD_LIBRARIES}
-                       ${FREETYPE_LIBRARIES}
-                       ${OPENGL_LIBRARIES}
-                       ${SDL2_IMAGE_LIBRARY}
-                       ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
-                       m ${LIBINTL_LIBRARIES} pthread)
-      endif(${FARSO_HAS_OGRE})
-   endif(${FARSO_HAS_OGRE_EXAMPLE})
-
+   # must link only with OpenGL dependencies
+   set(LIBRARIES farso farso-opengl
+                 ${KOBOLD_LIBRARY}
+                 ${FREETYPE_LIBRARIES}
+                 ${OPENGL_LIBRARIES}
+                 ${SDL2_IMAGE_LIBRARY}
+                 ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
+                 m ${LIBINTL_LIBRARIES} pthread)
 
    target_link_libraries(farso_opengl_example ${LIBRARIES})
 
@@ -328,41 +301,13 @@ if(${FARSO_BUILD_SDL_EXAMPLES})
    endif(${FARSO_HAS_RAPIDJSON})
 endif(${FARSO_BUILD_SDL_EXAMPLES})
 
-if(${FARSO_HAS_OGRE_EXAMPLE})
-   # Must link with all ogre example dependencies
-   set(LIBRARIES farso
-                 ${GOBLIN_LIBRARY} ${KOSOUND_LIBRARY} ${KOBOLD_LIBRARIES}
-                 ${FARSO_OGRE_LIBRARIES} 
-                 ${FREETYPE_LIBRARIES}
-                 ${OPENGL_LIBRARIES}
-                 ${SDL2_IMAGE_LIBRARY}
-                 ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
-                 ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY}
-                 ${OGG_LIBRARY} m
-                 ${LIBINTL_LIBRARIES} pthread)
-else(${FARSO_HAS_OGRE_EXAMPLE})
-   if(${FARSO_HAS_OGRE})
-      # Must link with ogre3d dependencies
-      set(LIBRARIES farso
-                    ${KOBOLD_LIBRARIES}
-                    ${FARSO_OGRE_LIBRARIES}
-                    ${FREETYPE_LIBRARIES}
-                    ${OPENGL_LIBRARIES}
-                    ${SDL2_IMAGE_LIBRARY}
-                    ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
-                    m ${LIBINTL_LIBRARIES} pthread)
-   else(${FARSO_HAS_OGRE})
-     # must link only with OpenGL dependencies
-      set(LIBRARIES farso
-                    ${KOBOLD_LIBRARIES}
-                    ${FREETYPE_LIBRARIES}
-                    ${OPENGL_LIBRARIES}
-                    ${SDL2_IMAGE_LIBRARY}
-                    ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
-                    m ${LIBINTL_LIBRARIES} pthread)
-   endif(${FARSO_HAS_OGRE})
-endif(${FARSO_HAS_OGRE_EXAMPLE})
-
+set(LIBRARIES farso
+   ${KOBOLD_LIBRARY}
+   ${FREETYPE_LIBRARIES}
+   ${OPENGL_LIBRARIES}
+   ${SDL2_IMAGE_LIBRARY}
+   ${SDL2_LIBRARY} ${OPENAL_LIBRARY} 
+   m ${LIBINTL_LIBRARIES} pthread)
 
 if(${FARSO_BUILD_SDL_EXAMPLES})
 

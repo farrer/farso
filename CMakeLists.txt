@@ -205,6 +205,12 @@ if(${FARSO_HAS_OPENGL})
 endif(${FARSO_HAS_OPENGL})
 
 install(TARGETS farso DESTINATION lib)
+if(${FARSO_HAS_OPENGL})
+   install(TARGETS farso-opengl DESTINATION lib)
+endif(${FARSO_HAS_OPENGL})
+if(${FARSO_HAS_OGRE})
+   install(TARGETS farso-ogre3d DESTINATION lib)
+endif(${FARSO_HAS_OGRE})
 
 # Print configuration options
 message("\n******************************************************")

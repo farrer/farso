@@ -23,26 +23,6 @@
 #include "font.h"
 #include "widgetjsonparser.h"
 
-#if FARSO_HAS_OGRE == 1
-   #include "ogre3d/ogredraw.h"
-   #include "ogre3d/ogrejunction.h"
-   #include "ogre3d/ogresurface.h"
-   #include "ogre3d/ogrewidgetrenderer.h"
-#endif
-
-#if FARSO_HAS_OPENGL == 1
-   #include "opengl/opengldraw.h"
-   #include "opengl/opengljunction.h"
-   #include "opengl/openglsurface.h"
-   #include "opengl/openglwidgetrenderer.h"
-#endif
-
-#include "sdl/sdldraw.h"
-#include "sdl/sdljunction.h"
-#include "sdl/sdlsurface.h"
-#include "sdl/sdlwidgetrenderer.h"
-
-
 #include <kobold/log.h>
 
 #include <assert.h>
@@ -52,43 +32,19 @@ using namespace Farso;
 /***********************************************************************
  *                                 init                                *
  ***********************************************************************/
-void Controller::init(Loader* loader, const RendererType& rendererType,
+void Controller::init(Loader* loader, Renderer* renderer,
       int screenWidth, int screenHeight, int maxCursorSize,
-      const Kobold::String& baseDir, RendererJunctionInfo* extraInfo)
+      const Kobold::String& baseDir)
 {
    mutex.lock();
    if(!inited)
    {
       /* Define parameters */
-      Controller::rendererType = rendererType;
       Controller::width = screenWidth;
       Controller::height = screenHeight;
       Controller::baseDir = baseDir;
       Controller::loader = loader;
-
-      /* Create based on renderer type */
-      Controller::junction = createNewJunction("farso_default_junction",
-                                               extraInfo);
-      switch(rendererType)
-      {
-         case RENDERER_TYPE_SDL:
-            Controller::draw = new SDLDraw();
-         break;
-         case RENDERER_TYPE_OPENGL:
-#if FARSO_HAS_OPENGL == 1
-            Controller::draw = new OpenGLDraw();
-#else
-            Kobold::Log::add("ERROR: OpenGL isn't available!");
-#endif
-         break;
-         case RENDERER_TYPE_OGRE3D:
-#if FARSO_HAS_OGRE == 1
-            Controller::draw = new OgreDraw();
-#else
-            Kobold::Log::add("ERROR: Ogre3d isn't available!");
-#endif
-        break;
-      }
+      Controller::renderer = renderer;
 
       skin = NULL;
       activeWidget = NULL;
@@ -126,11 +82,6 @@ void Controller::finish()
    Cursor::finish();
 #endif
 
-   if(draw)
-   {
-      delete draw;
-      draw = NULL;
-   }
    if(skin)
    {
       delete skin;
@@ -150,11 +101,6 @@ void Controller::finish()
    {
       delete widgets;
       widgets = NULL;
-   }
-   if(junction)
-   {
-      delete junction;
-      junction = NULL;
    }
    if(renderers)
    {
@@ -209,44 +155,7 @@ void Controller::setCursor(const Kobold::String& filename)
  ***********************************************************************/
 Kobold::String Controller::getRealFilename(const Kobold::String& filename)
 {
-   if(rendererType != RENDERER_TYPE_OGRE3D)
-   {
-      return baseDir + filename;
-   }
-
-   return filename;
-}
-
-/***********************************************************************
- *                           createNewJunction                         *
- ***********************************************************************/
-ControllerRendererJunction* Controller::createNewJunction(
-      const Kobold::String& name, RendererJunctionInfo* extraInfo)
-{
-   switch(rendererType)
-   {
-      case RENDERER_TYPE_SDL:
-         return new SDLJunction(static_cast<SDLJunctionInfo*>(extraInfo));
-      case RENDERER_TYPE_OPENGL:
-#if FARSO_HAS_OPENGL == 1
-         return new OpenGLJunction();
-#else
-         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
-               "ERROR: OpenGL isn't available!");
-      break;
-#endif
-      case RENDERER_TYPE_OGRE3D:
-#if FARSO_HAS_OGRE == 1
-         return new OgreJunction(name, 
-            static_cast<OgreJunctionInfo*>(extraInfo));
-#else
-         Kobold::Log::add(Kobold::LOG_LEVEL_ERROR,
-               "ERROR: Ogre3d isn't available!");
-      break;
-#endif
-   }
-
-   return NULL;
+   return baseDir + filename;
 }
 
 /***********************************************************************
@@ -255,88 +164,26 @@ ControllerRendererJunction* Controller::createNewJunction(
 WidgetRenderer* Controller::createNewWidgetRenderer(int width, int height,
       bool insertAtList)
 {
-   WidgetRenderer* renderer = NULL;
+   WidgetRenderer* widgetRenderer = 
+      renderer->createWidgetRenderer(width, height);
 
-   switch(rendererType)
+   if((widgetRenderer) && (insertAtList))
    {
-      case RENDERER_TYPE_SDL:
-         renderer = new SDLWidgetRenderer(width, height, junction);
-      break;
-      case RENDERER_TYPE_OPENGL:
-#if FARSO_HAS_OPENGL == 1
-         renderer = new OpenGLWidgetRenderer(width, height, junction);
-#endif
-      break;
-      case RENDERER_TYPE_OGRE3D:
-#if FARSO_HAS_OGRE == 1
-         renderer = new OgreWidgetRenderer(width, height, junction);
-#else
-      break;
-#endif
+      renderers->insertAtBegin(widgetRenderer);
    }
 
-   if((renderer) && (insertAtList))
-   {
-      renderers->insertAtBegin(renderer);
-   }
-
-   return renderer;
+   return widgetRenderer;
 }
 
 /***********************************************************************
  *                       removeNewWidgetRenderer                       *
  ***********************************************************************/
-void Controller::removeWidgetRenderer(WidgetRenderer* renderer)
+void Controller::removeWidgetRenderer(WidgetRenderer* wr)
 {
    if(renderers)
    {
-      renderers->remove(renderer);
+      renderers->remove(wr);
    }
-}
-
-/***********************************************************************
- *                          getDefaultGroupName                        *
- ***********************************************************************/
-Kobold::String Controller::getDefaultGroupName()
-{
-   switch(rendererType)
-   {
-      case RENDERER_TYPE_OGRE3D:
-#if FARSO_HAS_OGRE == 1
-         return Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME;
-#endif
-      break;
-      case RENDERER_TYPE_OPENGL:
-      case RENDERER_TYPE_SDL:
-         return ""; 
-   }
-
-   return "";
-}
-
-/***********************************************************************
- *                        loadImageToSurface                           *
- ***********************************************************************/
-Surface* Controller::loadImageToSurface(const Kobold::String& filename)
-{
-   switch(rendererType)
-   {
-      case RENDERER_TYPE_SDL:
-         return new SDLSurface(filename, getDefaultGroupName());
-      case RENDERER_TYPE_OPENGL:
-#if FARSO_HAS_OPENGL == 1
-         return new OpenGLSurface(filename, getDefaultGroupName()); 
-#endif
-         break;
-      case RENDERER_TYPE_OGRE3D:
-#if FARSO_HAS_OGRE == 1
-         return new OgreSurface(filename, getDefaultGroupName()); 
-#else
-      break;
-#endif
-   }
-
-   return NULL;
 }
 
 /***********************************************************************
@@ -440,21 +287,21 @@ Loader* Controller::getLoader()
 }
 
 /***********************************************************************
+ *                            getRenderer                              *
+ ***********************************************************************/
+Renderer* Controller::getRenderer()
+{
+   return renderer;
+}
+
+/***********************************************************************
  *                              getDraw                                *
  ***********************************************************************/
 Draw* Controller::getDraw()
 {
-   return draw;
+   return renderer->getDraw();
 }
 
-/***********************************************************************
- *                            getJunction                              *
- ***********************************************************************/
-ControllerRendererJunction* Controller::getJunction()
-{
-   return junction;
-}
- 
 /***********************************************************************
  *                             getLastEvent                            *
  ***********************************************************************/
@@ -597,17 +444,17 @@ void Controller::bringFront(Widget* widget)
       renderers->insertAtBegin(widget->getWidgetRenderer());
    }
 
-   if(!junction->shouldManualRender())
+   if(!renderer->shouldManualRender())
    {
       /* Must reset all WidgetRenderers sub group.
        * Note: Starting at LAST-1, as mouse cursor should be at last */
       int curSubId = FARSO_WIDGET_RENDERER_LAST_SUB_GROUP - 1;
 
-      WidgetRenderer* renderer = static_cast<WidgetRenderer*>(
+      WidgetRenderer* wr = static_cast<WidgetRenderer*>(
             renderers->getFirst());
       for(int i = 0; i < renderers->getTotal(); i++)
       {
-         renderer->setRenderQueueSubGroup(curSubId);
+         wr->setRenderQueueSubGroup(curSubId);
 
          /* Go to next level, if available */
          if(curSubId > FARSO_WIDGET_RENDERER_FIRST_SUB_GROUP)
@@ -615,7 +462,7 @@ void Controller::bringFront(Widget* widget)
             curSubId--;
          }
 
-         renderer = static_cast<WidgetRenderer*>(renderer->getNext());
+         wr = static_cast<WidgetRenderer*>(wr->getNext());
       }
    }
 }
@@ -686,7 +533,7 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    mouseOverWidget = false;
 
    /* Enter 2d rendering mode */
-   junction->enter2dMode();
+   renderer->enter2dMode();
 
    event.set(NULL, EVENT_NONE);
 
@@ -747,19 +594,19 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
       w = static_cast<Widget*>(w->getNext());
    }
 
-   if(junction->shouldManualRender())
+   if(renderer->shouldManualRender())
    {
       /* Most render widgets from back to front */
-      WidgetRenderer* renderer = static_cast<WidgetRenderer*>(
+      WidgetRenderer* wr = static_cast<WidgetRenderer*>(
             renderers->getLast());
       for(int i = 0; i < renderers->getTotal(); i++)
       {
-         if(renderer->isVisible())
+         if(wr->isVisible())
          {
-            renderer->render();
+            wr->render();
          }
 
-         renderer = static_cast<WidgetRenderer*>(renderer->getPrevious());
+         wr = static_cast<WidgetRenderer*>(wr->getPrevious());
       }
    }
    
@@ -773,7 +620,7 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
    {
       cursorRenderer->setPosition(Farso::Cursor::getX(),
                                   Farso::Cursor::getY());
-      if(junction->shouldManualRender())
+      if(renderer->shouldManualRender())
       {
          cursorRenderer->render();
       }
@@ -811,7 +658,7 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
          cursorRenderer->show();
       }
       
-      if(junction->shouldManualRender())
+      if(renderer->shouldManualRender())
       {
          cursorRenderer->render();
       }
@@ -820,19 +667,11 @@ bool Controller::verifyEvents(bool leftButtonPressed, bool rightButtonPressed,
 #endif
 
    /* Restore rendering mode to previously enter 2d one. */
-   junction->restore3dMode();
+   renderer->restore3dMode();
 
    mutex.unlock();
 
    return gotEvent;
-}
-
-/***********************************************************************
- *                        getRendererType                              *
- ***********************************************************************/
-const RendererType& Controller::getRendererType()
-{
-   return rendererType;
 }
 
 /***********************************************************************
@@ -911,15 +750,13 @@ Widget* Controller::getWidgetById(const Kobold::String& id)
  ***********************************************************************/
 Loader* Controller::loader = NULL;
 Skin* Controller::skin = NULL;
-Draw* Controller::draw = NULL;
-ControllerRendererJunction* Controller::junction = NULL;
+Renderer* Controller::renderer = NULL;
 Kobold::List* Controller::renderers = NULL;
 Kobold::List* Controller::widgets = NULL;
 Kobold::List* Controller::toRemoveWidgets = NULL;
 bool Controller::inited = false;
 Widget* Controller::activeWidget = NULL;
 Event Controller::event(NULL, EVENT_NONE);
-RendererType Controller::rendererType = RENDERER_TYPE_SDL; 
 int Controller::width = 0;
 int Controller::height = 0;
 Kobold::String Controller::baseDir;

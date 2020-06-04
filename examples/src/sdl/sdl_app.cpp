@@ -19,7 +19,7 @@ using namespace FarsoExample;
 SDLApp::SDLApp()
 {
    window = NULL;
-   renderer = NULL;
+   sdlRenderer = NULL;
    Kobold::Log::init(&log);
 
    /* Try to init SDL */
@@ -32,13 +32,15 @@ SDLApp::SDLApp()
 
    /* Try to create our window */
    if(SDL_CreateWindowAndRenderer(FARSO_EXAMPLE_WINDOW_WIDTH, 
-            FARSO_EXAMPLE_WINDOW_HEIGHT, 0, &window, &renderer) != 0)
+            FARSO_EXAMPLE_WINDOW_HEIGHT, 0, &window, &sdlRenderer) != 0)
    {
       Kobold::Log::add(Kobold::LOG_LEVEL_ERROR, 
            "Couldn't create SDL Window and Renderer!");
       SDL_Quit();
       exit(-2);
    }
+
+   renderer = new Farso::SDLRenderer(sdlRenderer);
 }
 
 /************************************************************************
@@ -48,7 +50,11 @@ SDLApp::~SDLApp()
 {
    if(renderer != NULL)
    {
-      SDL_DestroyRenderer(renderer);
+      delete renderer;
+   }
+   if(sdlRenderer != NULL)
+   {
+      SDL_DestroyRenderer(sdlRenderer);
    }
    if(window != NULL)
    {
@@ -94,14 +100,14 @@ void SDLApp::run()
             Kobold::Mouse::updateByEvent(event);
          }
 
-         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-         SDL_RenderClear(renderer);
+         SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 0, 255);
+         SDL_RenderClear(sdlRenderer);
 
          step(Kobold::Mouse::isLeftButtonPressed(), 
               Kobold::Mouse::isRightButtonPressed(),
               Kobold::Mouse::getX(), Kobold::Mouse::getY());
 
-         SDL_RenderPresent(renderer);
+         SDL_RenderPresent(sdlRenderer);
       }
       else if((UPDATE_RATE-1) - (time - lastTime) > 0 )
       {

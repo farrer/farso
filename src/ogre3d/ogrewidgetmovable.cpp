@@ -19,10 +19,10 @@
 */
 
 #include "ogrewidgetmovable.h"
+#include "ogrerenderer.h"
 
 #if FARSO_USE_OGRE_OVERLAY == 0
 
-#include "ogrejunction.h"
 #include <OGRE/OgreSceneManager.h>
 using namespace Farso;
 

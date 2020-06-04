@@ -19,15 +19,16 @@
 */
 
 #include "sdlwidgetrenderer.h"
+#include "sdlrenderer.h"
 #include "sdlsurface.h"
+#include "../controller.h"
 using namespace Farso;
 
 /***********************************************************************
  *                          SDLWidgetRenderer                          *
  ***********************************************************************/
-SDLWidgetRenderer::SDLWidgetRenderer(int width, int height, 
-      ControllerRendererJunction* junction)
-       : WidgetRenderer(width, height, junction)
+SDLWidgetRenderer::SDLWidgetRenderer(int width, int height)
+       : WidgetRenderer(width, height)
 {
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
    Uint32 pixelFormat = SDL_PIXELFORMAT_RGBA8888;
@@ -35,8 +36,8 @@ SDLWidgetRenderer::SDLWidgetRenderer(int width, int height,
    Uint32 pixelFormat = SDL_PIXELFORMAT_ABGR8888;
 #endif
 
-   this->sdlJunction = static_cast<SDLJunction*>(junction);
-   this->texture = SDL_CreateTexture(sdlJunction->getRenderer(), 
+   SDLRenderer* renderer = static_cast<SDLRenderer*>(Controller::getRenderer());
+   this->texture = SDL_CreateTexture(renderer->getSDLRenderer(), 
          pixelFormat, SDL_TEXTUREACCESS_STREAMING, width, height);
    this->posX = 0;
    this->posY = 0;
@@ -110,6 +111,7 @@ void SDLWidgetRenderer::doRender()
    dest.w = width;
    dest.h = height;
 
-   SDL_RenderCopy(sdlJunction->getRenderer(), this->texture, NULL, &dest);
+   SDLRenderer* renderer = static_cast<SDLRenderer*>(Controller::getRenderer());
+   SDL_RenderCopy(renderer->getSDLRenderer(), this->texture, NULL, &dest);
 }
 

@@ -17,9 +17,7 @@ namespace FarsoExample
          ~JsonLoader();
 
          /*! Init the example code */
-         void init(Farso::Loader* loader, 
-               Farso::RendererType rendererType, 
-               Farso::RendererJunctionInfo* extraInfo);
+         void init(Farso::Loader* loader, Farso::Renderer* renderer); 
 
          /* \return if should quit the example */
          bool shouldQuit();

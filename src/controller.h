@@ -39,6 +39,7 @@
 #include "menu.h"
 #include "picture.h"
 #include "progressbar.h"
+#include "renderer.h"
 #include "scrollbar.h"
 #include "scrolltext.h"
 #include "skin.h"
@@ -59,43 +60,6 @@
 namespace Farso
 {
 
-/*! Basic class to pass parameters to the junction creation. Each
- * rendererer should define its own needs as a child of this one */
-class RendererJunctionInfo 
-{
-   public:
-      virtual ~RendererJunctionInfo(){};
-   protected:
-      RendererJunctionInfo(){};
-};
-
-/*! Interface to some junction data between the controller and each renderer
- * implementation. 
- * \note Will only have one instance. */
-class ControllerRendererJunction
-{
-   public:
-      /*! Construct and define any needed information. */
-      ControllerRendererJunction(){};
-      virtual ~ControllerRendererJunction(){};
-
-      /*! Define rendering state to 2d */
-      virtual void enter2dMode() = 0;
-      /*! Restore the rendering to the state before call to enter2dMode() */
-      virtual void restore3dMode() = 0;
-
-      /*! \return if widget's render should be made by ourselves (true),
-       *  or by the original renderer engine (ie: Ogre) */
-      virtual const bool shouldManualRender() const = 0;
-};
-
-enum RendererType
-{
-   RENDERER_TYPE_SDL,
-   RENDERER_TYPE_OPENGL,
-   RENDERER_TYPE_OGRE3D
-};
-
 /*! The controller is the main access point to Farso, with all
  * current options and widgets. It's a static class, single per
  * application.
@@ -105,7 +69,7 @@ class Controller
    public:
       /*! Init the farso controller system to use.
        * \param loader pointer to the Loader to use.
-       * \param rendererType the renderer to use for Farso.
+       * \param renderer pointer to the Renderer to use.
        * \param screenWidth current screen width
        * \param screenHeight current screen height 
        * \param maxCursorSize -> maximum cursor size, in pixels 
@@ -113,16 +77,10 @@ class Controller
        *                Must end with a trail '/'.
        * \note baseDir is ignored on Ogre3d, in favor of its own resource 
        *               manager (thus make sure that baseDir is at a defined
-       *               resource group). 
-       * \param any extra information needed for renderer. For OpenGL, just 
-       *        pass NULL, for Ogre3D, the pointer to a 
-       *        OgreJunctionInfo, for SDL the pointer to a
-       *        SDLJunctionInfo. */
-      static void init(Loader* loader, 
-            const RendererType& rendererType, 
+       *               resource group). */ 
+      static void init(Loader* loader, Renderer* renderer, 
             int screenWidth, int screenHeight, int maxCursorSize, 
-            const Kobold::String& baseDir, 
-            RendererJunctionInfo* extraInfo);
+            const Kobold::String& baseDir); 
       /*! Finish with the farso controller (usually called at exit). */
       static void finish();
 
@@ -162,9 +120,9 @@ class Controller
 
       /*! \return pointer to the used loader */
       static Loader* getLoader();
-      
-      /*! \return pointer to current overlay used */
-      static ControllerRendererJunction* getJunction();
+
+      /*! \return current renderer pointer */
+      static Renderer* getRenderer();
 
       /*! Add a widget that has no parent.
        * \note: widget's should have no parent.
@@ -220,21 +178,8 @@ class Controller
       static WidgetRenderer* createNewWidgetRenderer(int width, int height,
             bool insertAtList=true);
       /*! Remove (and free its memory) a WidgetRenderer 
-       * \param renderer pointer to the renderer to remove and free. */
-      static void removeWidgetRenderer(WidgetRenderer* renderer);
-
-      /*! Load an image from file to a new surface.
-       * \param filename name of the image's file to load
-       * \return pointer to the created surface.
-       * \note The caller is responsible to delete the surface when no 
-       * more needed. */
-      static Surface* loadImageToSurface(const Kobold::String& filename);
-      
-      /*! \return default group name for the current using renderer */
-      static Kobold::String getDefaultGroupName();
-
-      /*! \return current renderer type */
-      static const RendererType& getRendererType();
+       * \param wr pointer to the WidgetRenderer to remove and free. */
+      static void removeWidgetRenderer(WidgetRenderer* wr);
 
       /*! \return real filename for fonts, skins and cursors files */
       static Kobold::String getRealFilename(const Kobold::String& filename);
@@ -307,15 +252,6 @@ class Controller
             Widget* widget;
       };
 
-      /*! Create a new ControllerRendererJunction for the current renderer
-       *  type, to be used elsewhere.
-       *  \param name name to be used for the junction. Must be unique.
-       *  \param extraInfo needed exra info for renderer. See @init for what 
-       *         to pass here.
-       *  \return junction created (or NULL if error) */
-      static ControllerRendererJunction* createNewJunction(
-            const Kobold::String& name, RendererJunctionInfo* extraInfo);
-
       /*! Verify events for specific widget */
       static bool verifyEvents(Widget* widget, 
             bool leftButtonPressed, bool rightButtonPressed,
@@ -331,8 +267,7 @@ class Controller
 
       static Loader* loader; /**< current loader */
       static Skin* skin; /**< Current skin used, if any (null for no skins). */
-      static Draw* draw; /**< Current draw interface. */
-      static ControllerRendererJunction* junction; 
+      static Renderer* renderer; /**< Current Renderer */
       static Kobold::List* toRemoveWidgets; /**< List with current 
                                       'first-level' widgets to be removed */
       static Kobold::List* widgets; /**< List with current 'first-level' 
@@ -341,7 +276,6 @@ class Controller
       static bool inited; /**< Inited flag.*/
       static Widget* activeWidget; /**< Current active widget */
       static Event event; /**< Last event. */
-      static RendererType rendererType; /**< Current controller renderer type*/
 
       static bool forceBringToFrontCall; /**< When the active widget changed 
                                            and we must call bringToFront */

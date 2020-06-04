@@ -34,8 +34,6 @@ namespace Farso
 #define FARSO_WIDGET_RENDERER_FIRST_SUB_GROUP     0
 #define FARSO_WIDGET_RENDERER_LAST_SUB_GROUP      6
 
-class ControllerRendererJunction;
-
 /*! The renderer interface.
  * \note the surface used should be created only by the createSurface method
  * call. This is needed for the surface creation always be at the 'renderer' 
@@ -46,10 +44,8 @@ class WidgetRenderer : public Kobold::ListElement
    public:
       /*! Constructor.
        * \param width -> width of the drawable surface 
-       * \param width -> height of the drawable surface
-       * \param junction -> pointer to juntion to use. */
-      WidgetRenderer(int width, int height, 
-            ControllerRendererJunction* junction);
+       * \param width -> height of the drawable surface */
+      WidgetRenderer(int width, int height);
       /*! Destructor
        * \note children destructor must delete the created surface. */
       virtual ~WidgetRenderer();
@@ -137,8 +133,6 @@ class WidgetRenderer : public Kobold::ListElement
 
       Surface* surface;      /**< The drawable surface */
 
-      ControllerRendererJunction* junction; /**< Junction to use */
-      
       Kobold::String name; /**< internal name of this renderer */
 
       bool visible; /**< if visible or not. */

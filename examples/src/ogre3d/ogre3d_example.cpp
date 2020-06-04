@@ -1,6 +1,5 @@
 
 #include "ogre3d_example.h"
-#include "../../../src/ogre3d/ogrejunction.h"
 
 #include <kobold/platform.h>
 #include <kobold/log.h>
@@ -14,6 +13,7 @@ Ogre3dExample::Ogre3dExample()
               :Goblin::BaseApp(Goblin::CameraConfig())
 {
    example = NULL;
+   renderer = NULL;
 }
 
 /************************************************************************
@@ -25,6 +25,10 @@ Ogre3dExample::~Ogre3dExample()
    {
       delete example;
    }
+   if(renderer != NULL)
+   {
+      delete renderer;
+   }
 }
 
 /************************************************************************
@@ -33,8 +37,9 @@ Ogre3dExample::~Ogre3dExample()
 bool Ogre3dExample::doCycleInit(int callCount, bool& shouldAbort)
 {
    example = new Example();
-   Farso::OgreJunctionInfo info(getSceneManager(), ogreRoot->getRenderSystem());
-   example->init(&loader, Farso::RENDERER_TYPE_OGRE3D, &info);
+   renderer = new Farso::OgreRenderer(getSceneManager(), 
+         ogreRoot->getRenderSystem());
+   example->init(&loader, renderer, "");
    return true;
 }
 

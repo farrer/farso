@@ -4,6 +4,7 @@
 
 #include "farsoconfig.h"
 #include "ogre3d/ogreloader.h"
+#include "ogre3d/ogrerenderer.h"
 #include "../common.h"
 #include "../size.h"
 #include <goblin/baseapp.h>
@@ -57,6 +58,7 @@ class Ogre3dExample : public Goblin::BaseApp
    private:
       Example* example;
       Farso::OgreLoader loader;
+      Farso::OgreRenderer* renderer;
 };
 
 

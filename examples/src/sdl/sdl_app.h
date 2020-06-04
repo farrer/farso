@@ -5,6 +5,9 @@
 #include <SDL2/SDL.h>
 #include <kobold/log.h>
 
+#include "../../../src/sdl/sdlrenderer.h"
+#include "../../../src/loader.h"
+
 namespace FarsoExample
 {
 
@@ -29,8 +32,13 @@ class SDLApp
     protected:
        /*! The window used */
        SDL_Window* window;
-       SDL_Renderer* renderer;
        Kobold::DefaultLog log;
+       Farso::DefaultLoader loader;
+       Farso::SDLRenderer* renderer;
+
+    private:
+       SDL_Renderer* sdlRenderer;
+
 };
 
 }

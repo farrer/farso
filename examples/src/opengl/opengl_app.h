@@ -6,6 +6,9 @@
 #include <SDL2/SDL_opengl.h>
 #include <kobold/log.h>
 
+#include "../../../src/opengl/openglrenderer.h"
+#include "../../../src/loader.h"
+
 namespace FarsoExample
 {
 
@@ -26,6 +29,10 @@ class OpenGLApp
 
        virtual void step(bool leftButtonPressed, bool rightButtonPressed,
              int mouseX, int mouseY) = 0; 
+
+    protected:
+       Farso::DefaultLoader loader;
+       Farso::OpenGLRenderer* renderer;
 
     private:
        /*! The window used */

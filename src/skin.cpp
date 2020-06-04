@@ -777,7 +777,7 @@ bool Skin::load(const Kobold::String& filename, Kobold::DefParser& def)
       {
          if(surface == NULL)
          {
-            surface = Controller::loadImageToSurface(
+            surface = Controller::getRenderer()->loadImageToSurface(
                   Controller::getRealFilename(value)); 
          }
       }

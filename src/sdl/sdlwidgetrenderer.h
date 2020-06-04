@@ -23,7 +23,6 @@
 
 #include "../widgetrenderer.h"
 #include <SDL2/SDL.h>
-#include "sdljunction.h"
 
 namespace Farso
 {
@@ -31,8 +30,7 @@ namespace Farso
    class SDLWidgetRenderer : public WidgetRenderer
    {
       public:
-         SDLWidgetRenderer(int width, int height, 
-               ControllerRendererJunction* junction);
+         SDLWidgetRenderer(int width, int height); 
          ~SDLWidgetRenderer();
 
          void uploadSurface();
@@ -47,7 +45,6 @@ namespace Farso
 
       private:
          SDL_Texture* texture; /**< SDL_Texture related */
-         SDLJunction* sdlJunction; /**< The junction of this WidgetRenderer */
          int posX;        /**< current X position on screen */
          int posY;        /**< current Y position on screen */
    };

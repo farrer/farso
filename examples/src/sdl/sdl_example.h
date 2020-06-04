@@ -25,7 +25,6 @@ class SDLExample : public SDLApp
     private:
        /*! The example itself */
        Example* example;
-       Farso::DefaultLoader loader;
 };
 
 }

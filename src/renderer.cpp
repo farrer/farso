@@ -18,28 +18,30 @@
   along with Farso.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "../controller.h"
+#include "renderer.h"
 
 namespace Farso
 {
 
-/*! The junction between OpenGL and the Controller. */
-class OpenGLJunction : public ControllerRendererJunction
+/****************************************************************************
+ *                                Constructor                               *
+ ****************************************************************************/
+Renderer::Renderer()
 {
-   public:
-      /*! Constructor */
-      OpenGLJunction();
-      /*! Destructor */
-      ~OpenGLJunction();
+   this->draw = NULL;
+}
 
-      /*! Set the projection and model view matrix to draw on 2d */
-      void enter2dMode();
-      /*! Restore the projection and model view matrix to state before
-       * call to enter2dMode() */
-      void restore3dMode();
-      
-      const bool shouldManualRender() const {return true;};
-};
+/****************************************************************************
+ *                                 Destructor                               *
+ ****************************************************************************/
+Renderer::~Renderer()
+{
+   if(draw != NULL)
+   {
+      delete draw;
+   }
+}
+
 
 }
 

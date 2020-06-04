@@ -33,7 +33,7 @@ Picture::Picture(int x, int y, const Kobold::String& filename, Widget* parent)
    ownImage = true;
 
    /* Load the image */
-   image = Controller::loadImageToSurface(
+   image = Controller::getRenderer()->loadImageToSurface(
          Controller::getRealFilename(filename));
    
    /* Set size based on loaded image */
@@ -95,7 +95,7 @@ void Picture::setImage(const Kobold::String& filename)
    }
 
    /* Load the image */
-   image = Controller::loadImageToSurface(
+   image = Controller::getRenderer()->loadImageToSurface(
          Controller::getRealFilename(filename));
    ownImage = true;
 

@@ -21,7 +21,7 @@
 #include "ogrewidgetrenderer.h"
 
 #include "ogresurface.h"
-#include "ogrejunction.h"
+#include "ogrerenderer.h"
 #include "../controller.h"
 
 #include <OGRE/OgreStringConverter.h>
@@ -62,12 +62,9 @@ using namespace Farso;
 /***********************************************************************
  *                             OgreWidgetRenderer                          *
  ***********************************************************************/
-OgreWidgetRenderer::OgreWidgetRenderer(int width, int height,
-            ControllerRendererJunction* junction) 
-                   :WidgetRenderer(width, height, junction)
+OgreWidgetRenderer::OgreWidgetRenderer(int width, int height) 
+                   :WidgetRenderer(width, height)
 {
-   /* Set junction to use */
-   this->ogreJunction = (OgreJunction*) junction;
 #if FARSO_USE_OGRE_OVERLAY == 1
    container = NULL;
 #else
@@ -98,13 +95,16 @@ OgreWidgetRenderer::~OgreWidgetRenderer()
  ***********************************************************************/
 void OgreWidgetRenderer::createSurface()
 {
+   OgreRenderer* renderer = 
+      static_cast<OgreRenderer*>(Controller::getRenderer());
+
    /* Create the drawable surface */ 
    this->surface = new OgreSurface(name, realWidth, realHeight);
 
    /* Create the ogre texture to render the widget */
 #if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
    Ogre::TextureGpuManager* textureMgr = 
-      ogreJunction->getRenderSystem()->getTextureGpuManager();
+      renderer->getRenderSystem()->getTextureGpuManager();
    
    this->texture = textureMgr->createOrRetrieveTexture(name, name,
          Ogre::GpuPageOutStrategy::Discard,
@@ -159,7 +159,7 @@ void OgreWidgetRenderer::createSurface()
          Ogre::v1::OverlayManager::getSingletonPtr()->createOverlayElement(
             "Panel", name));
    #endif
-   ogreJunction->getOverlay()->add2D(this->container);
+   renderer->getOverlay()->add2D(this->container);
 
    /* Set container dimensions */
    container->setWidth(((float)realWidth) / 
@@ -189,7 +189,7 @@ void OgreWidgetRenderer::createSurface()
    /* Note:  the Overlay::add2d will reassign all the internal zorder (which
     * isn't what we expected). A workaround to not let the mouse behind is
     * to force cursor Z order again after this call.*/
-   ogreJunction->getOverlay()->setZOrder(0);
+   renderer->getOverlay()->setZOrder(0);
    if(Cursor::getRenderer())
    {
       Cursor::getRenderer()->setRenderQueueSubGroup(650);
@@ -197,7 +197,7 @@ void OgreWidgetRenderer::createSurface()
 
 
 #else
-   Ogre::SceneManager* sceneManager = ogreJunction->getSceneManager();
+   Ogre::SceneManager* sceneManager = renderer->getSceneManager();
 
    /* Create our renderable and set its datablock */
    renderable = new OgreWidgetRenderable(name, realWidth, realHeight);
@@ -232,8 +232,9 @@ void OgreWidgetRenderer::deleteSurface()
    if(container != NULL)
    {
       /* Clear the container of the overlay */
-      OgreJunction* ogreJunction = (OgreJunction*) junction;
-      ogreJunction->getOverlay()->remove2D(container);
+      OgreRenderer* renderer = 
+         static_cast<OgreRenderer*>(Controller::getRenderer());
+      renderer->getOverlay()->remove2D(container);
       #if OGRE_VERSION_MAJOR == 1 || \
          (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
          Ogre::OverlayManager::getSingletonPtr()->destroyOverlayElement(
@@ -249,9 +250,10 @@ void OgreWidgetRenderer::deleteSurface()
    {
       sceneNode->detachObject(movable);
       movable->detachOgreWidgetRenderable(renderable);
-      OgreJunction* ogreJunction = (OgreJunction*) junction;
-      ogreJunction->getSceneManager()->destroySceneNode(sceneNode);
-      ogreJunction->getSceneManager()->destroyMovableObject(movable);
+      OgreRenderer* renderer = 
+         static_cast<OgreRenderer*>(Controller::getRenderer());
+      renderer->getSceneManager()->destroySceneNode(sceneNode);
+      renderer->getSceneManager()->destroyMovableObject(movable);
       delete renderable;
    }
 #endif
@@ -282,8 +284,10 @@ void OgreWidgetRenderer::deleteSurface()
 #elif OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR <= 1
       Ogre::TextureManager::getSingleton().remove(texture->getName()); 
 #else
+      OgreRenderer* renderer = 
+         static_cast<OgreRenderer*>(Controller::getRenderer());
       Ogre::TextureGpuManager* textureMgr = 
-         ogreJunction->getRenderSystem()->getTextureGpuManager();
+         renderer->getRenderSystem()->getTextureGpuManager();
       textureMgr->destroyTexture(texture);
 #endif
    }
@@ -363,8 +367,10 @@ void OgreWidgetRenderer::defineTexture()
    tech->getPass(0)->setCullingMode(Ogre::CULL_NONE);
    tech->getPass(0)->setColourWriteEnabled(true);
 
-   tech->getPass(0)->setVertexProgram(ogreJunction->getVertexProgramName());
-   tech->getPass(0)->setFragmentProgram(ogreJunction->getFragmentProgramName());
+   OgreRenderer* renderer = 
+         static_cast<OgreRenderer*>(Controller::getRenderer());
+   tech->getPass(0)->setVertexProgram(renderer->getVertexProgramName());
+   tech->getPass(0)->setFragmentProgram(renderer->getFragmentProgramName());
 #else
    /* Using Ogre's Unlit HLMS */
    Ogre::HlmsManager* hlmsManager = Ogre::Root::getSingleton().getHlmsManager();
@@ -476,8 +482,10 @@ void OgreWidgetRenderer::uploadSurface()
 
    /* As Ogre 2.2+ uses a parallell upload to GPU proccess, the work
     * is a bit more complicated. */
+   OgreRenderer* renderer = 
+         static_cast<OgreRenderer*>(Controller::getRenderer());
    Ogre::TextureGpuManager* textureManager = 
-      ogreJunction->getRenderSystem()->getTextureGpuManager();
+      renderer->getRenderSystem()->getTextureGpuManager();
 
    /* Define our sizes */
    const size_t bytesPerRow = texture->_getSysRamCopyBytesPerRow(0);

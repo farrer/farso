@@ -6,7 +6,6 @@
 #if FARSO_HAS_RAPIDJSON == 1
 
 #include "../jsonloader.h"
-
 #include "sdl_app.h"
 
 namespace FarsoExample
@@ -27,7 +26,6 @@ class SDLJsonLoader : public SDLApp
 
     private:
        JsonLoader* jsonLoader;
-       Farso::DefaultLoader loader;
 };
 
 }

@@ -23,14 +23,12 @@
 
 #include "farsoconfig.h"
 
+#include <OGRE/Ogre.h>
 #include <kobold/kstring.h>
 #include <kobold/target.h>
 
 #include "../widgetrenderer.h"
 #include "../surface.h"
-
-#include "ogrejunction.h"
-
 
 
 #if (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2)
@@ -72,8 +70,7 @@ class OgreWidgetRenderer : public WidgetRenderer
       /*! Constructor
        * \param width -> width of the drawable surface 
        * \param width -> height of the drawable surface */
-      OgreWidgetRenderer(int width, int height, 
-            ControllerRendererJunction* junction);
+      OgreWidgetRenderer(int width, int height); 
       /*! Destructor */
       ~OgreWidgetRenderer();
 
@@ -135,7 +132,6 @@ class OgreWidgetRenderer : public WidgetRenderer
 #else
       Ogre::HlmsUnlitDatablock* datablock; /**< Material datablock used */
 #endif
-      OgreJunction* ogreJunction; /**< OgreJunction to use */
 };
 
 }

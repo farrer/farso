@@ -19,6 +19,7 @@ src/menu.cpp
 src/picture.cpp
 src/progressbar.cpp
 src/rect.cpp
+src/renderer.cpp
 src/scrollbar.cpp
 src/scrolltext.cpp
 src/skin.cpp
@@ -34,7 +35,7 @@ src/widgetrenderer.cpp
 src/window.cpp
 src/sdl/sdlsurface.cpp
 src/sdl/sdldraw.cpp
-src/sdl/sdljunction.cpp
+src/sdl/sdlrenderer.cpp
 src/sdl/sdlwidgetrenderer.cpp
 )
 
@@ -60,6 +61,7 @@ src/menu.h
 src/picture.h
 src/progressbar.h
 src/rect.h
+src/renderer.h
 src/scrollbar.h
 src/scrolltext.h
 src/skin.h
@@ -76,7 +78,7 @@ src/widgeteventlistener.h
 src/window.h
 src/sdl/sdlsurface.h
 src/sdl/sdldraw.h
-src/sdl/sdljunction.h
+src/sdl/sdlrenderer.h
 src/sdl/sdlwidgetrenderer.h
 )
 
@@ -85,14 +87,14 @@ set(FARSO_FULL_HEADERS ${FARSO_HEADERS})
 
 set(FARSO_OPENGL_SOURCES
 src/opengl/opengldraw.cpp
-src/opengl/opengljunction.cpp
+src/opengl/openglrenderer.cpp
 src/opengl/openglsurface.cpp
 src/opengl/openglwidgetrenderer.cpp
 )
 
 set(FARSO_OPENGL_HEADERS 
 src/opengl/opengldraw.h
-src/opengl/opengljunction.h
+src/opengl/openglrenderer.h
 src/opengl/openglsurface.h
 src/opengl/openglwidgetrenderer.h
 )
@@ -105,7 +107,7 @@ endif(${OPENGL_FOUND})
 set(FARSO_OGRE_SOURCES
 src/ogre3d/ogredraw.cpp
 src/ogre3d/ogreloader.cpp
-src/ogre3d/ogrejunction.cpp
+src/ogre3d/ogrerenderer.cpp
 src/ogre3d/ogresurface.cpp
 src/ogre3d/ogrewidgetmovable.cpp
 src/ogre3d/ogrewidgetrenderable.cpp
@@ -115,7 +117,7 @@ src/ogre3d/ogrewidgetrenderer.cpp
 set(FARSO_OGRE_HEADERS
 src/ogre3d/ogredraw.h
 src/ogre3d/ogreloader.h
-src/ogre3d/ogrejunction.h
+src/ogre3d/ogrerenderer.h
 src/ogre3d/ogresurface.h
 src/ogre3d/ogrewidgetmovable.h
 src/ogre3d/ogrewidgetrenderable.h

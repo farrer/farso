@@ -26,6 +26,7 @@
 
 #include "ogrewidgetrenderable.h"
 
+#include <OGRE/Ogre.h>
 #include <OGRE/OgreMovableObject.h>
 
 namespace Farso

@@ -44,7 +44,7 @@ OgreSurface::OgreSurface(Kobold::String name, int width, int height)
  *                           constructor                          *
  ******************************************************************/
 OgreSurface::OgreSurface(Kobold::String filename, Kobold::String group)
-            :SDLSurface(filename, group, false)
+            :SDLSurface(filename, false)
 {
    load(filename, group);
 }

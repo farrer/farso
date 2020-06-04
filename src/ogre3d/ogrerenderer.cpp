@@ -18,7 +18,10 @@
   along with Farso.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ogrejunction.h"
+#include "ogrerenderer.h"
+#include "ogredraw.h"
+#include "ogresurface.h"
+#include "ogrewidgetrenderer.h"
 
 #if FARSO_USE_OGRE_OVERLAY == 0
    #include <OGRE/OgreRoot.h>
@@ -28,9 +31,6 @@
 #endif
 
 #include <kobold/platform.h>
-
-using namespace Farso;
-
 
 /* Only need those shaders for Ogre 1.x or 2.0 (and with overlays). */
 #if FARSO_USE_OGRE_OVERLAY == 1 && \
@@ -85,30 +85,19 @@ static Ogre::String farso_ogre_glsl_fs_source(
 
 #endif
 
-/*************************************************************************
- *                          OgreJunctionInfo                             *
- *************************************************************************/
-OgreJunctionInfo::OgreJunctionInfo(Ogre::SceneManager* sceneManager,
-            Ogre::RenderSystem* renderSystem)
+
+namespace Farso
+{
+
+/**************************************************************************
+ *                              Constructor                               *
+ **************************************************************************/
+OgreRenderer::OgreRenderer(Ogre::SceneManager* sceneManager,
+      Ogre::RenderSystem* renderSystem)
 {
    this->sceneManager = sceneManager;
    this->renderSystem = renderSystem;
-}
-
-/*************************************************************************
- *                         ~OgreJunctionInfo                             *
- *************************************************************************/
-OgreJunctionInfo::~OgreJunctionInfo()
-{
-}
-
-/*************************************************************************
- *                            OgreJunction                               *
- *************************************************************************/
-OgreJunction::OgreJunction(Kobold::String name, OgreJunctionInfo* extraInfo)
-{
-   this->sceneManager = extraInfo->sceneManager;
-   this->renderSystem = extraInfo->renderSystem;
+   this->draw = new OgreDraw();
 
 #if FARSO_USE_OGRE_OVERLAY == 0
    /* Default renderer, with movable and renderable implementations */
@@ -124,6 +113,7 @@ OgreJunction::OgreJunction(Kobold::String name, OgreJunctionInfo* extraInfo)
 
 #else
    /* Overlay Renderer (fallback) */
+   Kobold::String name = "farso_renderer";
 
    #if OGRE_VERSION_MAJOR == 1 || \
        (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
@@ -154,14 +144,14 @@ OgreJunction::OgreJunction(Kobold::String name, OgreJunctionInfo* extraInfo)
    #endif
    overlay->show();
 #endif
+
 }
 
-/*************************************************************************
- *                           ~OgreJunction                               *
- *************************************************************************/
-OgreJunction::~OgreJunction()
+/**************************************************************************
+ *                               Destructor                               *
+ **************************************************************************/
+OgreRenderer::~OgreRenderer()
 {
-
 #if FARSO_USE_OGRE_OVERLAY == 0
    /* Unregister our widget's movable factory */
    if(ogreWidgetMovableFactory)
@@ -180,22 +170,24 @@ OgreJunction::~OgreJunction()
       Ogre::v1::OverlayManager::getSingletonPtr()->destroy(overlay);
    #endif
 #endif
+
 }
 
-/*************************************************************************
- *                          getSceneManager                              *
- *************************************************************************/
-Ogre::SceneManager* OgreJunction::getSceneManager()
+/**************************************************************************
+ *                          createWidgetRenderer                          *
+ **************************************************************************/
+WidgetRenderer* OgreRenderer::createWidgetRenderer(int width, int height)
 {
-   return sceneManager;
+   return new OgreWidgetRenderer(width, height);
 }
 
-/*************************************************************************
- *                          getRenderSystem                              *
- *************************************************************************/
-Ogre::RenderSystem* OgreJunction::getRenderSystem()
+/**************************************************************************
+ *                          loadImageToSurface                            *
+ **************************************************************************/
+Surface* OgreRenderer::loadImageToSurface(const Kobold::String& filename) 
 {
-   return renderSystem;
+   return new OgreSurface(filename,
+         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME); 
 }
 
 #if OGRE_VERSION_MAJOR == 1 || \
@@ -204,7 +196,7 @@ Ogre::RenderSystem* OgreJunction::getRenderSystem()
 /*************************************************************************
  *                       getVertexProgramName                            *
  *************************************************************************/
-Ogre::String OgreJunction::getVertexProgramName()
+Ogre::String OgreRenderer::getVertexProgramName()
 {
    return vertexShader->getName();
 }
@@ -212,9 +204,12 @@ Ogre::String OgreJunction::getVertexProgramName()
 /*************************************************************************
  *                       getFragmentProgramName                          *
  *************************************************************************/
-Ogre::String OgreJunction::getFragmentProgramName()
+Ogre::String OgreRenderer::getFragmentProgramName()
 {
    return fragmentShader->getName();
 }
 #endif
+
+
+}
 

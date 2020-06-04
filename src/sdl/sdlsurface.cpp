@@ -86,9 +86,8 @@ void SDLSurface::createSurface(int width, int height)
 /******************************************************************
  *                           Constructor                          *
  ******************************************************************/
-SDLSurface::SDLSurface(Kobold::String filename, Kobold::String group, 
-                       bool load)
-              :Surface(filename, group)
+SDLSurface::SDLSurface(Kobold::String filename, bool load)
+              :Surface(filename)
 {
    if(load)
    {

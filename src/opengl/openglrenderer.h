@@ -18,22 +18,35 @@
   along with Farso.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "sdljunction.h"
-using namespace Farso;
+#ifndef _farso_opengl_renderer_h
+#define _farso_opengl_renderer_h
 
-/***********************************************************************
- *                             SDLJunction                             *
- ***********************************************************************/
-SDLJunction::SDLJunction(SDLJunctionInfo* info)
+#include <SDL2/SDL.h>
+#include "../renderer.h"
+
+namespace Farso
 {
-   renderer = info->sdlRenderer;
+
+/*! SDL Renderer implemenation */
+class OpenGLRenderer : public Renderer
+{
+   public:
+      /*! Constructor */ 
+      OpenGLRenderer();
+      /*! Destructor */
+      virtual ~OpenGLRenderer();
+
+      /*! \return new OpenGLWidgetRenderer */
+      WidgetRenderer* createWidgetRenderer(int width, int height) override;
+
+      void enter2dMode() override;
+      void restore3dMode() override;
+      const bool shouldManualRender() const override { return true; };
+      Surface* loadImageToSurface(const Kobold::String& filename) override;
+
+};
+
 }
 
-/***********************************************************************
- *                            ~SDLJunction                             *
- ***********************************************************************/
-SDLJunction::~SDLJunction()
-{
-}
-
+#endif
 

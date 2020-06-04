@@ -32,8 +32,8 @@ OpenGLSurface::OpenGLSurface(Kobold::String name, int width, int height)
 /******************************************************************
  *                           Constructor                          *
  ******************************************************************/
-OpenGLSurface::OpenGLSurface(Kobold::String filename, Kobold::String group)
-              :SDLSurface(filename, group)
+OpenGLSurface::OpenGLSurface(Kobold::String filename)
+              :SDLSurface(filename)
 {
 }
 

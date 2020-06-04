@@ -18,10 +18,11 @@
   along with Farso.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _farso_ogre_junction_h
-#define _farso_ogre_junction_h
+#ifndef _farso_sdl_renderer_h
+#define _farso_sdl_renderer_h
 
-#include "../controller.h"
+#include <OGRE/Ogre.h>
+#include "../renderer.h"
 
 #include <OGRE/OgreRenderSystem.h>
 
@@ -40,25 +41,30 @@ namespace Farso
 
 #define FARSO_DEFAULT_RENDER_QUEUE   240
 
-class OgreJunctionInfo : public RendererJunctionInfo {
-   public:
-      OgreJunctionInfo(Ogre::SceneManager* sceneManager,
-            Ogre::RenderSystem* renderSystem);
-      ~OgreJunctionInfo();
-     
-      Ogre::SceneManager* sceneManager;
-      Ogre::RenderSystem* renderSystem;
-};
-
-/*! The junction between controller and renderer for Ogre3d.
- * \note Farso will use render queue from 240 to 244 to render itself. */
-class OgreJunction : public ControllerRendererJunction
+/*! SDL Renderer implemenation */
+class OgreRenderer : public Renderer
 {
    public:
-      /*! Constructor */
-      OgreJunction(Kobold::String name, OgreJunctionInfo* info);
+      /*! Constructor 
+       * \param sceneManager pointer to the used Ogre::SceneManager
+       * \param renderSystem pointer to the used Ogre::RenderSystem */
+      OgreRenderer(Ogre::SceneManager* sceneManager,
+            Ogre::RenderSystem* renderSystem);
       /*! Destructor */
-      ~OgreJunction();
+      virtual ~OgreRenderer();
+
+      /*! \return new OgreWidgetRenderer */
+      WidgetRenderer* createWidgetRenderer(int width, int height) override;
+
+      void enter2dMode() override {};
+      void restore3dMode() override {};
+      const bool shouldManualRender() const override { return false; };
+      Surface* loadImageToSurface(const Kobold::String& filename) override;
+
+      /*! \return pointer to the used Ogre::SceneManager */
+      Ogre::SceneManager* getSceneManager() { return sceneManager; };
+      /*! \return pointer to the used Ogre::RenderSystem */
+      Ogre::RenderSystem* getRenderSystem() { return renderSystem; };
 
 #if FARSO_USE_OGRE_OVERLAY == 1
    #if OGRE_VERSION_MAJOR == 1 || \
@@ -74,20 +80,10 @@ class OgreJunction : public ControllerRendererJunction
       Ogre::v1::Overlay* getOverlay() { return overlay; };
    #endif
 #endif
-      
-      /*! \return used scene manager */
-      Ogre::SceneManager* getSceneManager();
-      /*! \return used render system */
-      Ogre::RenderSystem* getRenderSystem();
-
-      void enter2dMode(){};
-      void restore3dMode(){};
-      const bool shouldManualRender() const {return false;};
 
    private:
-      
-      Ogre::SceneManager* sceneManager; /**< SceneManager to use */
-      Ogre::RenderSystem* renderSystem; /**< RenderSystem to use */
+      Ogre::SceneManager* sceneManager;
+      Ogre::RenderSystem* renderSystem;
 
 #if FARSO_USE_OGRE_OVERLAY == 0
       OgreWidgetMovableFactory* ogreWidgetMovableFactory;
@@ -101,12 +97,10 @@ class OgreJunction : public ControllerRendererJunction
       Ogre::v1::Overlay* overlay; /**< Overlay to render farso to */
    #endif
 #endif
+
 };
-
-
 
 }
 
 #endif
-
 

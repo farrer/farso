@@ -28,14 +28,12 @@ using namespace Farso;
 /***********************************************************************
  *                             WidgetRenderer                          *
  ***********************************************************************/
-WidgetRenderer::WidgetRenderer(int width, int height,
-      ControllerRendererJunction* junction)
+WidgetRenderer::WidgetRenderer(int width, int height)
 {
    Farso::Draw* draw = Farso::Controller::getDraw();
 
    counter++;
    this->name = "widgetRenderer" + Kobold::StringUtil::toString(counter);
-   this->junction = junction;
 
    /* Define dimensions and real dimensions */
    this->width = width;

@@ -35,7 +35,7 @@ class SDLSurface : public Surface
       SDLSurface(Kobold::String name, int width, int height);
       /*! Constructor 
        * \param load if should load the image referenced by filename or not */
-      SDLSurface(Kobold::String filename, Kobold::String group, bool load=true);
+      SDLSurface(Kobold::String filename, bool load=true);
       /*! Destructor */
       virtual ~SDLSurface();
 

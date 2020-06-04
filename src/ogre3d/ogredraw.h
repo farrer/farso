@@ -21,6 +21,8 @@
 #ifndef _farso_ogre_draw_h
 #define _farso_ogre_draw_h
 
+#include <OGRE/Ogre.h>
+
 #include "../draw.h"
 #include "../sdl/sdldraw.h"
 #include "ogresurface.h"

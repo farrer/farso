@@ -1,6 +1,5 @@
 
 #include "sdl_example.h"
-#include "../../../src/sdl/sdljunction.h"
 #include <kobold/log.h>
 
 using namespace FarsoExample;
@@ -30,8 +29,7 @@ SDLExample::~SDLExample()
 void SDLExample::init()
 {
    example = new Example();
-   Farso::SDLJunctionInfo info(renderer);
-   example->init(&loader, Farso::RENDERER_TYPE_SDL, &info); 
+   example->init(&loader, renderer); 
 }
 
 /************************************************************************

@@ -38,10 +38,8 @@ class Surface
        * \param height -> height of the surface. Should be power of two. */
       Surface(const Kobold::String& name, int width, int height);
       /*! Constructor to load an image from file and use it as a surface.
-       * \param filename -> filename of the image file to load 
-       * \param group -> group that image belongs to (relevant for
-       *                 Ogre3d renderer) . */
-      Surface(const Kobold::String& filename, const Kobold::String& group);
+       * \param filename -> filename of the image file to load */
+      Surface(const Kobold::String& filename);
       /*! Destructor */
       virtual ~Surface();
 

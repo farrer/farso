@@ -34,8 +34,8 @@ class OpenGLSurface : public SDLSurface
    public:
       /*! Constructor */
       OpenGLSurface(Kobold::String name, int width, int height);
-      /*! COnstructor */
-      OpenGLSurface(Kobold::String filename, Kobold::String group);
+      /*! Constructor */
+      OpenGLSurface(Kobold::String filename);
       /*! Destructor */
       ~OpenGLSurface();
 };

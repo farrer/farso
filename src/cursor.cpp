@@ -487,7 +487,7 @@ Cursor::CursorImage* Cursor::current = NULL;
  ************************************************************************/
 Cursor::CursorImage::CursorImage(const Kobold::String& filename)
 {
-   this->image = Controller::loadImageToSurface(filename);
+   this->image = Controller::getRenderer()->loadImageToSurface(filename);
    this->filename = filename;
 }
 

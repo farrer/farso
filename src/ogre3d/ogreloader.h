@@ -21,6 +21,7 @@
 #ifndef _farso_ogre_font_loader_h
 #define _farso_ogre_draw_loader_h
 
+#include <OGRE/Ogre.h>
 #include "../loader.h"
 
 namespace Farso

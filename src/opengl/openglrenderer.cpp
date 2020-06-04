@@ -18,38 +18,47 @@
   along with Farso.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "openglrenderer.h"
+#include "opengldraw.h"
+#include "openglsurface.h"
+#include "openglwidgetrenderer.h"
+#include "../controller.h"
 
-#include "opengljunction.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
 #include <kobold/platform.h>
 
-#if KOBOLD_PLATFORM == KOBOLD_PLATFORM_MACOS
-   #include <OpenGL/glu.h>
-#else 
-   #include <GL/glu.h>
-#endif
-using namespace Farso;
+namespace Farso
+{
 
-/*************************************************************************
- *                            OpenGLJunction                             *
- *************************************************************************/
-OpenGLJunction::OpenGLJunction()
+/**************************************************************************
+ *                              Constructor                               *
+ **************************************************************************/
+OpenGLRenderer::OpenGLRenderer()
+{
+   this->draw = new OpenGLDraw();
+}
+
+/**************************************************************************
+ *                               Destructor                               *
+ **************************************************************************/
+OpenGLRenderer::~OpenGLRenderer()
 {
 }
 
-/*************************************************************************
- *                           ~OpenGLJunction                             *
- *************************************************************************/
-OpenGLJunction::~OpenGLJunction()
+/**************************************************************************
+ *                          createWidgetRenderer                          *
+ **************************************************************************/
+WidgetRenderer* OpenGLRenderer::createWidgetRenderer(int width, int height)
 {
+   return new OpenGLWidgetRenderer(width, height);
 }
 
 /*************************************************************************
  *                              enter2dMode                              *
  *************************************************************************/
-void OpenGLJunction::enter2dMode()
+void OpenGLRenderer::enter2dMode()
 {
    /* Keep ModelView current state */
    glMatrixMode(GL_MODELVIEW);
@@ -74,7 +83,7 @@ void OpenGLJunction::enter2dMode()
 /*************************************************************************
  *                             restore3dMode                             *
  *************************************************************************/
-void OpenGLJunction::restore3dMode()
+void OpenGLRenderer::restore3dMode()
 {
    /* Restore Projection matrix */
    glMatrixMode (GL_PROJECTION);
@@ -85,4 +94,14 @@ void OpenGLJunction::restore3dMode()
    glPopMatrix();
 }
 
+/**************************************************************************
+ *                          loadImageToSurface                            *
+ **************************************************************************/
+Surface* OpenGLRenderer::loadImageToSurface(const Kobold::String& filename) 
+{
+   return new OpenGLSurface(filename);
+}
+
+
+}
 

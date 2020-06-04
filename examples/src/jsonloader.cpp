@@ -29,14 +29,12 @@ JsonLoader::~JsonLoader()
 /************************************************************************
  *                                  init                                *
  ************************************************************************/
-void JsonLoader::init(Farso::Loader* loader,
-      Farso::RendererType rendererType, 
-      Farso::RendererJunctionInfo* extraInfo)
+void JsonLoader::init(Farso::Loader* loader, Farso::Renderer* renderer) 
 {
    /* Init Farso, with desired renderer */
-   Farso::Controller::init(loader, rendererType, 
+   Farso::Controller::init(loader, renderer, 
          FARSO_EXAMPLE_WINDOW_WIDTH, FARSO_EXAMPLE_WINDOW_HEIGHT, 
-         32, "data/gui/", extraInfo);
+         32, "data/gui/");
 
    Farso::FontManager::setDefaultFont("fonts/LiberationSans-Regular.ttf");
    Farso::Controller::setCursor("cursor/sel.png");

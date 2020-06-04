@@ -21,6 +21,7 @@
 #ifndef _farso_ogre_surface_h
 #define _farso_ogre_surface_h
 
+#include <OGRE/Ogre.h>
 #include "../surface.h"
 #include "../sdl/sdlsurface.h"
 

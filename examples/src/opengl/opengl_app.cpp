@@ -43,6 +43,9 @@ OpenGLApp::OpenGLApp()
 
    /* Define OpenGL Context */
    glcontext = SDL_GL_CreateContext(window);
+
+   /* Create farso renderer */
+   renderer = new Farso::OpenGLRenderer();
 }
 
 /************************************************************************
@@ -50,6 +53,10 @@ OpenGLApp::OpenGLApp()
  ************************************************************************/
 OpenGLApp::~OpenGLApp()
 {
+   if(renderer != NULL)
+   {
+      delete renderer;
+   }
    if(window != NULL)
    {
       SDL_GL_DeleteContext(glcontext);

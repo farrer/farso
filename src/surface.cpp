@@ -40,7 +40,7 @@ Surface::Surface(const Kobold::String& name, int width, int height)
 /******************************************************************
  *                           constructor                          *
  ******************************************************************/
-Surface::Surface(const Kobold::String& filename, const Kobold::String& group)
+Surface::Surface(const Kobold::String& filename)
 {
    this->locked = false;
    this->ownedTexture = false;

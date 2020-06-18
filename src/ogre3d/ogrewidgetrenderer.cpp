@@ -139,7 +139,7 @@ void OgreWidgetRenderer::createSurface()
    /* Create the material to use */
    Ogre::ResourceManager::ResourceCreateOrRetrieveResult matRes;
    matRes = Ogre::MaterialManager::getSingleton().createOrRetrieve(name,
-         "gui");
+         Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
    material = Ogre::static_pointer_cast<Ogre::Material>(matRes.first);
 #endif
 

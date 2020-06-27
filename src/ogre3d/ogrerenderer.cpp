@@ -33,30 +33,28 @@
 #include <kobold/platform.h>
 
 /* Only need those shaders for Ogre 1.x or 2.0 (and with overlays). */
-#if FARSO_USE_OGRE_OVERLAY == 1 && \
-    (OGRE_VERSION_MAJOR == 1 || \
-    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0))
+#if OGRE_VERSION_MAJOR == 1
 
 #if KOBOLD_PLATFORM != KOBOLD_PLATFORM_ANDROID && \
     KOBOLD_PLATFORM != KOBOLD_PLATFORM_IOS
 /*! Vertex shader for Farso Ogre3d renderer. Basically,
  * defines texture and polygon coordinates. */
 static Ogre::String farso_ogre_glsl_vs_source(
-      "void main(void)"
-      "{"
-      "    gl_TexCoord[0] = gl_MultiTexCoord0;"
-      "    gl_FrontColor = gl_Color;"
-      "    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
-      "}"
+      "void main(void)\n"
+      "{\n"
+      "    gl_TexCoord[0] = gl_MultiTexCoord0;\n"
+      "    gl_FrontColor = gl_Color;\n"
+      "    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
+      "}\n"
 );
 /*! Fragment shader for Farso Ogre3d rendererer. Just use the texture
  * as color definition, without other influences. */
 static Ogre::String farso_ogre_glsl_fs_source(
-      "uniform sampler2D texture0;"
-      "void main(void)"
-      "{"
-      "    gl_FragColor = texture2D(texture0, gl_TexCoord[0].st) * gl_Color;"
-      "}"
+      "uniform sampler2D texture0;\n"
+      "void main(void)\n"
+      "{\n"
+      "    gl_FragColor = texture2D(texture0, gl_TexCoord[0].st) * gl_Color;\n"
+      "}\n"
 );
 static Ogre::String farso_ogre_shader_type = "glsl";
 #else
@@ -99,12 +97,33 @@ OgreRenderer::OgreRenderer(Ogre::SceneManager* sceneManager,
    this->renderSystem = renderSystem;
    this->draw = new OgreDraw();
 
+#if OGRE_VERSION_MAJOR == 1
+   /* Create and load our shaders */
+   vertexShader = 
+      Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            "farso_rendererVP_glsl", 
+            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+            farso_ogre_shader_type, Ogre::GPT_VERTEX_PROGRAM);
+   vertexShader->setSource(farso_ogre_glsl_vs_source);
+   vertexShader->load();
+
+   fragmentShader = 
+      Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            "farso_rendererFP_glsl", 
+            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+            farso_ogre_shader_type, Ogre::GPT_FRAGMENT_PROGRAM);
+   fragmentShader->setSource(farso_ogre_glsl_fs_source);
+   fragmentShader->load();
+#endif
+
 #if FARSO_USE_OGRE_OVERLAY == 0
    /* Default renderer, with movable and renderable implementations */
 
+#if OGRE_VERSION_MAJOR >= 2
    /* Must set our needed render queues to v2 */
    sceneManager->getRenderQueue()->setRenderQueueMode(
          FARSO_DEFAULT_RENDER_QUEUE, Ogre::RenderQueue::FAST);
+#endif
 
    /* We must register the WidgetMoveble factory */
    ogreWidgetMovableFactory = new OgreWidgetMovableFactory();
@@ -119,23 +138,6 @@ OgreRenderer::OgreRenderer(Ogre::SceneManager* sceneManager,
        (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
       /* Create our overlay */
       overlay = Ogre::OverlayManager::getSingletonPtr()->create(name);
-      
-      /* Create and load our shaders */
-      vertexShader = 
-         Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-               name + "VP_glsl", 
-               Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-               farso_ogre_shader_type, Ogre::GPT_VERTEX_PROGRAM);
-      vertexShader->setSource(farso_ogre_glsl_vs_source);
-      vertexShader->load();
-
-      fragmentShader = 
-         Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-               name + "FP_glsl", 
-               Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-               farso_ogre_shader_type, Ogre::GPT_FRAGMENT_PROGRAM);
-      fragmentShader->setSource(farso_ogre_glsl_fs_source);
-      fragmentShader->load();
    #else
       /* Create our overlay */
       overlay = Ogre::v1::OverlayManager::getSingletonPtr()->create(name);
@@ -190,9 +192,7 @@ Surface* OgreRenderer::loadImageToSurface(const Kobold::String& filename)
          Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME); 
 }
 
-#if OGRE_VERSION_MAJOR == 1 || \
-    (FARSO_USE_OGRE_OVERLAY == 1 && OGRE_VERSION_MAJOR == 2 && \
-     OGRE_VERSION_MINOR == 0)
+#if OGRE_VERSION_MAJOR == 1 
 /*************************************************************************
  *                       getVertexProgramName                            *
  *************************************************************************/

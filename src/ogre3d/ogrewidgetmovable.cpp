@@ -29,6 +29,14 @@ using namespace Farso;
 /************************************************************************
  *                              Constructor                             *
  ************************************************************************/
+#if OGRE_VERSION_MAJOR == 1
+OgreWidgetMovable::OgreWidgetMovable(const Ogre::String& name)
+                  :Ogre::MovableObject(name),
+                   bbox(Ogre::AxisAlignedBox::EXTENT_INFINITE)
+{
+   this->renderable = NULL;
+}
+#else
 OgreWidgetMovable::OgreWidgetMovable(Ogre::IdType id, 
                       Ogre::ObjectMemoryManager* objectMemoryManager, 
                       Ogre::SceneManager* sceneManager, 
@@ -49,6 +57,7 @@ OgreWidgetMovable::OgreWidgetMovable(Ogre::IdType id,
    mObjectData.mQueryFlags[mObjectData.mIndex] = 
       Ogre::SceneManager::QUERY_ENTITY_DEFAULT_MASK;
 }
+#endif
 
 /************************************************************************
  *                               Destructor                             *
@@ -63,6 +72,7 @@ OgreWidgetMovable::~OgreWidgetMovable()
 void OgreWidgetMovable::attachOgreWidgetRenderable(
       OgreWidgetRenderable* renderable)
 {
+#if OGRE_VERSION_MAJOR >= 2
    /* Note: as we are just supporting a single renderable per widget movable,
     * we should passed it as contructor parameter, but I was too lazy (and not
     * very confortable to) implement a 'search widget by name' (even if it was
@@ -71,7 +81,9 @@ void OgreWidgetMovable::attachOgreWidgetRenderable(
    assert(this->renderable == NULL);
    /* Add the renderable to our renderable queue */
    mRenderables.push_back(renderable);
+#endif
    this->renderable = renderable;
+   this->renderable->setMovable(this);
 }
 
 /************************************************************************
@@ -81,7 +93,11 @@ void OgreWidgetMovable::detachOgreWidgetRenderable(
       OgreWidgetRenderable* renderable)
 {
    assert(this->renderable == renderable);
+#if OGRE_VERSION_MAJOR >= 2
    mRenderables.pop_back();
+#endif
+   this->renderable->setMovable(NULL);
+   this->renderable = NULL;
 }
 
 /************************************************************************
@@ -92,9 +108,37 @@ const Ogre::String& OgreWidgetMovable::getMovableType() const
    return OgreWidgetMovableFactory::FACTORY_TYPE_NAME;
 }
 
+
+#if OGRE_VERSION_MAJOR == 1
+/************************************************************************
+ *                           _updateRenderQueue                         *
+ ************************************************************************/
+void OgreWidgetMovable::_updateRenderQueue(Ogre::RenderQueue* queue)
+{
+   queue->addRenderable(this->renderable);
+}
+
+/************************************************************************
+ *                            visitRenderables                          *
+ ************************************************************************/
+void OgreWidgetMovable::visitRenderables(Ogre::Renderable::Visitor* visitor, 
+      bool debugRenderables)
+{
+   visitor->visit(this->renderable, 0, false);
+}
+#endif
+
 /************************************************************************
  *                           createInstanceImpl                         *
  ************************************************************************/
+#if OGRE_VERSION_MAJOR == 1
+Ogre::MovableObject* OgreWidgetMovableFactory::createInstanceImpl(
+      const Ogre::String& name, 
+      const Ogre::NameValuePairList* params)
+{
+   return OGRE_NEW OgreWidgetMovable(name);
+}
+#else
 Ogre::MovableObject* OgreWidgetMovableFactory::createInstanceImpl(
       Ogre::IdType id, Ogre::ObjectMemoryManager* objectMemoryManager,
       Ogre::SceneManager* manager, const Ogre::NameValuePairList* params)
@@ -102,6 +146,7 @@ Ogre::MovableObject* OgreWidgetMovableFactory::createInstanceImpl(
    return OGRE_NEW OgreWidgetMovable(id, objectMemoryManager, manager, 
          FARSO_DEFAULT_RENDER_QUEUE);
 }
+#endif
 
 /************************************************************************
  *                            destroyInstance                           *

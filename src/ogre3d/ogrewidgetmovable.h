@@ -37,19 +37,38 @@ class OgreWidgetMovable : public Ogre::MovableObject
 {
    public:
       /*! Constructor */
+#if OGRE_VERSION_MAJOR == 1
+      OgreWidgetMovable(const Ogre::String& name); 
+
+      const Ogre::AxisAlignedBox& getBoundingBox() const { return bbox;};
+      Ogre::Real getBoundingRadius() const { return 100000; };
+      void _updateRenderQueue(Ogre::RenderQueue* queue);
+      void visitRenderables(Ogre::Renderable::Visitor* visitor, 
+            bool debugRenderables = false);
+#else
       OgreWidgetMovable(Ogre::IdType id, 
             Ogre::ObjectMemoryManager* objectMemoryManager, 
             Ogre::SceneManager* sceneManager, Ogre::uint8 renderQueueId);
+#endif
       /*! Destructor */
       ~OgreWidgetMovable();
 
+      /*! Attach the renderable to the widget movable. Note: only one
+       * will be avaiable at a time .
+       * \note this function will set renderable->movable to this. */
       void attachOgreWidgetRenderable(OgreWidgetRenderable* renderable);
+      /*! Detach the rendereable from the widget movable.
+       * \note this function will set renderable->movable to NULL */
       void detachOgreWidgetRenderable(OgreWidgetRenderable* renderable);
 
       const Ogre::String& getMovableType() const;
 
    private:
       OgreWidgetRenderable* renderable; /**< Current renderable associated */
+#if OGRE_VERSION_MAJOR == 1
+      Ogre::AxisAlignedBox bbox;
+#endif
+
 };
 
 /*! The MovableObjectFactory for OgreWidgetMovables. */
@@ -67,11 +86,16 @@ class OgreWidgetMovableFactory : public Ogre::MovableObjectFactory
       void destroyInstance(Ogre::MovableObject* obj);
 
    protected:
+#if OGRE_VERSION_MAJOR == 1
+      virtual Ogre::MovableObject* createInstanceImpl(const Ogre::String& name, 
+            const Ogre::NameValuePairList* params = 0);
+#else
       /*! Create the OgreWidgetMovable instance */
       virtual Ogre::MovableObject* createInstanceImpl(Ogre::IdType id, 
             Ogre::ObjectMemoryManager* objectMemoryManager,
             Ogre::SceneManager* manager,
             const Ogre::NameValuePairList* params = 0);
+#endif
 };
 
 }

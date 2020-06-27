@@ -66,13 +66,16 @@ class OgreRenderer : public Renderer
       /*! \return pointer to the used Ogre::RenderSystem */
       Ogre::RenderSystem* getRenderSystem() { return renderSystem; };
 
-#if FARSO_USE_OGRE_OVERLAY == 1
-   #if OGRE_VERSION_MAJOR == 1 || \
-       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
+#if OGRE_VERSION_MAJOR == 1 
       /*! \return name of the loaded vertex program */
       Ogre::String getVertexProgramName();
       /*! \return name of the loaded fragment program */
       Ogre::String getFragmentProgramName();
+#endif
+
+#if FARSO_USE_OGRE_OVERLAY == 1
+   #if OGRE_VERSION_MAJOR == 1 || \
+       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
       /*! \return current overlay used */
       Ogre::Overlay* getOverlay() { return overlay; };
    #else
@@ -85,14 +88,17 @@ class OgreRenderer : public Renderer
       Ogre::SceneManager* sceneManager;
       Ogre::RenderSystem* renderSystem;
 
+#if OGRE_VERSION_MAJOR == 1
+      Ogre::HighLevelGpuProgramPtr vertexShader;   /**< Vertex shader to use */
+      Ogre::HighLevelGpuProgramPtr fragmentShader;/**< Fragment shader to use */
+#endif
+
 #if FARSO_USE_OGRE_OVERLAY == 0
       OgreWidgetMovableFactory* ogreWidgetMovableFactory;
 #else
    #if OGRE_VERSION_MAJOR == 1 || \
        (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
       Ogre::Overlay* overlay; /**< Overlay to render farso to */
-      Ogre::HighLevelGpuProgramPtr vertexShader;   /**< Vertex shader to use */
-      Ogre::HighLevelGpuProgramPtr fragmentShader;/**< Fragment shader to use */
    #else
       Ogre::v1::Overlay* overlay; /**< Overlay to render farso to */
    #endif

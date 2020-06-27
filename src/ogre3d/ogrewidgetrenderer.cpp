@@ -203,13 +203,24 @@ void OgreWidgetRenderer::createSurface()
    renderable = new OgreWidgetRenderable(name, realWidth, realHeight);
 
    /* Define our movable and attach our renderable to it */
+#if OGRE_VERSION_MAJOR == 1
+   movable = static_cast<OgreWidgetMovable*>(
+         sceneManager->createMovableObject(
+            OgreWidgetMovableFactory::FACTORY_TYPE_NAME));
+#else
    movable = static_cast<OgreWidgetMovable*>(
          sceneManager->createMovableObject(
             OgreWidgetMovableFactory::FACTORY_TYPE_NAME,
             &sceneManager->_getEntityMemoryManager(Ogre::SCENE_DYNAMIC)));
+#endif
 
    movable->attachOgreWidgetRenderable(renderable); 
+
+#if OGRE_VERSION_MAJOR == 1
+   renderable->setMaterial(material);
+#else
    renderable->setDatablock(datablock);
+#endif
 
    /* Finally, add them to a SceneNode */
    sceneNode = sceneManager->getRootSceneNode()->createChildSceneNode();

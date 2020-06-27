@@ -22,7 +22,6 @@
 #define _farso_ogre_widget_renderable_h
 
 #include "farsoconfig.h"
-#if FARSO_USE_OGRE_OVERLAY == 0
 
 #include <OGRE/Ogre.h>
 #include <OGRE/OgreRenderable.h>
@@ -126,6 +125,5 @@ class OgreWidgetRenderable : public Ogre::Renderable
 
 }
 
-#endif
 #endif
 

@@ -50,14 +50,8 @@
    #include <OGRE/Hlms/Pbs/OgreHlmsPbsPrerequisites.h>
 #endif
 
-#if FARSO_USE_OGRE_OVERLAY == 1
-   #include <OGRE/Overlay/OgreOverlayContainer.h>
-   #include <OGRE/Overlay/OgreOverlayManager.h>
-#endif
-
-
-
-using namespace Farso;
+namespace Farso
+{
 
 /***********************************************************************
  *                             OgreWidgetRenderer                          *
@@ -65,13 +59,9 @@ using namespace Farso;
 OgreWidgetRenderer::OgreWidgetRenderer(int width, int height) 
                    :WidgetRenderer(width, height)
 {
-#if FARSO_USE_OGRE_OVERLAY == 1
-   container = NULL;
-#else
    renderable = NULL;
    movable = NULL;
    sceneNode = NULL;
-#endif
 
 #if OGRE_VERSION_MAJOR == 1 || \
     (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
@@ -146,57 +136,6 @@ void OgreWidgetRenderer::createSurface()
    uploadSurface();
    defineTexture();
 
-#if FARSO_USE_OGRE_OVERLAY == 1
-
-   /* Define the container and set it to the overlay */
-   #if OGRE_VERSION_MAJOR == 1 || \
-       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
-   this->container = static_cast<Ogre::OverlayContainer*>(
-         Ogre::OverlayManager::getSingletonPtr()->createOverlayElement(
-            "Panel", name));
-   #else
-   this->container = static_cast<Ogre::v1::OverlayContainer*>(
-         Ogre::v1::OverlayManager::getSingletonPtr()->createOverlayElement(
-            "Panel", name));
-   #endif
-   renderer->getOverlay()->add2D(this->container);
-
-   /* Set container dimensions */
-   container->setWidth(((float)realWidth) / 
-         Controller::getWidth());
-   container->setHeight(((float)realHeight) / 
-         Controller::getHeight());
-
-   if(!isVisible())
-   {
-      container->hide();
-   }
-   container->setPosition(targetX.getValue() / Controller::getWidth(),
-         targetY.getValue() / Controller::getHeight());
-
-#if OGRE_VERSION_MAJOR == 1 || \
-    (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
-   container->setMaterialName(material->getName());
-#else
-   /* Note: we still need to set the material name, as at 
-    * OgreOverlayElement::_update it will check if the datablock name is
-    * equal to the defined material name, trying to get a datablock
-    * with the name if they aren't equal. */
-   container->setDatablock(datablock);
-   container->setMaterialName(name);
-#endif
-
-   /* Note:  the Overlay::add2d will reassign all the internal zorder (which
-    * isn't what we expected). A workaround to not let the mouse behind is
-    * to force cursor Z order again after this call.*/
-   renderer->getOverlay()->setZOrder(0);
-   if(Cursor::getRenderer())
-   {
-      Cursor::getRenderer()->setRenderQueueSubGroup(650);
-   }
-
-
-#else
    Ogre::SceneManager* sceneManager = renderer->getSceneManager();
 
    /* Create our renderable and set its datablock */
@@ -231,7 +170,6 @@ void OgreWidgetRenderer::createSurface()
       sceneNode->setVisible(false);
    }
    setPosition(targetX.getValue(), targetY.getValue());
-#endif
 }
 
 /***********************************************************************
@@ -239,24 +177,6 @@ void OgreWidgetRenderer::createSurface()
  ***********************************************************************/
 void OgreWidgetRenderer::deleteSurface()
 {
-#if FARSO_USE_OGRE_OVERLAY == 1
-   if(container != NULL)
-   {
-      /* Clear the container of the overlay */
-      OgreRenderer* renderer = 
-         static_cast<OgreRenderer*>(Controller::getRenderer());
-      renderer->getOverlay()->remove2D(container);
-      #if OGRE_VERSION_MAJOR == 1 || \
-         (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
-         Ogre::OverlayManager::getSingletonPtr()->destroyOverlayElement(
-               container);
-      #else
-         Ogre::v1::OverlayManager::getSingletonPtr()->destroyOverlayElement(
-               container);
-      #endif
-      container = NULL;
-   }
-#else
    if(sceneNode)
    {
       sceneNode->detachObject(movable);
@@ -267,7 +187,6 @@ void OgreWidgetRenderer::deleteSurface()
       renderer->getSceneManager()->destroyMovableObject(movable);
       delete renderable;
    }
-#endif
 
 #if OGRE_VERSION_MAJOR == 1 || \
     (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
@@ -309,23 +228,11 @@ void OgreWidgetRenderer::deleteSurface()
  ***********************************************************************/
 void OgreWidgetRenderer::setRenderQueueSubGroup(int renderQueueId)
 {
-#if FARSO_USE_OGRE_OVERLAY == 1
-   if(container)
-   {
-   #if OGRE_VERSION_MAJOR > 1
-      container->setRenderQueueSubGroup(
-            static_cast<Ogre::uint8>(renderQueueId));
-   #else
-      container->_notifyZOrder(renderQueueId);
-   #endif
-   }
-#else
    if(renderable)
    {
       renderable->setRenderQueueSubGroup(
             static_cast<Ogre::uint8>(renderQueueId));
    }
-#endif
 }
 
 /***********************************************************************
@@ -414,13 +321,6 @@ void OgreWidgetRenderer::defineTexture()
  ***********************************************************************/
 void OgreWidgetRenderer::doSetPosition(Ogre::Real x, Ogre::Real y)
 {
-#if FARSO_USE_OGRE_OVERLAY == 1
-   if(container)
-   {
-      container->setPosition(x / Controller::getWidth(),
-            y / Controller::getHeight());
-   }
-#else
    if(sceneNode)
    {
       /* Redefine the coordinates to -1,1 space. */
@@ -432,7 +332,6 @@ void OgreWidgetRenderer::doSetPosition(Ogre::Real x, Ogre::Real y)
       /* Set our node */
       sceneNode->setPosition(x1, y1, 0.0f);
    }
-#endif
 }
  
 /***********************************************************************
@@ -440,17 +339,10 @@ void OgreWidgetRenderer::doSetPosition(Ogre::Real x, Ogre::Real y)
  ***********************************************************************/
 void OgreWidgetRenderer::doShow()
 {
-#if FARSO_USE_OGRE_OVERLAY == 1
-   if(container)
-   {
-      container->show();
-   }
-#else
    if(sceneNode)
    {
       sceneNode->setVisible(true);
    }
-#endif
 }
 
 /***********************************************************************
@@ -458,17 +350,10 @@ void OgreWidgetRenderer::doShow()
  ***********************************************************************/
 void OgreWidgetRenderer::doHide()
 {
-#if FARSO_USE_OGRE_OVERLAY == 1
-   if(container)
-   {
-      container->hide();
-   }
-#else
    if(sceneNode)
    {
       sceneNode->setVisible(false);
    }
-#endif
 }
 
 /***********************************************************************
@@ -540,5 +425,7 @@ void OgreWidgetRenderer::uploadSurface()
    texture->getBuffer()->blitFromMemory(pixelBox);
 #endif
    ogreSurface->unlock();
+}
+
 }
 

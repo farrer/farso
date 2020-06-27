@@ -23,13 +23,8 @@
 #include "ogresurface.h"
 #include "ogrewidgetrenderer.h"
 
-#if FARSO_USE_OGRE_OVERLAY == 0
-   #include <OGRE/OgreRoot.h>
-   #include <OGRE/OgreRenderQueue.h>
-#else
-   #include <OGRE/Overlay/OgreOverlayManager.h>
-#endif
-
+#include <OGRE/OgreRoot.h>
+#include <OGRE/OgreRenderQueue.h>
 #include <kobold/platform.h>
 
 /* Only need those shaders for Ogre 1.x or 2.0 (and with overlays). */
@@ -116,9 +111,6 @@ OgreRenderer::OgreRenderer(Ogre::SceneManager* sceneManager,
    fragmentShader->load();
 #endif
 
-#if FARSO_USE_OGRE_OVERLAY == 0
-   /* Default renderer, with movable and renderable implementations */
-
 #if OGRE_VERSION_MAJOR >= 2
    /* Must set our needed render queues to v2 */
    sceneManager->getRenderQueue()->setRenderQueueMode(
@@ -129,24 +121,6 @@ OgreRenderer::OgreRenderer(Ogre::SceneManager* sceneManager,
    ogreWidgetMovableFactory = new OgreWidgetMovableFactory();
    Ogre::Root::getSingleton().addMovableObjectFactory(
          ogreWidgetMovableFactory);
-
-#else
-   /* Overlay Renderer (fallback) */
-   Kobold::String name = "farso_renderer";
-
-   #if OGRE_VERSION_MAJOR == 1 || \
-       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
-      /* Create our overlay */
-      overlay = Ogre::OverlayManager::getSingletonPtr()->create(name);
-   #else
-      /* Create our overlay */
-      overlay = Ogre::v1::OverlayManager::getSingletonPtr()->create(name);
-      /* Set our render queue group to farso ( != of overlays one), and show it */
-      overlay->setRenderQueueGroup(FARSO_DEFAULT_RENDER_QUEUE);
-   #endif
-   overlay->show();
-#endif
-
 }
 
 /**************************************************************************
@@ -154,7 +128,6 @@ OgreRenderer::OgreRenderer(Ogre::SceneManager* sceneManager,
  **************************************************************************/
 OgreRenderer::~OgreRenderer()
 {
-#if FARSO_USE_OGRE_OVERLAY == 0
    /* Unregister our widget's movable factory */
    if(ogreWidgetMovableFactory)
    {
@@ -163,16 +136,6 @@ OgreRenderer::~OgreRenderer()
       delete ogreWidgetMovableFactory;
       ogreWidgetMovableFactory = NULL;
    }
-#else
-   /* Destroy our overlays */
-   #if OGRE_VERSION_MAJOR == 1 || \
-       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
-      Ogre::OverlayManager::getSingletonPtr()->destroy(overlay);
-   #else
-      Ogre::v1::OverlayManager::getSingletonPtr()->destroy(overlay);
-   #endif
-#endif
-
 }
 
 /**************************************************************************

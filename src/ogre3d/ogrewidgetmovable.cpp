@@ -20,11 +20,10 @@
 
 #include "ogrewidgetmovable.h"
 #include "ogrerenderer.h"
-
-#if FARSO_USE_OGRE_OVERLAY == 0
-
 #include <OGRE/OgreSceneManager.h>
-using namespace Farso;
+
+namespace Farso
+{
 
 /************************************************************************
  *                              Constructor                             *
@@ -169,6 +168,5 @@ const Ogre::String& OgreWidgetMovableFactory::getType(void) const
  ************************************************************************/
 Ogre::String OgreWidgetMovableFactory::FACTORY_TYPE_NAME = "FarsoWidget";
 
-
-#endif
+}
 

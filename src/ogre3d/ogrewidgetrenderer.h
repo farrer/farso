@@ -37,15 +37,9 @@
    #include <OGRE/OgrePixelFormat.h>
 #endif
 
-#if FARSO_USE_OGRE_OVERLAY == 1
-   #include <OGRE/Overlay/OgreOverlay.h>
-   #include <OGRE/Overlay/OgreOverlayManager.h>
-   #include <OGRE/Overlay/OgreOverlayContainer.h>
-#else
-   #include <OGRE/OgreSceneNode.h>
-   #include "ogrewidgetrenderable.h"
-   #include "ogrewidgetmovable.h"
-#endif
+#include <OGRE/OgreSceneNode.h>
+#include "ogrewidgetrenderable.h"
+#include "ogrewidgetmovable.h"
 
 #if OGRE_VERSION_MAJOR == 1 || \
     (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
@@ -103,19 +97,9 @@ class OgreWidgetRenderer : public WidgetRenderer
       /*! Update the texture renderer of this widget. */
       void defineTexture();
 
-
-#if FARSO_USE_OGRE_OVERLAY == 1
-   #if OGRE_VERSION_MAJOR == 1 || \
-       (OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR == 0)
-      Ogre::OverlayContainer* container; /**< Container of the texture */
-   #else
-      Ogre::v1::OverlayContainer* container; /**< Container of the texture */
-   #endif
-#else
       OgreWidgetMovable* movable;
       OgreWidgetRenderable* renderable;
       Ogre::SceneNode* sceneNode;       /**< Scene Node used for 2D object */
-#endif
 
 #if OGRE_VERSION_MAJOR == 2 && OGRE_VERSION_MINOR >= 2
       Ogre::TextureGpu* texture; /**< The texture used to render the widget */

@@ -21,8 +21,6 @@
 
 #include "ogrewidgetrenderable.h"
 
-#if FARSO_USE_OGRE_OVERLAY == 0
-
 #include "../controller.h"
 
 #include <OGRE/OgreRenderOperation.h>
@@ -37,8 +35,10 @@
 
 #include <string.h>
 
-using namespace Farso;
 #define FARSO_OGRE_1_MAX_SUBS 255
+
+namespace Farso
+{
 
 /************************************************************************
  *                              Constructor                             *
@@ -354,8 +354,8 @@ Ogre::Real OgreWidgetRenderable::getSquaredViewDepth(
 {
    return this->renderQueueSubGroupId * this->renderQueueSubGroupId;
 }
-#endif
-
 
 #endif
+
+}
 

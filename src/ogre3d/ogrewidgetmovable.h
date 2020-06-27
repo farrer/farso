@@ -22,8 +22,6 @@
 #define _farso_ogre_widget_movable_h
 
 #include "farsoconfig.h"
-#if FARSO_USE_OGRE_OVERLAY == 0
-
 #include "ogrewidgetrenderable.h"
 
 #include <OGRE/Ogre.h>
@@ -99,8 +97,6 @@ class OgreWidgetMovableFactory : public Ogre::MovableObjectFactory
 };
 
 }
-
-#endif
 
 #endif
 

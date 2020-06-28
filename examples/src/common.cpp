@@ -5,6 +5,24 @@
 #include <kobold/platform.h>
 using namespace FarsoExample;
 
+
+Kobold::String eventNames[] = {"None", "User defined event", 
+   "Window move init", "Window moving", "Window move end",
+   "Window will activate", "Window activated", "Window clicked",
+   "Window will close", "Button press init", "Button pressing",
+   "Button not pressing", "Button press canceled", "Button released",
+   "Label clicked", "Checkbox pressing", "Checkbox checked",
+   "Checkbox unchecked", "TextSelector option selected",
+   "Scrollbar changed", "Scrollbar unchanged", "Stacktab changed",
+   "Stacktab unchanged", "TextEntry edition start", "TextEntry editing",
+   "TextEntry edition done", "Grid clicking element", "Grid selected element",
+   "FileSelector accept", "FileSelector cancel", "FileSelector selected file",
+   "FileSelector selected directory", "Menu pressing", "Menu selected",
+   "Menu closed", "Menu opened", "LabelledPicture pressing",
+   "LabelledPicture clicked", "ClickablePicture pressing",
+   "ClickablePicture clicked", "Spin changed", "TreeView expanded",
+   "TreeView collapsed", "TreeView selected", "Combobox selected"};
+
 /************************************************************************
  *                              Constructor                             *
  ************************************************************************/
@@ -414,8 +432,9 @@ void Example::step(bool leftButtonPressed, bool rightButtonPressed,
       /* Got an event, we must treat it. For this example, just echo'ing
        * the event code to log */
       Farso::Event event = Farso::Controller::getLastEvent();
-      Kobold::Log::add(Kobold::LOG_LEVEL_NORMAL, "Event got: %d", 
-            event.getType());
+      Kobold::Log::add(Kobold::LOG_LEVEL_NORMAL, "Event got: %d (%s), on %p", 
+            event.getType(), eventNames[event.getType()].c_str(), 
+            event.getWidget());
 
       if(event.getType() == Farso::EVENT_BUTTON_RELEASED)
       {

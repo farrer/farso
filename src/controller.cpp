@@ -406,7 +406,8 @@ void Controller::setActiveWidget(Widget* widget)
          }
       }
       if((lastActive != NULL) && 
-         (lastActive->getType() == Widget::WIDGET_TYPE_WINDOW))
+         (lastActive->getType() == Widget::WIDGET_TYPE_WINDOW) &&
+         (widget != NULL) && (widget->getRoot() != lastActive))
       {
          Window* lastWindow = static_cast<Window*>(lastActive);
          if(lastWindow->isActive())

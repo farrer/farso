@@ -398,16 +398,15 @@ void Controller::setActiveWidget(Widget* widget)
 
       if((widget != NULL) && (widget->getType() == Widget::WIDGET_TYPE_WINDOW))
       {
+         /* Must active the window as it is the new active widget */
          Window* window = static_cast<Window*>(widget);
          if(!window->isActive())
          {
             window->activate();
          }
       }
-      if(((lastActive != NULL) && 
-          (lastActive->getType() == Widget::WIDGET_TYPE_WINDOW)) &&
-          ((widget == NULL) || (widget->getParent() == NULL) ||
-           (widget->getType() == Widget::WIDGET_TYPE_WINDOW)))
+      if((lastActive != NULL) && 
+         (lastActive->getType() == Widget::WIDGET_TYPE_WINDOW))
       {
          Window* lastWindow = static_cast<Window*>(lastActive);
          if(lastWindow->isActive())

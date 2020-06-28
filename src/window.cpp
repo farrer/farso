@@ -425,14 +425,14 @@ bool Window::doTreat(bool leftButtonPressed, bool rightButtonPressed,
       /* Activate the window (after releasing the click) */
       willActivate = false;
       activate();
-      Controller::setEvent(this, EVENT_WINDOW_MOVE_END);
+      Controller::setEvent(this, EVENT_WINDOW_ACTIVATED);
       return true;
    }
    else if(moveStarted)
    {
       /* Stoped the screen movement. */
       moveStarted = false;
-      Controller::setEvent(this, EVENT_WINDOW_ACTIVATED);
+      Controller::setEvent(this, EVENT_WINDOW_MOVE_END);
       return true;
    }
 

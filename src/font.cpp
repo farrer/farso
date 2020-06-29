@@ -96,6 +96,7 @@ const Kobold::String& FontManager::getDefaultFontFilename()
  ***********************************************************************/
 Font* FontManager::getFont(const Kobold::String& filename)
 {
+   mutex.lock();
    std::map<Kobold::String, Font*>::iterator it = fonts.find(filename);
 
    if(it == fonts.end())
@@ -105,18 +106,21 @@ Font* FontManager::getFont(const Kobold::String& filename)
       if(f->load()) 
       {
          fonts[filename] = f;
+         mutex.unlock();
          return f;
       }
       else 
       {
          /* Couldn't load font */
          delete f;
+         mutex.unlock();
          return NULL;
       }
    }
-
-   return it->second;
-
+ 
+   Font* f = it->second;
+   mutex.unlock();
+   return f;
 }
 
 /***********************************************************************
@@ -124,12 +128,14 @@ Font* FontManager::getFont(const Kobold::String& filename)
  ***********************************************************************/
 void FontManager::unloadAllFonts()
 {
-  for(std::map<Kobold::String, Font*>::iterator it = fonts.begin(); 
-       it != fonts.end(); ++it)
+   mutex.lock();
+   for(std::map<Kobold::String, Font*>::iterator it = fonts.begin(); 
+         it != fonts.end(); ++it)
    {
       delete it->second;
    }
    fonts.clear();
+   mutex.unlock();
 }
 
 /***********************************************************************
@@ -138,6 +144,7 @@ void FontManager::unloadAllFonts()
 FT_Library FontManager::freeTypeLib;
 std::map<Kobold::String, Font*> FontManager::fonts;
 Kobold::String FontManager::defaultFont;
+Kobold::Mutex FontManager::mutex;
 
 /***********************************************************************
  *                             Constructor                             *

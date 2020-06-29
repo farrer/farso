@@ -23,6 +23,7 @@
 
 #include <kobold/kstring.h>
 #include <kobold/filereader.h>
+#include <kobold/mutex.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -267,9 +268,7 @@ class FontManager
       static const Kobold::String& getDefaultFontFilename();
 
       /*! Unload all current loaded fonts. Usefull when the system is
-       * low in memory to de-alloc some no more used bytes.
-       * TODO: make this function tread safe (as unload could be called on
-          * another thread if used, for example, on iOS)! */
+       * low in memory to de-alloc some no more used bytes. */
       static void unloadAllFonts();
 
    private:
@@ -279,6 +278,7 @@ class FontManager
       static FT_Library freeTypeLib; /**< The FreeType context to use */
       static std::map<Kobold::String, Font*> fonts; /**< Current loaded fonts */
       static Kobold::String defaultFont; /**< Default font to use */
+      static Kobold::Mutex mutex; /**< Mutex for font accessing control */
 };
 
 }

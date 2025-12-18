@@ -1,5 +1,9 @@
 # Farso - A GUI toolkit
 
+## The code here on github is old.
+
+## New repository available at: https://codeberg.org/farrer/farso
+
 ## About
 Farso is a graphical user interface written in C++ with OpenGL, Ogre3D
  (1.10+, 2.1 and 2.2) and SDL renderers.
